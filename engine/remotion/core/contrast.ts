@@ -21,3 +21,9 @@ export function contrast(a: string, b: string): number {
   const [l1, l2] = [luminance(a), luminance(b)].sort((m, n) => n - m);
   return (l1! + 0.05) / (l2! + 0.05);
 }
+
+/** `colour` when it reads on `background` (4.5:1, as for body text), otherwise white or near black, whichever reads better. */
+export function readableOn(background: string, colour: string): string {
+  if (contrast(colour, background) >= 4.5) return colour;
+  return contrast("#FFFFFF", background) >= contrast("#1B1B1F", background) ? "#FFFFFF" : "#1B1B1F";
+}

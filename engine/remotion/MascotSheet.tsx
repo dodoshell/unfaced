@@ -2,6 +2,7 @@ import { AbsoluteFill } from "remotion";
 import type { Mascot } from "../src/plan/types.js";
 import { Character } from "./core/character/Character.js";
 import { POSES, type Pose } from "./core/character/types.js";
+import { readableOn } from "./core/contrast.js";
 import { CAPTION_FONT, loadFonts } from "./core/fonts.js";
 import { getStyle } from "./styles/registry.js";
 
@@ -25,7 +26,9 @@ const MOMENT: Partial<Record<Pose, number>> = { jump: 14, run: 3, talk: 4, happy
  */
 export const MascotSheet: React.FC<MascotSheetProps> = ({ style: styleId, mascot, palette }) => {
   const style = getStyle(styleId);
-  const [bg = "#FFFFFF", , , , ink = "#1B1B1F"] = palette;
+  const [bg = "#FFFFFF", , , , paletteInk = "#1B1B1F"] = palette;
+  // A dark palette can have a dark ink too (a night sky): the labels must still read.
+  const ink = readableOn(bg, paletteInk);
   const label = (text: string, x: number, y: number, size = 30) => (
     <div style={{ position: "absolute", left: x - 150, top: y, width: 300, textAlign: "center", fontFamily: CAPTION_FONT, fontWeight: 600, fontSize: size, color: ink }}>{text}</div>
   );
