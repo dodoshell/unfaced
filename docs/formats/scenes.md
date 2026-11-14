@@ -78,4 +78,27 @@ A beat with its own scene and no text needs no entry. Without an entry the check
 
 ## inbox/
 
-Images or clips made elsewhere (manual handoff, or another tool) go in `inbox/`. Show them with Remotion's `<Img src={staticFile("inbox/cat.png")} />` or `<OffthreadVideo src={staticFile("inbox/clip.mp4")} />`. Use 1080×1920 (or larger, same shape) for full-screen images, PNG or JPEG for images and MP4 (H.264) for clips. Hidden files (starting with `.`) are ignored.
+Images or clips made elsewhere (manual handoff, or another tool) go in `inbox/`. Show them with Remotion's `<Img src={staticFile("inbox/cat.png")} />` or `<OffthreadVideo src={staticFile("inbox/clip.mp4")} />`.
+
+What a file must be:
+
+| Kind | Files | Shape |
+|---|---|---|
+| image | `.png`, `.jpg`, `.jpeg`, `.webp` | 9:16 (portrait), at least 1080 wide |
+| clip | `.mp4` | H.264, 9:16 |
+| voice | `.wav`, `.mp3` | any length, with sound |
+
+The render reads only these. Hidden files (starting with `.`), folders and other types are left out.
+
+### inbox/PROMPTS.md
+
+For manual handoff the agent writes what it needs into `inbox/PROMPTS.md`: one `## <file name>` heading per file, with the prompt under it (the beat it is for, the subject, the style and the mascot from its reference sheet, and "9:16 portrait"). The user makes the files with any service they have and drops them into `inbox/` under those names.
+
+```markdown
+# Prompts
+
+## kneading.png
+For beat b2. A ginger cat with a white chest kneading a fluffy blanket, side view, flat cartoon style with thick dark outlines and bright colours, plain cream background, 9:16 portrait.
+```
+
+`unfaced inbox <videoDir>` prints one line per file (`ok`, `problem` with what is wrong, `ignored`) and one `waiting` line per prompt whose file hasn't arrived, and exits 1 when a file can't be used as it is.

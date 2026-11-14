@@ -5,6 +5,7 @@ import { bundle } from "@remotion/bundler";
 import { renderMedia, renderStill, selectComposition } from "@remotion/renderer";
 import { COMPOSITION_ID } from "../../remotion/compositionId.js";
 import { LIBRARY_ROOT } from "../paths.js";
+import { inboxKind } from "../inbox/inbox.js";
 import type { VideoPlan } from "../plan/types.js";
 
 export interface RenderOptions {
@@ -30,11 +31,17 @@ export interface RenderJob {
 export const ENGINE_ENTRY = join(LIBRARY_ROOT, "engine", "remotion", "index.ts");
 const KIT = join(LIBRARY_ROOT, "engine", "remotion", "kit", "index.ts");
 
-/** The files of a video folder a render reads: the soundtrack and anything dropped into inbox/. */
+/**
+ * The files of a video folder a render reads: the soundtrack and the images, clips and voice
+ * dropped into inbox/. Folders, hidden files and other types stay out (`unfaced inbox` reports them).
+ */
 export function planFiles(plan: VideoPlan, assetsDir: string): string[] {
   const files = plan.audioSrc ? [plan.audioSrc] : [];
   const inbox = join(assetsDir, "inbox");
-  if (existsSync(inbox)) files.push(...readdirSync(inbox).filter((f) => !f.startsWith(".")).map((f) => `inbox/${f}`));
+  if (existsSync(inbox)) {
+    const usable = (f: string) => !f.startsWith(".") && inboxKind(f) !== undefined && statSync(join(inbox, f)).isFile();
+    files.push(...readdirSync(inbox).filter(usable).map((f) => `inbox/${f}`));
+  }
   return files;
 }
 

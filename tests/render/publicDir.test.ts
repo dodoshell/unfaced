@@ -32,6 +32,20 @@ describe("stagePublicDir", () => {
     expect(existsSync(join(staged, "inbox", "b2.png"))).toBe(true);
   });
 
+  it("leaves out inbox folders, unknown types and the prompts list instead of failing", () => {
+    const video = mkdtempSync(join(tmpdir(), "unfaced video "));
+    mkdirSync(join(video, "inbox", "raw"), { recursive: true });
+    writeFileSync(join(video, "inbox", "raw", "big.png"), "png");
+    writeFileSync(join(video, "inbox", "PROMPTS.md"), "## b2.png\nA cat.\n");
+    writeFileSync(join(video, "inbox", "take.mov"), "mov");
+    writeFileSync(join(video, "inbox", "b2.PNG"), "png");
+    writeFileSync(join(video, "inbox", "clip.mp4"), "mp4");
+
+    const files = planFiles({} as VideoPlan, video);
+    expect(files).toEqual(["inbox/b2.PNG", "inbox/clip.mp4"]);
+    expect(() => stagePublicDir(video, files)).not.toThrow();
+  });
+
   it("stages nothing for a silent video without an inbox", () => {
     const video = mkdtempSync(join(tmpdir(), "unfaced video "));
     expect(planFiles({} as VideoPlan, video)).toEqual([]);
