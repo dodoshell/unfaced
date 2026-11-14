@@ -187,7 +187,7 @@ The agent writes ready prompts (consistent with the style and mascot) into a lis
 
 ### 6.7 Recurring mascot (owner's decision)
 A page may have a mascot that looks **the same in every video**.
-- `page-setup` builds it once, in the page's style, and saves it in `brand/mascot/`: `mascot.md` (name, look, personality, do/don't), the reusable component and its assets, and a reference sheet image (front, side, expressions) that the review step compares frames against.
+- `page-setup` builds it once, in the page's style, and saves it in `brand/mascot/`: `mascot.md` (name, look, personality, do/don't), the reusable component and its assets, and a reference sheet image (the side view facing both ways, and every pose with its expression; every style draws figures in side view, so a front view would show something no video has) that the review step compares frames against.
 - Every style provides a **character system**: a parametric rig (body shape, head, ears or hair, colours, accessories) with a shared set of poses and expressions: idle, walk, run, jump, point, talk, surprised, happy, sad, thinking. The dog in the style demo is built with the same system, so the demo proves it.
 - Changing the page's style means rebuilding the mascot in the new style from the same `mascot.md`.
 - A page without a mascot is fine; the field is optional.

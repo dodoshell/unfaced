@@ -35,10 +35,10 @@ function fakeLibrary(dir: string): void {
 }
 
 /** A git repo tagged v0.1.0 to install from with UNFACED_REPO; its postinstall points tsx at this checkout's, so nothing is downloaded. */
-function releaseRepo(dir: string): string {
+function releaseRepo(dir: string, cli = 'console.log(`ran ${process.argv.slice(2).join(" ")}`);\n'): string {
   const repo = join(dir, "unfaced repo");
   fakeLibrary(repo);
-  writeFileSync(join(repo, "engine", "src", "cli.ts"), 'console.log(`ran ${process.argv.slice(2).join(" ")}`);\n');
+  writeFileSync(join(repo, "engine", "src", "cli.ts"), cli);
   const loader = `import ${JSON.stringify(pathToFileURL(join(root, "node_modules", "tsx", "dist", "loader.mjs")).href)};\n`;
   writeFileSync(
     join(repo, "tsx.mjs"),
@@ -134,6 +134,22 @@ describe("the skills' launcher", () => {
     expect(r.status).toBe(1);
     expect(r.stderr).toMatch(/could not move [\s\S]*0\.1\.0\.partial[\s\S]*run this command again/);
     expect(r.stderr).not.toMatch(/\n\s+at /);
+  }, 60_000);
+
+  it("keeps the command's own exit code when the first-use setup fails", () => {
+    const { script, dir } = outsideCopy();
+    const cli = 'if (process.argv[2] === "setup") process.exit(3);\nconsole.log("ran the command");\n';
+    const r = launch(script, ["list", "hook"], { UNFACED_HOME: join(dir, "home"), UNFACED_REPO: releaseRepo(dir, cli) });
+    expect(r.stderr).toContain("setup did not finish");
+    expect(r.stdout).toContain("ran the command");
+    expect(r.status).toBe(0);
+  }, 60_000);
+
+  it("tells the CLI where it is, so its advice can name the launcher", () => {
+    const { script, dir } = outsideCopy();
+    const cli = "console.log(`launcher=${process.env.UNFACED_LAUNCHER}`);\n";
+    const r = launch(script, ["doctor"], { UNFACED_HOME: join(dir, "home"), UNFACED_REPO: releaseRepo(dir, cli) });
+    expect(r.stdout).toContain(`launcher=${script}`);
   }, 60_000);
 
   it("runs the library's CLI with the arguments it was given", () => {

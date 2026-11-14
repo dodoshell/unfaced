@@ -1,7 +1,8 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { Catalog } from "../catalog/catalog.js";
+import { Catalog, type CatalogEntry } from "../catalog/catalog.js";
+import { NO_MUSIC, TEXT_ONLY_VOICE } from "../catalog/special.js";
 import { loadPage } from "../page/loadPage.js";
 import { loadMascot } from "../page/mascot.js";
 import { resolveChoice } from "../page/resolveChoice.js";
@@ -12,14 +13,14 @@ import type { VideoPlan } from "../plan/types.js";
 import type { CheckReport } from "../check/types.js";
 import { ownScenes } from "../render/ownScenes.js";
 import { renderVideo, type RenderOptions } from "../render/renderVideo.js";
-import { parseScript } from "../script/parseScript.js";
+import { parseScript, type Script } from "../script/parseScript.js";
 import { alignWords, type WordTiming } from "../timing/align.js";
 import { readWavFile, speechPauses } from "../audio/speech.js";
 import { readingTimings } from "../timing/reading.js";
 import { evenOutCrushedWords, snapToPauses } from "../timing/snap.js";
 import { SEAMLESS_LOOP } from "../../remotion/core/endings.js";
 import { type SoundtrackRequest, writeSoundtrack } from "../music/soundtrack.js";
-import { prepareVoice } from "../voice/prepare.js";
+import { importVoice, prepareVoice } from "../voice/prepare.js";
 import { getVoiceProvider } from "../voice/registry.js";
 import { checkVideo, summaryLines } from "./check.js";
 import type { VoiceProvider } from "../voice/types.js";
@@ -27,8 +28,10 @@ import type { VoiceProvider } from "../voice/types.js";
 export interface MakeDeps {
   catalog: Catalog;
   voiceProvider(requested: string, env: NodeJS.ProcessEnv, warn: (msg: string) => void): VoiceProvider;
-  /** Adds the lead-in and brings the voice-over to the target loudness, in place. */
-  prepareVoice(wavPath: string): Promise<void>;
+  /** Adds the lead-in and brings the voice-over to the target loudness, in place; returns the prepared length in seconds. */
+  prepareVoice(wavPath: string): Promise<number>;
+  /** Converts a voice-over handed off in inbox/ (WAV or MP3) to `wavPath`; returns its length in seconds. */
+  importVoice(src: string, wavPath: string): Promise<number>;
   align(wavPath: string, language: string): Promise<WordTiming[]>;
   /** Writes the soundtrack (the music mood under the voice-over, if any) into the video folder; returns its file name. */
   mixMusic(videoDir: string, request: SoundtrackRequest): Promise<string>;
@@ -42,6 +45,7 @@ export const defaultMakeDeps = (): MakeDeps => ({
   catalog: Catalog.load(CATALOG_DIR),
   voiceProvider: getVoiceProvider,
   prepareVoice,
+  importVoice,
   // Whisper's times, with each word after a pause moved to where the voice really starts it
   // (pauses down to 100 ms, so every pause the 150 ms sync check finds is covered), and
   // words whisper squeezed to almost nothing given back a moment.
@@ -56,13 +60,8 @@ export const defaultMakeDeps = (): MakeDeps => ({
 
 const SNAP_MIN_PAUSE_MS = 100;
 
-/** Voice 08 in the voice catalog: no voice-over, the captions carry the video. */
-export const TEXT_ONLY_VOICE = 8;
-/** Music 08 in the music catalog: no music. */
-export const NO_MUSIC = 8;
-
 /** Bumped when the voice-over is processed differently, so cached voice-overs are made again. */
-const VOICE_PROCESSING = "lead-in 250, loudnorm -14, pause snap 100, crushed words";
+const VOICE_PROCESSING = "lead-in 250, limiter -3 then loudnorm -14 two-pass, pause snap 100 in order, crushed words, prepared length, no clicks 30";
 
 /** timing.json: the voice-over's word timings, keyed by what produced the voice. */
 interface TimingFile {
@@ -86,6 +85,7 @@ export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDe
   const page = await loadPage(pageDir, deps.catalog);
   const mascot = loadMascot(pageDir);
   const script = parseScript(readFileSync(scriptFile, "utf8"));
+  checkWriting(script, deps.catalog);
   const scenes = ownScenes(dir, script.beats.map((b) => b.id), deps.log);
 
   const style = choose("style", page, deps, script.choices.style);
@@ -93,7 +93,13 @@ export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDe
   const voiceType = choose("voice", page, deps, script.choices.voice);
   const music = choose("music", page, deps, script.choices.music);
   const textOnly = voiceType === TEXT_ONLY_VOICE;
-  const timing = textOnly ? readingTiming(script.spokenText) : await recordVoice(dir, script.spokenText, voiceType, page, deps);
+  const handedOff = handedOffVoice(dir, deps.log);
+  if (handedOff && textOnly) deps.log(`voice ${TEXT_ONLY_VOICE} is text only, so ${handedOff.name} is not used`);
+  const timing = textOnly
+    ? readingTiming(script.spokenText)
+    : handedOff
+      ? await takeHandedOffVoice(dir, handedOff, script.spokenText, page, deps)
+      : await recordVoice(dir, script.spokenText, voiceType, page, deps);
   writeFileSync(join(dir, "timing.json"), `${JSON.stringify(timing, null, 2)}\n`);
 
   const plan = buildPlan({ script, words: timing.words, audioDurationSec: timing.durationSec, page, style, captions, voice: voiceType, warn: deps.log, audioSrc: textOnly ? null : "voice.wav", mascot });
@@ -141,13 +147,49 @@ async function recordVoice(dir: string, text: string, voiceType: number, page: P
   }
   deps.log(`Recording the voice-over (${voice.id}, voice ${voiceType}, ${page.language})`);
   const result = await voice.synthesize(text, { language: page.language, voiceType, outPath: wavPath });
-  await deps.prepareVoice(wavPath);
+  const durationSec = await deps.prepareVoice(wavPath);
+  const words = await timeWords(wavPath, page.language, deps);
+  // A voice that stood in for a failed paid one is kept for this video only: next time the paid one is tried again.
+  return { hash: result.provider === voice.id ? hash : `${hash} (${result.provider} stood in)`, provider: result.provider, durationSec, words };
+}
+
+/** The voice-overs a user can hand off, in the order they are taken. */
+const HANDED_OFF_VOICES = ["voice.wav", "voice.mp3"];
+
+/** inbox/voice.wav or inbox/voice.mp3, when the user dropped one in. */
+function handedOffVoice(dir: string, log: (msg: string) => void): { file: string; name: string } | undefined {
+  const found = HANDED_OFF_VOICES.filter((f) => existsSync(join(dir, "inbox", f)));
+  if (found.length > 1) log(`inbox/${found[0]} is the voice-over; ${found.slice(1).map((f) => `inbox/${f}`).join(", ")} is not used`);
+  return found[0] ? { file: join(dir, "inbox", found[0]), name: `inbox/${found[0]}` } : undefined;
+}
+
+/**
+ * Takes a voice-over made elsewhere as voice.wav: converted, prepared like a recorded one and
+ * timed, or reused while the file, the text and the language stay the same.
+ */
+async function takeHandedOffVoice(dir: string, voice: { file: string; name: string }, text: string, page: Page, deps: MakeDeps): Promise<TimingFile> {
+  const wavPath = join(dir, "voice.wav");
+  const file = createHash("sha256").update(readFileSync(voice.file)).digest("hex");
+  const hash = createHash("sha256").update(JSON.stringify([text, voice.name, file, page.language, VOICE_PROCESSING])).digest("hex");
+  const cached = readTiming(join(dir, "timing.json"));
+  if (cached?.hash === hash && existsSync(wavPath)) {
+    deps.log(`Voice-over unchanged; reusing voice.wav (from ${voice.name}) and timing.json`);
+    return cached;
+  }
+  deps.log(`Using ${voice.name} as the voice-over (handed off, so the page's voice type is not used)`);
+  await deps.importVoice(voice.file, wavPath);
+  const durationSec = await deps.prepareVoice(wavPath);
+  return { hash, provider: voice.name, durationSec, words: await timeWords(wavPath, page.language, deps) };
+}
+
+/** Whisper's word timings for a prepared voice-over; stops with advice when it hears none. */
+async function timeWords(wavPath: string, language: string, deps: Pick<MakeDeps, "align" | "log">): Promise<WordTiming[]> {
   deps.log("Timing every word");
-  const words = await deps.align(wavPath, page.language);
+  const words = await deps.align(wavPath, language);
   if (words.length === 0) {
     throw new Error(`Whisper heard no words in ${wavPath}. Listen to it: if it is silent or noise, run "unfaced doctor" to check the voice; if it sounds right, run make again.`);
   }
-  return { hash, provider: result.provider, durationSec: result.durationSec, words };
+  return words;
 }
 
 /**
@@ -172,6 +214,19 @@ export function choose(field: ChoiceField, page: Page, deps: Pick<MakeDeps, "cat
   const entry = deps.catalog.get(field, chosen);
   if (entry.status !== "ready") throw new Error(`${field} ${chosen} (${entry.name}) is not ready yet; pick a ready one from "unfaced list ${field}"`);
   return chosen;
+}
+
+/** The script type, hook and ending script.md names must be catalog entries that are ready. */
+function checkWriting(script: Script, catalog: Catalog): void {
+  for (const [kind, num] of [["script", script.scriptType], ["hook", script.hook], ["ending", script.ending]] as const) {
+    let entry: CatalogEntry;
+    try {
+      entry = catalog.get(kind, num);
+    } catch (err) {
+      throw new Error(`script.md: ${(err as Error).message}`);
+    }
+    if (entry.status !== "ready") throw new Error(`script.md: ${kind} ${num} (${entry.name}) is not ready yet; pick a ready one from "unfaced list ${kind}"`);
+  }
 }
 
 function readTiming(file: string): TimingFile | undefined {

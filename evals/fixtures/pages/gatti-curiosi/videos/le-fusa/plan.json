@@ -1,0 +1,22 @@
+{
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationInFrames": 1110,
+  "style": 3,
+  "captions": 1,
+  "palette": ["#FFF4E0", "#FF6B35", "#2EC4B6", "#FFD23F", "#1B1B3A"],
+  "audioSrc": "voice.wav",
+  "voice": 1,
+  "scriptType": 6,
+  "ending": 5,
+  "scenes": [
+    { "beatId": "hook", "kind": "title", "text": "Perché i gatti fanno le fusa?", "fromFrame": 0, "durationInFrames": 66, "words": [] },
+    { "beatId": "b1", "kind": "fact", "text": "Perché sono felici. Lo sanno tutti.", "fromFrame": 66, "durationInFrames": 96, "words": [] },
+    { "beatId": "b2", "kind": "fact", "text": "In realtà, è solo metà della storia.", "fromFrame": 162, "durationInFrames": 78, "words": [] },
+    { "beatId": "b3", "kind": "fact", "text": "I gatti fanno le fusa anche quando hanno paura, quando sono feriti e perfino durante il parto.", "fromFrame": 240, "durationInFrames": 150, "words": [] },
+    { "beatId": "b4", "kind": "fact", "text": "Le fusa sembrano calmarli, come canticchiare da soli in un posto che fa paura. Alcuni scienziati pensano che le vibrazioni basse aiutino perfino ossa e muscoli a guarire.", "fromFrame": 390, "durationInFrames": 306, "words": [] },
+    { "beatId": "b5", "kind": "fact", "text": "E alcuni gatti nascondono nelle fusa un piccolo pianto, molto simile a quello di un neonato. Per noi è difficilissimo ignorarlo.", "fromFrame": 696, "durationInFrames": 258, "words": [] },
+    { "beatId": "ending", "kind": "outro", "text": "Quindi, quando il tuo gatto ti fa le fusa alle cinque del mattino, non è amore. È la colazione.", "fromFrame": 954, "durationInFrames": 156, "words": [] }
+  ]
+}

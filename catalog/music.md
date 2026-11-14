@@ -4,7 +4,7 @@ Background music moods. Every track is made by code when the video is made (`eng
 
 How `unfaced make` uses it:
 
-- The track is made at the video's exact length, fades in over 0.8 s and out over 0.9 s.
+- The track is made at the video's exact length, fades in over 0.8 s and out over 0.9 s. With the seamless loop ending (01) it doesn't fade: its end runs into its start, so the replay has no seam.
 - Under a voice-over, the music ducks to −34 dB below the voice's level while someone speaks and comes back up to −26 dB in the pauses, so the words stay clear.
 - Without a voice-over (voice `08 None`), the music is the whole soundtrack and is brought to −14 LUFS, the level the platforms play at.
 - The mixed soundtrack is `soundtrack.wav` in the video folder; the voice-over stays in `voice.wav`.

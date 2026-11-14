@@ -36,7 +36,7 @@ Purring might be how cats heal themselves.
 | `script_type` | yes | Number from the script catalog (`unfaced list script`). |
 | `hook` | yes | Number from the hook catalog. |
 | `ending` | yes | Number from the ending catalog. |
-| `sources` | no | Where the facts come from: one line or a list. |
+| `sources` | no | Where the facts come from: one line or a list. Put a source in quotes when it contains ": " (a colon and a space), or YAML reads it as a key. |
 | `style`, `voice`, `captions`, `music` | no | This video's own choice from that catalog. It wins over the page's choice for this video only; `page.yaml` stays as it is. |
 
 When the page leaves a choice open (a list such as `script: [2, 6, 9]`, or `auto`), the agent picks one for the video and writes it here, with the reason in its reply. A one-off change ("style 12 this time") goes here too. `unfaced make` prints a line for every choice that differs from the page. Without a choice here, a fixed number in the page is used, and a list or `auto` falls back to its first ready option.
@@ -65,6 +65,8 @@ The voice reads the paragraph in the order it is written, but a list scene shows
 ## Visuals
 
 A line starting with `> visual:` describes what should be on screen during that beat. It is never spoken. Put it inside the paragraph it belongs to; a `> visual:` paragraph on its own attaches to the beat before it.
+
+A visual is a brief for a scene you write in the video's `scenes/` folder (`unfaced docs scenes`). The style's own scenes never draw it: they show the beat's text and the mascot. So write a scene for every visual you keep, or drop the note. The example scripts in `examples/` and `catalog/scripts/` keep their notes to show where a scene helps; made as they are, their videos show the style's own scenes.
 
 ## What the voice reads
 

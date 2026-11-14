@@ -9,7 +9,7 @@ Rules for every hook:
 - No greetings, no "in this video", no channel name.
 - Write it for the ear: say it out loud before keeping it.
 
-Each hook below has three examples from different niches. `examples/hooks/` has the same examples and a hook reel video.
+Each hook below has three examples from different niches. `examples/hooks/` has the same examples; `unfaced reel hooks` renders them as a hook reel, which is also attached to each release.
 
 ## 01 Shocking question
 

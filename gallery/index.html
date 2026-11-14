@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>unfaced catalog</title>
+<style>
+:root { --bg: #FBF8F3; --card: #FFFFFF; --ink: #1B1B3A; --muted: #5C5C78; --line: #E6E0D6; --accent: #FF6B35; --soft: #F3EEE6; }
+@media (prefers-color-scheme: dark) { :root { --bg: #14141F; --card: #1E1E2C; --ink: #F2EFEA; --muted: #A6A3B8; --line: #2E2E40; --accent: #FF8A5C; --soft: #262636; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+header, main, footer { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+header { padding-top: 48px; }
+h1 { font-size: 40px; margin: 0; letter-spacing: -0.02em; }
+header p { color: var(--muted); margin: 8px 0 0; max-width: 640px; }
+nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 8px; }
+nav a { color: var(--ink); text-decoration: none; background: var(--soft); border-radius: 999px; padding: 6px 14px; font-size: 14px; }
+nav a:hover { background: var(--line); }
+section { margin-top: 48px; }
+h2 { font-size: 24px; margin: 0 0 16px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+.card.planned { opacity: 0.6; }
+.card img, .card .noposter { display: block; width: 100%; height: auto; aspect-ratio: 9 / 16; border-radius: 10px; margin-bottom: 12px; background: var(--soft); object-fit: cover; }
+.card .noposter { display: grid; place-items: center; color: var(--muted); font-size: 14px; }
+h3 { font-size: 17px; margin: 0; }
+.status { display: inline-block; margin-top: 4px; font-size: 12px; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+.card p { margin: 8px 0 0; }
+.good { color: var(--muted); font-size: 14px; }
+q { font-style: italic; }
+.niche { color: var(--muted); font-size: 13px; }
+footer { color: var(--muted); font-size: 14px; padding-top: 48px; padding-bottom: 48px; }
+</style>
+</head>
+<body>
+<header>
+<h1>unfaced catalog</h1>
+<p>Everything a page can be made of, numbered the way <code>page.yaml</code> uses it: 12 styles · 10 script types · 15 hooks · 8 voices · 6 caption styles · 8 music moods · 6 endings · 4 durations. Every style shows the same dog, the same jump, the same catch.</p>
+<nav><a href="#style">Visual styles</a><a href="#script">Script types</a><a href="#hook">Hooks</a><a href="#voice">Voices</a><a href="#captions">Captions</a><a href="#music">Music moods</a><a href="#ending">Endings</a><a href="#duration">Durations</a></nav>
+</header>
+<main>
+<section id="style">
+<h2>Visual styles</h2>
+<div class="grid">
+<article class="card" id="style-01">
+<img src="media/01-soft-3d.png" alt="The dog demo in 01 Soft 3D" width="270" height="480" loading="lazy">
+<h3>01 Soft 3D</h3>
+<p>Rounded toy-like 3D shapes with soft light, like clay figures.</p>
+<p class="good">Good for: kids, cute animals, products</p>
+</article>
+<article class="card" id="style-02">
+<img src="media/02-90s-low-poly.png" alt="The dog demo in 02 90s low poly" width="270" height="480" loading="lazy">
+<h3>02 90s low poly</h3>
+<p>Faceted low-polygon 3D with flat shading and a retro game feel.</p>
+<p class="good">Good for: gaming, nostalgia, tech</p>
+</article>
+<article class="card" id="style-03">
+<img src="media/03-flat-cartoon.png" alt="The dog demo in 03 Flat cartoon" width="270" height="480" loading="lazy">
+<h3>03 Flat cartoon</h3>
+<p>Bold flat shapes, thick outlines and bright colours.</p>
+<p class="good">Good for: facts, animals, explainers</p>
+</article>
+<article class="card" id="style-04">
+<img src="media/04-line-art.png" alt="The dog demo in 04 Line art" width="270" height="480" loading="lazy">
+<h3>04 Line art</h3>
+<p>Clean single-weight lines on a plain background, drawn as you watch.</p>
+<p class="good">Good for: explainers, productivity, minimal brands</p>
+</article>
+<article class="card" id="style-05">
+<img src="media/05-ink-silhouette.png" alt="The dog demo in 05 Ink silhouette" width="270" height="480" loading="lazy">
+<h3>05 Ink silhouette</h3>
+<p>Black silhouettes against a coloured sky, high contrast and moody.</p>
+<p class="good">Good for: history, stories, mystery</p>
+</article>
+<article class="card" id="style-06">
+<img src="media/06-chalkboard.png" alt="The dog demo in 06 Chalkboard" width="270" height="480" loading="lazy">
+<h3>06 Chalkboard</h3>
+<p>Chalk drawings and handwriting on a dark board.</p>
+<p class="good">Good for: education, maths, how it works</p>
+</article>
+<article class="card" id="style-07">
+<img src="media/07-paper-cut-out.png" alt="The dog demo in 07 Paper cut-out" width="270" height="480" loading="lazy">
+<h3>07 Paper cut-out</h3>
+<p>Layered paper shapes with soft shadows, like a stop-motion collage.</p>
+<p class="good">Good for: stories, kids, crafts</p>
+</article>
+<article class="card" id="style-08">
+<img src="media/08-vintage-comic.png" alt="The dog demo in 08 Vintage comic" width="270" height="480" loading="lazy">
+<h3>08 Vintage comic</h3>
+<p>Halftone dots, ink outlines and panels from old comic books.</p>
+<p class="good">Good for: history, myths, bold claims</p>
+</article>
+<article class="card" id="style-09">
+<img src="media/09-16-bit-pixel-art.png" alt="The dog demo in 09 16-bit pixel art" width="270" height="480" loading="lazy">
+<h3>09 16-bit pixel art</h3>
+<p>Chunky pixels and limited palettes from 16-bit consoles.</p>
+<p class="good">Good for: gaming, tech, nostalgia</p>
+</article>
+<article class="card" id="style-10">
+<img src="media/10-neon-synthwave.png" alt="The dog demo in 10 Neon synthwave" width="270" height="480" loading="lazy">
+<h3>10 Neon synthwave</h3>
+<p>Glowing neon lines on a dark grid under an 80s sunset.</p>
+<p class="good">Good for: tech, space, music</p>
+</article>
+<article class="card" id="style-11">
+<img src="media/11-watercolour.png" alt="The dog demo in 11 Watercolour" width="270" height="480" loading="lazy">
+<h3>11 Watercolour</h3>
+<p>Soft washes of paint with visible paper texture.</p>
+<p class="good">Good for: nature, emotional stories, travel</p>
+</article>
+<article class="card" id="style-12">
+<img src="media/12-kinetic-typography.png" alt="The dog demo in 12 Kinetic typography" width="270" height="480" loading="lazy">
+<h3>12 Kinetic typography</h3>
+<p>The words are the visuals: big type that moves with the voice.</p>
+<p class="good">Good for: quotes, motivation, lists</p>
+</article>
+</div>
+</section>
+<section id="script">
+<h2>Script types</h2>
+<div class="grid">
+<article class="card" id="script-01">
+<h3>01 Build it</h3>
+<p>Something is built step by step, from nothing to finished.</p>
+<p class="good">Good for: engineering, history, food</p>
+</article>
+<article class="card" id="script-02">
+<h3>02 Top N countdown</h3>
+<p>A ranked list that counts down to number one.</p>
+<p class="good">Good for: lists, comparisons, trivia</p>
+</article>
+<article class="card" id="script-03">
+<h3>03 Myth or fact</h3>
+<p>A popular belief is stated, then confirmed or busted.</p>
+<p class="good">Good for: science, health, history</p>
+</article>
+<article class="card" id="script-04">
+<h3>04 What if</h3>
+<p>A hypothetical scenario followed to its consequences.</p>
+<p class="good">Good for: science, space, history</p>
+</article>
+<article class="card" id="script-05">
+<h3>05 Story in 60 seconds</h3>
+<p>A real event told as a compact story with a beginning, middle and end.</p>
+<p class="good">Good for: history, true stories, business</p>
+</article>
+<article class="card" id="script-06">
+<h3>06 Surprising answer</h3>
+<p>A simple question whose real answer is unexpected.</p>
+<p class="good">Good for: facts, science, animals</p>
+</article>
+<article class="card" id="script-07">
+<h3>07 How it works</h3>
+<p>An everyday thing explained from the inside.</p>
+<p class="good">Good for: tech, science, engineering</p>
+</article>
+<article class="card" id="script-08">
+<h3>08 X vs Y</h3>
+<p>Two things compared point by point, with a verdict.</p>
+<p class="good">Good for: animals, tech, sport</p>
+</article>
+<article class="card" id="script-09">
+<h3>09 Did you know</h3>
+<p>A quick chain of related facts, each stranger than the last.</p>
+<p class="good">Good for: facts, animals, trivia</p>
+</article>
+<article class="card" id="script-10">
+<h3>10 Mini story</h3>
+<p>A short fictional story with a twist, often starring the mascot.</p>
+<p class="good">Good for: fiction, mascot, humour</p>
+</article>
+</div>
+</section>
+<section id="hook">
+<h2>Hooks</h2>
+<div class="grid">
+<article class="card" id="hook-01">
+<h3>01 Shocking question</h3>
+<p>Open with a question the viewer can&#39;t answer but wants to.</p>
+<p class="example"><q>Why do cats purr when they&#39;re hurt?</q> <span class="niche">Animals</span></p>
+<p class="good">Good for: facts, science</p>
+</article>
+<article class="card" id="hook-02">
+<h3>02 Absurd number</h3>
+<p>Open with a number so big or so small it sounds wrong.</p>
+<p class="example"><q>Twenty quadrillion ants are alive right now.</q> <span class="niche">Nature</span></p>
+<p class="good">Good for: facts, space, money</p>
+</article>
+<article class="card" id="hook-03">
+<h3>03 You&#39;re doing it wrong</h3>
+<p>Tell the viewer that something they do every day is wrong.</p>
+<p class="example"><q>You&#39;ve been cutting avocados wrong your whole life.</q> <span class="niche">Food</span></p>
+<p class="good">Good for: life hacks, health, food</p>
+</article>
+<article class="card" id="hook-04">
+<h3>04 Impossible image</h3>
+<p>Open on a picture that looks like it can&#39;t be real.</p>
+<p class="example"><q>This lake is pink, and nobody added anything to it.</q> <span class="niche">Nature</span></p>
+<p class="good">Good for: nature, space, engineering</p>
+</article>
+<article class="card" id="hook-05">
+<h3>05 Unfinished sentence</h3>
+<p>Start a sentence and finish it only at the end.</p>
+<p class="example"><q>The real reason cats knock things off tables is...</q> <span class="niche">Animals</span></p>
+<p class="good">Good for: stories, loops</p>
+</article>
+<article class="card" id="hook-06">
+<h3>06 Bold claim</h3>
+<p>Open with a strong statement, then prove it.</p>
+<p class="example"><q>Napoleon wasn&#39;t short.</q> <span class="niche">History</span></p>
+<p class="good">Good for: history, myths, opinions</p>
+</article>
+<article class="card" id="hook-07">
+<h3>07 Countdown tease</h3>
+<p>Promise that the last item is the best one.</p>
+<p class="example"><q>Five animals that cheat death, and number one is immortal.</q> <span class="niche">Animals</span></p>
+<p class="good">Good for: lists, countdowns</p>
+</article>
+<article class="card" id="hook-08">
+<h3>08 POV</h3>
+<p>Put the viewer inside the situation: &quot;POV: you are...&quot;.</p>
+<p class="example"><q>POV: you built the pyramids and got paid in beer.</q> <span class="niche">History</span></p>
+<p class="good">Good for: stories, history, humour</p>
+</article>
+<article class="card" id="hook-09">
+<h3>09 Nobody talks about this</h3>
+<p>Frame the topic as overlooked or hidden.</p>
+<p class="example"><q>Nobody talks about why every Apple ad shows nine forty-one.</q> <span class="niche">Business</span></p>
+<p class="good">Good for: facts, history, business</p>
+</article>
+<article class="card" id="hook-10">
+<h3>10 Before/after flash</h3>
+<p>Flash the finished result first, then go back to the start.</p>
+<p class="example"><q>This started as a pile of sand.</q> <span class="niche">Engineering</span></p>
+<p class="good">Good for: build it, transformations</p>
+</article>
+<article class="card" id="hook-11">
+<h3>11 Insider secret</h3>
+<p>Share what people in the field know and others don&#39;t.</p>
+<p class="example"><q>The pilot and co-pilot never eat the same meal.</q> <span class="niche">Jobs</span></p>
+<p class="good">Good for: jobs, business, how it works</p>
+</article>
+<article class="card" id="hook-12">
+<h3>12 Challenge</h3>
+<p>Dare the viewer to guess, spot or try something.</p>
+<p class="example"><q>You have three seconds to spot the odd one out.</q> <span class="niche">Puzzles</span></p>
+<p class="good">Good for: quizzes, puzzles, trivia</p>
+</article>
+<article class="card" id="hook-13">
+<h3>13 Start at the climax</h3>
+<p>Open on the most dramatic moment, then rewind.</p>
+<p class="example"><q>The ship is sinking, and the band keeps playing.</q> <span class="niche">History</span></p>
+<p class="good">Good for: stories, history</p>
+</article>
+<article class="card" id="hook-14">
+<h3>14 Relatable pain</h3>
+<p>Name a small frustration everyone has felt.</p>
+<p class="example"><q>Your phone dies at twenty percent. Here&#39;s why.</q> <span class="niche">Tech</span></p>
+<p class="good">Good for: life hacks, humour, tech</p>
+</article>
+<article class="card" id="hook-15">
+<h3>15 Contrarian take</h3>
+<p>Disagree with something everyone believes.</p>
+<p class="example"><q>Eight glasses of water a day? You don&#39;t need them.</q> <span class="niche">Health</span></p>
+<p class="good">Good for: myths, opinions, science</p>
+</article>
+</div>
+</section>
+<section id="voice">
+<h2>Voices</h2>
+<div class="grid">
+<article class="card" id="voice-01">
+<h3>01 Calm documentary</h3>
+<p>Slow, low and clear, like a nature documentary.</p>
+<p class="good">Good for: nature, history, science</p>
+</article>
+<article class="card" id="voice-02">
+<h3>02 Energetic</h3>
+<p>Fast and upbeat, with weight on every key word.</p>
+<p class="good">Good for: lists, facts, sport</p>
+</article>
+<article class="card" id="voice-03">
+<h3>03 Storyteller</h3>
+<p>Warm, with pauses that build suspense.</p>
+<p class="good">Good for: stories, history</p>
+</article>
+<article class="card" id="voice-04">
+<h3>04 Whisper</h3>
+<p>Quiet and close, for mysteries and calm content.</p>
+<p class="good">Good for: mystery, relaxing</p>
+</article>
+<article class="card" id="voice-05">
+<h3>05 Deadpan</h3>
+<p>Flat and dry, so the humour lands on the pause.</p>
+<p class="good">Good for: humour, absurd facts</p>
+</article>
+<article class="card" id="voice-06">
+<h3>06 Warm friendly</h3>
+<p>Like a friend explaining something over coffee.</p>
+<p class="good">Good for: how it works, life hacks</p>
+</article>
+<article class="card" id="voice-07">
+<h3>07 News anchor</h3>
+<p>Crisp and authoritative, like breaking news.</p>
+<p class="good">Good for: tech, business, current events</p>
+</article>
+<article class="card" id="voice-08">
+<h3>08 None (text only)</h3>
+<p>No voice: captions and music carry the video.</p>
+<p class="good">Good for: quotes, kinetic typography, silent viewing</p>
+</article>
+</div>
+</section>
+<section id="captions">
+<h2>Captions</h2>
+<div class="grid">
+<article class="card" id="captions-01">
+<h3>01 Word-by-word karaoke</h3>
+<p>Each word lights up as it is spoken.</p>
+<p class="good">Good for: any voiced video</p>
+</article>
+<article class="card" id="captions-02">
+<h3>02 Bold centre</h3>
+<p>Short phrases in large type at the centre of the screen.</p>
+<p class="good">Good for: facts, punchy edits</p>
+</article>
+<article class="card" id="captions-03">
+<h3>03 Typewriter</h3>
+<p>Letters appear one at a time, as if being typed.</p>
+<p class="good">Good for: mystery, tech, history</p>
+</article>
+<article class="card" id="captions-04">
+<h3>04 Minimal lower third</h3>
+<p>Small, quiet subtitles near the bottom.</p>
+<p class="good">Good for: busy visuals, calm content</p>
+</article>
+<article class="card" id="captions-05">
+<h3>05 Outline pop</h3>
+<p>Outlined words that pop in with a bounce.</p>
+<p class="good">Good for: kids, humour, cartoons</p>
+</article>
+<article class="card" id="captions-06">
+<h3>06 Highlight keyword</h3>
+<p>Full lines with the key word in a highlight colour.</p>
+<p class="good">Good for: explainers, education</p>
+</article>
+</div>
+</section>
+<section id="music">
+<h2>Music moods</h2>
+<div class="grid">
+<article class="card" id="music-01">
+<h3>01 Suspense</h3>
+<p>Slow tension that builds under the voice.</p>
+<p class="good">Good for: mystery, cliffhangers</p>
+</article>
+<article class="card" id="music-02">
+<h3>02 Epic</h3>
+<p>Big drums and strings for dramatic moments.</p>
+<p class="good">Good for: history, space, sport</p>
+</article>
+<article class="card" id="music-03">
+<h3>03 Lo-fi</h3>
+<p>Relaxed beats for calm, cosy content.</p>
+<p class="good">Good for: study, how it works, relaxing</p>
+</article>
+<article class="card" id="music-04">
+<h3>04 Upbeat</h3>
+<p>Bright and bouncy, keeps the pace high.</p>
+<p class="good">Good for: lists, life hacks</p>
+</article>
+<article class="card" id="music-05">
+<h3>05 Playful</h3>
+<p>Light and silly, for cartoons and animals.</p>
+<p class="good">Good for: animals, kids, humour</p>
+</article>
+<article class="card" id="music-06">
+<h3>06 Emotional</h3>
+<p>Soft piano and strings for moving stories.</p>
+<p class="good">Good for: stories, nature</p>
+</article>
+<article class="card" id="music-07">
+<h3>07 Mystery</h3>
+<p>Strange, sparse sounds for unexplained things.</p>
+<p class="good">Good for: mystery, space, deep sea</p>
+</article>
+<article class="card" id="music-08">
+<h3>08 None</h3>
+<p>No music: voice only, or a trending sound added when posting.</p>
+<p class="good">Good for: trending sounds, voice-led videos</p>
+</article>
+</div>
+</section>
+<section id="ending">
+<h2>Endings</h2>
+<div class="grid">
+<article class="card" id="ending-01">
+<h3>01 Seamless loop</h3>
+<p>The last line flows back into the first, so the video replays.</p>
+<p class="good">Good for: short facts, 15-second videos</p>
+</article>
+<article class="card" id="ending-02">
+<h3>02 Cliffhanger</h3>
+<p>Stop just before the answer.</p>
+<p class="good">Good for: series, stories</p>
+</article>
+<article class="card" id="ending-03">
+<h3>03 Comment question</h3>
+<p>Ask the viewer a question to answer in the comments.</p>
+<p class="good">Good for: opinions, comparisons</p>
+</article>
+<article class="card" id="ending-04">
+<h3>04 Follow for part 2</h3>
+<p>Promise a continuation in the next video.</p>
+<p class="good">Good for: series, long stories</p>
+</article>
+<article class="card" id="ending-05">
+<h3>05 Punchline</h3>
+<p>End on a short, funny or surprising line.</p>
+<p class="good">Good for: facts, humour, animals</p>
+</article>
+<article class="card" id="ending-06">
+<h3>06 Callback to the hook</h3>
+<p>Answer or echo the opening line.</p>
+<p class="good">Good for: questions, stories</p>
+</article>
+</div>
+</section>
+<section id="duration">
+<h2>Durations</h2>
+<div class="grid">
+<article class="card" id="duration-01">
+<h3>01 15 seconds</h3>
+<p>One fact, one punch. Best for loops.</p>
+<p class="good">Good for: loops, single facts</p>
+</article>
+<article class="card" id="duration-02">
+<h3>02 30 seconds</h3>
+<p>The default: a hook, three beats and an ending.</p>
+<p class="good">Good for: most videos</p>
+</article>
+<article class="card" id="duration-03">
+<h3>03 45 seconds</h3>
+<p>Room for a short story or a top 5.</p>
+<p class="good">Good for: countdowns, short stories</p>
+</article>
+<article class="card" id="duration-04">
+<h3>04 60 seconds</h3>
+<p>Full stories, countdowns and comparisons.</p>
+<p class="good">Good for: stories, comparisons</p>
+</article>
+</div>
+</section>
+</main>
+<footer>Built from catalog/catalog.json by <code>unfaced gallery</code>.</footer>
+</body>
+</html>

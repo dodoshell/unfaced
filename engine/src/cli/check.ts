@@ -9,9 +9,7 @@ import { captionedOnsets, checkEdges, checkSync, shownWords } from "../check/syn
 import { type CheckReport, toReport } from "../check/types.js";
 import type { VideoPlan } from "../plan/types.js";
 import { readOwnBoxes } from "../render/ownScenes.js";
-
-/** Voice 08 in the voice catalog: text only, no voice-over. */
-const TEXT_ONLY_VOICE = 8;
+import { TEXT_ONLY_VOICE } from "../catalog/special.js";
 
 export interface CheckDeps {
   readFrames(video: string): Promise<Uint8Array[]>;

@@ -39,9 +39,10 @@ export default defineScenes({ b2: TwoBowls });
 
 - Import `remotion` and `react` by name, and everything unfaced offers from `@unfaced/kit`.
 - A scene gets `{ scene, palette }`: `scene.text` is the beat's text, `scene.words` its words with their times, `scene.durationInFrames` its length. `useCurrentFrame()` counts from the start of the beat.
+- Word times (`startMs`, `endMs`) count in milliseconds from the start of the whole video, not of the beat. To make something happen on a word, turn its time into the beat's frames: `Math.round((word.startMs / 1000) * fps) - scene.fromFrame`, with `fps` from `useVideoConfig()`.
 - `useVideo()` gives the whole plan, the style and the palette; `useMascot()` gives the page's mascot or `undefined`.
 - The style's background stays behind the scene, and the engine draws the captions on top of it.
-- The engine draws the ending's sign (an arrow, a question bubble, a follow button) on top, in `END_MARK_BOX`, whatever scene the ending has, unless the style draws it in its own last scene (style 03, inside `<StyleScene>`); then an ending scene that skips `<StyleScene>` draws `<EndingMark>` itself. `drawsEndingMark(useVideo().plan.style)` tells which.
+- The engine draws the ending's sign (an arrow, a question bubble, a follow button) on top, in `END_MARK_BOX`, whatever scene the ending has, unless the style draws it in its own last scene (inside `<StyleScene>`, as style 03 does); then an ending scene that skips `<StyleScene>` draws `<EndingMark>` itself. `drawsEndingMark(useVideo().plan.style)` tells which.
 
 What `@unfaced/kit` offers:
 
@@ -79,4 +80,31 @@ A beat with its own scene and no text needs no entry; an ending scene that draws
 
 ## inbox/
 
-Images or clips made elsewhere (manual handoff, or another tool) go in `inbox/`. Show them with Remotion's `<Img src={staticFile("inbox/cat.png")} />` or `<OffthreadVideo src={staticFile("inbox/clip.mp4")} />`. Use 1080×1920 (or larger, same shape) for full-screen images, PNG or JPEG for images and MP4 (H.264) for clips. Hidden files (starting with `.`) are ignored.
+Images or clips made elsewhere (manual handoff, or another tool) go in `inbox/`. Show them with Remotion's `<Img src={staticFile("inbox/cat.png")} />` or `<OffthreadVideo src={staticFile("inbox/clip.mp4")} />`.
+
+What a file must be:
+
+| Kind | Files | Shape |
+|---|---|---|
+| image | `.png`, `.jpg`, `.jpeg`, `.webp` | 9:16 (portrait), at least 1080 wide |
+| clip | `.mp4` | H.264, 9:16 |
+| voice | `.wav`, `.mp3` | any length, with sound |
+
+The render reads only these. Hidden files (starting with `.`), folders and other types are left out.
+
+`inbox/voice.wav` or `inbox/voice.mp3` is the video's voice-over: `unfaced make` uses it instead of recording one (except for voice 08, text only), prepares it like a recorded voice and times its words with whisper. Record the approved script as written, so the captions match.
+
+### inbox/PROMPTS.md
+
+For manual handoff the agent writes what it needs into `inbox/PROMPTS.md`: one `## <file name>` heading per file, with the prompt under it (the beat it is for, the subject, the style and the mascot from its reference sheet, and "9:16 portrait"). The user makes the files with any service they have and drops them into `inbox/` under those names.
+
+```markdown
+# Prompts
+
+## kneading.png
+For beat b2. A ginger cat with a white chest kneading a fluffy blanket, side view, flat cartoon style with thick dark outlines and bright colours, plain cream background, 9:16 portrait.
+```
+
+`unfaced inbox <videoDir>` prints one line per file (`ok`, `problem` with what is wrong, `ignored`) and one `waiting` line per prompt whose file hasn't arrived, and exits 1 when a file can't be used as it is.
+
+`unfaced generate <videoDir>` makes the files PROMPTS.md asks for that aren't in `inbox/` yet, with the page's providers (`providers.images` for `.png`, `.jpg` and `.webp`, `providers.ai_clips` for `.mp4`; see `unfaced docs page`), fills and crops each to 1080×1920 (a `.webp` is kept as the provider made it, asked for at 9:16: the engine can read WebP but not write it), then prints the same lines as `unfaced inbox`. It never replaces a file already in `inbox/`. A file is downloaded only over https from the provider's own hosts, up to 50 MB for an image and 300 MB for a clip, and only if its first bytes show it is the image or clip its name says. Without a provider or its key, a file is left for manual handoff and its line says so. When a provider fails, its line says why, the other files are still made, and the command exits 1. For stock photos (`images: pexels`) add a `Search: <a few words>` line under the prompt; without one, the prompt's subject is searched (its first sentence after "For beat ...", up to the first comma). Each photo's credit line goes into `inbox/CREDITS.md`, for the post's caption.

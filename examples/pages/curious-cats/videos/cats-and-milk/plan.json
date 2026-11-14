@@ -2,7 +2,7 @@
   "fps": 30,
   "width": 1080,
   "height": 1920,
-  "durationInFrames": 964,
+  "durationInFrames": 971,
   "style": 3,
   "captions": 1,
   "palette": [
@@ -42,11 +42,11 @@
         {
           "text": "cat",
           "startMs": 1280,
-          "endMs": 1540
+          "endMs": 1550
         },
         {
           "text": "a",
-          "startMs": 1540,
+          "startMs": 1550,
           "endMs": 1840
         },
         {
@@ -62,27 +62,27 @@
         {
           "text": "milk?",
           "startMs": 2340,
-          "endMs": 2400
+          "endMs": 2740
         },
         {
           "text": "You're",
-          "startMs": 2770,
-          "endMs": 3140
+          "startMs": 2760,
+          "endMs": 3160
         },
         {
           "text": "doing",
-          "startMs": 3140,
-          "endMs": 3170
+          "startMs": 3160,
+          "endMs": 3230
         },
         {
           "text": "it",
-          "startMs": 3170,
-          "endMs": 3425
+          "startMs": 3230,
+          "endMs": 3660
         },
         {
           "text": "wrong.",
-          "startMs": 3425,
-          "endMs": 3680
+          "startMs": 3660,
+          "endMs": 4000
         }
       ]
     },
@@ -95,108 +95,108 @@
       "words": [
         {
           "text": "Most",
-          "startMs": 4220,
-          "endMs": 4620
+          "startMs": 4200,
+          "endMs": 4640
         },
         {
           "text": "adult",
-          "startMs": 4620,
-          "endMs": 4930
+          "startMs": 4640,
+          "endMs": 5020
         },
         {
           "text": "cats",
-          "startMs": 4930,
+          "startMs": 5020,
           "endMs": 5120
         },
         {
           "text": "can't",
-          "startMs": 5550,
-          "endMs": 5940
+          "startMs": 5530,
+          "endMs": 5920
         },
         {
           "text": "digest",
-          "startMs": 5940,
+          "startMs": 5920,
           "endMs": 6620
         },
         {
           "text": "milk",
-          "startMs": 6910,
-          "endMs": 7040
+          "startMs": 6890,
+          "endMs": 7120
         },
         {
           "text": "properly.",
-          "startMs": 7040,
-          "endMs": 7160
+          "startMs": 7120,
+          "endMs": 7440
         },
         {
           "text": "For",
-          "startMs": 7160,
-          "endMs": 7660
+          "startMs": 7640,
+          "endMs": 7900
         },
         {
           "text": "many",
-          "startMs": 7660,
-          "endMs": 8120
+          "startMs": 7900,
+          "endMs": 7950
         },
         {
           "text": "of",
-          "startMs": 8120,
-          "endMs": 8320
+          "startMs": 7950,
+          "endMs": 8300
         },
         {
           "text": "them,",
-          "startMs": 8320,
-          "endMs": 8360
+          "startMs": 8300,
+          "endMs": 8680
         },
         {
           "text": "one",
-          "startMs": 8360,
-          "endMs": 8590
+          "startMs": 8680,
+          "endMs": 8960
         },
         {
           "text": "bowl",
-          "startMs": 8590,
-          "endMs": 8900
+          "startMs": 8960,
+          "endMs": 9360
         },
         {
           "text": "means",
-          "startMs": 8900,
-          "endMs": 9290
+          "startMs": 9360,
+          "endMs": 9400
         },
         {
           "text": "an",
-          "startMs": 9290,
-          "endMs": 9430
+          "startMs": 9400,
+          "endMs": 9800
         },
         {
           "text": "upset",
-          "startMs": 9430,
-          "endMs": 9850
+          "startMs": 9800,
+          "endMs": 10115
         },
         {
           "text": "stomach",
-          "startMs": 9850,
-          "endMs": 10380
+          "startMs": 10115,
+          "endMs": 10430
         },
         {
           "text": "a",
-          "startMs": 10380,
-          "endMs": 10450
+          "startMs": 10430,
+          "endMs": 10500
         },
         {
           "text": "few",
-          "startMs": 10450,
-          "endMs": 10670
+          "startMs": 10660,
+          "endMs": 10720
         },
         {
           "text": "hours",
-          "startMs": 10670,
-          "endMs": 11070
+          "startMs": 10720,
+          "endMs": 11090
         },
         {
           "text": "later.",
-          "startMs": 11070,
-          "endMs": 11930
+          "startMs": 11090,
+          "endMs": 11830
         }
       ]
     },
@@ -205,26 +205,26 @@
       "kind": "fact",
       "text": "Kittens make an enzyme called lactase to digest their mother's milk. But most cats lose it as they grow up.",
       "fromFrame": 357,
-      "durationInFrames": 205,
+      "durationInFrames": 211,
       "words": [
         {
           "text": "Kittens",
-          "startMs": 11930,
-          "endMs": 12500
+          "startMs": 11920,
+          "endMs": 12480
         },
         {
           "text": "make",
-          "startMs": 12500,
-          "endMs": 12720
+          "startMs": 12480,
+          "endMs": 12700
         },
         {
           "text": "an",
-          "startMs": 12720,
-          "endMs": 13140
+          "startMs": 12700,
+          "endMs": 13100
         },
         {
           "text": "enzyme",
-          "startMs": 13140,
+          "startMs": 13100,
           "endMs": 13600
         },
         {
@@ -234,78 +234,78 @@
         },
         {
           "text": "lactase",
-          "startMs": 14110,
-          "endMs": 14530
+          "startMs": 14070,
+          "endMs": 14240
         },
         {
           "text": "to",
-          "startMs": 14530,
-          "endMs": 14760
+          "startMs": 14520,
+          "endMs": 14740
         },
         {
           "text": "digest",
-          "startMs": 14760,
-          "endMs": 15300
+          "startMs": 14740,
+          "endMs": 14860
         },
         {
           "text": "their",
-          "startMs": 15300,
-          "endMs": 15580
+          "startMs": 14860,
+          "endMs": 15290
         },
         {
           "text": "mother's",
-          "startMs": 15580,
+          "startMs": 15290,
           "endMs": 16040
         },
         {
           "text": "milk.",
           "startMs": 16040,
-          "endMs": 16390
+          "endMs": 16400
         },
         {
           "text": "But",
-          "startMs": 16430,
-          "endMs": 16680
+          "startMs": 16400,
+          "endMs": 16660
         },
         {
           "text": "most",
-          "startMs": 16890,
+          "startMs": 16870,
           "endMs": 17000
         },
         {
           "text": "cats",
           "startMs": 17000,
-          "endMs": 17190
-        },
-        {
-          "text": "lose",
-          "startMs": 17190,
           "endMs": 17380
         },
         {
-          "text": "it",
+          "text": "lose",
           "startMs": 17380,
-          "endMs": 17530
+          "endMs": 17640
+        },
+        {
+          "text": "it",
+          "startMs": 17640,
+          "endMs": 17680
         },
         {
           "text": "as",
-          "startMs": 17530,
-          "endMs": 17700
+          "startMs": 17680,
+          "endMs": 17780
         },
         {
           "text": "they",
-          "startMs": 17700,
-          "endMs": 18260
+          "startMs": 17780,
+          "endMs": 18240
         },
         {
           "text": "grow",
-          "startMs": 18260,
-          "endMs": 18360
+          "startMs": 18240,
+          "endMs": 18580
         },
         {
           "text": "up.",
-          "startMs": 18360,
-          "endMs": 18590
+          "startMs": 18580,
+          "endMs": 18950
         }
       ]
     },
@@ -313,138 +313,138 @@
       "beatId": "b3",
       "kind": "fact",
       "text": "And here's the strangest part. Cats can't taste sweetness at all. Their sweet taste gene is broken, so the sugar in milk means nothing to them.",
-      "fromFrame": 562,
-      "durationInFrames": 269,
+      "fromFrame": 568,
+      "durationInFrames": 272,
       "words": [
         {
           "text": "And",
-          "startMs": 18750,
-          "endMs": 18980
+          "startMs": 18960,
+          "endMs": 19240
         },
         {
           "text": "here's",
-          "startMs": 18980,
-          "endMs": 19280
+          "startMs": 19240,
+          "endMs": 19540
         },
         {
           "text": "the",
-          "startMs": 19280,
-          "endMs": 19900
+          "startMs": 19540,
+          "endMs": 19880
         },
         {
           "text": "strangest",
-          "startMs": 19900,
-          "endMs": 20480
+          "startMs": 19880,
+          "endMs": 20440
         },
         {
           "text": "part.",
-          "startMs": 20480,
-          "endMs": 20970
+          "startMs": 20440,
+          "endMs": 20940
         },
         {
           "text": "Cats",
-          "startMs": 20970,
-          "endMs": 21160
+          "startMs": 20940,
+          "endMs": 21100
         },
         {
           "text": "can't",
-          "startMs": 21160,
-          "endMs": 21470
+          "startMs": 21100,
+          "endMs": 21480
         },
         {
           "text": "taste",
-          "startMs": 21640,
-          "endMs": 22120
+          "startMs": 21610,
+          "endMs": 22090
         },
         {
           "text": "sweetness",
-          "startMs": 22120,
-          "endMs": 22570
+          "startMs": 22090,
+          "endMs": 22550
         },
         {
           "text": "at",
-          "startMs": 22570,
-          "endMs": 22835
+          "startMs": 22550,
+          "endMs": 22920
         },
         {
           "text": "all.",
-          "startMs": 22835,
-          "endMs": 23000
+          "startMs": 22920,
+          "endMs": 23350
         },
         {
           "text": "Their",
-          "startMs": 23380,
-          "endMs": 23740
+          "startMs": 23350,
+          "endMs": 23700
         },
         {
           "text": "sweet",
-          "startMs": 23740,
-          "endMs": 23940
+          "startMs": 23700,
+          "endMs": 23910
         },
         {
           "text": "taste",
-          "startMs": 23940,
-          "endMs": 24260
+          "startMs": 23910,
+          "endMs": 24420
         },
         {
           "text": "gene",
-          "startMs": 24260,
-          "endMs": 24480
+          "startMs": 24420,
+          "endMs": 24530
         },
         {
           "text": "is",
-          "startMs": 24480,
-          "endMs": 24790
+          "startMs": 24530,
+          "endMs": 25040
         },
         {
           "text": "broken,",
-          "startMs": 24790,
-          "endMs": 25100
+          "startMs": 25040,
+          "endMs": 25230
         },
         {
           "text": "so",
-          "startMs": 25100,
-          "endMs": 25250
+          "startMs": 25230,
+          "endMs": 25370
         },
         {
           "text": "the",
-          "startMs": 25250,
-          "endMs": 25500
+          "startMs": 25370,
+          "endMs": 25900
         },
         {
           "text": "sugar",
-          "startMs": 25500,
-          "endMs": 25870
+          "startMs": 25900,
+          "endMs": 25930
         },
         {
           "text": "in",
-          "startMs": 25870,
-          "endMs": 26020
+          "startMs": 25930,
+          "endMs": 26070
         },
         {
           "text": "milk",
-          "startMs": 26020,
-          "endMs": 26330
+          "startMs": 26070,
+          "endMs": 26350
         },
         {
           "text": "means",
-          "startMs": 26650,
-          "endMs": 27220
+          "startMs": 26630,
+          "endMs": 27080
         },
         {
           "text": "nothing",
-          "startMs": 27220,
-          "endMs": 27270
+          "startMs": 27080,
+          "endMs": 27200
         },
         {
           "text": "to",
-          "startMs": 27270,
-          "endMs": 27510
+          "startMs": 27200,
+          "endMs": 27340
         },
         {
           "text": "them.",
-          "startMs": 27510,
-          "endMs": 27730
+          "startMs": 27340,
+          "endMs": 28020
         }
       ]
     },
@@ -452,53 +452,53 @@
       "beatId": "ending",
       "kind": "outro",
       "text": "Give them water instead. Your carpet will thank you.",
-      "fromFrame": 831,
-      "durationInFrames": 133,
+      "fromFrame": 840,
+      "durationInFrames": 131,
       "words": [
         {
           "text": "Give",
-          "startMs": 27730,
-          "endMs": 28040
+          "startMs": 28020,
+          "endMs": 28380
         },
         {
           "text": "them",
-          "startMs": 28040,
-          "endMs": 28350
-        },
-        {
-          "text": "water",
-          "startMs": 28350,
+          "startMs": 28380,
           "endMs": 28740
         },
         {
-          "text": "instead.",
+          "text": "water",
           "startMs": 28740,
-          "endMs": 29210
+          "endMs": 29190
+        },
+        {
+          "text": "instead.",
+          "startMs": 29190,
+          "endMs": 30040
         },
         {
           "text": "Your",
-          "startMs": 29210,
-          "endMs": 30070
+          "startMs": 30040,
+          "endMs": 30560
         },
         {
           "text": "carpet",
-          "startMs": 30070,
-          "endMs": 30890
+          "startMs": 30560,
+          "endMs": 30860
         },
         {
           "text": "will",
-          "startMs": 30890,
+          "startMs": 30860,
           "endMs": 31200
         },
         {
           "text": "thank",
           "startMs": 31200,
-          "endMs": 31375
+          "endMs": 31520
         },
         {
           "text": "you.",
-          "startMs": 31375,
-          "endMs": 31540
+          "startMs": 31520,
+          "endMs": 31730
         }
       ]
     }

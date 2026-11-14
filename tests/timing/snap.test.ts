@@ -19,6 +19,12 @@ describe("snapToPauses", () => {
     expect(snapToPauses([w("so", 28500, 28700), w("it", 28840, 29000)], [pause(28720, 28890)])).toEqual([w("so", 28500, 28700), w("it", 28890, 29000)]);
   });
 
+  it("starts a different word after each pause, in order, when whisper put a word before the pause it follows", () => {
+    // "...the jaguar. | up | to about": whisper ends "up" at 4850, inside the pause the voice takes until 4860.
+    const words = [w("Jaguar", 4360, 4580), w("up", 4580, 4850), w("to", 5050, 5360), w("about", 5360, 5440)];
+    expect(snapToPauses(words, [pause(4680, 4860), pause(4940, 5050)])).toEqual([w("Jaguar", 4360, 4580), w("up", 4860, 4870), w("to", 5050, 5360), w("about", 5360, 5440)]);
+  });
+
   it("ignores a pause with no word starting within 800 ms of its end", () => {
     const words = [w("Cats", 1000, 1300)];
     expect(snapToPauses(words, [pause(0, 100)])).toEqual(words);

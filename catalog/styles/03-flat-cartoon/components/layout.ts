@@ -2,6 +2,7 @@
 // draw exactly these boxes, and checks call this without rendering.
 import type { Rect } from "../../../../engine/remotion/core/safeZone.js";
 import type { TextBox } from "../../../../engine/remotion/styles/registry.js";
+import { listParts } from "../../../../engine/remotion/core/badges.js";
 import type { Scene } from "../../../../engine/src/plan/types.js";
 
 /** Outline width and hard-shadow offset, in pixels. */
@@ -19,59 +20,8 @@ const LIST_TOP = 300;
 const LIST_BOTTOM = 1120; // captions start at 1180
 const LIST_GAP = 28;
 
-/** Header line and items of a list beat ("- item" lines). */
-export function listParts(text: string): { header: string; items: string[] } {
-  const lines = text.split("\n");
-  return {
-    header: lines.filter((l) => !/^\s*-\s+/.test(l)).join(" ").trim(),
-    items: lines.filter((l) => /^\s*-\s+/.test(l)).map((l) => l.replace(/^\s*-\s+/, "").trim()),
-  };
-}
-
-/** The number on a fact's badge: its place among the video's fact scenes, or its beat number (b2 → 2) without them. */
-export function factNumber(scene: Scene, scenes?: Scene[]): number {
-  const facts = scenes?.filter((s) => s.kind === "fact") ?? [];
-  const place = facts.findIndex((s) => s.beatId === scene.beatId);
-  return place >= 0 ? place + 1 : Number(/^b(\d+)$/.exec(scene.beatId)?.[1] ?? 1);
-}
-
-/** Script types whose body beats are numbered items: 07 how it works (steps), 09 did you know (facts); 02 counts down. */
-const COUNTING_UP = new Set([7, 9]);
-const COUNTDOWN = 2;
-
-/**
- * What a fact's badge shows: its number when the script type numbers its beats (counting
- * down for a countdown), nothing for other script types (the badge holds a star instead).
- */
-export function factBadge(scene: Scene, scenes: Scene[], scriptType: number | undefined): string | undefined {
-  const n = factNumber(scene, scenes);
-  if (scriptType === COUNTDOWN) return String(scenes.filter((s) => s.kind === "fact").length + 1 - n);
-  return scriptType === undefined || COUNTING_UP.has(scriptType) ? String(n) : undefined;
-}
-
-/**
- * The largest font size (step 2 px) at which `text` should fit `box` when wrapped,
- * estimating Fredoka Bold at ~0.6 em per character.
- */
-export function fitFontSize(text: string, box: { w: number; h: number }, max: number, min: number): number {
-  const words = text.split(/\s+/).filter(Boolean);
-  for (let size = max; size > min; size -= 2) {
-    const charW = size * 0.6;
-    let lines = 1;
-    let used = 0;
-    for (const word of words) {
-      const width = (word.length + 1) * charW;
-      if (used > 0 && used + width > box.w) {
-        lines++;
-        used = 0;
-      }
-      used += width;
-    }
-    const widest = Math.max(...words.map((wd) => wd.length * charW));
-    if (lines * size * 1.15 <= box.h && widest <= box.w) return size;
-  }
-  return min;
-}
+export { factBadge, factNumber, listParts } from "../../../../engine/remotion/core/badges.js";
+export { fitFontSize } from "../../../../engine/remotion/core/fit.js";
 
 export function layout(scene: Scene, _palette: string[]): TextBox[] {
   switch (scene.kind) {

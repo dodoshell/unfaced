@@ -1,0 +1,19 @@
+# A sample page: little stories behind everyday Italian words and things, in Italian.
+# Very different from the other two: watercolour, a warm voice, a quiet lower third,
+# lo-fi music and endings that ask the viewer something.
+name: Piccola Storia
+language: it
+niche: le piccole storie dietro parole, oggetti e abitudini di tutti i giorni
+style: 11              # Watercolour
+script: [3, 5, 10]     # Myth or fact, Story in 60 seconds, Mini story
+hook: auto
+voice: 6               # Warm friendly
+captions: 4            # Minimal lower third
+music: 3               # Lo-fi
+ending: [3, 6]         # Comment question or Callback to the hook
+duration: 45-60
+mascot: "Rossella, a red fox in a green hat"
+providers:
+  voice: free
+  ai_clips: none
+  images: none

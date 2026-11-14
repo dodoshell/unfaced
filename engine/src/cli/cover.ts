@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import type { VideoPlan } from "../plan/types.js";
 import { ownScenes } from "../render/ownScenes.js";
-import { renderStillAt } from "../render/renderVideo.js";
+import { closeRenders, renderStillAt } from "../render/renderVideo.js";
 
 /** The cover's frame: `atSec` if given (kept inside the video), else one second into the hook, when its title is on screen. */
 export function coverFrame(plan: VideoPlan, atSec?: number): number {
@@ -23,6 +23,10 @@ export async function makeCover(videoDir: string, atSec?: number, render: typeof
   const still: VideoPlan = { ...plan, scenes: plan.scenes.map((s) => ({ ...s, words: [] })) };
   const scenes = ownScenes(dir, plan.scenes.map((s) => s.beatId), log);
   const out = join(dir, "cover.png");
-  await render(still, coverFrame(plan, atSec), out, { assetsDir: dir, ...(scenes ? { scenes } : {}) });
+  try {
+    await render(still, coverFrame(plan, atSec), out, { assetsDir: dir, ...(scenes ? { scenes } : {}) });
+  } finally {
+    await closeRenders();
+  }
   return out;
 }

@@ -1,0 +1,19 @@
+# A sample page: one big space idea a minute, in English.
+# Very different from curious-cats: neon look, a storyteller voice, suspense music,
+# cliffhangers and a full minute per video.
+name: Space in 60
+language: en
+niche: space and astronomy, one big idea a minute, told like a story
+style: 10              # Neon synthwave
+script: [4, 5, 8]      # What if, Story in 60 seconds, X vs Y
+hook: [2, 4, 13]       # Absurd number, Impossible image, Start at the climax
+voice: 3               # Storyteller
+captions: 5            # Outline pop
+music: 1               # Suspense
+ending: [2, 4]         # Cliffhanger or Follow for part 2
+duration: 60
+mascot: "Orbit, a small cyan bird in a pink scarf"
+providers:
+  voice: free
+  ai_clips: none
+  images: none

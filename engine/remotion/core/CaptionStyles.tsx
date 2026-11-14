@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import type { VideoPlan } from "../../src/plan/types.js";
 import { Captions } from "./Captions.js";
-import { captionPages, captionStyle, keywordIndex } from "./captionLayout.js";
+import { captionColours, captionPages, captionStyle, fitCaptionSize, keywordIndex } from "./captionLayout.js";
 import { CAPTION_FONT } from "./fonts.js";
 
 interface Shown {
@@ -27,15 +27,12 @@ function useShownPage(plan: VideoPlan): Shown | undefined {
   return page && { page, nowMs, age: frame - Math.floor((page.startMs / 1000) * fps), fps };
 }
 
-const colours = (plan: VideoPlan) => {
-  const [, accent = "#FF6B35", , highlight = accent, ink = "#000000"] = plan.palette;
-  return { accent, highlight, ink };
-};
+const colours = (plan: VideoPlan) => captionColours(plan.palette);
 
-/** The largest size up to `base` at which the longest word still fits the box width. */
-function fitSize(texts: string[], width: number, base: number, upper = false): number {
-  const longest = Math.max(...texts.map((t) => t.length), 1);
-  return Math.min(base, Math.floor(width / (longest * (upper ? 0.7 : 0.6))));
+/** The type size at which a phrase fits caption style `n`'s box, less the card's padding. */
+function fitSize(n: number, texts: string[], lineHeight: number, { padX = 0, padY = 0, upper = false } = {}): number {
+  const { box, fontSize } = captionStyle(n);
+  return fitCaptionSize(texts, box.w - 2 * padX, box.h - 2 * padY, fontSize, lineHeight, upper);
 }
 
 const Box: React.FC<{ n: number; children: React.ReactNode; align?: "center" | "flex-end"; style?: React.CSSProperties }> = ({ n, children, align = "center", style }) => {
@@ -58,7 +55,7 @@ const BoldCentre: React.FC<{ plan: VideoPlan }> = ({ plan }) => {
   const { ink } = colours(plan);
   const words = texts(shown.page);
   const pop = spring({ frame: shown.age, fps: shown.fps, config: { damping: 12, stiffness: 220, mass: 0.6 } });
-  const size = fitSize(words, captionStyle(2).box.w, captionStyle(2).fontSize, true);
+  const size = fitSize(2, words, 1.02, { upper: true });
   return (
     <Box n={2}>
       <div
@@ -96,7 +93,7 @@ const Typewriter: React.FC<{ plan: VideoPlan }> = ({ plan }) => {
   });
   const lastTyping = tokens.reduce((last, t, i) => (t.shown > 0 ? i : last), 0);
   const cursorOn = Math.floor(nowMs / 400) % 2 === 0;
-  const size = fitSize(texts(page), captionStyle(3).box.w - 80, captionStyle(3).fontSize);
+  const size = fitSize(3, texts(page), 1.2, { padX: 40, padY: 28 });
   return (
     <Box n={3}>
       <div style={{ backgroundColor: ink, borderRadius: 24, padding: "28px 40px", fontFamily: CAPTION_FONT, fontWeight: 600, fontSize: size, lineHeight: 1.2, color: "#FFFFFF", textAlign: "left", maxWidth: "100%" }}>
@@ -123,7 +120,7 @@ const LowerThird: React.FC<{ plan: VideoPlan }> = ({ plan }) => {
         style={{
           fontFamily: CAPTION_FONT,
           fontWeight: 500,
-          fontSize: captionStyle(4).fontSize,
+          fontSize: fitSize(4, texts(shown.page), 1.25, { padX: 22, padY: 10 }),
           lineHeight: 1.25,
           color: "#FFFFFF",
           backgroundColor: "rgba(0,0,0,0.55)",
@@ -144,7 +141,7 @@ const OutlinePop: React.FC<{ plan: VideoPlan }> = ({ plan }) => {
   if (!shown) return null;
   const { highlight, ink } = colours(plan);
   const { page, nowMs, fps } = shown;
-  const size = fitSize(texts(page), captionStyle(5).box.w, captionStyle(5).fontSize);
+  const size = fitSize(5, texts(page), 1.1);
   return (
     <Box n={5}>
       <div style={{ fontFamily: CAPTION_FONT, fontWeight: 700, fontSize: size, lineHeight: 1.1, textWrap: "balance" }}>
@@ -183,7 +180,7 @@ const HighlightKeyword: React.FC<{ plan: VideoPlan }> = ({ plan }) => {
   const words = texts(shown.page);
   const key = keywordIndex(words);
   const sweep = Math.min(1, shown.age / 8);
-  const size = fitSize(words, captionStyle(6).box.w, captionStyle(6).fontSize);
+  const size = fitSize(6, words, 1.25);
   return (
     <Box n={6}>
       <div style={{ fontFamily: CAPTION_FONT, fontWeight: 700, fontSize: size, lineHeight: 1.25, color: "#FFFFFF", WebkitTextStroke: `9px ${ink}`, paintOrder: "stroke fill", textWrap: "balance" }}>

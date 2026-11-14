@@ -1,7 +1,8 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { parseScript } from "../../engine/src/script/parseScript.js";
+import { Catalog } from "../../engine/src/catalog/catalog.js";
 
 const md = (body: string) => `---
 title: Why do cats purr?
@@ -108,12 +109,31 @@ describe("parseScript", () => {
     expect(() => parseScript(basic.replace("hook: 1", "hook: one"))).toThrow(/"hook" must be a catalog number/);
   });
 
-  it("parses the examples in the ready script-type files", () => {
-    for (const file of ["06-surprising-answer.md", "09-did-you-know.md"]) {
-      const text = readFileSync(join(import.meta.dirname, "..", "..", "catalog", "scripts", file), "utf8");
+  const root = join(import.meta.dirname, "..", "..");
+  const readyTypes = Catalog.load(join(root, "catalog")).list("script").filter((e) => e.status === "ready");
+
+  it("parses the examples in every ready script-type file, each of its own type", () => {
+    expect(readyTypes.length).toBeGreaterThan(0);
+    for (const entry of readyTypes) {
+      const text = readFileSync(join(root, "catalog", entry.path), "utf8");
       const examples = [...text.matchAll(/```markdown\n([\s\S]*?)```/g)].map((m) => m[1]!);
-      expect(examples, file).toHaveLength(2);
-      for (const example of examples) expect(parseScript(example).beats.length, file).toBeGreaterThanOrEqual(3);
+      expect(examples, entry.path).toHaveLength(2);
+      for (const example of examples) {
+        const script = parseScript(example);
+        expect(script.beats.length, entry.path).toBeGreaterThanOrEqual(3);
+        expect(script.scriptType, entry.path).toBe(entry.num);
+      }
+    }
+  });
+
+  it("has one complete example script per ready script type in examples/scripts", () => {
+    const files = readdirSync(join(root, "examples", "scripts")).filter((f) => f !== "README.md");
+    for (const entry of readyTypes) {
+      const file = files.find((f) => f.startsWith(`${String(entry.num).padStart(2, "0")}-`));
+      expect(file, `example for type ${entry.num}`).toBeDefined();
+      const script = parseScript(readFileSync(join(root, "examples", "scripts", file!), "utf8"));
+      expect(script.scriptType, file).toBe(entry.num);
+      expect(script.beats.length, file).toBeGreaterThanOrEqual(3);
     }
   });
 });

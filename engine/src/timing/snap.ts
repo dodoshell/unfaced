@@ -35,17 +35,26 @@ export function evenOutCrushedWords(words: WordTiming[]): WordTiming[] {
  * Whisper places the first word after a pause up to half a second off, often
  * stretching it back over the pause. For each pause the audio shows, the first word
  * that is mostly spoken after it is moved to start exactly where the voice starts
- * again, and the word before ends no later.
+ * again, and the word before ends no later. Each pause starts a different word, in
+ * order: when two pauses would start the same word, whisper put the word before it
+ * too early, and that one follows the earlier pause.
  */
 export function snapToPauses(words: WordTiming[], pauses: Pause[]): WordTiming[] {
   const out = words.map((w) => ({ ...w }));
-  for (const pause of pauses) {
-    const k = out.findIndex((w) => Math.max(0, w.endMs - pause.toMs) > Math.max(0, Math.min(w.endMs, pause.fromMs) - w.startMs));
+  const firstAfter = pauses.map((pause) => out.findIndex((w) => Math.max(0, w.endMs - pause.toMs) > Math.max(0, Math.min(w.endMs, pause.fromMs) - w.startMs)));
+  for (let i = firstAfter.length - 2; i >= 0; i--) {
+    const next = firstAfter[i + 1]!;
+    if (next >= 0 && firstAfter[i]! >= next) firstAfter[i] = next - 1;
+  }
+  pauses.forEach((pause, i) => {
+    const k = firstAfter[i]!;
     const word = out[k];
-    if (!word || Math.abs(word.startMs - pause.toMs) > MAX_SHIFT_MS) continue;
+    if (k < 0 || !word || Math.abs(word.startMs - pause.toMs) > MAX_SHIFT_MS) return;
+    const after = out[k + 1];
+    if (word.endMs < pause.toMs + MIN_WORD_MS && (!after || after.startMs >= pause.toMs + MIN_WORD_MS)) word.endMs = pause.toMs + MIN_WORD_MS;
     word.startMs = Math.min(pause.toMs, word.endMs - MIN_WORD_MS);
     const before = out[k - 1];
     if (before) before.endMs = Math.min(before.endMs, word.startMs);
-  }
+  });
   return out;
 }

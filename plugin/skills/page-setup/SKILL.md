@@ -15,7 +15,7 @@ Every command runs through this skill's launcher:
 node "${CLAUDE_SKILL_DIR}/scripts/unfaced.mjs" <command>
 ```
 
-`${CLAUDE_SKILL_DIR}` is the folder this SKILL.md is in. Below, `unfaced <command>` means that line. The first run outside a checkout of unfaced installs the library into `~/.unfaced/` (git and npm needed, a few minutes): tell the user before it starts.
+`${CLAUDE_SKILL_DIR}` is the folder this SKILL.md is in. Below, `unfaced <command>` means that line. The first run outside a checkout of unfaced installs the library into `~/.unfaced/` (git and npm needed, about 1 GB, several minutes): tell the user before it starts, and give that command a timeout of at least 10 minutes.
 
 ## New page
 
@@ -26,7 +26,7 @@ node "${CLAUDE_SKILL_DIR}/scripts/unfaced.mjs" <command>
    - Lists of 2–4 numbers where variety helps: `script`, `hook`, `ending`. Use `auto` only if the user wants maximum variety.
    - Only `ready` entries can be fixed numbers or list items; never one marked `(planned)`.
    - A language other than English or Italian: check the support table in `unfaced show voice`, and say which voices are best effort.
-4. **Show the picks** as a numbered table (field, number, name, one-line reason) and let the user change any of them before you write.
+4. **Show the picks** as a numbered table (field, number, name, one-line reason) and let the user change any of them before you write. If they said "you choose", don't wait: write the profile and show the table with it.
 5. **Write `page.yaml`** with a comment naming each choice (`style: 3   # Flat cartoon`).
 6. **Validate:** `unfaced page <pageDir>` must print the profile. Fix every error it reports.
 7. **Mascot**, if wanted: see below.
@@ -46,10 +46,12 @@ node "${CLAUDE_SKILL_DIR}/scripts/unfaced.mjs" <command>
 - New style or mascot colours: render the reference sheet again (`unfaced mascot <pageDir>`) and look at it.
 - Videos already made keep their files; tell the user that making a video again applies the new profile to it.
 - A one-off change for a single video ("style 12 this time") does not belong in `page.yaml`: it goes in that video's `script.md` (video-make skill).
+- A look, voice or anything else the catalogs don't have ("claymation", "anime"): say there is no such entry, offer the closest ones with their numbers, and change nothing until the user picks.
 
 ## Rules
 
 - Never put an API key in `page.yaml`. Paid providers read their keys from a `.env` file; `unfaced page` rejects a profile with a key in it.
+- A key the user pastes (in chat or into `page.yaml`) goes in `<pageDir>/.env` as `NAME=value`, with the name `unfaced docs page` gives for that provider (such as `ELEVENLABS_API_KEY`). Take it out of `page.yaml`, keep the provider setting, and tell the user to keep `.env` out of git (add it to `.gitignore`).
 - Everything is free by default: `providers` can be left out.
 - Never post anything anywhere. unfaced makes files; the user posts.
 
@@ -57,7 +59,8 @@ node "${CLAUDE_SKILL_DIR}/scripts/unfaced.mjs" <command>
 
 | Mistake | Instead |
 |---|---|
-| Fixing a planned entry (`style: 7` while 07 is planned) | Pick a ready one; tell the user the planned one is coming. |
+| Fixing an entry marked `(planned)` | Pick a ready one; tell the user the planned one is coming. |
+| Inventing an entry the catalog lacks, or switching to the nearest one unasked | Say it isn't in the catalog; offer the closest numbers and let the user pick. |
 | `auto` everywhere | Fixed style, voice and captions; lists for script, hook and ending. |
 | A list with one number (`style: [3]`) | Write the number (`style: 3`). |
 | Writing the mascot only in `page.yaml` | The character is `brand/mascot/mascot.json`; `page.yaml` only describes it. |

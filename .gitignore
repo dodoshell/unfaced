@@ -2,6 +2,7 @@ node_modules/
 .superpowers/
 .env
 **/out/
-examples/**/videos/**/*.mp4
-examples/**/videos/**/*.wav
+examples/**/*.mp4
+examples/**/*.wav
 examples/**/videos/**/frames/
+evals/results/

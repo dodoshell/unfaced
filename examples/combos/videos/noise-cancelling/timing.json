@@ -1,0 +1,357 @@
+{
+  "hash": "91313ccd49d952f9ebd3757f1f165d07713d5b6039cd6f2e321a8b2e4451fe4e",
+  "provider": "kokoro",
+  "durationSec": 27.192916666666665,
+  "words": [
+    {
+      "text": "Hours",
+      "startMs": 300,
+      "endMs": 840
+    },
+    {
+      "text": "of",
+      "startMs": 1030,
+      "endMs": 1140
+    },
+    {
+      "text": "engine",
+      "startMs": 1140,
+      "endMs": 1840
+    },
+    {
+      "text": "drone,",
+      "startMs": 1840,
+      "endMs": 2390
+    },
+    {
+      "text": "headphones",
+      "startMs": 2390,
+      "endMs": 3200
+    },
+    {
+      "text": "on,",
+      "startMs": 3200,
+      "endMs": 3540
+    },
+    {
+      "text": "and",
+      "startMs": 3540,
+      "endMs": 3690
+    },
+    {
+      "text": "the",
+      "startMs": 3690,
+      "endMs": 3940
+    },
+    {
+      "text": "raw",
+      "startMs": 3940,
+      "endMs": 4190
+    },
+    {
+      "text": "vanishes,",
+      "startMs": 4190,
+      "endMs": 4940
+    },
+    {
+      "text": "a",
+      "startMs": 4940,
+      "endMs": 5280
+    },
+    {
+      "text": "tiny",
+      "startMs": 5280,
+      "endMs": 5860
+    },
+    {
+      "text": "microphone",
+      "startMs": 5860,
+      "endMs": 6400
+    },
+    {
+      "text": "on",
+      "startMs": 6450,
+      "endMs": 6600
+    },
+    {
+      "text": "the",
+      "startMs": 6600,
+      "endMs": 6820
+    },
+    {
+      "text": "outside",
+      "startMs": 6820,
+      "endMs": 7200
+    },
+    {
+      "text": "of",
+      "startMs": 7200,
+      "endMs": 7540
+    },
+    {
+      "text": "each",
+      "startMs": 7540,
+      "endMs": 7760
+    },
+    {
+      "text": "ear",
+      "startMs": 7760,
+      "endMs": 8080
+    },
+    {
+      "text": "cup",
+      "startMs": 8260,
+      "endMs": 8380
+    },
+    {
+      "text": "listens",
+      "startMs": 8380,
+      "endMs": 8650
+    },
+    {
+      "text": "to",
+      "startMs": 8650,
+      "endMs": 8940
+    },
+    {
+      "text": "the",
+      "startMs": 8940,
+      "endMs": 9200
+    },
+    {
+      "text": "noise",
+      "startMs": 9200,
+      "endMs": 9620
+    },
+    {
+      "text": "around",
+      "startMs": 9620,
+      "endMs": 9920
+    },
+    {
+      "text": "you,",
+      "startMs": 9920,
+      "endMs": 10210
+    },
+    {
+      "text": "a",
+      "startMs": 10210,
+      "endMs": 10460
+    },
+    {
+      "text": "chip",
+      "startMs": 10460,
+      "endMs": 10680
+    },
+    {
+      "text": "flips",
+      "startMs": 10680,
+      "endMs": 11080
+    },
+    {
+      "text": "that",
+      "startMs": 11080,
+      "endMs": 11440
+    },
+    {
+      "text": "sound",
+      "startMs": 11440,
+      "endMs": 11820
+    },
+    {
+      "text": "wave",
+      "startMs": 11820,
+      "endMs": 12200
+    },
+    {
+      "text": "upside",
+      "startMs": 12200,
+      "endMs": 12760
+    },
+    {
+      "text": "down,",
+      "startMs": 12760,
+      "endMs": 13200
+    },
+    {
+      "text": "making",
+      "startMs": 13200,
+      "endMs": 13470
+    },
+    {
+      "text": "its",
+      "startMs": 13470,
+      "endMs": 13780
+    },
+    {
+      "text": "exact",
+      "startMs": 14020,
+      "endMs": 14240
+    },
+    {
+      "text": "opposite",
+      "startMs": 14240,
+      "endMs": 14650
+    },
+    {
+      "text": "called",
+      "startMs": 14650,
+      "endMs": 15210
+    },
+    {
+      "text": "anti-noise.",
+      "startMs": 15210,
+      "endMs": 16080
+    },
+    {
+      "text": "The",
+      "startMs": 16080,
+      "endMs": 16440
+    },
+    {
+      "text": "speaker",
+      "startMs": 16440,
+      "endMs": 16840
+    },
+    {
+      "text": "plays",
+      "startMs": 16840,
+      "endMs": 17100
+    },
+    {
+      "text": "the",
+      "startMs": 17100,
+      "endMs": 17280
+    },
+    {
+      "text": "anti-noise",
+      "startMs": 17280,
+      "endMs": 17870
+    },
+    {
+      "text": "with",
+      "startMs": 17870,
+      "endMs": 18180
+    },
+    {
+      "text": "your",
+      "startMs": 18180,
+      "endMs": 18410
+    },
+    {
+      "text": "music.",
+      "startMs": 18410,
+      "endMs": 19190
+    },
+    {
+      "text": "Each",
+      "startMs": 19190,
+      "endMs": 19600
+    },
+    {
+      "text": "peak",
+      "startMs": 19600,
+      "endMs": 19660
+    },
+    {
+      "text": "meets",
+      "startMs": 19660,
+      "endMs": 20140
+    },
+    {
+      "text": "a",
+      "startMs": 20140,
+      "endMs": 20380
+    },
+    {
+      "text": "dip",
+      "startMs": 20380,
+      "endMs": 20410
+    },
+    {
+      "text": "and",
+      "startMs": 20670,
+      "endMs": 20840
+    },
+    {
+      "text": "they",
+      "startMs": 20840,
+      "endMs": 21100
+    },
+    {
+      "text": "cancel",
+      "startMs": 21100,
+      "endMs": 21580
+    },
+    {
+      "text": "out,",
+      "startMs": 21580,
+      "endMs": 22030
+    },
+    {
+      "text": "so",
+      "startMs": 22040,
+      "endMs": 22280
+    },
+    {
+      "text": "the",
+      "startMs": 22280,
+      "endMs": 22520
+    },
+    {
+      "text": "raw",
+      "startMs": 22520,
+      "endMs": 22560
+    },
+    {
+      "text": "never",
+      "startMs": 23010,
+      "endMs": 23600
+    },
+    {
+      "text": "vanished.",
+      "startMs": 23600,
+      "endMs": 24220
+    },
+    {
+      "text": "Your",
+      "startMs": 24220,
+      "endMs": 24720
+    },
+    {
+      "text": "headphones",
+      "startMs": 24720,
+      "endMs": 25200
+    },
+    {
+      "text": "drowned",
+      "startMs": 25200,
+      "endMs": 25560
+    },
+    {
+      "text": "it",
+      "startMs": 25560,
+      "endMs": 25760
+    },
+    {
+      "text": "in",
+      "startMs": 25760,
+      "endMs": 25920
+    },
+    {
+      "text": "its",
+      "startMs": 25920,
+      "endMs": 26140
+    },
+    {
+      "text": "own",
+      "startMs": 26140,
+      "endMs": 26700
+    },
+    {
+      "text": "opposite.",
+      "startMs": 26700,
+      "endMs": 26970
+    }
+  ]
+}

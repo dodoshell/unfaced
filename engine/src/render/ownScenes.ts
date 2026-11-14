@@ -1,6 +1,7 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { join } from "node:path";
 import type { OwnBoxes } from "../check/overlap.js";
+import { readText } from "../text.js";
 
 /**
  * A video's own scene code, looked at before anything is made or rendered so a mistake in it
@@ -26,7 +27,7 @@ export function readOwnBoxes(file: string): OwnBoxes {
   if (!existsSync(file)) return {};
   let raw: unknown;
   try {
-    raw = JSON.parse(readFileSync(file, "utf8"));
+    raw = JSON.parse(readText(file));
   } catch (err) {
     throw new Error(`${file} is not valid JSON: ${(err as Error).message}`);
   }

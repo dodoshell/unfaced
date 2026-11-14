@@ -1,0 +1,17 @@
+# A sample page: short, surprising cat facts in English.
+# Every catalog field takes a number, a list of numbers (one is picked per video) or "auto".
+# See `npm run unfaced -- list <kind>` for the catalogs.
+name: Curious Cats
+language: en
+niche: surprising cat facts and behaviour, explained simply
+style: 3          # Flat cartoon
+script: [6, 9]    # Surprising answer or Did you know
+voice: 1          # Calm documentary
+captions: 1       # Word-by-word karaoke
+music: 8          # None (add a trending sound when posting)
+ending: 5         # Punchline
+duration: 30-45
+
+providers:
+  voice: elevenlabs
+  elevenlabs_api_key: sk_evalfake_8f2c41d07a9e4b3c1d5e6f708192a3b4

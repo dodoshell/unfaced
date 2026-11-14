@@ -15,6 +15,8 @@ const SPEECH_SHARE = 0.1;
 const FLOOR = 0.001;
 /** A pause at least this long before speech makes the speech an onset (a new phrase). */
 export const MIN_PAUSE_MS = 150;
+/** A sound shorter than this on its own is a click or a lip smack, not speech. */
+const MIN_SPEECH_MS = 30;
 
 /** Reads a 16-bit PCM WAV, mixed down to mono. A data size ffmpeg could not fill in (piped output) means "to the end". */
 export function parseWav(wav: Buffer): Pcm {
@@ -67,9 +69,12 @@ export function encodeWav({ samples, rate }: Pcm): Buffer {
   return wav;
 }
 
-/** Decodes a video's soundtrack as 16 kHz mono. */
+/**
+ * Decodes a video's soundtrack as mono at its own sample rate. Resampling lower would drop
+ * the hiss of an "s" or "f" (above 8 kHz at 16 kHz), and the checks would hear a pause there.
+ */
 export async function readSoundtrack(video: string): Promise<Pcm> {
-  const { stdout } = await runFfmpeg(["-v", "error", "-i", resolve(video), "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le", "-f", "wav", "-"]);
+  const { stdout } = await runFfmpeg(["-v", "error", "-i", resolve(video), "-vn", "-ac", "1", "-c:a", "pcm_s16le", "-f", "wav", "-"]);
   return parseWav(stdout);
 }
 
@@ -90,7 +95,15 @@ function speechSteps(pcm: Pcm): boolean[] {
   const sorted = [...level].sort((a, b) => a - b);
   const loud = sorted[Math.floor(sorted.length * 0.99)] ?? 0;
   const threshold = Math.max(loud * SPEECH_SHARE, FLOOR);
-  return level.map((l) => l > threshold);
+  const steps = level.map((l) => l > threshold);
+  const shortest = MIN_SPEECH_MS / HOP_MS;
+  for (let i = 0; i < steps.length; ) {
+    let end = i;
+    while (end < steps.length && steps[end] === steps[i]) end++;
+    if (steps[i] && end - i < shortest) steps.fill(false, i, end);
+    i = end;
+  }
+  return steps;
 }
 
 /** Quiet before speech: from the end of the speech before it (or the start of the audio) to where speech starts again. */

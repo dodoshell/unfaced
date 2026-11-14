@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CAPTION_STYLES, captionPages, captionStyle, keywordIndex } from "../../engine/remotion/core/captionLayout.js";
+import { CAPTION_STYLES, captionColours, captionPages, captionStyle, fitCaptionSize, keywordIndex } from "../../engine/remotion/core/captionLayout.js";
 import { isInsideSafeZone } from "../../engine/remotion/core/safeZone.js";
 import { placedBoxes } from "../../engine/src/check/overlap.js";
 import { shownWords } from "../../engine/src/check/sync.js";
@@ -16,6 +16,29 @@ describe("caption styles", () => {
     const catalog = Catalog.load(CATALOG_DIR);
     expect(Object.keys(CAPTION_STYLES).map(Number).sort()).toEqual(catalog.ids("captions"));
     for (const [n, style] of Object.entries(CAPTION_STYLES)) expect(isInsideSafeZone(style.box), `captions ${n}`).toBe(true);
+  });
+
+  it("keeps white caption text on a dark ink, even when the palette's ink is light like chalk", () => {
+    expect(captionColours(["#FFF4E0", "#FF6B35", "#2EC4B6", "#FFD23F", "#1B1B3A"]).ink).toBe("#1B1B3A");
+    // Chalkboard: the ink is chalk white, so the board's dark green carries the white text.
+    expect(captionColours(["#26392F", "#F4D774", "#F2A6B0", "#9DD1E3", "#F1EEE4"]).ink).toBe("#26392F");
+    expect(captionColours(["#FFFFFF", "#FFEEDD", "#EEFFEE", "#FFFFEE", "#F1EEE4"]).ink).toBe("#000000");
+    expect(captionColours([]).ink).toBe("#000000");
+  });
+
+  it("keeps a caption's type at its size while it fits the box", () => {
+    expect(fitCaptionSize(["one", "two", "three"], 880, 140, 46, 1.25)).toBe(46);
+  });
+
+  it("makes the type smaller until every line fits the box's height, not only its width", () => {
+    // Eight 12-letter words: at 46 px they wrap onto 4 lines, 230 px in a 140 px lower third; 37 px holds 3 lines.
+    const long = Array.from({ length: 8 }, () => "aaaaaaaaaaaa");
+    expect(fitCaptionSize(long, 880, 140, 46, 1.25)).toBe(37);
+  });
+
+  it("makes the type smaller until the longest word fits the width", () => {
+    expect(fitCaptionSize(["Supercalifragilistic"], 880, 330, 76, 1.15)).toBe(73);
+    expect(fitCaptionSize(["SUPERCALIFRAGILISTIC"], 880, 360, 104, 1.02, true)).toBe(62);
   });
 
   it("splits phrases to the style's word limit", () => {

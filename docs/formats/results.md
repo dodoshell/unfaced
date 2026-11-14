@@ -26,3 +26,13 @@
 - Numbers without separators (`12400`, not `12,400` or `12.400`), so they read the same in every language.
 - Other columns are allowed; `page-results` reads the ones it knows and keeps the rest.
 - A week after posting is a fair time to record the numbers; earlier numbers move a lot.
+
+## Comparing
+
+`unfaced results <pageDir>` reads the table, joins each row with what its video was made with (`videos/<video>/plan.json`, and the hook from `script.md`), and prints, for each platform:
+
+- the videos ranked by average watched (seconds become a share of the video's length), with shares + saves, follows and comments per view;
+- the median average watched of every choice that varies between the videos (hook, script type, ending, length, style, voice...), marking groups of fewer than 3 videos as thin;
+- the choices every video shares, which can't explain any difference.
+
+Its `## Check` section lists the cells it couldn't read, rows whose video isn't a folder in `videos/`, and numbers less than a week old. It exits 1 when there is something to fix.

@@ -15,7 +15,7 @@ Every command runs through this skill's launcher:
 node "${CLAUDE_SKILL_DIR}/scripts/unfaced.mjs" <command>
 ```
 
-`${CLAUDE_SKILL_DIR}` is the folder this SKILL.md is in. Below, `unfaced <command>` means that line. The first run outside a checkout of unfaced installs the library into `~/.unfaced/`: tell the user before it starts.
+`${CLAUDE_SKILL_DIR}` is the folder this SKILL.md is in. Below, `unfaced <command>` means that line. The first run outside a checkout of unfaced installs the library into `~/.unfaced/` (git and npm needed, about 1 GB, several minutes): tell the user before it starts, and give that command a timeout of at least 10 minutes.
 
 ## Steps
 
@@ -56,7 +56,7 @@ Sources: 1. ASPCA, "Why does my cat knead?"
 | Mon | 2026-11-16 | Idea 1 |
 ```
 
-`Status` moves through `idea`, `scripted`, `made`, `posted`; video-make and video-package update it.
+`Status` moves through `idea`, `scripted`, `made`, `posted`: video-make sets `scripted` when the user approves the script and `made` when it hands the video over; `posted` follows when the user says the video is out, or when page-results gets numbers for it.
 
 ## Common mistakes
 

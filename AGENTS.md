@@ -16,7 +16,7 @@ unfaced helps a person create and run faceless social media pages (Reels, TikTok
 | A file format (page, script, mascot, scenes, review, post, results) | `npm run unfaced -- docs <format>`, or `docs/formats/` |
 | One catalog entry and its rules | `npm run unfaced -- show <kind> <number>` |
 | See a complete page to copy | `examples/pages/curious-cats/` |
-| Add a style or a script type | `catalog/` (`CONTRIBUTING.md` is coming soon); a style's look and layout rules live in its `STYLE.md` |
+| Add a style, a script type or a hook | `CONTRIBUTING.md`; a style's look and layout rules live in its `STYLE.md` |
 | Design and plans | `docs/design/`, `docs/plans/` |
 
 Inside this repository the skills' launcher (`node plugin/launcher/unfaced.mjs <command>`) and `npm run unfaced -- <command>` run the same CLI.
@@ -31,9 +31,16 @@ Inside this repository the skills' launcher (`node plugin/launcher/unfaced.mjs <
 - Run the automatic checks again: `npm run unfaced -- check <videoDir>` (writes `check.json`)
 - Review frames: `npm run unfaced -- frames <videoDir> --every 1s`, then look at `<videoDir>/frames/`
 - Cover image: `npm run unfaced -- cover <videoDir> [--at 1.5]`
+- Files handed off into a video's `inbox/`: `npm run unfaced -- inbox <videoDir>`
+- Images and clips for `inbox/PROMPTS.md` from the page's providers: `npm run unfaced -- generate <videoDir>`
+- Compare a page's numbers (`results.md`) by platform and by choice: `npm run unfaced -- results <pageDir>`
+- Catalog gallery (static page with every entry and a poster per style): `npm run unfaced -- gallery`
+- Style demo (the same dog scene in every style): `npm run unfaced -- demo <style|all> [--frames]`; `all` also writes `docs/media/styles-grid.gif`
+- Hook reel (every hook's first example, spoken, each in the next style): `npm run unfaced -- reel hooks`
 - Mascot reference sheet: `npm run unfaced -- mascot <pageDir>`
 - Tests: `npm test` (slow tests that synthesize voice or render video: `UNFACED_SLOW=1 npm test`)
 - Types: `npm run typecheck`
+- Evals for the skills and the reviewer (real model calls that cost money): `claude plugin eval . --scaffold --trust-plugin --allow-tools Bash Write Edit`, or on native Windows `--tag files-only` without `Bash`; see `evals/README.md`
 
 ## Rules
 

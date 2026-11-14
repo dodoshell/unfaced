@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { encodeWav, parseWav, speechOnsets } from "../../engine/src/audio/speech.js";
 import { checkEdges } from "../../engine/src/check/sync.js";
-import { MOODS, renderMusic } from "../../engine/src/music/moods.js";
+import { MOODS, renderLoopingMusic, renderMusic } from "../../engine/src/music/moods.js";
 import { mixSoundtrack } from "../../engine/src/music/mix.js";
 import { RATE, tones } from "../audio/tones.js";
 
@@ -70,12 +70,19 @@ describe("mixSoundtrack", () => {
     expect(rms(textOnly, textOnly.length - 0.08 * RATE)).toBeLessThan(0.01 * rms(textOnly));
   });
 
-  it("keeps the music going to the very edges of a looping video, with only a click-free touch of fade", () => {
-    const loop = mixSoundtrack(renderMusic(4, 4, RATE), RATE, undefined, { loop: true });
-    expect(rms(loop, 0.05 * RATE, 0.25 * RATE)).toBeGreaterThan(0.3 * rms(loop));
-    expect(rms(loop, loop.length - 0.25 * RATE, loop.length - 0.05 * RATE)).toBeGreaterThan(0.3 * rms(loop));
-    expect(Math.abs(loop[0]!)).toBeLessThan(0.01);
-    expect(Math.abs(loop.at(-1)!)).toBeLessThan(0.01);
+  it("runs the end of a looping video's music into its start: no fade on either side, no jump", () => {
+    for (const mood of MOODS) {
+      const loop = mixSoundtrack(renderLoopingMusic(mood, 4, RATE), RATE, undefined, { loop: true });
+      expect(loop.length, `mood ${mood}`).toBe(4 * RATE);
+      // The song's own fade-in (up to 2 s) and fade-out (1 s) stay out of the loop.
+      expect(rms(loop, 0, 0.5 * RATE), `mood ${mood} start`).toBeGreaterThan(0.5 * rms(loop));
+      expect(rms(loop, loop.length - 0.5 * RATE), `mood ${mood} end`).toBeGreaterThan(0.5 * rms(loop));
+      expect(rms(loop, 0, 0.01 * RATE), `mood ${mood} first 10 ms`).toBeGreaterThan(0.1 * rms(loop));
+      // The last sample runs into the first like any two neighbours inside the track.
+      let step = 0;
+      for (let i = 1; i < loop.length; i++) step = Math.max(step, Math.abs(loop[i]! - loop[i - 1]!));
+      expect(Math.abs(loop[0]! - loop.at(-1)!), `mood ${mood} seam`).toBeLessThanOrEqual(step);
+    }
   });
 });
 

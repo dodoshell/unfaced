@@ -10,12 +10,31 @@ import { CATALOG_DIR } from "../../engine/src/paths.js";
 
 const catalog = Catalog.load(CATALOG_DIR);
 
+/** A fresh catalog in which style 7 is still planned, whatever the real one says by now. */
+function withPlannedStyle(): Catalog {
+  const fresh = Catalog.load(CATALOG_DIR);
+  fresh.get("style", 7).status = "planned";
+  return fresh;
+}
+
 describe("unfaced show", () => {
   it("prints one entry's own section of a shared catalog file", () => {
     const text = showText(catalog, "hook", 4);
     expect(text).toMatch(/^## 04 Impossible image/);
     expect(text).toContain("**Status:** ready");
     expect(text).not.toContain("## 05");
+  });
+
+  it("adds the rules every entry of the kind follows after the entry's own section", () => {
+    const hook = showText(catalog, "hook", 1);
+    expect(hook).toMatch(/^## 01 Shocking question/);
+    expect(hook).toContain("Rules for every hook:\n\n- Under 12 words");
+    expect(hook).toContain("Write it for the ear");
+    expect(hook).not.toContain("## 02");
+    expect(hook).not.toContain("Each hook below has three examples");
+    expect(showText(catalog, "ending", 5)).toContain("Rules for every ending:");
+    expect(showText(catalog, "duration", 2)).toContain("Pacing rules for every length:");
+    expect(showText(catalog, "voice", 1)).not.toMatch(/rules for every/i);
   });
 
   it("prints a whole catalog file, rules included, when no number is given", () => {
@@ -30,7 +49,7 @@ describe("unfaced show", () => {
   });
 
   it("says plainly when an entry is planned and has nothing to show yet", () => {
-    expect(showText(catalog, "style", 7)).toMatch(/07 Paper cut-out.*planned.*not available yet/s);
+    expect(showText(withPlannedStyle(), "style", 7)).toMatch(/07 Paper cut-out.*planned.*not available yet/s);
   });
 
   it("names the catalogs when the kind is wrong", () => {
@@ -72,7 +91,7 @@ describe("unfaced page", () => {
   });
 
   it("marks a fixed choice that is not ready yet", async () => {
-    const lines = await pageSummary(page("name: P\nlanguage: en\nniche: x\nstyle: 7\n"), catalog);
+    const lines = await pageSummary(page("name: P\nlanguage: en\nniche: x\nstyle: 7\n"), withPlannedStyle());
     expect(lines).toContain("style: 7 Paper cut-out (planned: not available yet)");
   });
 

@@ -89,7 +89,7 @@ function install(target) {
   }
   if (!moveInto(tmp, target)) process.exit(1);
   // The voice model, whisper and the render browser.
-  if (!cli(target, ["setup"])) say("setup did not finish; run `unfaced doctor` to see what is missing.");
+  if (cli(target, ["setup"]) !== 0) say("setup did not finish; run `unfaced doctor` to see what is missing.");
 }
 
 function findLibrary() {
@@ -107,11 +107,16 @@ function findLibrary() {
   return { lib: join(home, "lib", VERSION), installed: true };
 }
 
+/** Runs the library's CLI and returns its exit code; UNFACED_LAUNCHER lets its advice name this script. */
 function cli(lib, args) {
   const loader = pathToFileURL(join(lib, "node_modules", "tsx", "dist", "loader.mjs")).href;
-  const result = spawnSync(process.execPath, ["--import", loader, join(lib, "engine", "src", "cli.ts"), ...args], { stdio: "inherit" });
-  if (result.status !== 0) process.exitCode = result.status ?? 1;
-  return result.status === 0;
+  const env = { ...process.env, UNFACED_LAUNCHER: fileURLToPath(import.meta.url) };
+  return spawnSync(process.execPath, ["--import", loader, join(lib, "engine", "src", "cli.ts"), ...args], { stdio: "inherit", env }).status ?? 1;
+}
+
+if (Number(process.versions.node.split(".")[0]) < 22) {
+  say(`needs Node 22 or newer; this is Node ${process.versions.node}. Install it from https://nodejs.org and run this command again.`);
+  process.exit(1);
 }
 
 const args = process.argv.slice(2);
@@ -126,5 +131,5 @@ if (args[0] === "where") {
     say(`the unfaced library at ${lib} has no dependencies installed; run \`npm run setup\` in that folder.`);
     process.exit(1);
   }
-  cli(lib, args);
+  process.exitCode = cli(lib, args);
 }

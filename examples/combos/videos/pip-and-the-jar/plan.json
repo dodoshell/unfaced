@@ -1,0 +1,478 @@
+{
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationInFrames": 822,
+  "style": 8,
+  "captions": 5,
+  "palette": [
+    "#F1E2BF",
+    "#D7312A",
+    "#2C78BA",
+    "#F6C833",
+    "#1D1712"
+  ],
+  "audioSrc": "soundtrack.wav",
+  "voice": 3,
+  "scriptType": 10,
+  "ending": 1,
+  "mascot": {
+    "name": "Pip",
+    "rig": {
+      "species": "dog",
+      "build": "quadruped",
+      "body": "long",
+      "head": "round",
+      "ears": "floppy",
+      "tail": "short",
+      "hair": "none",
+      "snout": "long",
+      "pattern": "none",
+      "colours": {
+        "body": "#B9763C",
+        "belly": "#F3D9B1",
+        "accent": "#D62828"
+      },
+      "accessories": [
+        "collar"
+      ]
+    }
+  },
+  "scenes": [
+    {
+      "beatId": "hook",
+      "kind": "title",
+      "text": "Pip is halfway up the fridge, and the cookie jar is wobbling.",
+      "fromFrame": 0,
+      "durationInFrames": 113,
+      "words": [
+        {
+          "text": "Pip",
+          "startMs": 260,
+          "endMs": 300
+        },
+        {
+          "text": "is",
+          "startMs": 360,
+          "endMs": 780
+        },
+        {
+          "text": "halfway",
+          "startMs": 780,
+          "endMs": 1030
+        },
+        {
+          "text": "up",
+          "startMs": 1030,
+          "endMs": 1340
+        },
+        {
+          "text": "the",
+          "startMs": 1340,
+          "endMs": 1580
+        },
+        {
+          "text": "fridge,",
+          "startMs": 1580,
+          "endMs": 2120
+        },
+        {
+          "text": "and",
+          "startMs": 2120,
+          "endMs": 2280
+        },
+        {
+          "text": "the",
+          "startMs": 2280,
+          "endMs": 2460
+        },
+        {
+          "text": "cookie",
+          "startMs": 2460,
+          "endMs": 2740
+        },
+        {
+          "text": "jar",
+          "startMs": 2740,
+          "endMs": 2881
+        },
+        {
+          "text": "is",
+          "startMs": 2881,
+          "endMs": 3001
+        },
+        {
+          "text": "wobbling.",
+          "startMs": 3001,
+          "endMs": 3770
+        }
+      ]
+    },
+    {
+      "beatId": "b1",
+      "kind": "fact",
+      "text": "Pip is a small brown dog, and he wants one thing: that jar.",
+      "fromFrame": 113,
+      "durationInFrames": 127,
+      "words": [
+        {
+          "text": "Pip",
+          "startMs": 3770,
+          "endMs": 4140
+        },
+        {
+          "text": "is",
+          "startMs": 4140,
+          "endMs": 4340
+        },
+        {
+          "text": "a",
+          "startMs": 4340,
+          "endMs": 4440
+        },
+        {
+          "text": "small",
+          "startMs": 4440,
+          "endMs": 5320
+        },
+        {
+          "text": "brown",
+          "startMs": 5320,
+          "endMs": 5680
+        },
+        {
+          "text": "dog,",
+          "startMs": 5680,
+          "endMs": 6040
+        },
+        {
+          "text": "and",
+          "startMs": 6040,
+          "endMs": 6300
+        },
+        {
+          "text": "he",
+          "startMs": 6300,
+          "endMs": 6460
+        },
+        {
+          "text": "wants",
+          "startMs": 6460,
+          "endMs": 6720
+        },
+        {
+          "text": "one",
+          "startMs": 6720,
+          "endMs": 6940
+        },
+        {
+          "text": "thing:",
+          "startMs": 6940,
+          "endMs": 7290
+        },
+        {
+          "text": "that",
+          "startMs": 7290,
+          "endMs": 7540
+        },
+        {
+          "text": "jar.",
+          "startMs": 7750,
+          "endMs": 8000
+        }
+      ]
+    },
+    {
+      "beatId": "b2",
+      "kind": "fact",
+      "text": "Every morning his owner lifts it higher, laces her running shoes, and leaves.",
+      "fromFrame": 240,
+      "durationInFrames": 144,
+      "words": [
+        {
+          "text": "Every",
+          "startMs": 8000,
+          "endMs": 8370
+        },
+        {
+          "text": "morning",
+          "startMs": 8370,
+          "endMs": 8810
+        },
+        {
+          "text": "his",
+          "startMs": 8810,
+          "endMs": 9340
+        },
+        {
+          "text": "owner",
+          "startMs": 9340,
+          "endMs": 9620
+        },
+        {
+          "text": "lifts",
+          "startMs": 9620,
+          "endMs": 9820
+        },
+        {
+          "text": "it",
+          "startMs": 9820,
+          "endMs": 10100
+        },
+        {
+          "text": "higher,",
+          "startMs": 10100,
+          "endMs": 10400
+        },
+        {
+          "text": "laces",
+          "startMs": 10550,
+          "endMs": 10720
+        },
+        {
+          "text": "her",
+          "startMs": 10720,
+          "endMs": 11140
+        },
+        {
+          "text": "running",
+          "startMs": 11140,
+          "endMs": 11460
+        },
+        {
+          "text": "shoes,",
+          "startMs": 11460,
+          "endMs": 11880
+        },
+        {
+          "text": "and",
+          "startMs": 11880,
+          "endMs": 12040
+        },
+        {
+          "text": "leaves.",
+          "startMs": 12040,
+          "endMs": 12800
+        }
+      ]
+    },
+    {
+      "beatId": "b3",
+      "kind": "fact",
+      "text": "So Pip stacks a cushion, a chair and the laundry basket, and climbs.",
+      "fromFrame": 384,
+      "durationInFrames": 144,
+      "words": [
+        {
+          "text": "So",
+          "startMs": 12800,
+          "endMs": 12960
+        },
+        {
+          "text": "Pip",
+          "startMs": 13110,
+          "endMs": 13366
+        },
+        {
+          "text": "stacks",
+          "startMs": 13366,
+          "endMs": 13621
+        },
+        {
+          "text": "a",
+          "startMs": 13621,
+          "endMs": 14100
+        },
+        {
+          "text": "cushion,",
+          "startMs": 14100,
+          "endMs": 14400
+        },
+        {
+          "text": "a",
+          "startMs": 14550,
+          "endMs": 14700
+        },
+        {
+          "text": "chair",
+          "startMs": 14700,
+          "endMs": 14850
+        },
+        {
+          "text": "and",
+          "startMs": 14850,
+          "endMs": 15240
+        },
+        {
+          "text": "the",
+          "startMs": 15240,
+          "endMs": 15420
+        },
+        {
+          "text": "laundry",
+          "startMs": 15420,
+          "endMs": 15940
+        },
+        {
+          "text": "basket,",
+          "startMs": 15940,
+          "endMs": 16310
+        },
+        {
+          "text": "and",
+          "startMs": 16310,
+          "endMs": 16520
+        },
+        {
+          "text": "climbs.",
+          "startMs": 17100,
+          "endMs": 17240
+        }
+      ]
+    },
+    {
+      "beatId": "b4",
+      "kind": "fact",
+      "text": "The jar is empty. The cookies left an hour ago, in her running pocket.",
+      "fromFrame": 528,
+      "durationInFrames": 151,
+      "words": [
+        {
+          "text": "The",
+          "startMs": 17620,
+          "endMs": 17860
+        },
+        {
+          "text": "jar",
+          "startMs": 17860,
+          "endMs": 17900
+        },
+        {
+          "text": "is",
+          "startMs": 17900,
+          "endMs": 18500
+        },
+        {
+          "text": "empty.",
+          "startMs": 18500,
+          "endMs": 19040
+        },
+        {
+          "text": "The",
+          "startMs": 19260,
+          "endMs": 19540
+        },
+        {
+          "text": "cookies",
+          "startMs": 19540,
+          "endMs": 19880
+        },
+        {
+          "text": "left",
+          "startMs": 19880,
+          "endMs": 20080
+        },
+        {
+          "text": "an",
+          "startMs": 20080,
+          "endMs": 20280
+        },
+        {
+          "text": "hour",
+          "startMs": 20280,
+          "endMs": 20580
+        },
+        {
+          "text": "ago,",
+          "startMs": 20580,
+          "endMs": 20720
+        },
+        {
+          "text": "in",
+          "startMs": 20870,
+          "endMs": 21020
+        },
+        {
+          "text": "her",
+          "startMs": 21020,
+          "endMs": 21280
+        },
+        {
+          "text": "running",
+          "startMs": 21280,
+          "endMs": 21600
+        },
+        {
+          "text": "pocket.",
+          "startMs": 22330,
+          "endMs": 22650
+        }
+      ]
+    },
+    {
+      "beatId": "ending",
+      "kind": "outro",
+      "text": "Tomorrow there's a new jar, higher than ever. And once again,",
+      "fromFrame": 679,
+      "durationInFrames": 143,
+      "words": [
+        {
+          "text": "Tomorrow",
+          "startMs": 22650,
+          "endMs": 23240
+        },
+        {
+          "text": "there's",
+          "startMs": 23240,
+          "endMs": 23450
+        },
+        {
+          "text": "a",
+          "startMs": 23450,
+          "endMs": 23520
+        },
+        {
+          "text": "new",
+          "startMs": 23520,
+          "endMs": 23780
+        },
+        {
+          "text": "jar,",
+          "startMs": 24100,
+          "endMs": 24320
+        },
+        {
+          "text": "higher",
+          "startMs": 24320,
+          "endMs": 24580
+        },
+        {
+          "text": "than",
+          "startMs": 24580,
+          "endMs": 24860
+        },
+        {
+          "text": "ever.",
+          "startMs": 25140,
+          "endMs": 25440
+        },
+        {
+          "text": "And",
+          "startMs": 25820,
+          "endMs": 26120
+        },
+        {
+          "text": "once",
+          "startMs": 26120,
+          "endMs": 26520
+        },
+        {
+          "text": "again,",
+          "startMs": 26810,
+          "endMs": 27070
+        }
+      ]
+    }
+  ],
+  "music": 2
+}

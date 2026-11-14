@@ -18,7 +18,7 @@ The last line flows straight back into the first, so the video replays without a
 
 - Write it: an ending line that the hook completes. Read the ending and then the hook out loud: they should sound like one sentence.
 - Example: hook "Cats purr for a reason nobody expected." … ending "And that's exactly why…" → back to "Cats purr for a reason nobody expected."
-- What the video does: the voice-over gets a shorter tail, the last frames fade into the first frame (which already shows the hook), and the music runs to the cut instead of fading out.
+- What the video does: the voice-over gets a shorter tail, the last frames fade into the first frame (which already shows the hook), and the music runs through the cut into its own start, with no fade at either end.
 - Good for: short facts, 15–30 second videos, hook 05 unfinished sentence.
 - Avoid: videos over 45 seconds; the viewer no longer remembers how it started.
 
@@ -65,7 +65,7 @@ Promise a continuation in the next video, so viewers follow to see it.
 One short line that lands the video: funny, surprising or both. It reframes what the viewer just learned rather than repeating it.
 
 - Keep it under 15 words.
-- Put it on its own scene with nothing else on screen but the caption.
+- Give it the last scene to itself: no other words on screen but the caption.
 - Example: "So a polar bear is a black bear in a very clever coat."
 - Sign: none; the style's own last scene (an exclamation badge in style 03) carries it.
 - Good for: facts, humour, animals.

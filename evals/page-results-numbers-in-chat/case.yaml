@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: page-results-numbers-in-chat
+context:
+  scaffold_script: scaffold.sh

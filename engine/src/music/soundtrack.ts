@@ -4,7 +4,7 @@ import { encodeWav, readWavFile } from "../audio/speech.js";
 import { runFfmpeg } from "../ffmpeg.js";
 import { TARGET_LUFS } from "../voice/prepare.js";
 import { mixSoundtrack } from "./mix.js";
-import { renderMusic } from "./moods.js";
+import { renderLoopingMusic, renderMusic } from "./moods.js";
 
 /** Sample rate of a soundtrack without a voice-over. */
 const MUSIC_RATE = 44100;
@@ -22,7 +22,7 @@ export interface SoundtrackRequest {
   durationSec: number;
   /** The prepared voice-over, if the video has one. */
   voiceWav?: string;
-  /** The video loops (ending 01), so the music runs to the cut. */
+  /** The video loops, so the music runs to the cut and on into its start. */
   loop?: boolean;
 }
 
@@ -33,7 +33,8 @@ export interface SoundtrackRequest {
 export async function writeSoundtrack(videoDir: string, { mood, durationSec, voiceWav, loop = false }: SoundtrackRequest): Promise<string> {
   const voice = voiceWav ? readWavFile(voiceWav) : undefined;
   const rate = voice?.rate ?? MUSIC_RATE;
-  const samples = mixSoundtrack(renderMusic(mood, durationSec, rate), rate, voice, { loop });
+  const music = loop ? renderLoopingMusic(mood, durationSec, rate) : renderMusic(mood, durationSec, rate);
+  const samples = mixSoundtrack(music, rate, voice, { loop });
   const file = join(videoDir, SOUNDTRACK);
   writeFileSync(file, encodeWav({ samples, rate }));
   if (!voice) {

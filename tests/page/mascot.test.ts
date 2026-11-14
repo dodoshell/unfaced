@@ -34,6 +34,10 @@ describe("loadMascot", () => {
     expect(() => loadMascot(page({ name: "Rex", species: "dog", colours: { body: "brown" } }))).toThrow(/colours\.body/);
   });
 
+  it("reads a mascot.json saved with a byte order mark", () => {
+    expect(loadMascot(page(`﻿${JSON.stringify({ name: "Miso", species: "cat" })}`))?.name).toBe("Miso");
+  });
+
   it("explains invalid JSON", () => {
     expect(() => loadMascot(page("{ name: "))).toThrow(/mascot\.json is not valid JSON/);
   });

@@ -47,13 +47,17 @@ function stubs() {
   );
   const render = vi.fn<MakeDeps["render"]>(async (_plan, outPath) => writeFileSync(outPath, "mp4"));
   const check = vi.fn<MakeDeps["check"]>(async () => ({ pass: false, issues: [{ check: "clipping", atMs: 0, severity: "error", message: "True peak is -0.4 dBTP" }] }));
-  const prepareVoice = vi.fn<MakeDeps["prepareVoice"]>(async () => {});
+  const prepareVoice = vi.fn<MakeDeps["prepareVoice"]>(async () => 4);
   const mixMusic = vi.fn<MakeDeps["mixMusic"]>(async (dir) => {
     writeFileSync(join(dir, "soundtrack.wav"), "RIFF");
     return "soundtrack.wav";
   });
-  const deps: MakeDeps = { catalog: Catalog.load(CATALOG_DIR), voiceProvider: () => voice, prepareVoice, align, mixMusic, render, check, env: {}, log: () => {} };
-  return { deps, voice, synthesize, prepareVoice, align, mixMusic, render, check };
+  const importVoice = vi.fn<MakeDeps["importVoice"]>(async (_src, wavPath) => {
+    writeFileSync(wavPath, "RIFF");
+    return 3.2;
+  });
+  const deps: MakeDeps = { catalog: Catalog.load(CATALOG_DIR), voiceProvider: () => voice, prepareVoice, importVoice, align, mixMusic, render, check, env: {}, log: () => {} };
+  return { deps, voice, synthesize, prepareVoice, importVoice, align, mixMusic, render, check };
 }
 
 describe("make", () => {
@@ -131,6 +135,15 @@ describe("make", () => {
     expect(prepareVoice.mock.invocationCallOrder[0]).toBeLessThan(align.mock.invocationCallOrder[0]!);
   });
 
+  it("times the video by the prepared voice-over, lead-in included, so the end never cuts the last word", async () => {
+    const video = setup();
+    const { deps, prepareVoice } = stubs();
+    prepareVoice.mockResolvedValueOnce(4.25);
+    const { plan } = await makeVideo(video, deps);
+    expect(JSON.parse(readFileSync(join(video, "timing.json"), "utf8"))).toMatchObject({ durationSec: 4.25 });
+    expect(plan.durationInFrames).toBe(Math.ceil(4.25 * 30) + 15);
+  });
+
   it("runs the automatic checks on the finished video and logs their summary", async () => {
     const video = setup();
     const { deps, render, check } = stubs();
@@ -174,6 +187,19 @@ describe("make", () => {
     voice.describeVoice = () => ({ id: "speaker-a@1" });
     await makeVideo(video, deps);
     voice.describeVoice = () => ({ id: "speaker-b@1" });
+    await makeVideo(video, deps);
+    expect(synthesize).toHaveBeenCalledTimes(2);
+  });
+
+  it("tries the page's voice again next time when another voice stood in for it", async () => {
+    const video = setup();
+    const { deps, synthesize } = stubs();
+    synthesize.mockImplementationOnce(async (_text, { outPath }) => {
+      writeFileSync(outPath, "RIFF");
+      return { wavPath: outPath, durationSec: 3, provider: "kokoro" };
+    });
+    await makeVideo(video, deps);
+    await makeVideo(video, deps);
     await makeVideo(video, deps);
     expect(synthesize).toHaveBeenCalledTimes(2);
   });
@@ -256,7 +282,30 @@ describe("make", () => {
   it("refuses a script choice that is not ready yet", async () => {
     const video = setup();
     writeFileSync(join(video, "script.md"), SCRIPT.replace("ending: 5", "ending: 5\nstyle: 7"));
-    await expect(makeVideo(video, stubs().deps)).rejects.toThrow(/style 7 .*not ready yet/);
+    const { deps } = stubs();
+    // Style 7 stands in for a style that isn't built yet, whatever the real catalog says by now.
+    deps.catalog.get("style", 7).status = "planned";
+    await expect(makeVideo(video, deps)).rejects.toThrow(/style 7 .*not ready yet/);
+  });
+
+  it("refuses a script type, hook or ending that is not in the catalog, before recording any voice", async () => {
+    for (const [line, kind] of [["script_type: 9", "script"], ["hook: 1", "hook"], ["ending: 5", "ending"]] as const) {
+      const video = setup();
+      writeFileSync(join(video, "script.md"), SCRIPT.replace(line, `${line.split(":")[0]}: 51`));
+      const { deps, synthesize } = stubs();
+      await expect(makeVideo(video, deps), kind).rejects.toThrow(new RegExp(`script\\.md: ${kind} 51 does not exist; choose a number from 1–`));
+      expect(synthesize).not.toHaveBeenCalled();
+    }
+  });
+
+  it("refuses a script whose ending is not ready yet", async () => {
+    const video = setup();
+    const { deps } = stubs();
+    const catalogDir = mkdtempSync(join(tmpdir(), "unfaced catalog "));
+    const raw = JSON.parse(readFileSync(join(CATALOG_DIR, "catalog.json"), "utf8"));
+    raw.ending.find((e: { num: number }) => e.num === 5).status = "planned";
+    writeFileSync(join(catalogDir, "catalog.json"), JSON.stringify(raw));
+    await expect(makeVideo(video, { ...deps, catalog: Catalog.load(catalogDir) })).rejects.toThrow(/script\.md: ending 5 .*is not ready yet.*unfaced list ending/);
   });
 
   it("stops with advice when whisper hears no words, without keeping those timings", async () => {
@@ -294,7 +343,62 @@ describe("make", () => {
     const log = vi.fn();
     await makeVideo(video, { ...deps, log });
     const plan = JSON.parse(readFileSync(join(video, "plan.json"), "utf8")) as VideoPlan;
-    expect(plan.style).toBe(3);
-    expect(log.mock.calls.flat().join("\n")).toMatch(/style.*auto.*3/i);
+    const firstReady = Catalog.load(CATALOG_DIR).list("style").find((e) => e.status === "ready")!.num;
+    expect(plan.style).toBe(firstReady);
+    expect(log.mock.calls.flat().join("\n")).toMatch(new RegExp(`style.*auto.*${firstReady}`, "i"));
+  });
+});
+
+describe("make with a voice-over handed off in inbox/", () => {
+  it("uses inbox/voice.mp3 instead of recording one", async () => {
+    const video = setup();
+    mkdirSync(join(video, "inbox"));
+    writeFileSync(join(video, "inbox", "voice.mp3"), "ID3 one");
+    const { deps, synthesize, importVoice, prepareVoice, align } = stubs();
+    prepareVoice.mockResolvedValueOnce(3.45);
+    await makeVideo(video, deps);
+    expect(synthesize).not.toHaveBeenCalled();
+    expect(importVoice).toHaveBeenCalledWith(join(video, "inbox", "voice.mp3"), join(video, "voice.wav"));
+    expect(prepareVoice).toHaveBeenCalledWith(join(video, "voice.wav"));
+    expect(align).toHaveBeenCalledWith(join(video, "voice.wav"), "en");
+    expect(JSON.parse(readFileSync(join(video, "timing.json"), "utf8"))).toMatchObject({ provider: "inbox/voice.mp3", durationSec: 3.45 });
+    expect(JSON.parse(readFileSync(join(video, "plan.json"), "utf8"))).toMatchObject({ audioSrc: "voice.wav" });
+  });
+
+  it("reuses it while the file is unchanged, and takes it again when it changes", async () => {
+    const video = setup();
+    mkdirSync(join(video, "inbox"));
+    writeFileSync(join(video, "inbox", "voice.wav"), "RIFF one");
+    const { deps, importVoice } = stubs();
+    await makeVideo(video, deps);
+    await makeVideo(video, deps);
+    expect(importVoice).toHaveBeenCalledTimes(1);
+    writeFileSync(join(video, "inbox", "voice.wav"), "RIFF two");
+    await makeVideo(video, deps);
+    expect(importVoice).toHaveBeenCalledTimes(2);
+  });
+
+  it("takes voice.wav when both are there, and says the other is not used", async () => {
+    const video = setup();
+    mkdirSync(join(video, "inbox"));
+    writeFileSync(join(video, "inbox", "voice.wav"), "RIFF");
+    writeFileSync(join(video, "inbox", "voice.mp3"), "ID3");
+    const log = vi.fn();
+    const { deps, importVoice } = stubs();
+    await makeVideo(video, { ...deps, log });
+    expect(importVoice).toHaveBeenCalledWith(join(video, "inbox", "voice.wav"), join(video, "voice.wav"));
+    expect(log.mock.calls.flat().join("\n")).toContain("inbox/voice.mp3 is not used");
+  });
+
+  it("leaves it out of a text-only video, and says so", async () => {
+    const video = setup();
+    writeFileSync(join(video, "..", "..", "page.yaml"), "name: My cats\nlanguage: en\nniche: cat facts\nstyle: 3\nvoice: 8\ncaptions: 1\nmusic: 8\n");
+    mkdirSync(join(video, "inbox"));
+    writeFileSync(join(video, "inbox", "voice.mp3"), "ID3");
+    const log = vi.fn();
+    const { deps, importVoice } = stubs();
+    await makeVideo(video, { ...deps, log });
+    expect(importVoice).not.toHaveBeenCalled();
+    expect(log.mock.calls.flat().join("\n")).toMatch(/voice 8.*text only.*inbox\/voice\.mp3 is not used/);
   });
 });
