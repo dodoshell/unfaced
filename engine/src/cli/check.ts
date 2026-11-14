@@ -1,40 +1,41 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { getLayout } from "../../remotion/styles/layouts.js";
+import { type Pcm, readSoundtrack, speechOnsets } from "../audio/speech.js";
 import { type Loudness, checkLoudness, measureLoudness } from "../check/audio.js";
 import { checkFrames, readGrayFrames } from "../check/frames.js";
 import { checkOverlap, checkSafeZone, placedBoxes } from "../check/overlap.js";
 import { checkEdges, checkSync, shownWords } from "../check/sync.js";
 import { type CheckReport, toReport } from "../check/types.js";
 import type { VideoPlan } from "../plan/types.js";
-import type { WordTiming } from "../timing/align.js";
 
 export interface CheckDeps {
   readFrames(video: string): Promise<Uint8Array[]>;
   measureLoudness(video: string): Promise<Loudness>;
+  readSoundtrack(video: string): Promise<Pcm>;
 }
 
-export const defaultCheckDeps = (): CheckDeps => ({ readFrames: readGrayFrames, measureLoudness });
+export const defaultCheckDeps = (): CheckDeps => ({ readFrames: readGrayFrames, measureLoudness, readSoundtrack });
 
 /**
- * Runs every automatic check on a made video (plan.json, timing.json and video.mp4 in
+ * Runs every automatic check on a made video (plan.json and video.mp4 in
  * `videoDir`) and writes the report to `<videoDir>/check.json`.
  */
 export async function checkVideo(videoDir: string, deps: CheckDeps = defaultCheckDeps()): Promise<CheckReport> {
   const dir = resolve(videoDir);
-  for (const file of ["plan.json", "timing.json", "video.mp4"]) {
+  for (const file of ["plan.json", "video.mp4"]) {
     if (!existsSync(join(dir, file))) throw new Error(`${file} not found in ${dir}; run "unfaced make" on this folder first`);
   }
   const plan = JSON.parse(readFileSync(join(dir, "plan.json"), "utf8")) as VideoPlan;
-  const { words } = JSON.parse(readFileSync(join(dir, "timing.json"), "utf8")) as { words: WordTiming[] };
   const video = join(dir, "video.mp4");
 
   const boxes = placedBoxes(plan, getLayout(plan.style));
+  const soundtrack = await deps.readSoundtrack(video);
   const report = toReport([
     ...checkOverlap(boxes, plan.fps),
     ...checkSafeZone(boxes, plan.fps),
-    ...checkSync(shownWords(plan), words, plan.fps),
-    ...checkEdges(words, (plan.durationInFrames / plan.fps) * 1000),
+    ...checkSync(shownWords(plan), speechOnsets(soundtrack), plan.fps),
+    ...checkEdges(soundtrack),
     ...checkFrames(await deps.readFrames(video), plan.fps),
     ...checkLoudness(await deps.measureLoudness(video)),
   ]);

@@ -47,9 +47,9 @@ function stubs() {
   );
   const render = vi.fn<MakeDeps["render"]>(async (_plan, outPath) => writeFileSync(outPath, "mp4"));
   const check = vi.fn<MakeDeps["check"]>(async () => ({ pass: false, issues: [{ check: "clipping", atMs: 0, severity: "error", message: "True peak is -0.4 dBTP" }] }));
-  const normalize = vi.fn<MakeDeps["normalize"]>(async () => {});
-  const deps: MakeDeps = { catalog: Catalog.load(CATALOG_DIR), voiceProvider: () => voice, normalize, align, render, check, env: {}, log: () => {} };
-  return { deps, synthesize, normalize, align, render, check };
+  const prepareVoice = vi.fn<MakeDeps["prepareVoice"]>(async () => {});
+  const deps: MakeDeps = { catalog: Catalog.load(CATALOG_DIR), voiceProvider: () => voice, prepareVoice, align, render, check, env: {}, log: () => {} };
+  return { deps, synthesize, prepareVoice, align, render, check };
 }
 
 describe("make", () => {
@@ -64,13 +64,13 @@ describe("make", () => {
     expect(render).toHaveBeenCalledWith(expect.anything(), join(video, "video.mp4"), { assetsDir: video });
   });
 
-  it("brings the voice-over to the target loudness before timing it", async () => {
+  it("prepares the voice-over (lead-in and loudness) before timing it", async () => {
     const video = setup();
-    const { deps, synthesize, normalize, align } = stubs();
+    const { deps, synthesize, prepareVoice, align } = stubs();
     await makeVideo(video, deps);
-    expect(normalize).toHaveBeenCalledWith(join(video, "voice.wav"));
-    expect(normalize.mock.invocationCallOrder[0]).toBeGreaterThan(synthesize.mock.invocationCallOrder[0]!);
-    expect(normalize.mock.invocationCallOrder[0]).toBeLessThan(align.mock.invocationCallOrder[0]!);
+    expect(prepareVoice).toHaveBeenCalledWith(join(video, "voice.wav"));
+    expect(prepareVoice.mock.invocationCallOrder[0]).toBeGreaterThan(synthesize.mock.invocationCallOrder[0]!);
+    expect(prepareVoice.mock.invocationCallOrder[0]).toBeLessThan(align.mock.invocationCallOrder[0]!);
   });
 
   it("runs the automatic checks on the finished video and logs their summary", async () => {
@@ -107,6 +107,14 @@ describe("make", () => {
     const video = setup();
     const { deps } = stubs();
     await expect(makeVideo(join(video, "..", "nope"), deps)).rejects.toThrow(/script\.md not found/);
+  });
+
+  it("refuses a fixed choice that is not ready yet, before recording any voice", async () => {
+    const video = setup();
+    writeFileSync(join(video, "..", "..", "page.yaml"), "name: My cats\nlanguage: en\nniche: cat facts\nstyle: 3\nvoice: 1\ncaptions: 2\n");
+    const { deps, synthesize } = stubs();
+    await expect(makeVideo(video, deps)).rejects.toThrow(/captions 2 .*is not ready yet.*unfaced list captions/);
+    expect(synthesize).not.toHaveBeenCalled();
   });
 
   it("picks the first ready option when the page leaves a choice to the agent", async () => {

@@ -3,14 +3,15 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import type { CheckReport } from "../../engine/src/check/types.js";
+import { tones } from "../audio/tones.js";
 import { type CheckDeps, checkVideo, summaryLines } from "../../engine/src/cli/check.js";
 
 const example = join(import.meta.dirname, "..", "..", "examples", "pages", "curious-cats", "videos", "cats-and-milk");
 
-/** A made video folder: the example's plan and timings, and a stand-in video.mp4. */
+/** A made video folder: the example's plan, and a stand-in video.mp4. */
 function setup(): string {
   const dir = mkdtempSync(join(tmpdir(), "unfaced check è "));
-  for (const file of ["plan.json", "timing.json"]) copyFileSync(join(example, file), join(dir, file));
+  for (const file of ["plan.json"]) copyFileSync(join(example, file), join(dir, file));
   writeFileSync(join(dir, "video.mp4"), "mp4");
   return dir;
 }
@@ -20,6 +21,7 @@ const moving = (n: number) => Array.from({ length: n }, (_, i) => new Uint8Array
 const deps = (truePeakDb: number): CheckDeps => ({
   readFrames: async () => moving(30),
   measureLoudness: async () => ({ integratedLufs: -20, truePeakDb }),
+  readSoundtrack: async () => tones(1000, []),
 });
 
 describe("check", () => {

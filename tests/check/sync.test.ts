@@ -2,26 +2,28 @@ import { describe, expect, it } from "vitest";
 import { checkEdges, checkSync, shownWords } from "../../engine/src/check/sync.js";
 import type { VideoPlan } from "../../engine/src/plan/types.js";
 import type { WordTiming } from "../../engine/src/timing/align.js";
+import { tones } from "../audio/tones.js";
 
 const words: WordTiming[] = "Cats sleep sixteen hours daily.".split(" ").map((text, i) => ({ text, startMs: 500 + i * 300, endMs: 750 + i * 300 }));
-const shifted = (frames: number) => words.map((w) => ({ text: w.text, fromMs: w.startMs + (frames * 1000) / 30 }));
+const shown = (frames: number) => words.map((w) => ({ text: w.text, fromMs: w.startMs + (frames * 1000) / 30 }));
+/** The voice starts speaking at 500 ms and again at 1400 ms. */
+const onsets = [500, 1400];
 
-describe("caption sync", () => {
-  it("passes captions that light each word when it is spoken", () => {
-    expect(checkSync(shifted(0), words, 30)).toEqual([]);
+describe("caption sync against the voice", () => {
+  it("passes captions that light a word when the voice starts it", () => {
+    expect(checkSync(shown(0), onsets, 30)).toEqual([]);
   });
 
-  it("reports captions 3 frames late as one sync error where the drift starts", () => {
-    expect(checkSync(shifted(3), words, 30)).toEqual([{ check: "sync", atMs: 500, severity: "error", message: expect.stringContaining("3 frames") }]);
+  it("reports captions 3 frames late at each place the voice starts after a pause", () => {
+    expect(checkSync(shown(3), onsets, 30)).toEqual([
+      { check: "sync", atMs: 500, severity: "error", message: expect.stringMatching(/3 frames behind the voice at "Cats"/) },
+      { check: "sync", atMs: 1400, severity: "error", message: expect.stringMatching(/3 frames behind the voice at "hours"/) },
+    ]);
   });
 
   it("accepts a drift of 2 frames, early or late", () => {
-    expect(checkSync(shifted(2), words, 30)).toEqual([]);
-    expect(checkSync(shifted(-2), words, 30)).toEqual([]);
-  });
-
-  it("reports captions that show a different number of words than the voice-over", () => {
-    expect(checkSync(shifted(0).slice(1), words, 30)).toEqual([{ check: "sync", atMs: 0, severity: "error", message: expect.stringContaining("4 words") }]);
+    expect(checkSync(shown(2), onsets, 30)).toEqual([]);
+    expect(checkSync(shown(-2), onsets, 30)).toEqual([]);
   });
 
   it("reads the words the captions light up from the plan, scene by scene", () => {
@@ -32,20 +34,20 @@ describe("caption sync", () => {
         { beatId: "b2", kind: "fact", text: "sixteen hours daily.", fromFrame: 30, durationInFrames: 90, words: words.slice(2) },
       ],
     };
-    expect(shownWords(plan)).toEqual(shifted(0));
+    expect(shownWords(plan)).toEqual(shown(0));
   });
 });
 
 describe("cut words", () => {
-  it("passes a voice-over with room before the first word and after the last", () => {
-    expect(checkEdges(words, 3000)).toEqual([]);
+  it("passes a soundtrack with quiet at both ends", () => {
+    expect(checkEdges(tones(3000, [[250, 2400]]))).toEqual([]);
   });
 
-  it("reports a first word starting less than 80 ms into the video", () => {
-    expect(checkEdges([{ text: "Cats", startMs: 50, endMs: 300 }], 3000)).toEqual([{ check: "cut-word", atMs: 50, severity: "error", message: expect.stringContaining("Cats") }]);
+  it("reports speech in the first 80 ms", () => {
+    expect(checkEdges(tones(3000, [[50, 2400]]))).toEqual([{ check: "cut-word", atMs: 0, severity: "error", message: expect.stringContaining("first word") }]);
   });
 
-  it("reports a last word ending less than 80 ms before the video ends", () => {
-    expect(checkEdges([{ text: "daily.", startMs: 2600, endMs: 2950 }], 3000)).toEqual([{ check: "cut-word", atMs: 2600, severity: "error", message: expect.stringContaining("daily.") }]);
+  it("reports speech in the last 80 ms", () => {
+    expect(checkEdges(tones(3000, [[250, 2960]]))).toEqual([{ check: "cut-word", atMs: 2920, severity: "error", message: expect.stringContaining("last word") }]);
   });
 });

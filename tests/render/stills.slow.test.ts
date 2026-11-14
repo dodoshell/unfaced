@@ -5,7 +5,7 @@ import pixelmatch from "pixelmatch";
 import { PNG } from "pngjs";
 import { describe, expect, it } from "vitest";
 import type { VideoPlan } from "../../engine/src/plan/types.js";
-import { renderStillAt } from "../../engine/src/render/renderVideo.js";
+import { closeRenders, renderStillAt } from "../../engine/src/render/renderVideo.js";
 
 const fixtures = join(import.meta.dirname, "..", "fixtures");
 const options = { entryPoint: join(fixtures, "remotion", "entry.ts"), assetsDir: join(fixtures, "audio") };
@@ -53,5 +53,12 @@ describe.skipIf(!process.env.UNFACED_SLOW)("render stills (slow)", () => {
     const expected = readPng(reference);
     const diff = pixelmatch(actual.data, expected.data, null, 1080, 1920, { threshold: 0.1 });
     expect(diff / (1080 * 1920)).toBeLessThan(0.02);
+  }, 600_000);
+
+  it("removes its temporary bundle and staged files when closed", async () => {
+    await renderStillAt(plan, 0, join(out, "close.png"), options);
+    const removed = await closeRenders();
+    expect(removed.length).toBeGreaterThanOrEqual(2);
+    for (const dir of removed) expect(existsSync(dir), dir).toBe(false);
   }, 600_000);
 });

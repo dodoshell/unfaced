@@ -73,48 +73,86 @@ function kindOf(beat: Beat): SceneKind {
 
 const norm = (w: string) => w.toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
 
-/**
- * Matches the words whisper heard to the script's words with a minimum edit
- * alignment, so a word heard differently ("3" for "three") or an extra word
- * ("um") does not shift the beats. Returns the heard words of each beat.
- */
-function assignWords(beats: Beat[], heard: WordTiming[]): WordTiming[][] {
-  const written: { word: string; beat: number }[] = [];
+interface Written {
+  norm: string;
+  /** As written in the script: case, punctuation, accents, and any emoji next to it. */
+  display: string;
+  beat: number;
+}
+
+/** The script's words in order. A token with no letters or digits (an emoji, a dash) is shown with a word of its beat. */
+function writtenWords(beats: Beat[]): Written[] {
+  const words: Written[] = [];
   beats.forEach((beat, b) => {
-    for (const w of beat.text.replace(/^\s*-\s+/gm, "").split(/\s+/)) {
-      const n = norm(w);
-      if (n) written.push({ word: n, beat: b });
+    let lead: string[] = [];
+    for (const token of beat.text.replace(/^\s*-\s+/gm, "").split(/\s+/)) {
+      if (!token) continue;
+      const last = words.at(-1);
+      if (norm(token)) {
+        words.push({ norm: norm(token), display: [...lead, token].join(" "), beat: b });
+        lead = [];
+      } else if (last?.beat === b) {
+        last.display += ` ${token}`;
+      } else {
+        lead.push(token);
+      }
     }
   });
+  return words;
+}
+
+/**
+ * Lines up the words whisper heard with the script's words (a minimum edit
+ * alignment), so a word heard differently ("3" for "three") or an extra word ("um")
+ * does not shift the beats. Returns each beat's words as written in the script,
+ * with the times they were heard: an extra heard word is folded into its neighbour,
+ * and a written word whisper missed is shown with the word before it.
+ */
+function assignWords(beats: Beat[], heard: WordTiming[]): WordTiming[][] {
+  const written = writtenWords(beats);
   const spoken = heard.map((w) => norm(w.text));
 
   // cost[i][j]: edit distance between the first i written and first j heard words.
   const rows = written.length + 1;
   const cols = spoken.length + 1;
   const cost = Array.from({ length: rows }, (_, i) => Array.from({ length: cols }, (_, j) => (i === 0 ? j : j === 0 ? i : 0)));
+  const sub = (i: number, j: number) => (written[i]!.norm === spoken[j] ? 0 : 1);
   for (let i = 1; i < rows; i++) {
     for (let j = 1; j < cols; j++) {
-      const same = written[i - 1]!.word === spoken[j - 1] ? 0 : 1;
-      cost[i]![j] = Math.min(cost[i - 1]![j - 1]! + same, cost[i - 1]![j]! + 1, cost[i]![j - 1]! + 1);
+      cost[i]![j] = Math.min(cost[i - 1]![j - 1]! + sub(i - 1, j - 1), cost[i - 1]![j]! + 1, cost[i]![j - 1]! + 1);
     }
   }
 
-  // Walk back: each heard word takes the beat of the written word it lines up with;
-  // an extra heard word takes the beat of the written word before it.
-  const beatOfHeard = new Array<number | undefined>(spoken.length);
-  let i = rows - 1;
-  let j = cols - 1;
-  while (j > 0) {
-    if (i > 0 && cost[i]![j] === cost[i - 1]![j - 1]! + (written[i - 1]!.word === spoken[j - 1] ? 0 : 1)) {
-      beatOfHeard[--j] = written[--i]!.beat;
-    } else if (i > 0 && cost[i]![j] === cost[i - 1]![j]! + 1) {
-      i--;
+  // Walk back to the start: a pair (written and heard), a written word only, or a heard word only.
+  const steps: Array<{ w?: number; h?: number }> = [];
+  for (let i = rows - 1, j = cols - 1; i > 0 || j > 0; ) {
+    if (i > 0 && j > 0 && cost[i]![j] === cost[i - 1]![j - 1]! + sub(i - 1, j - 1)) steps.push({ w: --i, h: --j });
+    else if (i > 0 && cost[i]![j] === cost[i - 1]![j]! + 1) steps.push({ w: --i });
+    else steps.push({ h: --j });
+  }
+
+  const words: Array<WordTiming & { beat: number }> = [];
+  let heardBefore: WordTiming | undefined;
+  let missedBefore: Written[] = [];
+  for (const { w, h } of steps.reverse()) {
+    const last = words.at(-1);
+    if (w !== undefined && h !== undefined) {
+      const word = written[w]!;
+      const lead = missedBefore.filter((m) => m.beat === word.beat).map((m) => m.display);
+      words.push({ text: [...lead, word.display].join(" "), startMs: (heardBefore ?? heard[h]!).startMs, endMs: heard[h]!.endMs, beat: word.beat });
+      heardBefore = undefined;
+      missedBefore = [];
+    } else if (w !== undefined) {
+      if (last?.beat === written[w]!.beat) last.text += ` ${written[w]!.display}`;
+      else missedBefore.push(written[w]!);
+    } else if (last) {
+      last.endMs = Math.max(last.endMs, heard[h!]!.endMs);
     } else {
-      beatOfHeard[--j] = i > 0 ? written[i - 1]!.beat : 0;
+      heardBefore ??= heard[h!];
     }
   }
 
   const byBeat = beats.map((): WordTiming[] => []);
-  heard.forEach((w, k) => byBeat[beatOfHeard[k] ?? 0]!.push(w));
+  for (const { beat, ...word } of words) byBeat[beat]!.push(word);
   return byBeat;
 }

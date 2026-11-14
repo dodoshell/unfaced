@@ -12,7 +12,9 @@ import type { CheckReport } from "../check/types.js";
 import { renderVideo, type RenderOptions } from "../render/renderVideo.js";
 import { parseScript } from "../script/parseScript.js";
 import { alignWords, type WordTiming } from "../timing/align.js";
-import { normalizeLoudness } from "../voice/loudness.js";
+import { readWavFile, speechPauses } from "../audio/speech.js";
+import { snapToPauses } from "../timing/snap.js";
+import { prepareVoice } from "../voice/prepare.js";
 import { getVoiceProvider } from "../voice/registry.js";
 import { checkVideo, summaryLines } from "./check.js";
 import type { VoiceProvider } from "../voice/types.js";
@@ -20,8 +22,8 @@ import type { VoiceProvider } from "../voice/types.js";
 export interface MakeDeps {
   catalog: Catalog;
   voiceProvider(requested: string, env: NodeJS.ProcessEnv, warn: (msg: string) => void): VoiceProvider;
-  /** Brings the voice-over to the target loudness, in place. */
-  normalize(wavPath: string): Promise<void>;
+  /** Adds the lead-in and brings the voice-over to the target loudness, in place. */
+  prepareVoice(wavPath: string): Promise<void>;
   align(wavPath: string, language: string): Promise<WordTiming[]>;
   render(plan: VideoPlan, outPath: string, options: RenderOptions): Promise<void>;
   check(videoDir: string): Promise<CheckReport>;
@@ -32,16 +34,20 @@ export interface MakeDeps {
 export const defaultMakeDeps = (): MakeDeps => ({
   catalog: Catalog.load(CATALOG_DIR),
   voiceProvider: getVoiceProvider,
-  normalize: normalizeLoudness,
-  align: alignWords,
+  prepareVoice,
+  // Whisper's times, with each word after a pause moved to where the voice really starts it.
+  // Pauses down to 100 ms are used, so every pause the 150 ms sync check finds is covered.
+  align: async (wavPath, language) => snapToPauses(await alignWords(wavPath, language), speechPauses(readWavFile(wavPath), SNAP_MIN_PAUSE_MS)),
   render: renderVideo,
   check: (videoDir) => checkVideo(videoDir),
   env: process.env,
   log: (msg) => console.error(msg),
 });
 
+const SNAP_MIN_PAUSE_MS = 100;
+
 /** Bumped when the voice-over is processed differently, so cached voice-overs are made again. */
-const VOICE_PROCESSING = "loudnorm -14";
+const VOICE_PROCESSING = "lead-in 250, loudnorm -14, pause snap 100";
 
 /** timing.json: the voice-over's word timings, keyed by what produced the voice. */
 interface TimingFile {
@@ -78,7 +84,7 @@ export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDe
   } else {
     deps.log(`Recording the voice-over (${voice.id}, voice ${voiceType}, ${page.language})`);
     const result = await voice.synthesize(script.spokenText, { language: page.language, voiceType, outPath: wavPath });
-    await deps.normalize(wavPath);
+    await deps.prepareVoice(wavPath);
     deps.log("Timing every word");
     const words = await deps.align(wavPath, page.language);
     timing = { hash, provider: result.provider, durationSec: result.durationSec, words };
@@ -97,17 +103,21 @@ export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDe
 }
 
 /**
- * The page's choice for a catalog. A fixed number is used as is; a list or "auto"
+ * The page's choice for a catalog, which must be ready. A fixed number is used as is; a list or "auto"
  * is narrowed to the first ready option (the agent recommends one in Phase 2).
  */
 function choose(field: ChoiceField, page: Page, deps: MakeDeps): number {
   const choice = page.choices[field];
-  return resolveChoice(field, choice, deps.catalog, (options) => {
+  const chosen = resolveChoice(field, choice, deps.catalog, (options) => {
     const ready = options.find((n) => deps.catalog.get(field, n).status === "ready");
     if (ready === undefined) throw new Error(`None of the ${field} options ${options.join(", ")} is ready yet; see "unfaced list ${field}"`);
     deps.log(`${field}: ${JSON.stringify(choice ?? "auto")} → ${ready} (${deps.catalog.get(field, ready).name})`);
     return ready;
   });
+  // A fixed number is used as is, so it is checked here, before any voice is recorded.
+  const entry = deps.catalog.get(field, chosen);
+  if (entry.status !== "ready") throw new Error(`${field} ${chosen} (${entry.name}) is not ready yet; pick a ready one from "unfaced list ${field}"`);
+  return chosen;
 }
 
 function readTiming(file: string): TimingFile | undefined {

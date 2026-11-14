@@ -2,6 +2,9 @@ import { readFileSync, renameSync } from "node:fs";
 import { resolve } from "node:path";
 import { runFfmpeg } from "../ffmpeg.js";
 
+/** Quiet added before the first word, so it never starts right at the edge of the video. */
+export const LEAD_IN_MS = 250;
+
 /** Where a voice-over is brought before rendering: the middle of the −16…−12 LUFS range, with headroom under −1 dBTP. */
 export const TARGET_LUFS = -14;
 export const TARGET_TRUE_PEAK = -1.5;
@@ -16,13 +19,14 @@ function wavSampleRate(file: string): number {
 }
 
 /**
- * Rewrites a WAV voice-over at the target loudness (EBU R128), keeping its sample rate.
+ * Rewrites a WAV voice-over with a short lead-in of quiet and at the target loudness
+ * (EBU R128), keeping its sample rate.
  * The true-peak ceiling wins over the loudness target, so short or very peaky speech
  * can land a little under it, still inside the −16…−12 LUFS range.
  */
-export async function normalizeLoudness(wavPath: string): Promise<void> {
+export async function prepareVoice(wavPath: string): Promise<void> {
   const file = resolve(wavPath);
-  const tmp = `${file}.loudnorm.wav`;
-  await runFfmpeg(["-v", "error", "-i", file, "-af", `loudnorm=I=${TARGET_LUFS}:TP=${TARGET_TRUE_PEAK}:LRA=11`, "-ar", String(wavSampleRate(file)), "-c:a", "pcm_s16le", "-y", tmp]);
+  const tmp = `${file}.prepared.wav`;
+  await runFfmpeg(["-v", "error", "-i", file, "-af", `adelay=${LEAD_IN_MS}:all=1,loudnorm=I=${TARGET_LUFS}:TP=${TARGET_TRUE_PEAK}:LRA=11`, "-ar", String(wavSampleRate(file)), "-c:a", "pcm_s16le", "-y", tmp]);
   renameSync(tmp, file);
 }

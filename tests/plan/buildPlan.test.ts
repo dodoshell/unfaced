@@ -74,10 +74,36 @@ describe("buildPlan", () => {
   it("starts each scene at its first word, even when whisper wrote a word differently", () => {
     const plan = build();
     const b2 = plan.scenes[2]!;
-    expect(b2.words[0]!.text).toBe("3");
+    const three = heard.indexOf("3");
+    expect(b2.words[0]).toEqual({ text: "Three", startMs: words[three]!.startMs, endMs: words[three]!.endMs });
     expect(b2.fromFrame).toBe(Math.floor((b2.words[0]!.startMs / 1000) * 30));
     expect(plan.scenes[3]!.words.map((w) => w.text)).toEqual(["That's", "cats."]);
-    expect(b2.words.map((w) => w.text)).toContain("um,");
+  });
+
+  it("captions the script's words, folding a word only whisper heard into the one before", () => {
+    const b2 = build().scenes[2]!;
+    expect(b2.words.map((w) => w.text)).toEqual(["Three", "things", "cats", "hate:", "water", "noise", "closed", "doors"]);
+    const noise = b2.words[5]!;
+    expect(noise.startMs).toBe(words[heard.indexOf("noise,")]!.startMs);
+    expect(noise.endMs).toBe(words[heard.indexOf("um,")]!.endMs);
+  });
+
+  const captioned = (body: string, heardText: string) => {
+    const s = parseScript(`---\ntitle: T\nscript_type: 9\nhook: 1\nending: 5\n---\n\n## Hook\nHi there.\n\n## Body\n${body}\n\n## Ending\nBye now.\n`);
+    const h = `Hi there. ${heardText} Bye now.`.split(" ");
+    const timed = h.map((text, i) => ({ text, startMs: 200 + i * 400, endMs: 550 + i * 400 }));
+    const plan = buildPlan({ script: s, words: timed, audioDurationSec: (200 + h.length * 400) / 1000, page, style: 3, captions: 1, warn: () => {} });
+    return plan.scenes[1]!.words.map((w) => w.text);
+  };
+
+  it("keeps the script's punctuation, contractions, accents and emoji in the captions", () => {
+    expect(captioned("Still giving your cat milk? They're happy.", "Still giving your cat milk. They are happy.")).toEqual(["Still", "giving", "your", "cat", "milk?", "They're", "happy."]);
+    expect(captioned("Perché l’acqua è blu?", "Perche l'acqua e blu.")).toEqual(["Perché", "l’acqua", "è", "blu?"]);
+    expect(captioned("Cats 🐱 purr.", "Cats purr.")).toEqual(["Cats 🐱", "purr."]);
+  });
+
+  it("keeps a written word whisper missed, captioned together with the word before", () => {
+    expect(captioned("A bowl of milk.", "A of milk.")).toEqual(["A bowl", "of", "milk."]);
   });
 
   it("warns when the voice-over is outside the page's duration, and still returns a plan", () => {

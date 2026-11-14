@@ -65,6 +65,49 @@ describe("loadPage", () => {
     expect(err.message).toBe("API keys must not be stored in page.yaml; use .env");
   });
 
+  it.each([
+    ["style: 0", "style", /"style" must be a number from 1–12, a list of different numbers from 1–12, or "auto"/],
+    ["style: seven", "style", /"style" must be a number from 1–12.*got "seven"/],
+    ["script: [6, 6]", "script", /"script" must be a number from 1–10, a list of different numbers/],
+    ["duration: abc", "duration", /"duration" must be a number of seconds \(5 or more\) or a range such as 30-45/],
+    ["palette: [red]", "palette", /"palette" must be a list of colours such as "#FF6B35"/],
+  ])("explains what %s should be", async (line, field, message) => {
+    const err = await errorOf(`${minimal}${line}\n`);
+    expect(err.field).toBe(field);
+    expect(err.message).toMatch(message);
+  });
+
+  it("explains what language should be", async () => {
+    const err = await errorOf("name: Test\nlanguage: English\nniche: tests\n");
+    expect(err.field).toBe("language");
+    expect(err.message).toMatch(/"language" must be a language code such as en or it/);
+  });
+
+  it("names an unknown provider field and suggests the closest one", async () => {
+    const err = await errorOf(`${minimal}providers:\n  voise: free\n`);
+    expect(err.field).toBe("providers.voise");
+    expect(err.message).toContain(`Did you mean "voice"?`);
+  });
+
+  it("names the voice providers it knows, and reads kokoro as the free one", async () => {
+    const err = await errorOf(`${minimal}providers:\n  voice: azure\n`);
+    expect(err.field).toBe("providers.voice");
+    expect(err.message).toMatch(/free, kokoro, elevenlabs/);
+    expect((await loadPage(fixture, stubCatalog)).providers.voice).toBe("free");
+  });
+
+  it.each(["sk_3f9a8b7c6d5e4f3a2b1c", "sk_live_51Hxyz", "xi-abc", "AIzaSyD-123"])("refuses an API key such as %s anywhere in page.yaml", async (key) => {
+    const err = await errorOf(`${minimal}mascot: ${key}\n`);
+    expect(err.message).toBe("API keys must not be stored in page.yaml; use .env");
+  });
+
+  it("says page.yaml is not valid YAML, and where", async () => {
+    const err = await errorOf(`${minimal}style: [3\n`);
+    expect(err.field).toBe("page.yaml");
+    expect(err.message).toMatch(/^page\.yaml is not valid YAML/);
+    expect(err.message).toMatch(/line \d+/);
+  });
+
   it("accepts a single number of seconds as duration", async () => {
     const page = await loadPage(pageDir(`${minimal}duration: 30\n`), stubCatalog);
     expect(page.duration).toEqual({ minSec: 30, maxSec: 30 });

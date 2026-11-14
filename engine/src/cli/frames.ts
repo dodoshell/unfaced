@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import type { VideoPlan } from "../plan/types.js";
-import { renderStillAt } from "../render/renderVideo.js";
+import { closeRenders, renderStillAt } from "../render/renderVideo.js";
 
 /** Parses an interval such as "1s", "0.5s" or "2" (seconds). */
 export function parseEvery(value: string): number {
@@ -18,10 +18,14 @@ export async function renderFrames(videoDir: string, everySec: number, log: (m: 
   const plan = JSON.parse(readFileSync(planFile, "utf8")) as VideoPlan;
   const step = Math.max(1, Math.round(everySec * plan.fps));
   const files: string[] = [];
-  for (let frame = 0; frame < plan.durationInFrames; frame += step) {
-    const file = join(dir, "frames", `frame-${String(frame).padStart(5, "0")}.png`);
-    await renderStillAt(plan, frame, file, { assetsDir: dir });
-    files.push(file);
+  try {
+    for (let frame = 0; frame < plan.durationInFrames; frame += step) {
+      const file = join(dir, "frames", `frame-${String(frame).padStart(5, "0")}.png`);
+      await renderStillAt(plan, frame, file, { assetsDir: dir });
+      files.push(file);
+    }
+  } finally {
+    await closeRenders();
   }
   log(`Wrote ${files.length} frames to ${join(dir, "frames")}`);
   return files;

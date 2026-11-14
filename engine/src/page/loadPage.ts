@@ -4,7 +4,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Ajv2020 } from "ajv/dist/2020.js";
 import { parse } from "yaml";
-import { CHOICE_FIELDS, type CatalogLike, type Choice, type Page } from "./types.js";
+import { VOICE_PROVIDERS, voiceProviderId } from "../voice/providers.js";
+import { CHOICE_FIELDS, type CatalogLike, type Choice, type ChoiceField, type Page } from "./types.js";
 
 export class PageError extends Error {
   constructor(
@@ -20,14 +21,20 @@ const schemaPath = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..
 const schema = JSON.parse(readFileSync(schemaPath, "utf8"));
 const validate = new Ajv2020({ allErrors: true }).compile(schema);
 const knownFields: string[] = Object.keys(schema.properties);
+const providerFields: string[] = Object.keys(schema.properties.providers.properties);
 
-// Prefixes of common API keys (OpenAI, ElevenLabs, Google).
-const KEY_LIKE = /^(sk-|xi-|AIza)/;
+// Prefixes of common API keys: OpenAI and Anthropic (sk-), ElevenLabs and Stripe (sk_), Google (AIza), and xi-.
+const KEY_LIKE = /^(sk[-_]|xi-|AIza)/;
 
 export async function loadPage(dir: string, catalog: CatalogLike): Promise<Page> {
   const file = join(dir, "page.yaml");
   if (!existsSync(file)) throw new PageError("page.yaml", `page.yaml not found in ${dir}`);
-  const raw: unknown = parse(await readFile(file, "utf8"));
+  let raw: unknown;
+  try {
+    raw = parse(await readFile(file, "utf8"));
+  } catch (e) {
+    throw new PageError("page.yaml", `page.yaml is not valid YAML: ${e instanceof Error ? e.message : String(e)}`);
+  }
   if (raw === null || typeof raw !== "object" || Array.isArray(raw)) {
     throw new PageError("page.yaml", "page.yaml must be a mapping of fields");
   }
@@ -42,10 +49,19 @@ export async function loadPage(dir: string, catalog: CatalogLike): Promise<Page>
       throw new PageError(field, `Unknown field "${field}" in page.yaml${hint ? `. Did you mean "${hint}"?` : ""}`);
     }
   }
+  const providerData = data.providers;
+  if (providerData && typeof providerData === "object" && !Array.isArray(providerData)) {
+    for (const field of Object.keys(providerData)) {
+      if (!providerFields.includes(field)) {
+        const hint = closest(field, providerFields);
+        throw new PageError(`providers.${field}`, `Unknown field "providers.${field}" in page.yaml${hint ? `. Did you mean "${hint}"?` : ""}`);
+      }
+    }
+  }
   if (!validate(data)) {
     const first = validate.errors![0]!;
     const field = first.instancePath.split("/")[1] || first.params.missingProperty || "page.yaml";
-    throw new PageError(field, `Invalid "${field}" in page.yaml: ${first.message}`);
+    throw new PageError(field, explain(field, data[field], catalog) ?? `Invalid "${field}" in page.yaml: ${first.message}`);
   }
 
   const choices: Page["choices"] = {};
@@ -63,6 +79,9 @@ export async function loadPage(dir: string, catalog: CatalogLike): Promise<Page>
   }
 
   const providers = (data.providers ?? {}) as Partial<Page["providers"]>;
+  if (providers.voice !== undefined && !(VOICE_PROVIDERS as readonly string[]).includes(providers.voice)) {
+    throw new PageError("providers.voice", `Unknown voice provider "${providers.voice}" in page.yaml; choose one of: ${VOICE_PROVIDERS.join(", ")}`);
+  }
   return {
     dir,
     name: data.name as string,
@@ -74,11 +93,25 @@ export async function loadPage(dir: string, catalog: CatalogLike): Promise<Page>
     font: data.font as string | undefined,
     mascot: data.mascot as string | undefined,
     providers: {
-      voice: providers.voice ?? "free",
+      voice: voiceProviderId(providers.voice ?? "free"),
       ai_clips: providers.ai_clips ?? "none",
       images: providers.images ?? "none",
     },
   };
+}
+
+/** What a field should look like, for the fields where the schema's own message would not say. */
+function explain(field: string, value: unknown, catalog: CatalogLike): string | undefined {
+  const got = ` (got ${JSON.stringify(value)})`;
+  if ((CHOICE_FIELDS as readonly string[]).includes(field)) {
+    const ids = catalog.ids(field as ChoiceField);
+    const range = `${ids[0]}–${ids[ids.length - 1]}`;
+    return `"${field}" must be a number from ${range}, a list of different numbers from ${range}, or "auto"${got}`;
+  }
+  if (field === "duration") return `"duration" must be a number of seconds (5 or more) or a range such as 30-45${got}`;
+  if (field === "language") return `"language" must be a language code such as en or it${got}`;
+  if (field === "palette") return `"palette" must be a list of colours such as "#FF6B35"${got}`;
+  return undefined;
 }
 
 function parseDuration(value: number | string | undefined): Page["duration"] {
