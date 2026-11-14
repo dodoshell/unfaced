@@ -128,6 +128,19 @@ describe("buildPlan", () => {
     expect(warn.mock.calls[0]![0]).toContain("45.3s");
   });
 
+  it("warns about a list of more than 7 items, which the styles can only show small or cut", () => {
+    const items = Array.from({ length: 8 }, (_, i) => `- toy ${i + 1}`);
+    const long = parseScript(`---\ntitle: Toys\nscript_type: 9\nhook: 1\nending: 5\n---\n\n## Hook\nHi.\n\n## Body\nToys:\n${items.join("\n")}\n\n## Ending\nBye.\n`);
+    const said = ["Hi.", "Toys:", ...items.map((l) => l.slice(2)), "Bye."].join(" ").split(" ");
+    const timed = said.map((text, i) => ({ text, startMs: 200 + i * 400, endMs: 200 + i * 400 + 350 }));
+    const warn = vi.fn();
+    buildPlan({ script: long, words: timed, audioDurationSec: (200 + said.length * 400) / 1000, page, style: 3, captions: 1, warn });
+    expect(warn).toHaveBeenCalledWith('The list in beat "b1" has 8 items; a list shows up to 7 legibly, so split it into two paragraphs.');
+    const short = vi.fn();
+    build({ warn: short });
+    expect(short).not.toHaveBeenCalled();
+  });
+
   it("does not warn when the voice-over fits the page's duration", () => {
     const warn = vi.fn();
     build({ page: { ...page, duration: { minSec: 5, maxSec: 60 } }, warn });

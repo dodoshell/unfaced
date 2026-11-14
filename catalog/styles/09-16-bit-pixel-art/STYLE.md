@@ -37,7 +37,7 @@ Font sizes come from `fitFontSize` so each text fits its box: headline 48–100 
 |---|---|
 | title | `headline` 108,474 792×486 |
 | fact | `badge` 288,396 420×420 |
-| list | `header` 108,300 792×132, then `item1…n` from y 462 (y 300 without a lead-in) stacked down to y 1122 with 24 px gaps, at most 150 px tall |
+| list | `header` 108,300 792×132, then `item1…n` from y 462 (y 300 without a lead-in) stacked down to y 1122 with 24 px gaps, at most 150 px tall. When rows would get shorter than 90 px (one line of 28 px text), the lead-in drops to 96 px and the gaps to 18 px |
 | outro | `mark` 342,438 396×396 |
 
 Decorations (twinkles, the next-page arrow, the cursor) may leave the boxes; they carry no text.
@@ -52,7 +52,7 @@ All durations at 30 fps. Everything moves at 10 fps, like a sprite: each value h
 
 ## Pitfalls
 
-- More than 5 list items make the rows short and the shared item size small; split the list across two beats.
+- More than 5 list items make the rows short: an item that does not fit its row is cut after the lines that fit, with an ellipsis, and with 7 items and a lead-in the text drops to 25 px; with more it gets too small to read (`make` warns past 7). Keep items short, and split a list of more than 5 across two beats.
 - Long list items type out for longer: a 60-letter item takes about 40 frames from the moment its row appears. Keep items short so the list is complete while the voice reads it.
 - Fine detail disappears in 6 px cells: thin mascot parts (whiskers, small marks) become one-cell lines or single cells. Mascots with big simple shapes read best.
 - The ledge is part of the background: in custom scenes with their own ground (a park, a room) it shows behind them as a terrace.
