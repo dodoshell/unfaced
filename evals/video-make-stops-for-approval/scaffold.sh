@@ -4,3 +4,4 @@ set -euo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 bash "$here/../fixtures/scaffold.sh" "$here" curious-cats
 mkdir -p pages/curious-cats/videos/why-cats-knead
+bash "$here/../fixtures/library.sh"

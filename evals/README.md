@@ -6,7 +6,7 @@ Every run is a real Claude Code session on your account: it counts against your 
 
 ## Where the suite lives
 
-The suite is at the repository root, as the layout in [`docs/design/2026-11-14-unfaced-design.md`](../docs/design/2026-11-14-unfaced-design.md) asks, not inside `plugin/`. `--eval-dir` only accepts folders below the plugin, so each case points at the plugin itself with `plugins: ["../../plugin"]` in its `prompt.md`. Run the commands below from the repository root (`.` is the target). The plugin is loaded in place, so the skills' launcher finds this checkout and its `node_modules`; nothing is downloaded.
+The suite is at the repository root, as the layout in [`docs/design/2026-11-14-unfaced-design.md`](../docs/design/2026-11-14-unfaced-design.md) asks, not inside `plugin/`. `--eval-dir` only accepts folders below the plugin, so each case points at the plugin itself with `plugins: ["../../plugin"]` in its `prompt.md`. Run the commands below from the repository root (`.` is the target). The plugin is loaded in place, but the OS sandbox around `Bash` shows the agent only `plugin/`. So the scaffold of every `shell` case copies this checkout's library, with its `node_modules`, into the run's temporary home, where the skills' launcher finds it; nothing is downloaded.
 
 ## Run it
 
@@ -24,9 +24,9 @@ claude plugin eval . --tag files-only --scaffold --trust-plugin --allow-tools Wr
 claude plugin eval . --case video-make-stops-for-approval --runs 1 --ablation none --scaffold --trust-plugin --allow-tools Bash Write Edit
 ```
 
-- `--scaffold` is required: without it the cases that need a page start in an empty folder.
+- `--scaffold` is required: without it the cases that need a page start in an empty folder, and the `shell` cases have no library.
 - `--allow-tools` takes a list, so keep it last (or put the target `.` before it).
-- Cases tagged `shell` need `Bash` to run the unfaced CLI (`list`, `show`, `docs`, `page`). Claude Code refuses a run that is granted `Bash` on a machine without an OS sandbox, which includes native Windows, so run those under WSL2, macOS or Linux. Cases tagged `files-only` judge behaviour that doesn't need the CLI and run anywhere.
+- Cases tagged `shell` need `Bash` to run the unfaced CLI (`list`, `show`, `docs`, `page`). Claude Code refuses a run that is granted `Bash` on a machine without an OS sandbox, which includes native Windows, so run those under WSL2, macOS or Linux. Under WSL2, `/tmp` is a memory filesystem the sandbox leaves read-only, so every `Bash` call fails; point `TMPDIR` at a folder on disk first (`mkdir -p ~/.eval-tmp && export TMPDIR=~/.eval-tmp`). Cases tagged `files-only` judge behaviour that doesn't need the CLI and run anywhere.
 - Filter with `--case <glob>` or `--tag <skill name>`; `--tag negative` runs the refusals and "don't do it" cases.
 - By default every case runs 3 times with the plugin and 3 times without it (the baseline), and the summary shows `WITH`, `W/OUT` and `Δ`. `--ablation none` skips the baseline.
 
@@ -67,6 +67,7 @@ claude plugin eval . --case video-make-stops-for-approval --runs 1 --ablation no
 - `fixtures/frames/cats-and-milk/`: the 33 frames (one per second) of a render of `cats-and-milk`, reduced to a 48-colour palette to keep them small. The reviewer cases copy them into the video folder.
 - `fixtures/video.mp4`: a small still video that stands in for a made video in the packaging cases.
 - `fixtures/scaffold.sh`: copies the named pages into `pages/`, then the case's own `overlay/` folder on top. Each case's `scaffold.sh` calls it.
+- `fixtures/library.sh`: copies this checkout's library into `~/.unfaced/lib/<version>` of the run's temporary home, so the CLI works inside the sandbox. Every `shell` case's `scaffold.sh` calls it; run `npm install` first.
 
 ## Cost
 
