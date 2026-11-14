@@ -1,8 +1,7 @@
-import { type Caption, createTikTokStyleCaptions } from "@remotion/captions";
 import { useMemo } from "react";
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import type { VideoPlan } from "../../src/plan/types.js";
-import { CAPTION_BOX, CAPTION_FONT_SIZE, captionPhrases } from "./captionLayout.js";
+import { CAPTION_BOX, CAPTION_FONT_SIZE, captionPages } from "./captionLayout.js";
 import { CAPTION_FONT } from "./fonts.js";
 
 /** Captions 01, word-by-word karaoke: the current phrase, the spoken word lit up. */
@@ -11,20 +10,7 @@ export const Captions: React.FC<{ plan: VideoPlan }> = ({ plan }) => {
   const { fps } = useVideoConfig();
   const nowMs = (frame / fps) * 1000;
 
-  // One page per phrase, built scene by scene so a phrase never runs across a scene
-  // change. A page stays up until the next one starts, or until its scene ends.
-  const pages = useMemo(
-    () =>
-      plan.scenes.flatMap((scene) => {
-        const sceneEndMs = ((scene.fromFrame + scene.durationInFrames) / fps) * 1000;
-        const built = captionPhrases(scene.words).map((phrase) => {
-          const captions: Caption[] = phrase.map((w) => ({ text: ` ${w.text}`, startMs: w.startMs, endMs: w.endMs, timestampMs: null, confidence: null }));
-          return createTikTokStyleCaptions({ captions, combineTokensWithinMilliseconds: Number.MAX_SAFE_INTEGER }).pages[0]!;
-        });
-        return built.map((page, i) => ({ ...page, durationMs: (built[i + 1]?.startMs ?? Math.max(sceneEndMs, page.startMs + page.durationMs)) - page.startMs }));
-      }),
-    [plan, fps],
-  );
+  const pages = useMemo(() => captionPages(plan.scenes, fps), [plan, fps]);
 
   const page = pages.find((p) => nowMs >= p.startMs && nowMs < p.startMs + p.durationMs);
   if (!page) return null;

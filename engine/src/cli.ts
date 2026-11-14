@@ -1,4 +1,5 @@
 import { Catalog } from "./catalog/catalog.js";
+import { checkVideo, summaryLines } from "./cli/check.js";
 import { defaultChecks, runDoctor } from "./cli/doctor.js";
 import { parseEvery, renderFrames } from "./cli/frames.js";
 import { listLines } from "./cli/list.js";
@@ -11,6 +12,7 @@ const USAGE = `Usage: unfaced <command>
 Commands:
   list <kind>                    List a catalog (style, script, hook, voice, captions, music, ending, duration)
   make <videoDir>                Make the video in <videoDir> (script.md; page.yaml two folders up)
+  check <videoDir>               Run the automatic checks on a made video; writes <videoDir>/check.json
   frames <videoDir> [--every 1s] Render review frames of a made video into <videoDir>/frames/
   doctor                         Check that everything the free pipeline needs is installed
   setup                          Download the voice model, whisper and the render browser`;
@@ -29,6 +31,11 @@ async function main(args: string[]): Promise<number> {
     case "make":
       await makeVideo(need(rest[0], "the video folder"));
       return 0;
+    case "check": {
+      const report = await checkVideo(need(rest[0], "the video folder"));
+      console.log(summaryLines(report).join("\n"));
+      return report.pass ? 0 : 1;
+    }
     case "frames": {
       const at = rest.indexOf("--every");
       await renderFrames(need(rest[0], "the video folder"), at >= 0 ? parseEvery(need(rest[at + 1], "a value for --every")) : 1);

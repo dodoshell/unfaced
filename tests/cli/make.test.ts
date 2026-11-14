@@ -46,8 +46,10 @@ function stubs() {
     "Why do cats purr? Cats sleep a lot. That's cats.".split(" ").map((text, i) => ({ text, startMs: 100 + i * 400, endMs: 450 + i * 400 })),
   );
   const render = vi.fn<MakeDeps["render"]>(async (_plan, outPath) => writeFileSync(outPath, "mp4"));
-  const deps: MakeDeps = { catalog: Catalog.load(CATALOG_DIR), voiceProvider: () => voice, align, render, env: {}, log: () => {} };
-  return { deps, synthesize, align, render };
+  const check = vi.fn<MakeDeps["check"]>(async () => ({ pass: false, issues: [{ check: "clipping", atMs: 0, severity: "error", message: "True peak is -0.4 dBTP" }] }));
+  const normalize = vi.fn<MakeDeps["normalize"]>(async () => {});
+  const deps: MakeDeps = { catalog: Catalog.load(CATALOG_DIR), voiceProvider: () => voice, normalize, align, render, check, env: {}, log: () => {} };
+  return { deps, synthesize, normalize, align, render, check };
 }
 
 describe("make", () => {
@@ -60,6 +62,25 @@ describe("make", () => {
     expect(plan).toMatchObject({ style: 3, captions: 1, audioSrc: "voice.wav" });
     expect(plan.scenes.map((s) => s.beatId)).toEqual(["hook", "b1", "ending"]);
     expect(render).toHaveBeenCalledWith(expect.anything(), join(video, "video.mp4"), { assetsDir: video });
+  });
+
+  it("brings the voice-over to the target loudness before timing it", async () => {
+    const video = setup();
+    const { deps, synthesize, normalize, align } = stubs();
+    await makeVideo(video, deps);
+    expect(normalize).toHaveBeenCalledWith(join(video, "voice.wav"));
+    expect(normalize.mock.invocationCallOrder[0]).toBeGreaterThan(synthesize.mock.invocationCallOrder[0]!);
+    expect(normalize.mock.invocationCallOrder[0]).toBeLessThan(align.mock.invocationCallOrder[0]!);
+  });
+
+  it("runs the automatic checks on the finished video and logs their summary", async () => {
+    const video = setup();
+    const { deps, render, check } = stubs();
+    const log = vi.fn();
+    await makeVideo(video, { ...deps, log });
+    expect(check).toHaveBeenCalledWith(video);
+    expect(check.mock.invocationCallOrder[0]).toBeGreaterThan(render.mock.invocationCallOrder[0]!);
+    expect(log.mock.calls.flat()).toEqual(expect.arrayContaining(["Checks: FAIL (1 error, 0 warnings)", expect.stringContaining("clipping")]));
   });
 
   it("reuses the voice and timings when the spoken text has not changed", async () => {

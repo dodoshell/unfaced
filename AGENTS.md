@@ -11,7 +11,7 @@ unfaced helps a person create and run faceless social media pages (Reels, TikTok
 | Create or edit a page profile | `schema/page.schema.json` (the `page-setup` skill is coming soon) |
 | Write or fix a video's `script.md` | `docs/formats/script.md` and the script type in `catalog/scripts/` |
 | See a complete page to copy | `examples/pages/curious-cats/` |
-| Review a made video | `npm run unfaced -- frames <videoDir> --every 1s`, then look at `<videoDir>/frames/` |
+| Review a made video | `npm run unfaced -- check <videoDir>` (writes `check.json`), then `npm run unfaced -- frames <videoDir> --every 1s` and look at `<videoDir>/frames/` |
 | Add a style or a script type | `catalog/` (`CONTRIBUTING.md` is coming soon); a style's look and layout rules live in its `STYLE.md` |
 | Design and plans | `docs/design/`, `docs/plans/` |
 
@@ -19,6 +19,7 @@ unfaced helps a person create and run faceless social media pages (Reels, TikTok
 
 - Install: `npm run setup` (npm install, then the voice model, whisper and the render browser into `~/.unfaced/`)
 - Check the install: `npm run unfaced -- doctor`
+- Run the automatic checks on a made video (exits 1 on an error): `npm run unfaced -- check <videoDir>`
 - Review frames of a made video: `npm run unfaced -- frames <videoDir> --every 1s`
 - Tests: `npm test` (slow tests that synthesize voice or render video: `UNFACED_SLOW=1 npm test`)
 - Types: `npm run typecheck`

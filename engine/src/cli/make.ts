@@ -8,17 +8,23 @@ import type { ChoiceField, Page } from "../page/types.js";
 import { CATALOG_DIR } from "../paths.js";
 import { buildPlan } from "../plan/buildPlan.js";
 import type { VideoPlan } from "../plan/types.js";
+import type { CheckReport } from "../check/types.js";
 import { renderVideo, type RenderOptions } from "../render/renderVideo.js";
 import { parseScript } from "../script/parseScript.js";
 import { alignWords, type WordTiming } from "../timing/align.js";
+import { normalizeLoudness } from "../voice/loudness.js";
 import { getVoiceProvider } from "../voice/registry.js";
+import { checkVideo, summaryLines } from "./check.js";
 import type { VoiceProvider } from "../voice/types.js";
 
 export interface MakeDeps {
   catalog: Catalog;
   voiceProvider(requested: string, env: NodeJS.ProcessEnv, warn: (msg: string) => void): VoiceProvider;
+  /** Brings the voice-over to the target loudness, in place. */
+  normalize(wavPath: string): Promise<void>;
   align(wavPath: string, language: string): Promise<WordTiming[]>;
   render(plan: VideoPlan, outPath: string, options: RenderOptions): Promise<void>;
+  check(videoDir: string): Promise<CheckReport>;
   env: NodeJS.ProcessEnv;
   log(msg: string): void;
 }
@@ -26,11 +32,16 @@ export interface MakeDeps {
 export const defaultMakeDeps = (): MakeDeps => ({
   catalog: Catalog.load(CATALOG_DIR),
   voiceProvider: getVoiceProvider,
+  normalize: normalizeLoudness,
   align: alignWords,
   render: renderVideo,
+  check: (videoDir) => checkVideo(videoDir),
   env: process.env,
   log: (msg) => console.error(msg),
 });
+
+/** Bumped when the voice-over is processed differently, so cached voice-overs are made again. */
+const VOICE_PROCESSING = "loudnorm -14";
 
 /** timing.json: the voice-over's word timings, keyed by what produced the voice. */
 interface TimingFile {
@@ -43,8 +54,8 @@ interface TimingFile {
 /**
  * Makes one video from `<videoDir>/script.md` and the page profile two folders up
  * (`<page>/videos/<video>/`). Writes voice.wav, timing.json, plan.json and video.mp4
- * into the video folder; the voice and timings are reused while the spoken text,
- * voice and language stay the same.
+ * into the video folder, then runs the automatic checks (check.json); the voice and
+ * timings are reused while the spoken text, voice and language stay the same.
  */
 export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDeps()): Promise<VideoPlan> {
   const dir = resolve(videoDir);
@@ -60,13 +71,14 @@ export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDe
 
   const wavPath = join(dir, "voice.wav");
   const timingFile = join(dir, "timing.json");
-  const hash = createHash("sha256").update(JSON.stringify([script.spokenText, voice.id, voiceType, page.language])).digest("hex");
+  const hash = createHash("sha256").update(JSON.stringify([script.spokenText, voice.id, voiceType, page.language, VOICE_PROCESSING])).digest("hex");
   let timing = readTiming(timingFile);
   if (timing?.hash === hash && existsSync(wavPath)) {
     deps.log("Voice-over unchanged; reusing voice.wav and timing.json");
   } else {
     deps.log(`Recording the voice-over (${voice.id}, voice ${voiceType}, ${page.language})`);
     const result = await voice.synthesize(script.spokenText, { language: page.language, voiceType, outPath: wavPath });
+    await deps.normalize(wavPath);
     deps.log("Timing every word");
     const words = await deps.align(wavPath, page.language);
     timing = { hash, provider: result.provider, durationSec: result.durationSec, words };
@@ -80,6 +92,7 @@ export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDe
   deps.log(`Rendering ${plan.durationInFrames} frames`);
   await deps.render(plan, out, { assetsDir: dir });
   deps.log(`Done: ${out}`);
+  for (const line of summaryLines(await deps.check(dir))) deps.log(line);
   return plan;
 }
 
