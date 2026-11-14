@@ -3,6 +3,8 @@
 import { layout as softThreeD } from "../../../catalog/styles/01-soft-3d/components/layout.js";
 import { layout as lowPoly } from "../../../catalog/styles/02-90s-low-poly/components/layout.js";
 import { layout as flatCartoon } from "../../../catalog/styles/03-flat-cartoon/components/layout.js";
+import { layout as lineArt } from "../../../catalog/styles/04-line-art/components/layout.js";
+import { layout as chalkboard } from "../../../catalog/styles/06-chalkboard/components/layout.js";
 import { layout as pixelArt } from "../../../catalog/styles/09-16-bit-pixel-art/components/layout.js";
 import { layout as neonSynthwave } from "../../../catalog/styles/10-neon-synthwave/components/layout.js";
 import { layout as kineticTypography } from "../../../catalog/styles/12-kinetic-typography/components/layout.js";
@@ -12,12 +14,14 @@ const LAYOUTS = new Map<number, StyleKit["layout"]>([
   [1, softThreeD],
   [2, lowPoly],
   [3, flatCartoon],
+  [4, lineArt],
+  [6, chalkboard],
   [9, pixelArt],
   [10, neonSynthwave],
   [12, kineticTypography],
 ]);
 /** Styles whose last scene draws the ending's sign itself, inside one of its own boxes. */
-const DRAW_ENDING_MARK = new Set<number>([3, 9, 10, 12]);
+const DRAW_ENDING_MARK = new Set<number>([3, 4, 6, 9, 10, 12]);
 
 /** The styles that have a layout, in catalog order. */
 export const stylesWithLayout = (): number[] => [...LAYOUTS.keys()].sort((a, b) => a - b);
