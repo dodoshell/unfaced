@@ -144,6 +144,19 @@ describe("make", () => {
     expect(synthesize).toHaveBeenCalledTimes(2);
   });
 
+  it("tries the page's voice again next time when another voice stood in for it", async () => {
+    const video = setup();
+    const { deps, synthesize } = stubs();
+    synthesize.mockImplementationOnce(async (_text, { outPath }) => {
+      writeFileSync(outPath, "RIFF");
+      return { wavPath: outPath, durationSec: 3, provider: "kokoro" };
+    });
+    await makeVideo(video, deps);
+    await makeVideo(video, deps);
+    await makeVideo(video, deps);
+    expect(synthesize).toHaveBeenCalledTimes(2);
+  });
+
   it("says when the voice only approximates the page's voice type", async () => {
     const video = setup();
     const { deps, voice } = stubs();

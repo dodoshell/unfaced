@@ -146,7 +146,8 @@ async function recordVoice(dir: string, text: string, voiceType: number, page: P
   if (words.length === 0) {
     throw new Error(`Whisper heard no words in ${wavPath}. Listen to it: if it is silent or noise, run "unfaced doctor" to check the voice; if it sounds right, run make again.`);
   }
-  return { hash, provider: result.provider, durationSec: result.durationSec, words };
+  // A voice that stood in for a failed paid one is kept for this video only: next time the paid one is tried again.
+  return { hash: result.provider === voice.id ? hash : `${hash} (${result.provider} stood in)`, provider: result.provider, durationSec: result.durationSec, words };
 }
 
 /**
