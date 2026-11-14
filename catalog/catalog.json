@@ -44,7 +44,7 @@
     { "num": 15, "slug": "contrarian-take", "name": "Contrarian take", "summary": "Disagree with something everyone believes.", "goodFor": ["myths", "opinions", "science"], "path": "hooks.md#15-contrarian-take", "status": "planned" }
   ],
   "voice": [
-    { "num": 1, "slug": "calm-documentary", "name": "Calm documentary", "summary": "Slow, low and clear, like a nature documentary.", "goodFor": ["nature", "history", "science"], "path": "voices.md#01-calm-documentary", "status": "planned" },
+    { "num": 1, "slug": "calm-documentary", "name": "Calm documentary", "summary": "Slow, low and clear, like a nature documentary.", "goodFor": ["nature", "history", "science"], "path": "voices.md#01-calm-documentary", "status": "ready" },
     { "num": 2, "slug": "energetic", "name": "Energetic", "summary": "Fast and upbeat, with weight on every key word.", "goodFor": ["lists", "facts", "sport"], "path": "voices.md#02-energetic", "status": "planned" },
     { "num": 3, "slug": "storyteller", "name": "Storyteller", "summary": "Warm, with pauses that build suspense.", "goodFor": ["stories", "history"], "path": "voices.md#03-storyteller", "status": "planned" },
     { "num": 4, "slug": "whisper", "name": "Whisper", "summary": "Quiet and close, for mysteries and calm content.", "goodFor": ["mystery", "relaxing"], "path": "voices.md#04-whisper", "status": "planned" },

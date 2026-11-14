@@ -20,7 +20,7 @@ const launch: Record<string, string[]> = {
   duration: ["15 seconds", "30 seconds", "45 seconds", "60 seconds"],
 };
 
-const ready = new Set(["style:3", "script:6", "script:9", "captions:1", "duration:1", "duration:2", "duration:3", "duration:4", "music:8", "ending:5"]);
+const ready = new Set(["style:3", "script:6", "script:9", "captions:1", "duration:1", "duration:2", "duration:3", "duration:4", "music:8", "ending:5", "voice:1"]);
 
 describe("catalog", () => {
   it("numbers every kind from 1 with no gaps or duplicates", () => {
