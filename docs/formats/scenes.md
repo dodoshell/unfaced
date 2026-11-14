@@ -39,9 +39,10 @@ export default defineScenes({ b2: TwoBowls });
 
 - Import `remotion` and `react` by name, and everything unfaced offers from `@unfaced/kit`.
 - A scene gets `{ scene, palette }`: `scene.text` is the beat's text, `scene.words` its words with their times, `scene.durationInFrames` its length. `useCurrentFrame()` counts from the start of the beat.
+- Word times (`startMs`, `endMs`) count in milliseconds from the start of the whole video, not of the beat. To make something happen on a word, turn its time into the beat's frames: `Math.round((word.startMs / 1000) * fps) - scene.fromFrame`, with `fps` from `useVideoConfig()`.
 - `useVideo()` gives the whole plan, the style and the palette; `useMascot()` gives the page's mascot or `undefined`.
 - The style's background stays behind the scene, and the engine draws the captions on top of it.
-- The engine draws the ending's sign (an arrow, a question bubble, a follow button) on top, in `END_MARK_BOX`, whatever scene the ending has, unless the style draws it in its own last scene (style 03, inside `<StyleScene>`); then an ending scene that skips `<StyleScene>` draws `<EndingMark>` itself. `drawsEndingMark(useVideo().plan.style)` tells which.
+- The engine draws the ending's sign (an arrow, a question bubble, a follow button) on top, in `END_MARK_BOX`, whatever scene the ending has, unless the style draws it in its own last scene (inside `<StyleScene>`, as style 03 does); then an ending scene that skips `<StyleScene>` draws `<EndingMark>` itself. `drawsEndingMark(useVideo().plan.style)` tells which.
 
 What `@unfaced/kit` offers:
 
