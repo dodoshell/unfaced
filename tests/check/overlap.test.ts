@@ -47,6 +47,16 @@ describe("text box checks", () => {
     expect(placedBoxes({ ...plan(scenes), ending: 5 }, layout)).toEqual([]);
   });
 
+  it("uses the boxes a video's own scene code declares for its beats instead of the style's", () => {
+    const layout = () => [{ id: "text", x: 110, y: 500, w: 780, h: 400 }];
+    const own = { b2: [{ id: "label", x: 100, y: 300, w: 300, h: 100 }] };
+    const boxes = placedBoxes(plan([scene("b1", 0, []), scene("b2", 30, [])]), layout, false, own);
+    expect(boxes.map((b) => [b.id, b.x, b.fromFrame])).toEqual([
+      ["b1 text", 110, 0],
+      ["b2 label", 100, 30],
+    ]);
+  });
+
   it("finds no overlap and nothing outside the safe zone in the example videos", () => {
     for (const name of ["why-cats-purr", "cats-and-milk"]) {
       const file = join(import.meta.dirname, "..", "..", "examples", "pages", "curious-cats", "videos", name, "plan.json");

@@ -75,7 +75,7 @@ interface TimingFile {
  * into the video folder, then runs the automatic checks (check.json); the voice and
  * timings are reused while the spoken text, voice and language stay the same.
  */
-export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDeps()): Promise<VideoPlan> {
+export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDeps()): Promise<{ plan: VideoPlan; report: CheckReport }> {
   const dir = resolve(videoDir);
   const scriptFile = join(dir, "script.md");
   if (!existsSync(scriptFile)) throw new Error(`script.md not found in ${dir}`);
@@ -110,8 +110,9 @@ export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDe
   const scenes = join(dir, "scenes", "index.tsx");
   await deps.render(plan, out, { assetsDir: dir, ...(existsSync(scenes) ? { scenes } : {}) });
   deps.log(`Done: ${out}`);
-  for (const line of summaryLines(await deps.check(dir))) deps.log(line);
-  return plan;
+  const report = await deps.check(dir);
+  for (const line of summaryLines(report)) deps.log(line);
+  return { plan, report };
 }
 
 /** Timings for a text-only video: no voice, the captions at reading pace. */

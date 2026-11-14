@@ -4,7 +4,7 @@ import { drawsEndingMark, getLayout } from "../../remotion/styles/layouts.js";
 import { type Pcm, readSoundtrack, speechOnsets } from "../audio/speech.js";
 import { type Loudness, checkLoudness, measureLoudness } from "../check/audio.js";
 import { checkFrames, readGrayFrames } from "../check/frames.js";
-import { checkOverlap, checkSafeZone, placedBoxes } from "../check/overlap.js";
+import { checkOverlap, checkSafeZone, type OwnBoxes, placedBoxes } from "../check/overlap.js";
 import { checkEdges, checkSync, shownWords } from "../check/sync.js";
 import { type CheckReport, toReport } from "../check/types.js";
 import type { VideoPlan } from "../plan/types.js";
@@ -20,6 +20,18 @@ export interface CheckDeps {
 
 export const defaultCheckDeps = (): CheckDeps => ({ readFrames: readGrayFrames, measureLoudness, readSoundtrack });
 
+/** The text boxes a video's own scenes declare in scenes/boxes.json: { "<beat id>": [{ "id", "x", "y", "w", "h" }] }. */
+function readOwnBoxes(dir: string): OwnBoxes {
+  const file = join(dir, "scenes", "boxes.json");
+  if (!existsSync(file)) return {};
+  const raw = JSON.parse(readFileSync(file, "utf8")) as Record<string, unknown>;
+  for (const [beat, boxes] of Object.entries(raw)) {
+    const ok = Array.isArray(boxes) && boxes.every((b) => b && typeof b.id === "string" && ["x", "y", "w", "h"].every((k) => typeof b[k] === "number"));
+    if (!ok) throw new Error(`scenes/boxes.json: beat "${beat}" must be a list of boxes, each with an id and x, y, w and h in pixels`);
+  }
+  return raw as OwnBoxes;
+}
+
 /**
  * Runs every automatic check on a made video (plan.json and video.mp4 in
  * `videoDir`) and writes the report to `<videoDir>/check.json`.
@@ -32,7 +44,7 @@ export async function checkVideo(videoDir: string, deps: CheckDeps = defaultChec
   const plan = JSON.parse(readFileSync(join(dir, "plan.json"), "utf8")) as VideoPlan;
   const video = join(dir, "video.mp4");
 
-  const boxes = placedBoxes(plan, getLayout(plan.style), drawsEndingMark(plan.style));
+  const boxes = placedBoxes(plan, getLayout(plan.style), drawsEndingMark(plan.style), readOwnBoxes(dir));
   // A text-only video (voice 08) has no voice to follow; a silent one has no sound to measure.
   const voiced = plan.voice !== TEXT_ONLY_VOICE && plan.audioSrc !== undefined;
   const soundtrack = voiced ? await deps.readSoundtrack(video) : undefined;

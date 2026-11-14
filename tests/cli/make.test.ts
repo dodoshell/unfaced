@@ -107,6 +107,13 @@ describe("make", () => {
     expect(log.mock.calls.flat()).toEqual(expect.arrayContaining(["Checks: FAIL (1 error, 0 warnings)", expect.stringContaining("clipping")]));
   });
 
+  it("returns the plan and the check report, so the command can fail when a check fails", async () => {
+    const { deps } = stubs();
+    const made = await makeVideo(setup(), deps);
+    expect(made.plan.style).toBe(3);
+    expect(made.report.pass).toBe(false);
+  });
+
   it("reuses the voice and timings when the spoken text has not changed", async () => {
     const video = setup();
     const { deps, synthesize, align, render } = stubs();

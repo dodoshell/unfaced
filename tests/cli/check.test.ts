@@ -1,4 +1,4 @@
-import { copyFileSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it, vi } from "vitest";
@@ -60,6 +60,16 @@ describe("check", () => {
     const report = await checkVideo(dir, { ...deps(0.5), readSoundtrack });
     expect(readSoundtrack).not.toHaveBeenCalled();
     expect(report.issues.map((i) => i.check)).toContain("clipping");
+  });
+
+  it("checks the text boxes that the video's own scenes declare in scenes/boxes.json", async () => {
+    const dir = setup();
+    mkdirSync(join(dir, "scenes"));
+    writeFileSync(join(dir, "scenes", "boxes.json"), JSON.stringify({ hook: [{ id: "label", x: 60, y: 1250, w: 900, h: 200 }] }));
+    const report = await checkVideo(dir, deps(-3));
+    expect(report.issues.filter((i) => i.check === "overlap").map((i) => i.message)).toEqual([expect.stringMatching(/hook label.*hook caption/)]);
+    writeFileSync(join(dir, "scenes", "boxes.json"), JSON.stringify({ hook: [{ id: "label", x: 60 }] }));
+    await expect(checkVideo(dir, deps(-3))).rejects.toThrow(/scenes\/boxes\.json.*hook.*x, y, w and h/);
   });
 
   it("asks for make when the video folder has not been made", async () => {
