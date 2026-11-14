@@ -61,7 +61,7 @@ export const defaultMakeDeps = (): MakeDeps => ({
 const SNAP_MIN_PAUSE_MS = 100;
 
 /** Bumped when the voice-over is processed differently, so cached voice-overs are made again. */
-const VOICE_PROCESSING = "lead-in 250, loudnorm -14, pause snap 100 in order, crushed words, prepared length, no clicks 30";
+const VOICE_PROCESSING = "lead-in 250, limiter -3 then loudnorm -14 two-pass, pause snap 100 in order, crushed words, prepared length, no clicks 30";
 
 /** timing.json: the voice-over's word timings, keyed by what produced the voice. */
 interface TimingFile {
