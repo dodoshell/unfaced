@@ -8,6 +8,7 @@ import * as THREE from "three";
 import { partBounds } from "../character/parts.js";
 import type { FigureProps } from "../character/svg.js";
 import type { Part } from "../character/types.js";
+import { splitAlpha } from "./paint.js";
 
 /** How a 3D style shapes and lights its solids. */
 export interface Look3D {
@@ -94,13 +95,13 @@ const Solids: React.FC<{ parts: Part[]; look: Look3D }> = ({ parts, look }) => {
       parts.flatMap((part, i) => {
         if (part.kind === "mark") return [];
         const g = geometry(part, look);
-        const colour = partColour(part, look);
+        const { color, opacity } = splitAlpha(partColour(part, look));
         const material =
           part.role === "shadow"
             ? new THREE.MeshBasicMaterial({ color: "#000000", transparent: true, opacity: 0.16, depthTest: false, depthWrite: false })
-            : // Transparent (at full opacity) so three.js sorts every solid by renderOrder in one list;
+            : // Transparent (usually at full opacity) so three.js sorts every solid by renderOrder in one list;
               // otherwise the see-through shadows would be drawn after, and over, all the opaque solids.
-              new THREE.MeshStandardMaterial({ color: colour, roughness: look.roughness, metalness: 0, flatShading: look.flatShading, transparent: true, depthTest: false, depthWrite: false });
+              new THREE.MeshStandardMaterial({ color, opacity, roughness: look.roughness, metalness: 0, flatShading: look.flatShading, transparent: true, depthTest: false, depthWrite: false });
         return [{ key: i, ...g, material }];
       }),
     [parts, look],
