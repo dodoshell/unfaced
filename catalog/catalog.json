@@ -1,0 +1,88 @@
+{
+  "$comment": "Index of every catalog entry. Paths are relative to this folder; an anchor (#...) points at a section of a shared file. status: ready = usable now, planned = listed but not built yet.",
+  "style": [
+    { "num": 1, "slug": "soft-3d", "name": "Soft 3D", "summary": "Rounded toy-like 3D shapes with soft light, like clay figures.", "goodFor": ["kids", "cute animals", "products"], "path": "styles/01-soft-3d/style.json", "status": "planned" },
+    { "num": 2, "slug": "90s-low-poly", "name": "90s low poly", "summary": "Faceted low-polygon 3D with flat shading and a retro game feel.", "goodFor": ["gaming", "nostalgia", "tech"], "path": "styles/02-90s-low-poly/style.json", "status": "planned" },
+    { "num": 3, "slug": "flat-cartoon", "name": "Flat cartoon", "summary": "Bold flat shapes, thick outlines and bright colours.", "goodFor": ["facts", "animals", "explainers"], "path": "styles/03-flat-cartoon/style.json", "status": "ready" },
+    { "num": 4, "slug": "line-art", "name": "Line art", "summary": "Clean single-weight lines on a plain background, drawn as you watch.", "goodFor": ["explainers", "productivity", "minimal brands"], "path": "styles/04-line-art/style.json", "status": "planned" },
+    { "num": 5, "slug": "ink-silhouette", "name": "Ink silhouette", "summary": "Black silhouettes against a coloured sky, high contrast and moody.", "goodFor": ["history", "stories", "mystery"], "path": "styles/05-ink-silhouette/style.json", "status": "planned" },
+    { "num": 6, "slug": "chalkboard", "name": "Chalkboard", "summary": "Chalk drawings and handwriting on a dark board.", "goodFor": ["education", "maths", "how it works"], "path": "styles/06-chalkboard/style.json", "status": "planned" },
+    { "num": 7, "slug": "paper-cut-out", "name": "Paper cut-out", "summary": "Layered paper shapes with soft shadows, like a stop-motion collage.", "goodFor": ["stories", "kids", "crafts"], "path": "styles/07-paper-cut-out/style.json", "status": "planned" },
+    { "num": 8, "slug": "vintage-comic", "name": "Vintage comic", "summary": "Halftone dots, ink outlines and panels from old comic books.", "goodFor": ["history", "myths", "bold claims"], "path": "styles/08-vintage-comic/style.json", "status": "planned" },
+    { "num": 9, "slug": "16-bit-pixel-art", "name": "16-bit pixel art", "summary": "Chunky pixels and limited palettes from 16-bit consoles.", "goodFor": ["gaming", "tech", "nostalgia"], "path": "styles/09-16-bit-pixel-art/style.json", "status": "planned" },
+    { "num": 10, "slug": "neon-synthwave", "name": "Neon synthwave", "summary": "Glowing neon lines on a dark grid under an 80s sunset.", "goodFor": ["tech", "space", "music"], "path": "styles/10-neon-synthwave/style.json", "status": "planned" },
+    { "num": 11, "slug": "watercolour", "name": "Watercolour", "summary": "Soft washes of paint with visible paper texture.", "goodFor": ["nature", "emotional stories", "travel"], "path": "styles/11-watercolour/style.json", "status": "planned" },
+    { "num": 12, "slug": "kinetic-typography", "name": "Kinetic typography", "summary": "The words are the visuals: big type that moves with the voice.", "goodFor": ["quotes", "motivation", "lists"], "path": "styles/12-kinetic-typography/style.json", "status": "planned" }
+  ],
+  "script": [
+    { "num": 1, "slug": "build-it", "name": "Build it", "summary": "Something is built step by step, from nothing to finished.", "goodFor": ["engineering", "history", "food"], "path": "scripts/01-build-it.md", "status": "planned" },
+    { "num": 2, "slug": "top-n-countdown", "name": "Top N countdown", "summary": "A ranked list that counts down to number one.", "goodFor": ["lists", "comparisons", "trivia"], "path": "scripts/02-top-n-countdown.md", "status": "planned" },
+    { "num": 3, "slug": "myth-or-fact", "name": "Myth or fact", "summary": "A popular belief is stated, then confirmed or busted.", "goodFor": ["science", "health", "history"], "path": "scripts/03-myth-or-fact.md", "status": "planned" },
+    { "num": 4, "slug": "what-if", "name": "What if", "summary": "A hypothetical scenario followed to its consequences.", "goodFor": ["science", "space", "history"], "path": "scripts/04-what-if.md", "status": "planned" },
+    { "num": 5, "slug": "story-in-60-seconds", "name": "Story in 60 seconds", "summary": "A real event told as a compact story with a beginning, middle and end.", "goodFor": ["history", "true stories", "business"], "path": "scripts/05-story-in-60-seconds.md", "status": "planned" },
+    { "num": 6, "slug": "surprising-answer", "name": "Surprising answer", "summary": "A simple question whose real answer is unexpected.", "goodFor": ["facts", "science", "animals"], "path": "scripts/06-surprising-answer.md", "status": "ready" },
+    { "num": 7, "slug": "how-it-works", "name": "How it works", "summary": "An everyday thing explained from the inside.", "goodFor": ["tech", "science", "engineering"], "path": "scripts/07-how-it-works.md", "status": "planned" },
+    { "num": 8, "slug": "x-vs-y", "name": "X vs Y", "summary": "Two things compared point by point, with a verdict.", "goodFor": ["animals", "tech", "sport"], "path": "scripts/08-x-vs-y.md", "status": "planned" },
+    { "num": 9, "slug": "did-you-know", "name": "Did you know", "summary": "A quick chain of related facts, each stranger than the last.", "goodFor": ["facts", "animals", "trivia"], "path": "scripts/09-did-you-know.md", "status": "ready" },
+    { "num": 10, "slug": "mini-story", "name": "Mini story", "summary": "A short fictional story with a twist, often starring the mascot.", "goodFor": ["fiction", "mascot", "humour"], "path": "scripts/10-mini-story.md", "status": "planned" }
+  ],
+  "hook": [
+    { "num": 1, "slug": "shocking-question", "name": "Shocking question", "summary": "Open with a question the viewer can't answer but wants to.", "goodFor": ["facts", "science"], "path": "hooks.md#01-shocking-question", "status": "planned" },
+    { "num": 2, "slug": "absurd-number", "name": "Absurd number", "summary": "Open with a number so big or so small it sounds wrong.", "goodFor": ["facts", "space", "money"], "path": "hooks.md#02-absurd-number", "status": "planned" },
+    { "num": 3, "slug": "youre-doing-it-wrong", "name": "You're doing it wrong", "summary": "Tell the viewer that something they do every day is wrong.", "goodFor": ["life hacks", "health", "food"], "path": "hooks.md#03-youre-doing-it-wrong", "status": "planned" },
+    { "num": 4, "slug": "impossible-image", "name": "Impossible image", "summary": "Open on a picture that looks like it can't be real.", "goodFor": ["nature", "space", "engineering"], "path": "hooks.md#04-impossible-image", "status": "planned" },
+    { "num": 5, "slug": "unfinished-sentence", "name": "Unfinished sentence", "summary": "Start a sentence and finish it only at the end.", "goodFor": ["stories", "loops"], "path": "hooks.md#05-unfinished-sentence", "status": "planned" },
+    { "num": 6, "slug": "bold-claim", "name": "Bold claim", "summary": "Open with a strong statement, then prove it.", "goodFor": ["history", "myths", "opinions"], "path": "hooks.md#06-bold-claim", "status": "planned" },
+    { "num": 7, "slug": "countdown-tease", "name": "Countdown tease", "summary": "Promise that the last item is the best one.", "goodFor": ["lists", "countdowns"], "path": "hooks.md#07-countdown-tease", "status": "planned" },
+    { "num": 8, "slug": "pov", "name": "POV", "summary": "Put the viewer inside the situation: \"POV: you are...\".", "goodFor": ["stories", "history", "humour"], "path": "hooks.md#08-pov", "status": "planned" },
+    { "num": 9, "slug": "nobody-talks-about-this", "name": "Nobody talks about this", "summary": "Frame the topic as overlooked or hidden.", "goodFor": ["facts", "history", "business"], "path": "hooks.md#09-nobody-talks-about-this", "status": "planned" },
+    { "num": 10, "slug": "before-after-flash", "name": "Before/after flash", "summary": "Flash the finished result first, then go back to the start.", "goodFor": ["build it", "transformations"], "path": "hooks.md#10-before-after-flash", "status": "planned" },
+    { "num": 11, "slug": "insider-secret", "name": "Insider secret", "summary": "Share what people in the field know and others don't.", "goodFor": ["jobs", "business", "how it works"], "path": "hooks.md#11-insider-secret", "status": "planned" },
+    { "num": 12, "slug": "challenge", "name": "Challenge", "summary": "Dare the viewer to guess, spot or try something.", "goodFor": ["quizzes", "puzzles", "trivia"], "path": "hooks.md#12-challenge", "status": "planned" },
+    { "num": 13, "slug": "start-at-the-climax", "name": "Start at the climax", "summary": "Open on the most dramatic moment, then rewind.", "goodFor": ["stories", "history"], "path": "hooks.md#13-start-at-the-climax", "status": "planned" },
+    { "num": 14, "slug": "relatable-pain", "name": "Relatable pain", "summary": "Name a small frustration everyone has felt.", "goodFor": ["life hacks", "humour", "tech"], "path": "hooks.md#14-relatable-pain", "status": "planned" },
+    { "num": 15, "slug": "contrarian-take", "name": "Contrarian take", "summary": "Disagree with something everyone believes.", "goodFor": ["myths", "opinions", "science"], "path": "hooks.md#15-contrarian-take", "status": "planned" }
+  ],
+  "voice": [
+    { "num": 1, "slug": "calm-documentary", "name": "Calm documentary", "summary": "Slow, low and clear, like a nature documentary.", "goodFor": ["nature", "history", "science"], "path": "voices.md#01-calm-documentary", "status": "planned" },
+    { "num": 2, "slug": "energetic", "name": "Energetic", "summary": "Fast and upbeat, with weight on every key word.", "goodFor": ["lists", "facts", "sport"], "path": "voices.md#02-energetic", "status": "planned" },
+    { "num": 3, "slug": "storyteller", "name": "Storyteller", "summary": "Warm, with pauses that build suspense.", "goodFor": ["stories", "history"], "path": "voices.md#03-storyteller", "status": "planned" },
+    { "num": 4, "slug": "whisper", "name": "Whisper", "summary": "Quiet and close, for mysteries and calm content.", "goodFor": ["mystery", "relaxing"], "path": "voices.md#04-whisper", "status": "planned" },
+    { "num": 5, "slug": "deadpan", "name": "Deadpan", "summary": "Flat and dry, so the humour lands on the pause.", "goodFor": ["humour", "absurd facts"], "path": "voices.md#05-deadpan", "status": "planned" },
+    { "num": 6, "slug": "warm-friendly", "name": "Warm friendly", "summary": "Like a friend explaining something over coffee.", "goodFor": ["how it works", "life hacks"], "path": "voices.md#06-warm-friendly", "status": "planned" },
+    { "num": 7, "slug": "news-anchor", "name": "News anchor", "summary": "Crisp and authoritative, like breaking news.", "goodFor": ["tech", "business", "current events"], "path": "voices.md#07-news-anchor", "status": "planned" },
+    { "num": 8, "slug": "none", "name": "None (text only)", "summary": "No voice: captions and music carry the video.", "goodFor": ["quotes", "kinetic typography", "silent viewing"], "path": "voices.md#08-none", "status": "planned" }
+  ],
+  "captions": [
+    { "num": 1, "slug": "word-by-word-karaoke", "name": "Word-by-word karaoke", "summary": "Each word lights up as it is spoken.", "goodFor": ["any voiced video"], "path": "captions.md#01-word-by-word-karaoke", "status": "ready" },
+    { "num": 2, "slug": "bold-centre", "name": "Bold centre", "summary": "Short phrases in large type at the centre of the screen.", "goodFor": ["facts", "punchy edits"], "path": "captions.md#02-bold-centre", "status": "planned" },
+    { "num": 3, "slug": "typewriter", "name": "Typewriter", "summary": "Letters appear one at a time, as if being typed.", "goodFor": ["mystery", "tech", "history"], "path": "captions.md#03-typewriter", "status": "planned" },
+    { "num": 4, "slug": "minimal-lower-third", "name": "Minimal lower third", "summary": "Small, quiet subtitles near the bottom.", "goodFor": ["busy visuals", "calm content"], "path": "captions.md#04-minimal-lower-third", "status": "planned" },
+    { "num": 5, "slug": "outline-pop", "name": "Outline pop", "summary": "Outlined words that pop in with a bounce.", "goodFor": ["kids", "humour", "cartoons"], "path": "captions.md#05-outline-pop", "status": "planned" },
+    { "num": 6, "slug": "highlight-keyword", "name": "Highlight keyword", "summary": "Full lines with the key word in a highlight colour.", "goodFor": ["explainers", "education"], "path": "captions.md#06-highlight-keyword", "status": "planned" }
+  ],
+  "music": [
+    { "num": 1, "slug": "suspense", "name": "Suspense", "summary": "Slow tension that builds under the voice.", "goodFor": ["mystery", "cliffhangers"], "path": "music.md#01-suspense", "status": "planned" },
+    { "num": 2, "slug": "epic", "name": "Epic", "summary": "Big drums and strings for dramatic moments.", "goodFor": ["history", "space", "sport"], "path": "music.md#02-epic", "status": "planned" },
+    { "num": 3, "slug": "lo-fi", "name": "Lo-fi", "summary": "Relaxed beats for calm, cosy content.", "goodFor": ["study", "how it works", "relaxing"], "path": "music.md#03-lo-fi", "status": "planned" },
+    { "num": 4, "slug": "upbeat", "name": "Upbeat", "summary": "Bright and bouncy, keeps the pace high.", "goodFor": ["lists", "life hacks"], "path": "music.md#04-upbeat", "status": "planned" },
+    { "num": 5, "slug": "playful", "name": "Playful", "summary": "Light and silly, for cartoons and animals.", "goodFor": ["animals", "kids", "humour"], "path": "music.md#05-playful", "status": "planned" },
+    { "num": 6, "slug": "emotional", "name": "Emotional", "summary": "Soft piano and strings for moving stories.", "goodFor": ["stories", "nature"], "path": "music.md#06-emotional", "status": "planned" },
+    { "num": 7, "slug": "mystery", "name": "Mystery", "summary": "Strange, sparse sounds for unexplained things.", "goodFor": ["mystery", "space", "deep sea"], "path": "music.md#07-mystery", "status": "planned" },
+    { "num": 8, "slug": "none", "name": "None", "summary": "No music: voice only, or a trending sound added when posting.", "goodFor": ["trending sounds", "voice-led videos"], "path": "music.md#08-none", "status": "ready" }
+  ],
+  "ending": [
+    { "num": 1, "slug": "seamless-loop", "name": "Seamless loop", "summary": "The last line flows back into the first, so the video replays.", "goodFor": ["short facts", "15-second videos"], "path": "endings.md#01-seamless-loop", "status": "planned" },
+    { "num": 2, "slug": "cliffhanger", "name": "Cliffhanger", "summary": "Stop just before the answer.", "goodFor": ["series", "stories"], "path": "endings.md#02-cliffhanger", "status": "planned" },
+    { "num": 3, "slug": "comment-question", "name": "Comment question", "summary": "Ask the viewer a question to answer in the comments.", "goodFor": ["opinions", "comparisons"], "path": "endings.md#03-comment-question", "status": "planned" },
+    { "num": 4, "slug": "follow-for-part-2", "name": "Follow for part 2", "summary": "Promise a continuation in the next video.", "goodFor": ["series", "long stories"], "path": "endings.md#04-follow-for-part-2", "status": "planned" },
+    { "num": 5, "slug": "punchline", "name": "Punchline", "summary": "End on a short, funny or surprising line.", "goodFor": ["facts", "humour", "animals"], "path": "endings.md#05-punchline", "status": "ready" },
+    { "num": 6, "slug": "callback-to-the-hook", "name": "Callback to the hook", "summary": "Answer or echo the opening line.", "goodFor": ["questions", "stories"], "path": "endings.md#06-callback-to-the-hook", "status": "planned" }
+  ],
+  "duration": [
+    { "num": 1, "slug": "15-seconds", "name": "15 seconds", "summary": "One fact, one punch. Best for loops.", "goodFor": ["loops", "single facts"], "path": "durations.md#01-15-seconds", "status": "ready" },
+    { "num": 2, "slug": "30-seconds", "name": "30 seconds", "summary": "The default: a hook, three beats and an ending.", "goodFor": ["most videos"], "path": "durations.md#02-30-seconds", "status": "ready" },
+    { "num": 3, "slug": "45-seconds", "name": "45 seconds", "summary": "Room for a short story or a top 5.", "goodFor": ["countdowns", "short stories"], "path": "durations.md#03-45-seconds", "status": "ready" },
+    { "num": 4, "slug": "60-seconds", "name": "60 seconds", "summary": "Full stories, countdowns and comparisons.", "goodFor": ["stories", "comparisons"], "path": "durations.md#04-60-seconds", "status": "ready" }
+  ]
+}
