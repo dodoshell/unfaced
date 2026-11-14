@@ -30,7 +30,9 @@ export function markColours(palette: string[]): { fill: string; ink: string } {
 /**
  * The wordless sign of an ending (see endings.ts), popping in when its Sequence starts:
  * an arrow with dots that run on (cliffhanger), a question bubble (comment question), a
- * follow button with a 2 (part 2), an arrow turning back (callback to the hook).
+ * follow button with a 2 (part 2), an arrow turning back (callback to the hook). The engine
+ * draws it unless the style does (drawsEndingMark); in such a style, a video's own ending scene
+ * that skips StyleScene draws it itself.
  */
 export const EndingMark: React.FC<EndingMarkProps> = ({ kind, box, fill, ink }) => {
   const frame = useCurrentFrame();

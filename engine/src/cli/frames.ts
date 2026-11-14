@@ -1,6 +1,7 @@
 import { existsSync, readFileSync, rmSync } from "node:fs";
 import { join, resolve } from "node:path";
 import type { VideoPlan } from "../plan/types.js";
+import { ownScenes } from "../render/ownScenes.js";
 import { closeRenders, renderStillAt } from "../render/renderVideo.js";
 
 /** Parses an interval such as "1s", "0.5s" or "2" (seconds). */
@@ -26,8 +27,8 @@ export async function renderFrames(
   const plan = JSON.parse(readFileSync(planFile, "utf8")) as VideoPlan;
   const step = Math.max(1, Math.round(everySec * plan.fps));
   const files: string[] = [];
-  const scenes = join(dir, "scenes", "index.tsx");
-  const options = { assetsDir: dir, ...(existsSync(scenes) ? { scenes } : {}) };
+  const scenes = ownScenes(dir, plan.scenes.map((s) => s.beatId), log);
+  const options = { assetsDir: dir, ...(scenes ? { scenes } : {}) };
   rmSync(join(dir, "frames"), { recursive: true, force: true });
   try {
     for (let frame = 0; frame < plan.durationInFrames; frame += step) {

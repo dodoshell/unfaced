@@ -47,3 +47,4 @@ Inside this repository the skills' launcher (`node plugin/launcher/unfaced.mjs <
 - Code must work on Windows, macOS and Linux: use `node:path`, never hard-code separators.
 - Never publish to social networks. unfaced only produces files.
 - `plugin/launcher/unfaced.mjs` is copied into every skill's `scripts/`; after changing it, copy it again (a test checks the copies are identical).
+- `plugin/agents/video-reviewer.md` is copied into `plugin/skills/video-make/references/` for agents without subagents; after changing it, copy it again (a test checks the copy is identical).

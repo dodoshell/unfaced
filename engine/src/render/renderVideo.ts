@@ -73,7 +73,7 @@ function scenesEntry(scenes: string): { entry: string; dir: string } {
     `import ${engine("styles/installed.ts")};`,
     `import { setVideoScenes } from ${engine("core/videoScenes.ts")};`,
     `import scenes from ${JSON.stringify(slash(resolve(scenes)))};`,
-    "setVideoScenes(scenes);",
+    `setVideoScenes(scenes, ${JSON.stringify(resolve(scenes))});`,
     "registerRoot(RemotionRoot);",
     "",
   ].join("\n");

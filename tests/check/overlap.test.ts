@@ -45,6 +45,9 @@ describe("text box checks", () => {
     expect(mark).toEqual({ id: "ending mark", ...END_MARK_BOX, fromFrame: 30, toFrame: 60 });
     expect(placedBoxes({ ...plan(scenes), ending: 3 }, layout, true)).toEqual([]);
     expect(placedBoxes({ ...plan(scenes), ending: 5 }, layout)).toEqual([]);
+    const own = { ending: [{ id: "headline", x: 300, y: 300, w: 480, h: 150 }] };
+    expect(placedBoxes({ ...plan(scenes), ending: 3 }, layout, false, own).map((b) => b.id)).toEqual(["ending headline", "ending mark"]);
+    expect(placedBoxes({ ...plan(scenes), ending: 3 }, layout, true, own).map((b) => b.id)).toEqual(["ending headline"]);
   });
 
   it("uses the boxes a video's own scene code declares for its beats instead of the style's", () => {

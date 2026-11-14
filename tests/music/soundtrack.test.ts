@@ -21,6 +21,13 @@ describe("writeSoundtrack", () => {
     expect(truePeakDb).toBeLessThanOrEqual(MAX_TRUE_PEAK);
   });
 
+  it("leaves three quarters of a dB under the true-peak limit for the AAC encode, even for the bright drums of music 4", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "unfaced soundtrack "));
+    await writeSoundtrack(dir, { mood: 4, durationSec: 15 });
+    const { truePeakDb } = await measureLoudness(join(dir, "soundtrack.wav"));
+    expect(truePeakDb).toBeLessThanOrEqual(MAX_TRUE_PEAK - 0.75);
+  });
+
   it("keeps the voice-over's rate and its speech onsets under the music", async () => {
     const dir = mkdtempSync(join(tmpdir(), "unfaced soundtrack "));
     const voice = tones(5000, [[400, 1600], [2200, 3400], [4000, 4600]]);

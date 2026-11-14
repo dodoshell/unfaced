@@ -11,8 +11,11 @@ export function defineScenes(scenes: Record<string, SceneComponent>): Record<str
   return scenes;
 }
 
-/** Called by the generated entry point of a video with a scenes/ folder. */
-export function setVideoScenes(scenes: Record<string, SceneComponent>): void {
+/** Called by the generated entry point of a video with a scenes/ folder; `file` is its index.tsx, named when the default export is missing. */
+export function setVideoScenes(scenes: Record<string, SceneComponent>, file: string): void {
+  if (!scenes || typeof scenes !== "object") {
+    throw new Error(`${file} must export its scenes by default: end it with export default defineScenes({ b2: MyScene }), naming each scene by its beat ("hook", "b1", ..., "ending")`);
+  }
   custom = scenes;
 }
 

@@ -1,7 +1,8 @@
-import { spawnSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 import { describe, expect, it } from "vitest";
 
 const root = join(import.meta.dirname, "..", "..");
@@ -31,6 +32,26 @@ function fakeLibrary(dir: string): void {
   writeFileSync(join(dir, "engine", "src", "cli.ts"), "");
   writeFileSync(join(dir, "catalog", "catalog.json"), "{}");
   writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "unfaced" }));
+}
+
+/** A git repo tagged v0.1.0 to install from with UNFACED_REPO; its postinstall points tsx at this checkout's, so nothing is downloaded. */
+function releaseRepo(dir: string): string {
+  const repo = join(dir, "unfaced repo");
+  fakeLibrary(repo);
+  writeFileSync(join(repo, "engine", "src", "cli.ts"), 'console.log(`ran ${process.argv.slice(2).join(" ")}`);\n');
+  const loader = `import ${JSON.stringify(pathToFileURL(join(root, "node_modules", "tsx", "dist", "loader.mjs")).href)};\n`;
+  writeFileSync(
+    join(repo, "tsx.mjs"),
+    `import { mkdirSync, writeFileSync } from "node:fs";\nmkdirSync("node_modules/tsx/dist", { recursive: true });\nwriteFileSync("node_modules/tsx/dist/loader.mjs", ${JSON.stringify(loader)});\n`,
+  );
+  writeFileSync(join(repo, "package.json"), JSON.stringify({ name: "unfaced", private: true, scripts: { postinstall: "node tsx.mjs" } }));
+  const git = (...args: string[]) =>
+    execFileSync("git", ["-c", "user.name=test", "-c", "user.email=test@example.com", "-c", "commit.gpgsign=false", "-c", "tag.gpgsign=false", ...args], { cwd: repo, stdio: "ignore" });
+  git("init", "--quiet");
+  git("add", ".");
+  git("commit", "--quiet", "-m", "release");
+  git("tag", "v0.1.0");
+  return repo;
 }
 
 describe("the skills' launcher", () => {
@@ -90,6 +111,30 @@ describe("the skills' launcher", () => {
     expect(existsSync(join(dir, "home", "lib", "0.1.0"))).toBe(false);
     expect(existsSync(join(dir, "home", "lib", "0.1.0.partial"))).toBe(false);
   });
+
+  it("installs the release on first use, into a home folder whose path has spaces, and runs the command", () => {
+    const { script, dir } = outsideCopy();
+    const home = join(dir, "home with spaces");
+    const r = launch(script, ["list", "hook"], { UNFACED_HOME: home, UNFACED_REPO: releaseRepo(dir) });
+    expect(r.stderr).not.toContain("could not download");
+    expect(r.stderr).not.toContain("detached HEAD");
+    expect(r.status).toBe(0);
+    expect(r.stdout).toContain("ran setup");
+    expect(r.stdout).toMatch(/ran list hook$/);
+    expect(existsSync(join(home, "lib", "0.1.0", "engine", "src", "cli.ts"))).toBe(true);
+    expect(existsSync(join(home, "lib", "0.1.0.partial"))).toBe(false);
+  }, 60_000);
+
+  it("explains an install it cannot move into place", () => {
+    const { script, dir } = outsideCopy();
+    const home = join(dir, "home");
+    mkdirSync(join(home, "lib", "0.1.0"), { recursive: true });
+    writeFileSync(join(home, "lib", "0.1.0", "notes.txt"), "not a library");
+    const r = launch(script, ["list", "hook"], { UNFACED_HOME: home, UNFACED_REPO: releaseRepo(dir) });
+    expect(r.status).toBe(1);
+    expect(r.stderr).toMatch(/could not move [\s\S]*0\.1\.0\.partial[\s\S]*run this command again/);
+    expect(r.stderr).not.toMatch(/\n\s+at /);
+  }, 60_000);
 
   it("runs the library's CLI with the arguments it was given", () => {
     const r = launch(launcher, ["list", "hook"]);

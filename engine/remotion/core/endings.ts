@@ -30,6 +30,11 @@ export function endingMarkSpan(plan: VideoPlan): { fromFrame: number; toFrame: n
   return { fromFrame: last.fromFrame, toFrame: plan.durationInFrames };
 }
 
+/** The frames the engine draws the sign: none when the style draws it in its own last scene, whatever scene the ending has. */
+export function engineMarkSpan(plan: VideoPlan, styleDrawsMark: boolean): { fromFrame: number; toFrame: number } | undefined {
+  return styleDrawsMark ? undefined : endingMarkSpan(plan);
+}
+
 /** Frames the video runs on after the voice-over: a loop cuts back to the start sooner. */
 export const tailFrames = (ending: number | undefined): number => (ending === SEAMLESS_LOOP ? 6 : 15);
 

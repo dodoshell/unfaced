@@ -36,4 +36,13 @@ describe("unfaced frames", () => {
     await renderFrames(dir, 1, () => {}, render);
     expect(render).toHaveBeenCalledWith(expect.anything(), 0, join(dir, "frames", "frame-00000.png"), { assetsDir: dir, scenes: join(dir, "scenes", "index.tsx") });
   });
+
+  it("stops when scenes/ has no index.tsx, as make does", async () => {
+    const dir = setup();
+    mkdirSync(join(dir, "scenes"));
+    writeFileSync(join(dir, "scenes", "index.jsx"), "export default {};");
+    const render = stubRender();
+    await expect(renderFrames(dir, 1, () => {}, render)).rejects.toThrow(/no index\.tsx/);
+    expect(render).not.toHaveBeenCalled();
+  });
 });

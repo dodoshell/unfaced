@@ -2,7 +2,7 @@ import { AbsoluteFill, Freeze, Html5Audio, interpolate, Sequence, staticFile, us
 import type { VideoPlan } from "../src/plan/types.js";
 import { CaptionsView } from "./core/CaptionStyles.js";
 import { EndingMark, markColours } from "./core/EndingMark.js";
-import { END_MARK_BOX, endingMark, endingMarkSpan, LOOP_FADE_FRAMES, SEAMLESS_LOOP } from "./core/endings.js";
+import { END_MARK_BOX, endingMark, engineMarkSpan, LOOP_FADE_FRAMES, SEAMLESS_LOOP } from "./core/endings.js";
 import { loadFonts } from "./core/fonts.js";
 import { VideoContext } from "./core/VideoContext.js";
 import { videoScene } from "./core/videoScenes.js";
@@ -30,10 +30,8 @@ const LoopBack: React.FC<{ plan: VideoPlan; style: StyleKit }> = ({ plan, style 
 export const UnfacedVideo: React.FC<{ plan: VideoPlan }> = ({ plan }) => {
   const style = getStyle(plan.style);
   const mark = endingMark(plan.ending);
-  const markSpan = endingMarkSpan(plan);
-  const last = plan.scenes.at(-1);
-  // The style draws the sign in its own last scene, unless the video replaces that scene with its own code.
-  const engineDrawsMark = mark && markSpan && (!drawsEndingMark(plan.style) || (last && videoScene(last.beatId)));
+  // A style that draws the sign in its own last scene keeps it, even under the video's own ending scene.
+  const markSpan = engineMarkSpan(plan, drawsEndingMark(plan.style));
   return (
     <VideoContext.Provider value={{ plan, style, palette: plan.palette }}>
       <AbsoluteFill>
@@ -46,7 +44,7 @@ export const UnfacedVideo: React.FC<{ plan: VideoPlan }> = ({ plan }) => {
             </Sequence>
           );
         })}
-        {engineDrawsMark && (
+        {mark && markSpan && (
           <Sequence from={markSpan.fromFrame} durationInFrames={markSpan.toFrame - markSpan.fromFrame} name="ending mark">
             <EndingMark kind={mark} box={END_MARK_BOX} {...markColours(plan.palette)} />
           </Sequence>

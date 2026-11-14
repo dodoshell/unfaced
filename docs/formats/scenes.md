@@ -13,7 +13,7 @@ videos/<video>/
 └── inbox/             images or clips to show; read with staticFile("inbox/<file>")
 ```
 
-`unfaced make` finds `scenes/index.tsx`, bundles it with the engine and renders. Beat ids are `hook`, `b1`, `b2`, … and `ending`, in the order of `script.md`.
+`unfaced make` finds `scenes/index.tsx`, bundles it with the engine and renders. `make`, `frames` and `cover` stop before anything else when the folder has no `index.tsx` or `boxes.json` is not valid. Beat ids are `hook`, `b1`, `b2`, … and `ending`, in the order of `script.md`.
 
 ## index.tsx
 
@@ -40,7 +40,8 @@ export default defineScenes({ b2: TwoBowls });
 - Import `remotion` and `react` by name, and everything unfaced offers from `@unfaced/kit`.
 - A scene gets `{ scene, palette }`: `scene.text` is the beat's text, `scene.words` its words with their times, `scene.durationInFrames` its length. `useCurrentFrame()` counts from the start of the beat.
 - `useVideo()` gives the whole plan, the style and the palette; `useMascot()` gives the page's mascot or `undefined`.
-- The style's background stays behind the scene, and the captions and the ending's sign are drawn on top of it by the engine.
+- The style's background stays behind the scene, and the engine draws the captions on top of it.
+- The engine draws the ending's sign (an arrow, a question bubble, a follow button) on top, in `END_MARK_BOX`, whatever scene the ending has, unless the style draws it in its own last scene (style 03, inside `<StyleScene>`); then an ending scene that skips `<StyleScene>` draws `<EndingMark>` itself. `drawsEndingMark(useVideo().plan.style)` tells which.
 
 What `@unfaced/kit` offers:
 
@@ -52,7 +53,7 @@ What `@unfaced/kit` offers:
 | `Character`, `rigFor`, `POSES`, `SPECIES`, `ACCESSORIES` | Draw the mascot or any other character in the style's painting: `<Character rig={rigFor("dog")} pose="run" x={540} y={1100} size={400} facing={-1} />`. `x`, `y` is where the feet touch the ground, `size` is about the height in pixels, `facing={-1}` turns it to the left. |
 | `characterParts`, `FigureFrame`, `plainPart`, `smoothPath`, `polygonPath`, `mirrorParts`, `partBounds`, `shade`, `FIGURE_BOX` | Build a custom figure painter. |
 | `FRAME`, `SAFE_ZONE`, `CAPTION_BOX`, `CAPTION_STYLES`, `captionStyle` | The 1080×1920 frame, the margins the platforms cover, and where each caption style draws. |
-| `EndingMark`, `endingMark`, `endingPose`, `END_MARK_BOX` | The ending's sign, if a scene wants to draw it itself. |
+| `EndingMark`, `markColours`, `endingMark`, `endingPose`, `END_MARK_BOX`, `drawsEndingMark` | The ending's sign, for a scene that draws it itself: `<EndingMark kind={endingMark(plan.ending)!} box={END_MARK_BOX} {...markColours(palette)} />`. |
 
 ## Layout rules
 
@@ -74,7 +75,7 @@ The automatic checks know where the style draws text, but not where a video's ow
 }
 ```
 
-A beat with its own scene and no text needs no entry. Without an entry the checks test the style's boxes for that beat, which is right when the scene draws `<StyleScene>`; when it draws `<StyleScene>` and text of its own, list both (the style's boxes are in the Layout table of `unfaced show style <n>`).
+A beat with its own scene and no text needs no entry; an ending scene that draws `<EndingMark>` lists the sign's box too. Boxes for a beat the script does not have are never checked, so `make` warns about them. Without an entry the checks test the style's boxes for that beat, which is right when the scene draws `<StyleScene>`; when it draws `<StyleScene>` and text of its own, list both (the style's boxes are in the Layout table of `unfaced show style <n>`).
 
 ## inbox/
 

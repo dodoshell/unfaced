@@ -69,7 +69,9 @@ describe("check", () => {
     const report = await checkVideo(dir, deps(-3));
     expect(report.issues.filter((i) => i.check === "overlap").map((i) => i.message)).toEqual([expect.stringMatching(/b1 label.*b1 caption/)]);
     writeFileSync(join(dir, "scenes", "boxes.json"), JSON.stringify({ hook: [{ id: "label", x: 60 }] }));
-    await expect(checkVideo(dir, deps(-3))).rejects.toThrow(/scenes\/boxes\.json.*hook.*x, y, w and h/);
+    await expect(checkVideo(dir, deps(-3))).rejects.toThrow(/scenes[\\/]boxes\.json: beat "hook".*x, y, w and h/);
+    writeFileSync(join(dir, "scenes", "boxes.json"), "null");
+    await expect(checkVideo(dir, deps(-3))).rejects.toThrow(join(dir, "scenes", "boxes.json"));
   });
 
   it("asks for make when the video folder has not been made", async () => {
