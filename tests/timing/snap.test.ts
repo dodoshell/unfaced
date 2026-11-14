@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { snapToPauses } from "../../engine/src/timing/snap.js";
+import { evenOutCrushedWords, snapToPauses } from "../../engine/src/timing/snap.js";
 
 const w = (text: string, startMs: number, endMs: number) => ({ text, startMs, endMs });
 const pause = (fromMs: number, toMs: number) => ({ fromMs, toMs });
@@ -22,5 +22,24 @@ describe("snapToPauses", () => {
   it("ignores a pause with no word starting within 800 ms of its end", () => {
     const words = [w("Cats", 1000, 1300)];
     expect(snapToPauses(words, [pause(0, 100)])).toEqual(words);
+  });
+});
+
+describe("evenOutCrushedWords", () => {
+  it("gives a word whisper squeezed to almost nothing a share of the long word before it", () => {
+    const words = [w("press", 1020, 1320), w("its", 1320, 1900), w("paws", 1900, 1901), w("into", 1901, 2440)];
+    const out = evenOutCrushedWords(words);
+    expect(out[2]!.endMs).toBe(1901);
+    expect(out[2]!.endMs - out[2]!.startMs).toBeGreaterThanOrEqual(150);
+    expect(out[1]!.endMs).toBe(out[2]!.startMs);
+    expect(out[1]!.endMs - out[1]!.startMs).toBeGreaterThanOrEqual(150);
+    expect([out[0], out[3]]).toEqual([words[0], words[3]]);
+  });
+
+  it("leaves short words alone when they are short in the voice too, or follow a pause", () => {
+    const fine = [w("make", 6830, 7280), w("a", 7290, 7340), w("bed", 7340, 7700)];
+    expect(evenOutCrushedWords(fine)).toEqual(fine);
+    const afterPause = [w("so", 23780, 23880), w("it", 24300, 24310)];
+    expect(evenOutCrushedWords(afterPause)).toEqual(afterPause);
   });
 });

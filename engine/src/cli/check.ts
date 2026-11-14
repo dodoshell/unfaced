@@ -5,7 +5,7 @@ import { type Pcm, readSoundtrack, speechOnsets } from "../audio/speech.js";
 import { type Loudness, checkLoudness, measureLoudness } from "../check/audio.js";
 import { checkFrames, readGrayFrames } from "../check/frames.js";
 import { checkOverlap, checkSafeZone, type OwnBoxes, placedBoxes } from "../check/overlap.js";
-import { checkEdges, checkSync, shownWords } from "../check/sync.js";
+import { captionedOnsets, checkEdges, checkSync, shownWords } from "../check/sync.js";
 import { type CheckReport, toReport } from "../check/types.js";
 import type { VideoPlan } from "../plan/types.js";
 
@@ -51,7 +51,7 @@ export async function checkVideo(videoDir: string, deps: CheckDeps = defaultChec
   const report = toReport([
     ...checkOverlap(boxes, plan.fps),
     ...checkSafeZone(boxes, plan.fps),
-    ...(soundtrack ? checkSync(shownWords(plan), speechOnsets(soundtrack), plan.fps) : []),
+    ...(soundtrack ? checkSync(shownWords(plan), captionedOnsets(plan, speechOnsets(soundtrack)), plan.fps) : []),
     ...(soundtrack ? checkEdges(soundtrack) : []),
     ...checkFrames(await deps.readFrames(video), plan.fps),
     ...(plan.audioSrc !== undefined ? checkLoudness(await deps.measureLoudness(video)) : []),

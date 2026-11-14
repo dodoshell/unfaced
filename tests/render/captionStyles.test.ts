@@ -23,6 +23,15 @@ describe("caption styles", () => {
     expect(captionPages([scene], 30, captionStyle(4).maxWords).map((p) => p.tokens.length)).toEqual([8]);
   });
 
+  it("leaves out the hook's words, which the title scene already shows, in the captions, the sync check and the overlap check", () => {
+    const hook: Scene = { ...scene, beatId: "hook", kind: "title", words: words("why do cats purr") };
+    const later = { ...scene, fromFrame: 90, words: scene.words.map((w) => ({ ...w, startMs: w.startMs + 3000, endMs: w.endMs + 3000 })) };
+    const both = { ...plan(1), durationInFrames: 180, scenes: [hook, later] };
+    expect(captionPages(both.scenes, 30).flatMap((p) => p.tokens.map((t) => t.text.trim()))).toEqual(later.words.map((w) => w.text));
+    expect(shownWords(both).map((w) => w.text)).toEqual(later.words.map((w) => w.text));
+    expect(placedBoxes(both, () => []).map((b) => b.id)).toEqual(["b1 caption"]);
+  });
+
   it("checks overlap against the box of the video's caption style", () => {
     const box = placedBoxes(plan(4), () => []).find((b) => b.id === "b1 caption");
     expect(box).toMatchObject(captionStyle(4).box);

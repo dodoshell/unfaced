@@ -47,6 +47,7 @@ What `@unfaced/kit` offers:
 | Export | Use |
 |---|---|
 | `defineScenes`, `SceneComponent` | Declare the scenes by beat id. |
+| `StyleScene` | The style's own scene for this beat: draw `<StyleScene scene={scene} palette={palette} />` and add your visual around it to keep the style's text. |
 | `useVideo`, `useMascot`, `VideoContext` | The plan, the style, the palette, the mascot. |
 | `Character`, `rigFor`, `POSES`, `SPECIES`, `ACCESSORIES` | Draw the mascot or any other character in the style's painting: `<Character rig={rigFor("dog")} pose="run" x={540} y={1100} size={400} facing={-1} />`. `x`, `y` is where the feet touch the ground, `size` is about the height in pixels, `facing={-1}` turns it to the left. |
 | `characterParts`, `FigureFrame`, `plainPart`, `smoothPath`, `polygonPath`, `mirrorParts`, `partBounds`, `shade`, `FIGURE_BOX` | Build a custom figure painter. |
@@ -57,7 +58,7 @@ What `@unfaced/kit` offers:
 
 - The frame is 1080×1920 at 30 fps. Keep text inside the safe zone: 220 px from the top, 380 px from the bottom, 60 px from the left, 140 px from the right (the platforms put buttons there).
 - Keep text out of the caption box of the video's caption style: `captionStyle(useVideo().plan.captions).box`.
-- Let the first frame of the hook already show something: it is the preview on every platform.
+- The hook's words are on screen from its first frame: that frame is the preview on every platform, and the captions only start with the voice. A hook scene draws `<StyleScene>` (the style's title) and adds its visual around it, or draws the hook's words itself and declares their box.
 - Change something on screen every 3–5 seconds.
 
 ## boxes.json
@@ -73,7 +74,7 @@ The automatic checks know where the style draws text, but not where a video's ow
 }
 ```
 
-A beat with its own scene and no text needs no entry.
+A beat with its own scene and no text needs no entry. Without an entry the checks test the style's boxes for that beat, which is right when the scene draws `<StyleScene>`; when it draws `<StyleScene>` and text of its own, list both (the style's boxes are in the Layout table of `unfaced show style <n>`).
 
 ## inbox/
 

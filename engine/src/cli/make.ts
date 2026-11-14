@@ -15,7 +15,7 @@ import { parseScript } from "../script/parseScript.js";
 import { alignWords, type WordTiming } from "../timing/align.js";
 import { readWavFile, speechPauses } from "../audio/speech.js";
 import { readingTimings } from "../timing/reading.js";
-import { snapToPauses } from "../timing/snap.js";
+import { evenOutCrushedWords, snapToPauses } from "../timing/snap.js";
 import { SEAMLESS_LOOP } from "../../remotion/core/endings.js";
 import { type SoundtrackRequest, writeSoundtrack } from "../music/soundtrack.js";
 import { prepareVoice } from "../voice/prepare.js";
@@ -41,9 +41,11 @@ export const defaultMakeDeps = (): MakeDeps => ({
   catalog: Catalog.load(CATALOG_DIR),
   voiceProvider: getVoiceProvider,
   prepareVoice,
-  // Whisper's times, with each word after a pause moved to where the voice really starts it.
-  // Pauses down to 100 ms are used, so every pause the 150 ms sync check finds is covered.
-  align: async (wavPath, language) => snapToPauses(await alignWords(wavPath, language), speechPauses(readWavFile(wavPath), SNAP_MIN_PAUSE_MS)),
+  // Whisper's times, with each word after a pause moved to where the voice really starts it
+  // (pauses down to 100 ms, so every pause the 150 ms sync check finds is covered), and
+  // words whisper squeezed to almost nothing given back a moment.
+  align: async (wavPath, language) =>
+    evenOutCrushedWords(snapToPauses(await alignWords(wavPath, language), speechPauses(readWavFile(wavPath), SNAP_MIN_PAUSE_MS))),
   mixMusic: writeSoundtrack,
   render: renderVideo,
   check: (videoDir) => checkVideo(videoDir),
@@ -59,7 +61,7 @@ export const TEXT_ONLY_VOICE = 8;
 export const NO_MUSIC = 8;
 
 /** Bumped when the voice-over is processed differently, so cached voice-overs are made again. */
-const VOICE_PROCESSING = "lead-in 250, loudnorm -14, pause snap 100";
+const VOICE_PROCESSING = "lead-in 250, loudnorm -14, pause snap 100, crushed words";
 
 /** timing.json: the voice-over's word timings, keyed by what produced the voice. */
 interface TimingFile {

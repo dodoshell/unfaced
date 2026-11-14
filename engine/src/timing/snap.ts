@@ -5,6 +5,32 @@ import type { WordTiming } from "./align.js";
 const MAX_SHIFT_MS = 800;
 const MIN_WORD_MS = 10;
 
+/** Shorter than this, a word is one whisper squeezed, not one the voice said quickly. */
+const CRUSHED_MS = 25;
+/** About how long the voice takes per letter, for the share a crushed word gets back. */
+const MS_PER_LETTER = 55;
+const MIN_SHARE_MS = 120;
+
+/**
+ * Whisper sometimes gives a word almost no time (1 ms) and stretches the word before it
+ * over both. Such a word gets back a share of the pair, by its letters, so the captions
+ * light it up for a moment instead of skipping it. Words after a gap are left alone.
+ */
+export function evenOutCrushedWords(words: WordTiming[]): WordTiming[] {
+  const out = words.map((w) => ({ ...w }));
+  for (let i = 1; i < out.length; i++) {
+    const word = out[i]!;
+    const before = out[i - 1]!;
+    if (word.endMs - word.startMs >= CRUSHED_MS || before.endMs !== word.startMs) continue;
+    const span = word.endMs - before.startMs;
+    const letters = word.text.replace(/[^\p{L}\p{N}]/gu, "").length || 1;
+    const share = Math.min(Math.max(letters * MS_PER_LETTER, MIN_SHARE_MS), span / 2);
+    if (span - share < MIN_SHARE_MS) continue;
+    word.startMs = before.endMs = Math.round(word.endMs - share);
+  }
+  return out;
+}
+
 /**
  * Whisper places the first word after a pause up to half a second off, often
  * stretching it back over the pause. For each pause the audio shows, the first word

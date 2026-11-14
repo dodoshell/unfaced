@@ -1,4 +1,4 @@
-import { captionStyle } from "../../remotion/core/captionLayout.js";
+import { captionStyle, showsCaptions } from "../../remotion/core/captionLayout.js";
 import { END_MARK_BOX, endingMarkSpan } from "../../remotion/core/endings.js";
 import { isInsideSafeZone, type Rect } from "../../remotion/core/safeZone.js";
 import type { StyleKit, TextBox } from "../../remotion/styles/registry.js";
@@ -26,7 +26,7 @@ export function placedBoxes(plan: VideoPlan, layout: StyleKit["layout"], styleDr
   return plan.scenes.flatMap((scene) => {
     const frames = { fromFrame: scene.fromFrame, toFrame: scene.fromFrame + scene.durationInFrames };
     const boxes = (own[scene.beatId] ?? layout(scene, plan.palette)).map(({ id, ...rect }) => ({ id: `${scene.beatId} ${id}`, ...rect, ...frames }));
-    if (scene.words.length > 0) boxes.push({ id: `${scene.beatId} caption`, ...captionStyle(plan.captions).box, ...frames });
+    if (scene.words.length > 0 && showsCaptions(scene)) boxes.push({ id: `${scene.beatId} caption`, ...captionStyle(plan.captions).box, ...frames });
     return boxes;
   }).concat(markBox);
 }

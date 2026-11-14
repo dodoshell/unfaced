@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { checkEdges, checkSync, shownWords } from "../../engine/src/check/sync.js";
+import { captionedOnsets, checkEdges, checkSync, shownWords } from "../../engine/src/check/sync.js";
 import type { VideoPlan } from "../../engine/src/plan/types.js";
 import type { WordTiming } from "../../engine/src/timing/align.js";
 import { tones } from "../audio/tones.js";
@@ -30,11 +30,22 @@ describe("caption sync against the voice", () => {
     const plan: VideoPlan = {
       fps: 30, width: 1080, height: 1920, durationInFrames: 120, style: 3, captions: 1, palette: [], audioSrc: "voice.wav",
       scenes: [
-        { beatId: "b1", kind: "title", text: "Cats sleep", fromFrame: 0, durationInFrames: 30, words: words.slice(0, 2) },
+        { beatId: "b1", kind: "fact", text: "Cats sleep", fromFrame: 0, durationInFrames: 30, words: words.slice(0, 2) },
         { beatId: "b2", kind: "fact", text: "sixteen hours daily.", fromFrame: 30, durationInFrames: 90, words: words.slice(2) },
       ],
     };
     expect(shownWords(plan)).toEqual(shown(0));
+  });
+
+  it("checks only where captions are shown: not during the title, which already shows the hook", () => {
+    const plan: VideoPlan = {
+      fps: 30, width: 1080, height: 1920, durationInFrames: 120, style: 3, captions: 1, palette: [], audioSrc: "voice.wav",
+      scenes: [
+        { beatId: "hook", kind: "title", text: "Cats sleep", fromFrame: 0, durationInFrames: 30, words: words.slice(0, 2) },
+        { beatId: "b1", kind: "fact", text: "sixteen hours daily.", fromFrame: 30, durationInFrames: 90, words: words.slice(2) },
+      ],
+    };
+    expect(captionedOnsets(plan, [500, 980, 1100, 3900, 4100])).toEqual([1100, 3900]);
   });
 });
 

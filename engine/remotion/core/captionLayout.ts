@@ -59,13 +59,16 @@ export function captionPhrases<W extends { text: string }>(words: W[], maxWords 
     });
 }
 
+/** Whether the captions show a scene's words: not the title's, which already shows the hook in big type. */
+export const showsCaptions = (scene: Scene): boolean => scene.kind !== "title";
+
 /**
  * The caption pages a video shows: one per phrase, built scene by scene so a phrase
  * never runs across a scene change. A page stays up until the next one starts, or
  * until its scene ends. Each token lights up from `fromMs` to `toMs`.
  */
 export function captionPages(scenes: Scene[], fps: number, maxWords = CAPTION_MAX_WORDS): TikTokPage[] {
-  return scenes.flatMap((scene) => {
+  return scenes.filter(showsCaptions).flatMap((scene) => {
     const sceneEndMs = ((scene.fromFrame + scene.durationInFrames) / fps) * 1000;
     const built = captionPhrases(scene.words, maxWords).map((phrase) => {
       const captions: Caption[] = phrase.map((w) => ({ text: ` ${w.text}`, startMs: w.startMs, endMs: w.endMs, timestampMs: null, confidence: null }));

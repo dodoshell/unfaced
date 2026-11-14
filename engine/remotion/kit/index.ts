@@ -15,6 +15,7 @@ export { END_MARK_BOX, type EndingMarkKind, endingMark, endingPose } from "../co
 export { FRAME, SAFE_ZONE, type Rect } from "../core/safeZone.js";
 export { useVideo, VideoContext } from "../core/VideoContext.js";
 export { defineScenes, type SceneComponent } from "../core/videoScenes.js";
+export { StyleScene } from "../core/StyleScene.js";
 export type { Mascot, Scene, VideoPlan } from "../../src/plan/types.js";
 
 /** The page's mascot, if the page has one. */

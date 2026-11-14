@@ -65,9 +65,9 @@ describe("check", () => {
   it("checks the text boxes that the video's own scenes declare in scenes/boxes.json", async () => {
     const dir = setup();
     mkdirSync(join(dir, "scenes"));
-    writeFileSync(join(dir, "scenes", "boxes.json"), JSON.stringify({ hook: [{ id: "label", x: 60, y: 1250, w: 900, h: 200 }] }));
+    writeFileSync(join(dir, "scenes", "boxes.json"), JSON.stringify({ b1: [{ id: "label", x: 60, y: 1250, w: 900, h: 200 }] }));
     const report = await checkVideo(dir, deps(-3));
-    expect(report.issues.filter((i) => i.check === "overlap").map((i) => i.message)).toEqual([expect.stringMatching(/hook label.*hook caption/)]);
+    expect(report.issues.filter((i) => i.check === "overlap").map((i) => i.message)).toEqual([expect.stringMatching(/b1 label.*b1 caption/)]);
     writeFileSync(join(dir, "scenes", "boxes.json"), JSON.stringify({ hook: [{ id: "label", x: 60 }] }));
     await expect(checkVideo(dir, deps(-3))).rejects.toThrow(/scenes\/boxes\.json.*hook.*x, y, w and h/);
   });
