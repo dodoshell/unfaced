@@ -16,7 +16,7 @@ unfaced helps a person create and run faceless social media pages (Reels, TikTok
 | A file format (page, script, mascot, scenes, review, post, results) | `npm run unfaced -- docs <format>`, or `docs/formats/` |
 | One catalog entry and its rules | `npm run unfaced -- show <kind> <number>` |
 | See a complete page to copy | `examples/pages/curious-cats/` |
-| Add a style or a script type | `catalog/` (`CONTRIBUTING.md` is coming soon); a style's look and layout rules live in its `STYLE.md` |
+| Add a style, a script type or a hook | `CONTRIBUTING.md`; a style's look and layout rules live in its `STYLE.md` |
 | Design and plans | `docs/design/`, `docs/plans/` |
 
 Inside this repository the skills' launcher (`node plugin/launcher/unfaced.mjs <command>`) and `npm run unfaced -- <command>` run the same CLI.
