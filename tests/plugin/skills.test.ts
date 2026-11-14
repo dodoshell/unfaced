@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
@@ -34,6 +34,18 @@ describe("skills", () => {
     const { body } = frontMatter(join(skillsDir, skill, "SKILL.md"));
     for (const [, command] of body.matchAll(/`unfaced ([a-z]+)/g)) expect(COMMANDS, `${skill}: unfaced ${command}`).toContain(command);
     for (const [, format] of body.matchAll(/`unfaced docs ([a-z]+)`/g)) expect(FORMATS, `${skill}: unfaced docs ${format}`).toContain(format);
+  });
+
+  it.each(skills)("%s only points at files it carries", (skill) => {
+    const { body } = frontMatter(join(skillsDir, skill, "SKILL.md"));
+    for (const [path] of body.matchAll(/\b(?:references|scripts)\/[\w.-]+/g)) expect(existsSync(join(skillsDir, skill, path)), `${skill}: ${path}`).toBe(true);
+  });
+
+  it("carries the reviewer's instructions, unchanged, in video-make for agents without subagents", () => {
+    const copy = join(skillsDir, "video-make", "references", "video-reviewer.md");
+    expect(existsSync(copy), "video-make/references/video-reviewer.md").toBe(true);
+    expect(readFileSync(copy, "utf8"), "copy plugin/agents/video-reviewer.md again").toBe(readFileSync(join(root, "plugin", "agents", "video-reviewer.md"), "utf8"));
+    expect(frontMatter(join(skillsDir, "video-make", "SKILL.md")).body).toContain("references/video-reviewer.md");
   });
 
   it("has a reviewer agent with a name, a description and its tools", () => {
