@@ -12,6 +12,7 @@ export { ACCESSORIES, FIGURE_BOX, POSES, SPECIES, type Part, type Pose, type Rig
 export { CAPTION_BOX, CAPTION_STYLES, captionStyle, type CaptionStyle } from "../core/captionLayout.js";
 export { EndingMark, type EndingMarkProps, markColours } from "../core/EndingMark.js";
 export { END_MARK_BOX, type EndingMarkKind, endingMark, endingPose } from "../core/endings.js";
+export { drawsEndingMark } from "../styles/layouts.js";
 export { FRAME, SAFE_ZONE, type Rect } from "../core/safeZone.js";
 export { useVideo, VideoContext } from "../core/VideoContext.js";
 export { defineScenes, type SceneComponent } from "../core/videoScenes.js";

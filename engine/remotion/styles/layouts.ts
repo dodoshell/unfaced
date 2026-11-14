@@ -13,5 +13,5 @@ export function getLayout(style: number): StyleKit["layout"] {
   return layout;
 }
 
-/** Whether the style draws the ending's sign itself (otherwise the engine draws it in END_MARK_BOX). */
+/** Whether the style draws the ending's sign itself (otherwise the engine draws it in END_MARK_BOX, whatever scene the ending has). */
 export const drawsEndingMark = (style: number): boolean => DRAW_ENDING_MARK.has(style);

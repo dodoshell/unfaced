@@ -1,5 +1,5 @@
 import { captionStyle, showsCaptions } from "../../remotion/core/captionLayout.js";
-import { END_MARK_BOX, endingMarkSpan } from "../../remotion/core/endings.js";
+import { END_MARK_BOX, engineMarkSpan } from "../../remotion/core/endings.js";
 import { isInsideSafeZone, type Rect } from "../../remotion/core/safeZone.js";
 import type { StyleKit, TextBox } from "../../remotion/styles/registry.js";
 import type { VideoPlan } from "../plan/types.js";
@@ -21,7 +21,7 @@ export type OwnBoxes = Record<string, TextBox[]>;
  * sign when the engine draws it (`styleDrawsMark` false).
  */
 export function placedBoxes(plan: VideoPlan, layout: StyleKit["layout"], styleDrawsMark = false, own: OwnBoxes = {}): PlacedBox[] {
-  const mark = styleDrawsMark ? undefined : endingMarkSpan(plan);
+  const mark = engineMarkSpan(plan, styleDrawsMark);
   const markBox: PlacedBox[] = mark ? [{ id: "ending mark", ...END_MARK_BOX, ...mark }] : [];
   return plan.scenes.flatMap((scene) => {
     const frames = { fromFrame: scene.fromFrame, toFrame: scene.fromFrame + scene.durationInFrames };
