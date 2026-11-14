@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CAPTION_STYLES, captionPages, captionStyle, keywordIndex } from "../../engine/remotion/core/captionLayout.js";
+import { CAPTION_STYLES, captionColours, captionPages, captionStyle, keywordIndex } from "../../engine/remotion/core/captionLayout.js";
 import { isInsideSafeZone } from "../../engine/remotion/core/safeZone.js";
 import { placedBoxes } from "../../engine/src/check/overlap.js";
 import { shownWords } from "../../engine/src/check/sync.js";
@@ -16,6 +16,14 @@ describe("caption styles", () => {
     const catalog = Catalog.load(CATALOG_DIR);
     expect(Object.keys(CAPTION_STYLES).map(Number).sort()).toEqual(catalog.ids("captions"));
     for (const [n, style] of Object.entries(CAPTION_STYLES)) expect(isInsideSafeZone(style.box), `captions ${n}`).toBe(true);
+  });
+
+  it("keeps white caption text on a dark ink, even when the palette's ink is light like chalk", () => {
+    expect(captionColours(["#FFF4E0", "#FF6B35", "#2EC4B6", "#FFD23F", "#1B1B3A"]).ink).toBe("#1B1B3A");
+    // Chalkboard: the ink is chalk white, so the board's dark green carries the white text.
+    expect(captionColours(["#26392F", "#F4D774", "#F2A6B0", "#9DD1E3", "#F1EEE4"]).ink).toBe("#26392F");
+    expect(captionColours(["#FFFFFF", "#FFEEDD", "#EEFFEE", "#FFFFEE", "#F1EEE4"]).ink).toBe("#000000");
+    expect(captionColours([]).ink).toBe("#000000");
   });
 
   it("splits phrases to the style's word limit", () => {

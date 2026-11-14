@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import type { VideoPlan } from "../../src/plan/types.js";
-import { CAPTION_BOX, CAPTION_FONT_SIZE, captionPages } from "./captionLayout.js";
+import { CAPTION_BOX, CAPTION_FONT_SIZE, captionColours, captionPages } from "./captionLayout.js";
 import { CAPTION_FONT } from "./fonts.js";
 
 /** Captions 01, word-by-word karaoke: the current phrase, the spoken word lit up. */
@@ -15,7 +15,7 @@ export const Captions: React.FC<{ plan: VideoPlan }> = ({ plan }) => {
   const page = pages.find((p) => nowMs >= p.startMs && nowMs < p.startMs + p.durationMs);
   if (!page) return null;
 
-  const [, accent, , highlight = accent, ink = "#000000"] = plan.palette;
+  const { highlight, ink } = captionColours(plan.palette);
   return (
     <AbsoluteFill>
       <div

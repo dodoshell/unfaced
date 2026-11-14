@@ -1,6 +1,21 @@
 import { type Caption, createTikTokStyleCaptions, type TikTokPage } from "@remotion/captions";
 import type { Scene } from "../../src/plan/types.js";
+import { contrast, isHex, luminance } from "./contrast.js";
 import type { Rect } from "./safeZone.js";
+
+const WHITE = "#FFFFFF";
+
+/**
+ * The palette colours the captions use. Their text is white on an ink outline or card, so the
+ * ink must be dark: when the palette's ink (role 5) is light, as chalk on a chalkboard, its
+ * darkest colour takes over, or black.
+ */
+export function captionColours(palette: string[]): { accent: string; highlight: string; ink: string } {
+  const [, accent = "#FF6B35", , highlight = accent, ink = "#000000"] = palette;
+  const readable = (c: string) => isHex(c) && contrast(c, WHITE) >= 4.5;
+  const darkest = palette.filter(readable).sort((a, b) => luminance(a) - luminance(b))[0];
+  return { accent, highlight, ink: readable(ink) ? ink : (darkest ?? "#000000") };
+}
 
 /** Where captions are drawn: the lower middle of the frame, inside the safe zone. */
 export const CAPTION_BOX: Rect = { x: 60, y: 1180, w: 880, h: 330 };

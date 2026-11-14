@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import type { VideoPlan } from "../../src/plan/types.js";
 import { Captions } from "./Captions.js";
-import { captionPages, captionStyle, keywordIndex } from "./captionLayout.js";
+import { captionColours, captionPages, captionStyle, keywordIndex } from "./captionLayout.js";
 import { CAPTION_FONT } from "./fonts.js";
 
 interface Shown {
@@ -27,10 +27,7 @@ function useShownPage(plan: VideoPlan): Shown | undefined {
   return page && { page, nowMs, age: frame - Math.floor((page.startMs / 1000) * fps), fps };
 }
 
-const colours = (plan: VideoPlan) => {
-  const [, accent = "#FF6B35", , highlight = accent, ink = "#000000"] = plan.palette;
-  return { accent, highlight, ink };
-};
+const colours = (plan: VideoPlan) => captionColours(plan.palette);
 
 /** The largest size up to `base` at which the longest word still fits the box width. */
 function fitSize(texts: string[], width: number, base: number, upper = false): number {
