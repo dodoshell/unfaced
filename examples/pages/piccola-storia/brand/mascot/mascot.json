@@ -1,0 +1,7 @@
+{
+  "$schema": "../../../../../schema/mascot.schema.json",
+  "name": "Rossella",
+  "species": "fox",
+  "colours": { "accent": "#3E7C59" },
+  "accessories": ["hat"]
+}

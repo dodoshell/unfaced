@@ -1,0 +1,7 @@
+{
+  "$schema": "../../../../../schema/mascot.schema.json",
+  "name": "Orbit",
+  "species": "bird",
+  "colours": { "body": "#4CC9F0", "belly": "#E8F9FF", "accent": "#F72585" },
+  "accessories": ["scarf"]
+}
