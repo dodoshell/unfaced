@@ -37,6 +37,36 @@ describe("eval graders", () => {
     expect(choices.test(script("script_type: 6\nhook: 1\nending: 2", "Hi."))).toBe(false);
   });
 
+  const bash = (command: string) => JSON.stringify({ command, description: "Check the page and make sure it renders" });
+  const launcher = "/home/me/unfaced/plugin/skills/video-make/scripts/unfaced.mjs";
+
+  it.each(["video-make-rush", "video-make-stops-for-approval"])("%s no-render: catches a render however the launcher is called", (name) => {
+    const render = regex(`${name}/graders/no-render.md`);
+    expect(render.test(bash(`node ${launcher} make pages/curious-cats/videos/why-cats-knead`))).toBe(true);
+    expect(render.test(bash(`node "${launcher}" frames videos/x --every 1s`))).toBe(true);
+    expect(render.test(bash(`npm run unfaced -- cover videos/x`))).toBe(true);
+    expect(render.test(bash(`U="node ${launcher}"; $U page .; $U make videos/x`))).toBe(true);
+    expect(render.test(bash(`U="node ${launcher}"; "$U" check videos/x`))).toBe(true);
+    expect(render.test(bash(`U="node ${launcher}"; $U page .; $U docs script; $U show hook 1`))).toBe(false);
+    expect(render.test(bash(`node ${launcher} list hook; grep -i check notes.md`))).toBe(false);
+  });
+
+  it("video-recommend-options read-the-catalog: counts a list or show however the launcher is called", () => {
+    const read = regex("video-recommend-options/graders/read-the-catalog.md");
+    expect(read.test(bash(`node "${launcher}" list style`))).toBe(true);
+    expect(read.test(bash(`U="node ${launcher}"; cd pages/curious-cats; $U page .; $U list hook`))).toBe(true);
+    expect(read.test(bash(`U=${launcher}; node $U show script 6`))).toBe(true);
+    expect(read.test(bash(`U="node ${launcher}"; $U page pages/curious-cats`))).toBe(false);
+    expect(read.test(bash("ls catalog; cat catalog/hooks.md"))).toBe(false);
+  });
+
+  it("page-setup-you-choose validated: counts unfaced page however the launcher is called", () => {
+    const validated = regex("page-setup-you-choose/graders/validated.md");
+    expect(validated.test(bash(`node "${launcher}" page pages/deep-weird`))).toBe(true);
+    expect(validated.test(bash(`U="node ${launcher}"; $U page pages/deep-weird 2>&1 | tail -5`))).toBe(true);
+    expect(validated.test(bash(`U="node ${launcher}"; $U docs page; $U list style`))).toBe(false);
+  });
+
   it("video-make-stops-for-approval short-hook: passes a hook under 12 words, on one line, and nothing longer", () => {
     const short = regex("video-make-stops-for-approval/graders/short-hook.md");
     expect(short.test(script("script_type: 6", "Your cat is baking bread on your blanket. Here's why."))).toBe(true);

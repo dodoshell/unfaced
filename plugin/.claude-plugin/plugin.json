@@ -1,7 +1,7 @@
 {
   "name": "unfaced",
   "displayName": "unfaced",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Plan, script and produce videos for faceless pages: numbered styles, scripts, hooks and voices, a page profile for consistency, free by default.",
   "author": { "name": "dodoshell", "url": "https://github.com/dodoshell" },
   "repository": "https://github.com/dodoshell/unfaced",
