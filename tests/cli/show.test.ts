@@ -25,6 +25,18 @@ describe("unfaced show", () => {
     expect(text).not.toContain("## 05");
   });
 
+  it("adds the rules every entry of the kind follows after the entry's own section", () => {
+    const hook = showText(catalog, "hook", 1);
+    expect(hook).toMatch(/^## 01 Shocking question/);
+    expect(hook).toContain("Rules for every hook:\n\n- Under 12 words");
+    expect(hook).toContain("Write it for the ear");
+    expect(hook).not.toContain("## 02");
+    expect(hook).not.toContain("Each hook below has three examples");
+    expect(showText(catalog, "ending", 5)).toContain("Rules for every ending:");
+    expect(showText(catalog, "duration", 2)).toContain("Pacing rules for every length:");
+    expect(showText(catalog, "voice", 1)).not.toMatch(/rules for every/i);
+  });
+
   it("prints a whole catalog file, rules included, when no number is given", () => {
     const text = showText(catalog, "ending");
     expect(text).toMatch(/^# Endings/);
