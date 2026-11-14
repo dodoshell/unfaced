@@ -1,0 +1,564 @@
+{
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationInFrames": 845,
+  "style": 1,
+  "captions": 2,
+  "palette": [
+    "#F6E7DA",
+    "#F28C8C",
+    "#7FC8C2",
+    "#FFD37A",
+    "#3D3550"
+  ],
+  "audioSrc": "soundtrack.wav",
+  "voice": 6,
+  "scriptType": 2,
+  "ending": 3,
+  "mascot": {
+    "name": "Pip",
+    "rig": {
+      "species": "dog",
+      "build": "quadruped",
+      "body": "long",
+      "head": "round",
+      "ears": "floppy",
+      "tail": "short",
+      "hair": "none",
+      "snout": "long",
+      "pattern": "none",
+      "colours": {
+        "body": "#B9763C",
+        "belly": "#F3D9B1",
+        "accent": "#D62828"
+      },
+      "accessories": [
+        "collar"
+      ]
+    }
+  },
+  "scenes": [
+    {
+      "beatId": "hook",
+      "kind": "title",
+      "text": "Three biggest cats on Earth, and number one outweighs the king.",
+      "fromFrame": 0,
+      "durationInFrames": 101,
+      "words": [
+        {
+          "text": "Three",
+          "startMs": 340,
+          "endMs": 680
+        },
+        {
+          "text": "biggest",
+          "startMs": 680,
+          "endMs": 1000
+        },
+        {
+          "text": "cats",
+          "startMs": 1000,
+          "endMs": 1090
+        },
+        {
+          "text": "on",
+          "startMs": 1090,
+          "endMs": 1480
+        },
+        {
+          "text": "Earth,",
+          "startMs": 1480,
+          "endMs": 1670
+        },
+        {
+          "text": "and",
+          "startMs": 1670,
+          "endMs": 1860
+        },
+        {
+          "text": "number",
+          "startMs": 1860,
+          "endMs": 2180
+        },
+        {
+          "text": "one",
+          "startMs": 2180,
+          "endMs": 2460
+        },
+        {
+          "text": "outweighs",
+          "startMs": 2460,
+          "endMs": 2860
+        },
+        {
+          "text": "the",
+          "startMs": 2860,
+          "endMs": 3020
+        },
+        {
+          "text": "king.",
+          "startMs": 3020,
+          "endMs": 3370
+        }
+      ]
+    },
+    {
+      "beatId": "b1",
+      "kind": "fact",
+      "text": "Number three: the jaguar. Up to about a hundred and ten kilos, with the strongest bite of any big cat for its size. It can crack a turtle's shell.",
+      "fromFrame": 101,
+      "durationInFrames": 238,
+      "words": [
+        {
+          "text": "Number",
+          "startMs": 3370,
+          "endMs": 3840
+        },
+        {
+          "text": "three:",
+          "startMs": 3840,
+          "endMs": 4080
+        },
+        {
+          "text": "the",
+          "startMs": 4080,
+          "endMs": 4110
+        },
+        {
+          "text": "jaguar.",
+          "startMs": 4110,
+          "endMs": 4580
+        },
+        {
+          "text": "Up",
+          "startMs": 4830,
+          "endMs": 4840
+        },
+        {
+          "text": "to",
+          "startMs": 5030,
+          "endMs": 5340
+        },
+        {
+          "text": "about",
+          "startMs": 5340,
+          "endMs": 5440
+        },
+        {
+          "text": "a",
+          "startMs": 5440,
+          "endMs": 5780
+        },
+        {
+          "text": "hundred",
+          "startMs": 5780,
+          "endMs": 6040
+        },
+        {
+          "text": "and",
+          "startMs": 6040,
+          "endMs": 6240
+        },
+        {
+          "text": "ten",
+          "startMs": 6240,
+          "endMs": 6460
+        },
+        {
+          "text": "kilos,",
+          "startMs": 6460,
+          "endMs": 7020
+        },
+        {
+          "text": "with",
+          "startMs": 7020,
+          "endMs": 7140
+        },
+        {
+          "text": "the",
+          "startMs": 7140,
+          "endMs": 7420
+        },
+        {
+          "text": "strongest",
+          "startMs": 7420,
+          "endMs": 7830
+        },
+        {
+          "text": "bite",
+          "startMs": 7830,
+          "endMs": 8140
+        },
+        {
+          "text": "of",
+          "startMs": 8140,
+          "endMs": 8260
+        },
+        {
+          "text": "any",
+          "startMs": 8260,
+          "endMs": 8480
+        },
+        {
+          "text": "big",
+          "startMs": 8480,
+          "endMs": 8520
+        },
+        {
+          "text": "cat",
+          "startMs": 8520,
+          "endMs": 8710
+        },
+        {
+          "text": "for",
+          "startMs": 8710,
+          "endMs": 8980
+        },
+        {
+          "text": "its",
+          "startMs": 8980,
+          "endMs": 9090
+        },
+        {
+          "text": "size.",
+          "startMs": 9090,
+          "endMs": 9360
+        },
+        {
+          "text": "It",
+          "startMs": 9360,
+          "endMs": 9480
+        },
+        {
+          "text": "can",
+          "startMs": 9480,
+          "endMs": 9830
+        },
+        {
+          "text": "crack",
+          "startMs": 9830,
+          "endMs": 10030
+        },
+        {
+          "text": "a",
+          "startMs": 10030,
+          "endMs": 10090
+        },
+        {
+          "text": "turtle's",
+          "startMs": 10090,
+          "endMs": 10940
+        },
+        {
+          "text": "shell.",
+          "startMs": 10940,
+          "endMs": 11300
+        }
+      ]
+    },
+    {
+      "beatId": "b2",
+      "kind": "fact",
+      "text": "Number two: the lion. A big male weighs up to two hundred and fifty kilos, and his roar carries eight kilometres.",
+      "fromFrame": 339,
+      "durationInFrames": 180,
+      "words": [
+        {
+          "text": "Number",
+          "startMs": 11300,
+          "endMs": 11720
+        },
+        {
+          "text": "two:",
+          "startMs": 11720,
+          "endMs": 11880
+        },
+        {
+          "text": "the",
+          "startMs": 11880,
+          "endMs": 12080
+        },
+        {
+          "text": "lion.",
+          "startMs": 12080,
+          "endMs": 12160
+        },
+        {
+          "text": "A",
+          "startMs": 12530,
+          "endMs": 12740
+        },
+        {
+          "text": "big",
+          "startMs": 12740,
+          "endMs": 13000
+        },
+        {
+          "text": "male",
+          "startMs": 13000,
+          "endMs": 13240
+        },
+        {
+          "text": "weighs",
+          "startMs": 13240,
+          "endMs": 13320
+        },
+        {
+          "text": "up",
+          "startMs": 13320,
+          "endMs": 13600
+        },
+        {
+          "text": "to two hundred and",
+          "startMs": 13600,
+          "endMs": 14200
+        },
+        {
+          "text": "fifty",
+          "startMs": 14200,
+          "endMs": 14380
+        },
+        {
+          "text": "kilos,",
+          "startMs": 14380,
+          "endMs": 14720
+        },
+        {
+          "text": "and",
+          "startMs": 14720,
+          "endMs": 14930
+        },
+        {
+          "text": "his",
+          "startMs": 14930,
+          "endMs": 15240
+        },
+        {
+          "text": "roar",
+          "startMs": 15240,
+          "endMs": 15960
+        },
+        {
+          "text": "carries",
+          "startMs": 15960,
+          "endMs": 16330
+        },
+        {
+          "text": "eight",
+          "startMs": 16330,
+          "endMs": 16740
+        },
+        {
+          "text": "kilometres.",
+          "startMs": 16740,
+          "endMs": 17000
+        }
+      ]
+    },
+    {
+      "beatId": "b3",
+      "kind": "fact",
+      "text": "And number one: the tiger. The biggest males top three hundred kilos, about fifty more than a big lion. And unlike most cats, it loves to swim.",
+      "fromFrame": 519,
+      "durationInFrames": 228,
+      "words": [
+        {
+          "text": "And",
+          "startMs": 17320,
+          "endMs": 17540
+        },
+        {
+          "text": "number",
+          "startMs": 17540,
+          "endMs": 17820
+        },
+        {
+          "text": "one:",
+          "startMs": 17820,
+          "endMs": 18060
+        },
+        {
+          "text": "the",
+          "startMs": 18060,
+          "endMs": 18280
+        },
+        {
+          "text": "tiger.",
+          "startMs": 18280,
+          "endMs": 18440
+        },
+        {
+          "text": "The",
+          "startMs": 18710,
+          "endMs": 19000
+        },
+        {
+          "text": "biggest",
+          "startMs": 19000,
+          "endMs": 19320
+        },
+        {
+          "text": "males",
+          "startMs": 19320,
+          "endMs": 19680
+        },
+        {
+          "text": "top three",
+          "startMs": 19920,
+          "endMs": 20060
+        },
+        {
+          "text": "hundred",
+          "startMs": 20060,
+          "endMs": 20520
+        },
+        {
+          "text": "kilos,",
+          "startMs": 20520,
+          "endMs": 20780
+        },
+        {
+          "text": "about",
+          "startMs": 20780,
+          "endMs": 21420
+        },
+        {
+          "text": "fifty",
+          "startMs": 21420,
+          "endMs": 21780
+        },
+        {
+          "text": "more",
+          "startMs": 21780,
+          "endMs": 21980
+        },
+        {
+          "text": "than",
+          "startMs": 21980,
+          "endMs": 22160
+        },
+        {
+          "text": "a",
+          "startMs": 22160,
+          "endMs": 22220
+        },
+        {
+          "text": "big",
+          "startMs": 22220,
+          "endMs": 22500
+        },
+        {
+          "text": "lion.",
+          "startMs": 22500,
+          "endMs": 22890
+        },
+        {
+          "text": "And",
+          "startMs": 22890,
+          "endMs": 23080
+        },
+        {
+          "text": "unlike",
+          "startMs": 23080,
+          "endMs": 23420
+        },
+        {
+          "text": "most",
+          "startMs": 23620,
+          "endMs": 23740
+        },
+        {
+          "text": "cats,",
+          "startMs": 23740,
+          "endMs": 23800
+        },
+        {
+          "text": "it",
+          "startMs": 24150,
+          "endMs": 24360
+        },
+        {
+          "text": "loves",
+          "startMs": 24360,
+          "endMs": 24600
+        },
+        {
+          "text": "to",
+          "startMs": 24600,
+          "endMs": 24860
+        },
+        {
+          "text": "swim.",
+          "startMs": 24860,
+          "endMs": 24920
+        }
+      ]
+    },
+    {
+      "beatId": "ending",
+      "kind": "outro",
+      "text": "Which one would you want as a very large house cat?",
+      "fromFrame": 747,
+      "durationInFrames": 98,
+      "words": [
+        {
+          "text": "Which",
+          "startMs": 24920,
+          "endMs": 25220
+        },
+        {
+          "text": "one",
+          "startMs": 25220,
+          "endMs": 25560
+        },
+        {
+          "text": "would",
+          "startMs": 25560,
+          "endMs": 25720
+        },
+        {
+          "text": "you",
+          "startMs": 25720,
+          "endMs": 25920
+        },
+        {
+          "text": "want",
+          "startMs": 25920,
+          "endMs": 26200
+        },
+        {
+          "text": "as",
+          "startMs": 26200,
+          "endMs": 26260
+        },
+        {
+          "text": "a",
+          "startMs": 26260,
+          "endMs": 26500
+        },
+        {
+          "text": "very",
+          "startMs": 26500,
+          "endMs": 26760
+        },
+        {
+          "text": "large",
+          "startMs": 26760,
+          "endMs": 27100
+        },
+        {
+          "text": "house",
+          "startMs": 27100,
+          "endMs": 27360
+        },
+        {
+          "text": "cat?",
+          "startMs": 27360,
+          "endMs": 27560
+        }
+      ]
+    }
+  ],
+  "music": 5
+}

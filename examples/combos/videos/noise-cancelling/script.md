@@ -12,7 +12,7 @@ sources:
 ---
 
 ## Hook
-The engines drone for hours. Then you switch on your headphones, and the roar vanishes.
+Hours of engine drone. Headphones on, and the roar vanishes.
 
 ## Body
 A tiny microphone on the outside of each ear cup listens to the noise around you.

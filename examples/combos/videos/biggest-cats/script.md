@@ -14,14 +14,14 @@ sources:
 ---
 
 ## Hook
-The three biggest cats on Earth. Stay for number one: it outweighs the king.
+Three biggest cats on Earth, and number one outweighs the king.
 
 ## Body
-The jaguar. Up to about a hundred and ten kilos, with the strongest bite of any big cat for its size.
+Number three: the jaguar. Up to about a hundred and ten kilos, with the strongest bite of any big cat for its size. It can crack a turtle's shell.
 
-The lion. A big male weighs up to two hundred and fifty kilos, and his roar carries eight kilometres.
+Number two: the lion. A big male weighs up to two hundred and fifty kilos, and his roar carries eight kilometres.
 
-And number one: the tiger. A male Amur tiger can top three hundred kilos, heavier than any lion.
+And number one: the tiger. The biggest males top three hundred kilos, about fifty more than a big lion. And unlike most cats, it loves to swim.
 
 ## Ending
 Which one would you want as a very large house cat?

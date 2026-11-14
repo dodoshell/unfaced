@@ -1,0 +1,463 @@
+{
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationInFrames": 1089,
+  "style": 12,
+  "captions": 1,
+  "palette": [
+    "#0E0E0E",
+    "#FF3B2F",
+    "#2E5BFF",
+    "#EEFF41",
+    "#0A0A0A"
+  ],
+  "voice": 8,
+  "scriptType": 3,
+  "ending": 5,
+  "mascot": {
+    "name": "Pip",
+    "rig": {
+      "species": "dog",
+      "build": "quadruped",
+      "body": "long",
+      "head": "round",
+      "ears": "floppy",
+      "tail": "short",
+      "hair": "none",
+      "snout": "long",
+      "pattern": "none",
+      "colours": {
+        "body": "#B9763C",
+        "belly": "#F3D9B1",
+        "accent": "#D62828"
+      },
+      "accessories": [
+        "collar"
+      ]
+    }
+  },
+  "scenes": [
+    {
+      "beatId": "hook",
+      "kind": "title",
+      "text": "Everyone knows goldfish forget everything in three seconds. They don't.",
+      "fromFrame": 0,
+      "durationInFrames": 173,
+      "words": [
+        {
+          "text": "Everyone",
+          "startMs": 400,
+          "endMs": 854
+        },
+        {
+          "text": "knows",
+          "startMs": 894,
+          "endMs": 1264
+        },
+        {
+          "text": "goldfish",
+          "startMs": 1304,
+          "endMs": 1758
+        },
+        {
+          "text": "forget",
+          "startMs": 1798,
+          "endMs": 2196
+        },
+        {
+          "text": "everything",
+          "startMs": 2236,
+          "endMs": 2746
+        },
+        {
+          "text": "in",
+          "startMs": 2786,
+          "endMs": 3072
+        },
+        {
+          "text": "three",
+          "startMs": 3112,
+          "endMs": 3482
+        },
+        {
+          "text": "seconds.",
+          "startMs": 3522,
+          "endMs": 3948
+        },
+        {
+          "text": "They",
+          "startMs": 4498,
+          "endMs": 4840
+        },
+        {
+          "text": "don't.",
+          "startMs": 4880,
+          "endMs": 5222
+        }
+      ]
+    },
+    {
+      "beatId": "b1",
+      "kind": "fact",
+      "text": "Myth. Goldfish can remember things for months.",
+      "fromFrame": 173,
+      "durationInFrames": 119,
+      "words": [
+        {
+          "text": "Myth.",
+          "startMs": 5772,
+          "endMs": 6114
+        },
+        {
+          "text": "Goldfish",
+          "startMs": 6664,
+          "endMs": 7118
+        },
+        {
+          "text": "can",
+          "startMs": 7158,
+          "endMs": 7472
+        },
+        {
+          "text": "remember",
+          "startMs": 7512,
+          "endMs": 7966
+        },
+        {
+          "text": "things",
+          "startMs": 8006,
+          "endMs": 8404
+        },
+        {
+          "text": "for",
+          "startMs": 8444,
+          "endMs": 8758
+        },
+        {
+          "text": "months.",
+          "startMs": 8798,
+          "endMs": 9196
+        }
+      ]
+    },
+    {
+      "beatId": "b2",
+      "kind": "fact",
+      "text": "In one experiment, goldfish learned to push a lever for food, and only during one set hour of the day.",
+      "fromFrame": 292,
+      "durationInFrames": 257,
+      "words": [
+        {
+          "text": "In",
+          "startMs": 9746,
+          "endMs": 10032
+        },
+        {
+          "text": "one",
+          "startMs": 10072,
+          "endMs": 10386
+        },
+        {
+          "text": "experiment,",
+          "startMs": 10426,
+          "endMs": 10936
+        },
+        {
+          "text": "goldfish",
+          "startMs": 11186,
+          "endMs": 11640
+        },
+        {
+          "text": "learned",
+          "startMs": 11680,
+          "endMs": 12106
+        },
+        {
+          "text": "to",
+          "startMs": 12146,
+          "endMs": 12432
+        },
+        {
+          "text": "push",
+          "startMs": 12472,
+          "endMs": 12814
+        },
+        {
+          "text": "a",
+          "startMs": 12854,
+          "endMs": 13112
+        },
+        {
+          "text": "lever",
+          "startMs": 13152,
+          "endMs": 13522
+        },
+        {
+          "text": "for",
+          "startMs": 13562,
+          "endMs": 13876
+        },
+        {
+          "text": "food,",
+          "startMs": 13916,
+          "endMs": 14258
+        },
+        {
+          "text": "and",
+          "startMs": 14508,
+          "endMs": 14822
+        },
+        {
+          "text": "only",
+          "startMs": 14862,
+          "endMs": 15204
+        },
+        {
+          "text": "during",
+          "startMs": 15244,
+          "endMs": 15642
+        },
+        {
+          "text": "one",
+          "startMs": 15682,
+          "endMs": 15996
+        },
+        {
+          "text": "set",
+          "startMs": 16036,
+          "endMs": 16350
+        },
+        {
+          "text": "hour",
+          "startMs": 16390,
+          "endMs": 16732
+        },
+        {
+          "text": "of",
+          "startMs": 16772,
+          "endMs": 17058
+        },
+        {
+          "text": "the",
+          "startMs": 17098,
+          "endMs": 17412
+        },
+        {
+          "text": "day.",
+          "startMs": 17452,
+          "endMs": 17766
+        }
+      ]
+    },
+    {
+      "beatId": "b3",
+      "kind": "fact",
+      "text": "They can also learn to tell shapes, colours and sounds apart.",
+      "fromFrame": 549,
+      "durationInFrames": 152,
+      "words": [
+        {
+          "text": "They",
+          "startMs": 18316,
+          "endMs": 18658
+        },
+        {
+          "text": "can",
+          "startMs": 18698,
+          "endMs": 19012
+        },
+        {
+          "text": "also",
+          "startMs": 19052,
+          "endMs": 19394
+        },
+        {
+          "text": "learn",
+          "startMs": 19434,
+          "endMs": 19804
+        },
+        {
+          "text": "to",
+          "startMs": 19844,
+          "endMs": 20130
+        },
+        {
+          "text": "tell",
+          "startMs": 20170,
+          "endMs": 20512
+        },
+        {
+          "text": "shapes,",
+          "startMs": 20552,
+          "endMs": 20950
+        },
+        {
+          "text": "colours",
+          "startMs": 21200,
+          "endMs": 21626
+        },
+        {
+          "text": "and",
+          "startMs": 21666,
+          "endMs": 21980
+        },
+        {
+          "text": "sounds",
+          "startMs": 22020,
+          "endMs": 22418
+        },
+        {
+          "text": "apart.",
+          "startMs": 22458,
+          "endMs": 22828
+        }
+      ]
+    },
+    {
+      "beatId": "b4",
+      "kind": "fact",
+      "text": "Nobody knows who said three seconds first. A fish circling its bowl just looks forgetful.",
+      "fromFrame": 701,
+      "durationInFrames": 213,
+      "words": [
+        {
+          "text": "Nobody",
+          "startMs": 23378,
+          "endMs": 23776
+        },
+        {
+          "text": "knows",
+          "startMs": 23816,
+          "endMs": 24186
+        },
+        {
+          "text": "who",
+          "startMs": 24226,
+          "endMs": 24540
+        },
+        {
+          "text": "said",
+          "startMs": 24580,
+          "endMs": 24922
+        },
+        {
+          "text": "three",
+          "startMs": 24962,
+          "endMs": 25332
+        },
+        {
+          "text": "seconds",
+          "startMs": 25372,
+          "endMs": 25798
+        },
+        {
+          "text": "first.",
+          "startMs": 25838,
+          "endMs": 26208
+        },
+        {
+          "text": "A",
+          "startMs": 26758,
+          "endMs": 27016
+        },
+        {
+          "text": "fish",
+          "startMs": 27056,
+          "endMs": 27398
+        },
+        {
+          "text": "circling",
+          "startMs": 27438,
+          "endMs": 27892
+        },
+        {
+          "text": "its",
+          "startMs": 27932,
+          "endMs": 28246
+        },
+        {
+          "text": "bowl",
+          "startMs": 28286,
+          "endMs": 28628
+        },
+        {
+          "text": "just",
+          "startMs": 28668,
+          "endMs": 29010
+        },
+        {
+          "text": "looks",
+          "startMs": 29050,
+          "endMs": 29420
+        },
+        {
+          "text": "forgetful.",
+          "startMs": 29460,
+          "endMs": 29942
+        }
+      ]
+    },
+    {
+      "beatId": "ending",
+      "kind": "outro",
+      "text": "So if your goldfish looks bored, it probably remembers yesterday.",
+      "fromFrame": 914,
+      "durationInFrames": 175,
+      "words": [
+        {
+          "text": "So",
+          "startMs": 30492,
+          "endMs": 30778
+        },
+        {
+          "text": "if",
+          "startMs": 30818,
+          "endMs": 31104
+        },
+        {
+          "text": "your",
+          "startMs": 31144,
+          "endMs": 31486
+        },
+        {
+          "text": "goldfish",
+          "startMs": 31526,
+          "endMs": 31980
+        },
+        {
+          "text": "looks",
+          "startMs": 32020,
+          "endMs": 32390
+        },
+        {
+          "text": "bored,",
+          "startMs": 32430,
+          "endMs": 32800
+        },
+        {
+          "text": "it",
+          "startMs": 33050,
+          "endMs": 33336
+        },
+        {
+          "text": "probably",
+          "startMs": 33376,
+          "endMs": 33830
+        },
+        {
+          "text": "remembers",
+          "startMs": 33870,
+          "endMs": 34352
+        },
+        {
+          "text": "yesterday.",
+          "startMs": 34392,
+          "endMs": 34874
+        }
+      ]
+    }
+  ],
+  "audioSrc": "soundtrack.wav",
+  "music": 7
+}

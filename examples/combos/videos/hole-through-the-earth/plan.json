@@ -1,0 +1,652 @@
+{
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationInFrames": 877,
+  "style": 9,
+  "captions": 6,
+  "palette": [
+    "#41A6F6",
+    "#B13E53",
+    "#38B764",
+    "#FFCD75",
+    "#1A1C2C"
+  ],
+  "audioSrc": "soundtrack.wav",
+  "voice": 2,
+  "scriptType": 4,
+  "ending": 2,
+  "mascot": {
+    "name": "Pip",
+    "rig": {
+      "species": "dog",
+      "build": "quadruped",
+      "body": "long",
+      "head": "round",
+      "ears": "floppy",
+      "tail": "short",
+      "hair": "none",
+      "snout": "long",
+      "pattern": "none",
+      "colours": {
+        "body": "#B9763C",
+        "belly": "#F3D9B1",
+        "accent": "#D62828"
+      },
+      "accessories": [
+        "collar"
+      ]
+    }
+  },
+  "scenes": [
+    {
+      "beatId": "hook",
+      "kind": "title",
+      "text": "What if you jumped into a hole straight through the Earth?",
+      "fromFrame": 0,
+      "durationInFrames": 78,
+      "words": [
+        {
+          "text": "What",
+          "startMs": 220,
+          "endMs": 321
+        },
+        {
+          "text": "if",
+          "startMs": 321,
+          "endMs": 331
+        },
+        {
+          "text": "you",
+          "startMs": 331,
+          "endMs": 740
+        },
+        {
+          "text": "jumped",
+          "startMs": 740,
+          "endMs": 980
+        },
+        {
+          "text": "into",
+          "startMs": 980,
+          "endMs": 1100
+        },
+        {
+          "text": "a",
+          "startMs": 1100,
+          "endMs": 1260
+        },
+        {
+          "text": "hole",
+          "startMs": 1260,
+          "endMs": 1600
+        },
+        {
+          "text": "straight",
+          "startMs": 1600,
+          "endMs": 1900
+        },
+        {
+          "text": "through",
+          "startMs": 1900,
+          "endMs": 2130
+        },
+        {
+          "text": "the",
+          "startMs": 2130,
+          "endMs": 2320
+        },
+        {
+          "text": "Earth?",
+          "startMs": 2610,
+          "endMs": 2630
+        }
+      ]
+    },
+    {
+      "beatId": "b1",
+      "kind": "fact",
+      "text": "Say you jump in from Spain. The far end of the tunnel comes out in New Zealand.",
+      "fromFrame": 78,
+      "durationInFrames": 120,
+      "words": [
+        {
+          "text": "Say",
+          "startMs": 2630,
+          "endMs": 2800
+        },
+        {
+          "text": "you",
+          "startMs": 2800,
+          "endMs": 2960
+        },
+        {
+          "text": "jump",
+          "startMs": 2960,
+          "endMs": 3140
+        },
+        {
+          "text": "in",
+          "startMs": 3140,
+          "endMs": 3300
+        },
+        {
+          "text": "from",
+          "startMs": 3300,
+          "endMs": 3560
+        },
+        {
+          "text": "Spain.",
+          "startMs": 3560,
+          "endMs": 4060
+        },
+        {
+          "text": "The",
+          "startMs": 4060,
+          "endMs": 4280
+        },
+        {
+          "text": "far",
+          "startMs": 4280,
+          "endMs": 4281
+        },
+        {
+          "text": "end",
+          "startMs": 4281,
+          "endMs": 4460
+        },
+        {
+          "text": "of",
+          "startMs": 4460,
+          "endMs": 4680
+        },
+        {
+          "text": "the",
+          "startMs": 4680,
+          "endMs": 4900
+        },
+        {
+          "text": "tunnel",
+          "startMs": 4900,
+          "endMs": 5250
+        },
+        {
+          "text": "comes",
+          "startMs": 5250,
+          "endMs": 5620
+        },
+        {
+          "text": "out",
+          "startMs": 5620,
+          "endMs": 5790
+        },
+        {
+          "text": "in",
+          "startMs": 5790,
+          "endMs": 5940
+        },
+        {
+          "text": "New",
+          "startMs": 5940,
+          "endMs": 6260
+        },
+        {
+          "text": "Zealand.",
+          "startMs": 6260,
+          "endMs": 6630
+        }
+      ]
+    },
+    {
+      "beatId": "b2",
+      "kind": "fact",
+      "text": "The tunnel has no air and no heat. Gravity pulls you down, faster and faster, and you float like an astronaut.",
+      "fromFrame": 198,
+      "durationInFrames": 163,
+      "words": [
+        {
+          "text": "The",
+          "startMs": 6630,
+          "endMs": 6840
+        },
+        {
+          "text": "tunnel",
+          "startMs": 6840,
+          "endMs": 7080
+        },
+        {
+          "text": "has",
+          "startMs": 7080,
+          "endMs": 7300
+        },
+        {
+          "text": "no",
+          "startMs": 7300,
+          "endMs": 7560
+        },
+        {
+          "text": "air",
+          "startMs": 7560,
+          "endMs": 7740
+        },
+        {
+          "text": "and",
+          "startMs": 7740,
+          "endMs": 7880
+        },
+        {
+          "text": "no",
+          "startMs": 7880,
+          "endMs": 8140
+        },
+        {
+          "text": "heat.",
+          "startMs": 8140,
+          "endMs": 8470
+        },
+        {
+          "text": "Gravity",
+          "startMs": 8470,
+          "endMs": 8980
+        },
+        {
+          "text": "pulls",
+          "startMs": 8980,
+          "endMs": 9140
+        },
+        {
+          "text": "you",
+          "startMs": 9140,
+          "endMs": 9400
+        },
+        {
+          "text": "down,",
+          "startMs": 9400,
+          "endMs": 9800
+        },
+        {
+          "text": "faster",
+          "startMs": 9800,
+          "endMs": 10140
+        },
+        {
+          "text": "and",
+          "startMs": 10140,
+          "endMs": 10460
+        },
+        {
+          "text": "faster,",
+          "startMs": 10460,
+          "endMs": 10840
+        },
+        {
+          "text": "and",
+          "startMs": 10840,
+          "endMs": 10940
+        },
+        {
+          "text": "you",
+          "startMs": 10940,
+          "endMs": 11140
+        },
+        {
+          "text": "float",
+          "startMs": 11140,
+          "endMs": 11400
+        },
+        {
+          "text": "like",
+          "startMs": 11400,
+          "endMs": 11500
+        },
+        {
+          "text": "an",
+          "startMs": 11500,
+          "endMs": 12020
+        },
+        {
+          "text": "astronaut.",
+          "startMs": 12020,
+          "endMs": 12050
+        }
+      ]
+    },
+    {
+      "beatId": "b3",
+      "kind": "fact",
+      "text": "About nineteen minutes later, you race through the centre at kilometres per second.",
+      "fromFrame": 361,
+      "durationInFrames": 123,
+      "words": [
+        {
+          "text": "About",
+          "startMs": 12050,
+          "endMs": 12360
+        },
+        {
+          "text": "nineteen",
+          "startMs": 12360,
+          "endMs": 12670
+        },
+        {
+          "text": "minutes",
+          "startMs": 12670,
+          "endMs": 13060
+        },
+        {
+          "text": "later,",
+          "startMs": 13060,
+          "endMs": 13340
+        },
+        {
+          "text": "you",
+          "startMs": 13340,
+          "endMs": 13500
+        },
+        {
+          "text": "race",
+          "startMs": 13500,
+          "endMs": 13720
+        },
+        {
+          "text": "through",
+          "startMs": 13720,
+          "endMs": 14260
+        },
+        {
+          "text": "the",
+          "startMs": 14260,
+          "endMs": 14560
+        },
+        {
+          "text": "centre",
+          "startMs": 14560,
+          "endMs": 14700
+        },
+        {
+          "text": "at",
+          "startMs": 14700,
+          "endMs": 14980
+        },
+        {
+          "text": "kilometres",
+          "startMs": 14980,
+          "endMs": 15440
+        },
+        {
+          "text": "per",
+          "startMs": 15440,
+          "endMs": 15780
+        },
+        {
+          "text": "second.",
+          "startMs": 15780,
+          "endMs": 15870
+        }
+      ]
+    },
+    {
+      "beatId": "b4",
+      "kind": "fact",
+      "text": "Then gravity pulls you back. You slow down and stop, right at the edge in New Zealand.",
+      "fromFrame": 484,
+      "durationInFrames": 130,
+      "words": [
+        {
+          "text": "Then",
+          "startMs": 16160,
+          "endMs": 16480
+        },
+        {
+          "text": "gravity",
+          "startMs": 16480,
+          "endMs": 16840
+        },
+        {
+          "text": "pulls",
+          "startMs": 16840,
+          "endMs": 17040
+        },
+        {
+          "text": "you",
+          "startMs": 17040,
+          "endMs": 17280
+        },
+        {
+          "text": "back.",
+          "startMs": 17280,
+          "endMs": 17380
+        },
+        {
+          "text": "You",
+          "startMs": 17580,
+          "endMs": 17800
+        },
+        {
+          "text": "slow",
+          "startMs": 17800,
+          "endMs": 18080
+        },
+        {
+          "text": "down",
+          "startMs": 18080,
+          "endMs": 18200
+        },
+        {
+          "text": "and",
+          "startMs": 18200,
+          "endMs": 18320
+        },
+        {
+          "text": "stop,",
+          "startMs": 18320,
+          "endMs": 18550
+        },
+        {
+          "text": "right",
+          "startMs": 18550,
+          "endMs": 18870
+        },
+        {
+          "text": "at",
+          "startMs": 18870,
+          "endMs": 18960
+        },
+        {
+          "text": "the",
+          "startMs": 18960,
+          "endMs": 19380
+        },
+        {
+          "text": "edge",
+          "startMs": 19380,
+          "endMs": 19540
+        },
+        {
+          "text": "in",
+          "startMs": 19540,
+          "endMs": 19640
+        },
+        {
+          "text": "New",
+          "startMs": 19640,
+          "endMs": 19960
+        },
+        {
+          "text": "Zealand.",
+          "startMs": 20320,
+          "endMs": 20480
+        }
+      ]
+    },
+    {
+      "beatId": "b5",
+      "kind": "fact",
+      "text": "Nobody grabs you, so you fall again, all the way back to Spain. Back and forth, forever.",
+      "fromFrame": 614,
+      "durationInFrames": 134,
+      "words": [
+        {
+          "text": "Nobody",
+          "startMs": 20480,
+          "endMs": 20570
+        },
+        {
+          "text": "grabs",
+          "startMs": 20570,
+          "endMs": 20890
+        },
+        {
+          "text": "you,",
+          "startMs": 20890,
+          "endMs": 21080
+        },
+        {
+          "text": "so",
+          "startMs": 21080,
+          "endMs": 21200
+        },
+        {
+          "text": "you",
+          "startMs": 21200,
+          "endMs": 21390
+        },
+        {
+          "text": "fall",
+          "startMs": 21390,
+          "endMs": 21940
+        },
+        {
+          "text": "again,",
+          "startMs": 21940,
+          "endMs": 22000
+        },
+        {
+          "text": "all",
+          "startMs": 22000,
+          "endMs": 22260
+        },
+        {
+          "text": "the",
+          "startMs": 22260,
+          "endMs": 22600
+        },
+        {
+          "text": "way",
+          "startMs": 22600,
+          "endMs": 22751
+        },
+        {
+          "text": "back",
+          "startMs": 22751,
+          "endMs": 22901
+        },
+        {
+          "text": "to",
+          "startMs": 23020,
+          "endMs": 23280
+        },
+        {
+          "text": "Spain.",
+          "startMs": 23280,
+          "endMs": 23780
+        },
+        {
+          "text": "Back",
+          "startMs": 23780,
+          "endMs": 24020
+        },
+        {
+          "text": "and",
+          "startMs": 24020,
+          "endMs": 24220
+        },
+        {
+          "text": "forth,",
+          "startMs": 24220,
+          "endMs": 24580
+        },
+        {
+          "text": "forever.",
+          "startMs": 24580,
+          "endMs": 24940
+        }
+      ]
+    },
+    {
+      "beatId": "ending",
+      "kind": "outro",
+      "text": "But Earth spins, so you would hit the wall first. Which wall? That's next.",
+      "fromFrame": 748,
+      "durationInFrames": 129,
+      "words": [
+        {
+          "text": "But",
+          "startMs": 24950,
+          "endMs": 25160
+        },
+        {
+          "text": "Earth",
+          "startMs": 25160,
+          "endMs": 25480
+        },
+        {
+          "text": "spins,",
+          "startMs": 25480,
+          "endMs": 25520
+        },
+        {
+          "text": "so",
+          "startMs": 25520,
+          "endMs": 25620
+        },
+        {
+          "text": "you",
+          "startMs": 25620,
+          "endMs": 25890
+        },
+        {
+          "text": "would",
+          "startMs": 25890,
+          "endMs": 26260
+        },
+        {
+          "text": "hit",
+          "startMs": 26260,
+          "endMs": 26380
+        },
+        {
+          "text": "the",
+          "startMs": 26380,
+          "endMs": 26520
+        },
+        {
+          "text": "wall",
+          "startMs": 26750,
+          "endMs": 26900
+        },
+        {
+          "text": "first.",
+          "startMs": 26900,
+          "endMs": 27270
+        },
+        {
+          "text": "Which",
+          "startMs": 27270,
+          "endMs": 27580
+        },
+        {
+          "text": "wall?",
+          "startMs": 27580,
+          "endMs": 28000
+        },
+        {
+          "text": "That's next.",
+          "startMs": 28000,
+          "endMs": 28120
+        }
+      ]
+    }
+  ],
+  "music": 4
+}

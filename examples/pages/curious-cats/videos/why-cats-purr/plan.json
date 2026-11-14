@@ -2,7 +2,7 @@
   "fps": 30,
   "width": 1080,
   "height": 1920,
-  "durationInFrames": 1081,
+  "durationInFrames": 1079,
   "style": 3,
   "captions": 1,
   "palette": [
@@ -27,21 +27,21 @@
         {
           "text": "Why",
           "startMs": 300,
-          "endMs": 370
+          "endMs": 390
         },
         {
           "text": "do",
-          "startMs": 370,
+          "startMs": 390,
           "endMs": 900
         },
         {
           "text": "cats",
           "startMs": 900,
-          "endMs": 1400
+          "endMs": 1420
         },
         {
           "text": "purr?",
-          "startMs": 1400,
+          "startMs": 1420,
           "endMs": 1930
         }
       ]
@@ -56,16 +56,16 @@
         {
           "text": "Because",
           "startMs": 1930,
-          "endMs": 2790
+          "endMs": 2780
         },
         {
           "text": "they're",
-          "startMs": 2790,
-          "endMs": 3020
+          "startMs": 2780,
+          "endMs": 2990
         },
         {
           "text": "happy.",
-          "startMs": 3020,
+          "startMs": 2990,
           "endMs": 3550
         },
         {
@@ -99,7 +99,7 @@
         },
         {
           "text": "that's",
-          "startMs": 5900,
+          "startMs": 5890,
           "endMs": 6340
         },
         {
@@ -110,17 +110,17 @@
         {
           "text": "half",
           "startMs": 6640,
-          "endMs": 6860
+          "endMs": 6760
         },
         {
           "text": "the",
-          "startMs": 6860,
-          "endMs": 7120
+          "startMs": 6760,
+          "endMs": 6880
         },
         {
           "text": "story.",
-          "startMs": 7120,
-          "endMs": 7520
+          "startMs": 6880,
+          "endMs": 7690
         }
       ]
     },
@@ -129,77 +129,77 @@
       "kind": "fact",
       "text": "Cats also purr when they're scared, when they're hurt, and even while giving birth.",
       "fromFrame": 231,
-      "durationInFrames": 136,
+      "durationInFrames": 131,
       "words": [
         {
           "text": "Cats",
           "startMs": 7700,
-          "endMs": 7780
+          "endMs": 7790
         },
         {
           "text": "also",
-          "startMs": 7780,
+          "startMs": 7790,
           "endMs": 8040
         },
         {
           "text": "purr",
           "startMs": 8040,
-          "endMs": 8300
+          "endMs": 8280
         },
         {
           "text": "when",
-          "startMs": 8300,
-          "endMs": 8560
+          "startMs": 8280,
+          "endMs": 8530
         },
         {
           "text": "they're",
-          "startMs": 8560,
-          "endMs": 9240
+          "startMs": 8530,
+          "endMs": 9220
         },
         {
           "text": "scared,",
-          "startMs": 9240,
-          "endMs": 9550
+          "startMs": 9220,
+          "endMs": 9330
         },
         {
           "text": "when",
-          "startMs": 9790,
-          "endMs": 9980
+          "startMs": 9330,
+          "endMs": 9800
         },
         {
           "text": "they're",
-          "startMs": 9980,
-          "endMs": 10270
+          "startMs": 9800,
+          "endMs": 10100
         },
         {
           "text": "hurt,",
-          "startMs": 10270,
-          "endMs": 10540
+          "startMs": 10100,
+          "endMs": 10380
         },
         {
           "text": "and",
-          "startMs": 10540,
-          "endMs": 10780
+          "startMs": 10380,
+          "endMs": 10620
         },
         {
           "text": "even",
-          "startMs": 10780,
-          "endMs": 11020
+          "startMs": 10620,
+          "endMs": 10860
         },
         {
           "text": "while",
-          "startMs": 11020,
-          "endMs": 11320
+          "startMs": 10860,
+          "endMs": 11160
         },
         {
           "text": "giving",
-          "startMs": 11320,
-          "endMs": 11780
+          "startMs": 11160,
+          "endMs": 11620
         },
         {
           "text": "birth.",
-          "startMs": 11780,
-          "endMs": 12240
+          "startMs": 11620,
+          "endMs": 12080
         }
       ]
     },
@@ -207,143 +207,143 @@
       "beatId": "b4",
       "kind": "fact",
       "text": "Purring seems to calm them down, like humming to yourself in a scary place. Some scientists even think the low vibrations help their bones and muscles heal.",
-      "fromFrame": 367,
-      "durationInFrames": 299,
+      "fromFrame": 362,
+      "durationInFrames": 300,
       "words": [
         {
           "text": "Purring",
-          "startMs": 12240,
-          "endMs": 12800
+          "startMs": 12080,
+          "endMs": 12640
         },
         {
           "text": "seems",
-          "startMs": 12800,
-          "endMs": 13100
+          "startMs": 12640,
+          "endMs": 12940
         },
         {
           "text": "to",
-          "startMs": 13100,
-          "endMs": 13320
+          "startMs": 12940,
+          "endMs": 13160
         },
         {
           "text": "calm",
-          "startMs": 13320,
-          "endMs": 13560
+          "startMs": 13160,
+          "endMs": 13420
         },
         {
           "text": "them",
-          "startMs": 13560,
-          "endMs": 13880
+          "startMs": 13420,
+          "endMs": 13720
         },
         {
           "text": "down,",
-          "startMs": 13880,
-          "endMs": 14240
+          "startMs": 13720,
+          "endMs": 14100
         },
         {
           "text": "like",
-          "startMs": 14240,
-          "endMs": 14520
+          "startMs": 14100,
+          "endMs": 14340
         },
         {
           "text": "humming",
-          "startMs": 14520,
-          "endMs": 14840
+          "startMs": 14340,
+          "endMs": 14660
         },
         {
           "text": "to",
-          "startMs": 14840,
-          "endMs": 15000
+          "startMs": 14660,
+          "endMs": 14820
         },
         {
           "text": "yourself",
-          "startMs": 15000,
-          "endMs": 15410
+          "startMs": 14820,
+          "endMs": 15390
         },
         {
           "text": "in",
-          "startMs": 15410,
-          "endMs": 15660
+          "startMs": 15390,
+          "endMs": 15600
         },
         {
           "text": "a",
-          "startMs": 15660,
-          "endMs": 15780
+          "startMs": 15600,
+          "endMs": 15620
         },
         {
           "text": "scary",
-          "startMs": 15780,
-          "endMs": 16240
+          "startMs": 15620,
+          "endMs": 16100
         },
         {
           "text": "place.",
-          "startMs": 16240,
-          "endMs": 16720
+          "startMs": 16100,
+          "endMs": 16560
         },
         {
           "text": "Some",
-          "startMs": 16720,
-          "endMs": 17340
+          "startMs": 16560,
+          "endMs": 17180
         },
         {
           "text": "scientists",
-          "startMs": 17340,
-          "endMs": 17950
+          "startMs": 17180,
+          "endMs": 17800
         },
         {
           "text": "even",
-          "startMs": 17950,
-          "endMs": 18420
+          "startMs": 17800,
+          "endMs": 18280
         },
         {
           "text": "think",
-          "startMs": 18420,
-          "endMs": 18610
+          "startMs": 18280,
+          "endMs": 18460
         },
         {
           "text": "the",
-          "startMs": 18610,
-          "endMs": 18780
+          "startMs": 18460,
+          "endMs": 18640
         },
         {
           "text": "low",
-          "startMs": 18780,
-          "endMs": 19320
+          "startMs": 18640,
+          "endMs": 19160
         },
         {
           "text": "vibrations",
-          "startMs": 19320,
-          "endMs": 19880
+          "startMs": 19160,
+          "endMs": 19720
         },
         {
           "text": "help",
-          "startMs": 19880,
-          "endMs": 20120
+          "startMs": 19720,
+          "endMs": 20020
         },
         {
           "text": "their",
-          "startMs": 20120,
-          "endMs": 20540
+          "startMs": 20020,
+          "endMs": 20420
         },
         {
           "text": "bones",
-          "startMs": 20540,
-          "endMs": 20990
+          "startMs": 20420,
+          "endMs": 20840
         },
         {
           "text": "and",
-          "startMs": 20990,
-          "endMs": 21280
+          "startMs": 20840,
+          "endMs": 21100
         },
         {
           "text": "muscles",
-          "startMs": 21280,
-          "endMs": 21740
+          "startMs": 21100,
+          "endMs": 21600
         },
         {
           "text": "heal.",
-          "startMs": 21740,
-          "endMs": 22230
+          "startMs": 21600,
+          "endMs": 22070
         }
       ]
     },
@@ -351,138 +351,138 @@
       "beatId": "b5",
       "kind": "fact",
       "text": "And some cats hide a tiny cry inside the purr, one that sounds a lot like a human baby. People find it very hard to ignore.",
-      "fromFrame": 666,
-      "durationInFrames": 258,
+      "fromFrame": 662,
+      "durationInFrames": 255,
       "words": [
         {
           "text": "And",
-          "startMs": 22230,
-          "endMs": 22520
+          "startMs": 22070,
+          "endMs": 22360
         },
         {
           "text": "some",
-          "startMs": 22520,
-          "endMs": 22820
+          "startMs": 22360,
+          "endMs": 22660
         },
         {
           "text": "cats",
-          "startMs": 22820,
-          "endMs": 23300
+          "startMs": 22660,
+          "endMs": 23160
         },
         {
           "text": "hide",
-          "startMs": 23300,
-          "endMs": 23440
+          "startMs": 23160,
+          "endMs": 23390
         },
         {
           "text": "a",
-          "startMs": 23440,
-          "endMs": 23740
+          "startMs": 23390,
+          "endMs": 23580
         },
         {
           "text": "tiny",
-          "startMs": 23740,
-          "endMs": 23870
+          "startMs": 23580,
+          "endMs": 24000
         },
         {
           "text": "cry",
-          "startMs": 23870,
-          "endMs": 24130
+          "startMs": 24000,
+          "endMs": 24480
         },
         {
           "text": "inside",
-          "startMs": 24130,
-          "endMs": 24730
+          "startMs": 24480,
+          "endMs": 24860
         },
         {
           "text": "the",
-          "startMs": 24730,
-          "endMs": 24920
+          "startMs": 24860,
+          "endMs": 25060
         },
         {
           "text": "purr,",
-          "startMs": 24920,
-          "endMs": 25590
+          "startMs": 25060,
+          "endMs": 25430
         },
         {
           "text": "one",
-          "startMs": 25590,
-          "endMs": 25860
+          "startMs": 25430,
+          "endMs": 25700
         },
         {
           "text": "that",
-          "startMs": 25860,
-          "endMs": 26120
+          "startMs": 25700,
+          "endMs": 25960
         },
         {
           "text": "sounds",
-          "startMs": 26120,
-          "endMs": 26520
+          "startMs": 25960,
+          "endMs": 26370
         },
         {
           "text": "a",
-          "startMs": 26520,
-          "endMs": 26600
+          "startMs": 26370,
+          "endMs": 26430
         },
         {
           "text": "lot",
-          "startMs": 26600,
-          "endMs": 27020
+          "startMs": 26430,
+          "endMs": 26700
         },
         {
           "text": "like",
-          "startMs": 27020,
-          "endMs": 27200
+          "startMs": 26700,
+          "endMs": 26900
         },
         {
           "text": "a",
-          "startMs": 27200,
-          "endMs": 27440
+          "startMs": 26900,
+          "endMs": 27140
         },
         {
           "text": "human",
-          "startMs": 27440,
-          "endMs": 27760
+          "startMs": 27140,
+          "endMs": 27460
         },
         {
           "text": "baby.",
-          "startMs": 27760,
-          "endMs": 28280
+          "startMs": 27460,
+          "endMs": 27960
         },
         {
           "text": "People",
-          "startMs": 28280,
-          "endMs": 28820
+          "startMs": 27960,
+          "endMs": 28500
         },
         {
           "text": "find",
-          "startMs": 28820,
-          "endMs": 29020
+          "startMs": 28500,
+          "endMs": 28720
         },
         {
           "text": "it",
-          "startMs": 29020,
-          "endMs": 29260
+          "startMs": 28720,
+          "endMs": 28940
         },
         {
           "text": "very",
-          "startMs": 29260,
-          "endMs": 29760
+          "startMs": 28940,
+          "endMs": 29440
         },
         {
           "text": "hard",
-          "startMs": 29760,
-          "endMs": 29860
+          "startMs": 29440,
+          "endMs": 29700
         },
         {
           "text": "to",
-          "startMs": 29860,
-          "endMs": 30360
+          "startMs": 29700,
+          "endMs": 30040
         },
         {
           "text": "ignore.",
-          "startMs": 30360,
-          "endMs": 30800
+          "startMs": 30040,
+          "endMs": 30570
         }
       ]
     },
@@ -490,93 +490,93 @@
       "beatId": "ending",
       "kind": "outro",
       "text": "So when your cat purrs at you at five in the morning, it isn't love. It's breakfast.",
-      "fromFrame": 924,
-      "durationInFrames": 157,
+      "fromFrame": 917,
+      "durationInFrames": 162,
       "words": [
         {
           "text": "So",
-          "startMs": 30800,
-          "endMs": 30920
+          "startMs": 30570,
+          "endMs": 30840
         },
         {
           "text": "when",
-          "startMs": 30920,
-          "endMs": 31320
+          "startMs": 30840,
+          "endMs": 31000
         },
         {
           "text": "your",
-          "startMs": 31320,
-          "endMs": 31460
+          "startMs": 31000,
+          "endMs": 31140
         },
         {
           "text": "cat",
+          "startMs": 31140,
+          "endMs": 31280
+        },
+        {
+          "text": "purrs",
           "startMs": 31460,
           "endMs": 31580
         },
         {
-          "text": "purrs",
-          "startMs": 31790,
-          "endMs": 31880
-        },
-        {
           "text": "at",
-          "startMs": 31880,
-          "endMs": 32000
+          "startMs": 31580,
+          "endMs": 31700
         },
         {
           "text": "you",
-          "startMs": 32000,
-          "endMs": 32210
+          "startMs": 31700,
+          "endMs": 31870
         },
         {
           "text": "at",
-          "startMs": 32210,
-          "endMs": 32300
+          "startMs": 31870,
+          "endMs": 32000
         },
         {
           "text": "five",
-          "startMs": 32300,
-          "endMs": 32560
+          "startMs": 32000,
+          "endMs": 32230
         },
         {
           "text": "in",
-          "startMs": 32560,
-          "endMs": 32660
+          "startMs": 32230,
+          "endMs": 32360
         },
         {
           "text": "the",
-          "startMs": 32660,
-          "endMs": 33220
+          "startMs": 32360,
+          "endMs": 32900
         },
         {
           "text": "morning,",
-          "startMs": 33220,
-          "endMs": 33560
+          "startMs": 32900,
+          "endMs": 33240
         },
         {
           "text": "it",
-          "startMs": 33560,
-          "endMs": 33660
+          "startMs": 33240,
+          "endMs": 33340
         },
         {
           "text": "isn't",
-          "startMs": 33660,
-          "endMs": 34120
+          "startMs": 33340,
+          "endMs": 33800
         },
         {
           "text": "love.",
-          "startMs": 34120,
-          "endMs": 34560
+          "startMs": 33800,
+          "endMs": 34230
         },
         {
           "text": "It's",
-          "startMs": 34560,
-          "endMs": 35020
+          "startMs": 34240,
+          "endMs": 34700
         },
         {
           "text": "breakfast.",
-          "startMs": 35020,
-          "endMs": 35680
+          "startMs": 34700,
+          "endMs": 35340
         }
       ]
     }
