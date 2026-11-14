@@ -13,7 +13,8 @@ export interface Check {
   fix: string;
 }
 
-const SETUP = "npm run setup";
+/** How to run setup: through the skills' launcher when it started this CLI, otherwise with npm in a clone. */
+const setupCommand = (env: NodeJS.ProcessEnv) => (env.UNFACED_LAUNCHER ? `node "${env.UNFACED_LAUNCHER}" setup` : "npm run setup");
 
 /** The nearest folder that exists, for measuring free space before ~/.unfaced is created. */
 function existingAncestor(path: string): string {
@@ -42,17 +43,18 @@ function buildTools(executable: string, platform: NodeJS.Platform): Check[] {
 
 export function defaultChecks(env: NodeJS.ProcessEnv = process.env, platform: NodeJS.Platform = process.platform): Check[] {
   const home = unfacedHome(env);
+  const setup = setupCommand(env);
   const whisper = whisperPaths("en", env);
   // English uses its own whisper model; every other language uses the multilingual one.
   const multilingual = whisperPaths("it", env);
   return [
     { name: "Node 22 or newer", ok: async () => Number(process.versions.node.split(".")[0]) >= 22, fix: "install Node 22 or newer from https://nodejs.org" },
-    { name: "Free voice model", ok: async () => existsSync(join(home, "models", KOKORO_MODEL.name)), fix: SETUP },
+    { name: "Free voice model", ok: async () => existsSync(join(home, "models", KOKORO_MODEL.name)), fix: setup },
     ...buildTools(whisper.executable, platform),
-    { name: "Whisper", ok: async () => existsSync(whisper.executable), fix: SETUP },
-    { name: "Whisper model for English", ok: async () => existsSync(whisper.modelFile), fix: SETUP },
-    { name: "Whisper model for other languages", ok: async () => existsSync(multilingual.modelFile), fix: SETUP },
-    { name: "Remotion browser", ok: async () => existsSync(join(LIBRARY_ROOT, "node_modules", ".remotion", "chrome-headless-shell")), fix: SETUP },
+    { name: "Whisper", ok: async () => existsSync(whisper.executable), fix: setup },
+    { name: "Whisper model for English", ok: async () => existsSync(whisper.modelFile), fix: setup },
+    { name: "Whisper model for other languages", ok: async () => existsSync(multilingual.modelFile), fix: setup },
+    { name: "Remotion browser", ok: async () => existsSync(join(LIBRARY_ROOT, "node_modules", ".remotion", "chrome-headless-shell")), fix: setup },
     { name: "tar", ok: async () => spawnSync("tar", ["--version"]).status === 0, fix: "install tar (it ships with Windows 10+, macOS and Linux)" },
     {
       name: "2 GB free disk space",

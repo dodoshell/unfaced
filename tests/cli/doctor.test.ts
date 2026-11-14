@@ -44,6 +44,12 @@ describe("doctor", () => {
     ]);
   });
 
+  it("says to run setup the way the user runs unfaced: through the skills' launcher, or with npm in a clone", () => {
+    const fix = (env: NodeJS.ProcessEnv) => defaultChecks(env, "win32").find((c) => c.name === "Whisper")!.fix;
+    expect(fix({})).toBe("npm run setup");
+    expect(fix({ UNFACED_LAUNCHER: "C:\\skills\\video-make\\scripts\\unfaced.mjs" })).toBe('node "C:\\skills\\video-make\\scripts\\unfaced.mjs" setup');
+  });
+
   it("checks the tools that build whisper on macOS and Linux, where it is compiled from source", () => {
     for (const platform of ["darwin", "linux"] as const) {
       const names = defaultChecks({}, platform).map((c) => c.name);

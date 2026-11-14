@@ -22,7 +22,6 @@
     "@types/three": "0.186.0",
     "pixelmatch": "^8.0.0",
     "pngjs": "^7.0.0",
-    "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vitest": "^5.1.0"
   },
@@ -43,6 +42,7 @@
     "remotion": "4.0.543",
     "sherpa-onnx-node": "1.13.8",
     "three": "0.186.0",
+    "tsx": "^4.23.15",
     "yaml": "^2.9.1"
   }
 }
