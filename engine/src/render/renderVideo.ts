@@ -26,6 +26,8 @@ export interface RenderJob {
   assetsDir?: string;
   files?: string[];
   scenes?: string;
+  /** How renderMediaOf encodes: H.264 + AAC by default, or a looping GIF with every nth frame, scaled. */
+  media?: { codec: "gif"; everyNthFrame: number; scale: number };
 }
 
 export const ENGINE_ENTRY = join(LIBRARY_ROOT, "engine", "remotion", "index.ts");
@@ -144,10 +146,13 @@ async function prepare(job: RenderJob) {
   return { url, composition };
 }
 
-/** Renders a composition to an H.264 + AAC video. The bundle is kept until closeRenders(). */
+/** Renders a composition to an H.264 + AAC video (or the GIF `job.media` asks for). The bundle is kept until closeRenders(). */
 export async function renderMediaOf(job: RenderJob): Promise<void> {
   const { url, composition } = await prepare(job);
-  await renderMedia({ serveUrl: url, composition, inputProps: job.inputProps, codec: "h264", audioCodec: "aac", outputLocation: job.outPath });
+  const encoding = job.media
+    ? { codec: "gif" as const, everyNthFrame: job.media.everyNthFrame, scale: job.media.scale, numberOfGifLoops: null }
+    : { codec: "h264" as const, audioCodec: "aac" as const };
+  await renderMedia({ serveUrl: url, composition, inputProps: job.inputProps, ...encoding, outputLocation: job.outPath });
 }
 
 /** Renders one frame of a composition as a PNG. The bundle is kept until closeRenders(). */

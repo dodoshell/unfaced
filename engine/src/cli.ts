@@ -29,7 +29,8 @@ Commands:
   mascot <pageDir>               Render the page's mascot reference sheet to brand/mascot/reference.png
   demo <style|all> [--out <dir>] [--frames]
                                  Render the style demo (the same dog scene in every style) to <dir>/NN-slug.mp4,
-                                 or its key moments as PNGs with --frames (default dir: examples/styles)
+                                 or its key moments as PNGs with --frames (default dir: examples/styles);
+                                 all also writes <dir>/all-styles.mp4 and docs/media/styles-grid.gif
   doctor                         Check that everything the free pipeline needs is installed
   setup                          Download the voice model, whisper and the render browser`;
 

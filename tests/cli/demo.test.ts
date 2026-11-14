@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { DEMO_FRAMES, type DemoDeps, renderDemos } from "../../engine/src/cli/demo.js";
-import { DOG_DEMO_ID } from "../../engine/remotion/compositionId.js";
+import { DOG_DEMO_ID, STYLES_GRID_ID } from "../../engine/remotion/compositionId.js";
 import { stylesWithLayout } from "../../engine/remotion/styles/layouts.js";
 import { Catalog } from "../../engine/src/catalog/catalog.js";
 import { CATALOG_DIR } from "../../engine/src/paths.js";
@@ -32,7 +32,30 @@ describe("demo", () => {
   it("renders every style that has components with all", async () => {
     const { d, videos } = deps();
     await renderDemos("all", { out }, d);
-    expect(videos.map((v) => v.inputProps.style)).toEqual(stylesWithLayout());
+    expect(videos.filter((v) => v.id === DOG_DEMO_ID).map((v) => v.inputProps.style)).toEqual(stylesWithLayout());
+  });
+
+  it("puts every demo side by side after all: a vertical video and the README's GIF", async () => {
+    const { d, videos } = deps();
+    const gif = join("docs", "media", "styles-grid.gif");
+    const files = await renderDemos("all", { out, gif }, d);
+    const grids = videos.filter((v) => v.id === STYLES_GRID_ID);
+    const cells = stylesWithLayout().map((n) => {
+      const entry = Catalog.load(CATALOG_DIR).get("style", n);
+      return { src: `${String(n).padStart(2, "0")}-${entry.slug}.mp4`, label: `${String(n).padStart(2, "0")} ${entry.name}` };
+    });
+    expect(grids).toEqual([
+      expect.objectContaining({ outPath: join(out, "all-styles.mp4"), inputProps: { cells, bands: true }, assetsDir: out, files: cells.map((c) => c.src) }),
+      expect.objectContaining({ outPath: gif, inputProps: { cells, bands: false }, assetsDir: out, media: { codec: "gif", everyNthFrame: 3, scale: 0.5 } }),
+    ]);
+    expect(files.slice(-2)).toEqual([join(out, "all-styles.mp4"), gif]);
+  });
+
+  it("makes no grid for a single style or for stills", async () => {
+    const { d, videos } = deps();
+    await renderDemos("3", { out }, d);
+    await renderDemos("all", { out, frames: true }, d);
+    expect(videos.some((v) => v.id === STYLES_GRID_ID)).toBe(false);
   });
 
   it("renders review stills instead of the video with --frames", async () => {

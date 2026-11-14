@@ -4,3 +4,5 @@ export const COMPOSITION_ID = "UnfacedVideo";
 export const MASCOT_SHEET_ID = "MascotSheet";
 /** The style demo: the same dog, park and ball in one style. */
 export const DOG_DEMO_ID = "DogDemo";
+/** Every style demo side by side: the all-styles video and the README GIF. */
+export const STYLES_GRID_ID = "StylesGrid";
