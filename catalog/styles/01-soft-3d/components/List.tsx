@@ -1,6 +1,6 @@
 import { AbsoluteFill } from "remotion";
 import { fitFontSize, listParts, type Rect, type Scene } from "../../../../engine/remotion/kit/index.js";
-import { colour, layout } from "./layout.js";
+import { colour, layout, leadInColours } from "./layout.js";
 import { ball, cardFill, clay, FONT, useSquish } from "./shared.js";
 
 /** One clay pill. Items get a numbered clay ball at the left. */
@@ -64,7 +64,7 @@ export const List: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pal
   const ink = colour(palette, 4);
   return (
     <AbsoluteFill>
-      {header && <Row text={header} box={boxes[0]!} delay={0} fill={colour(palette, 3)} ink={ink} />}
+      {header && <Row text={header} box={boxes[0]!} delay={0} {...leadInColours(palette)} />}
       {items.map((item, i) => (
         <Row key={i} text={item} box={itemBoxes[i]!} delay={6 + i * 6} fill={cardFill(palette)} ink={ink} bullet={{ n: i + 1, fill: colour(palette, i % 2 === 0 ? 1 : 2) }} />
       ))}

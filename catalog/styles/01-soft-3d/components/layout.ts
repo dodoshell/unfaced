@@ -1,6 +1,7 @@
 // Pure layout: where each scene kind puts its text. The components draw exactly these
 // boxes, and the checks call this without rendering, so keep React out of this file.
 import { listParts } from "../../../../engine/remotion/core/badges.js";
+import { readableOn } from "../../../../engine/remotion/core/contrast.js";
 import type { Rect } from "../../../../engine/remotion/core/safeZone.js";
 import type { TextBox } from "../../../../engine/remotion/styles/registry.js";
 import type { Scene } from "../../../../engine/src/plan/types.js";
@@ -8,6 +9,12 @@ import style from "../style.json";
 
 /** Palette roles by position: 0 background, 1 accent, 2 secondary, 3 highlight, 4 ink. Short page palettes fall back to the defaults. */
 export const colour = (palette: string[], role: 0 | 1 | 2 | 3 | 4): string => palette[role] ?? style.defaultPalette[role]!;
+
+/** A list's lead-in pill: the highlight colour, with the ink when it reads on it, else white or near black. */
+export const leadInColours = (palette: string[]): { fill: string; ink: string } => {
+  const fill = colour(palette, 3);
+  return { fill, ink: readableOn(fill, colour(palette, 4)) };
+};
 
 const TITLE: Rect = { x: 110, y: 480, w: 780, h: 480 };
 const BADGE: Rect = { x: 290, y: 420, w: 420, h: 420 };
