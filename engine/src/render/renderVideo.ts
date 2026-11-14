@@ -94,7 +94,8 @@ function serveUrl(entryPoint: string, assetsDir: string, files: string[], scenes
     const s = statSync(join(assetsDir, f));
     return `${f}:${s.size}:${s.mtimeMs}`;
   });
-  const key = [entryPoint, assetsDir, scenes ?? "", ...stats].join("\n");
+  // With no files to stage, the folder they would come from changes nothing in the bundle.
+  const key = [entryPoint, files.length > 0 ? assetsDir : "", scenes ?? "", ...stats].join("\n");
   let url = bundles.get(key);
   if (!url) {
     const staged = stagePublicDir(assetsDir, files);
@@ -151,16 +152,32 @@ export async function closeRenders(): Promise<string[]> {
   for (const browser of open) await (await browser.catch(() => undefined))?.close({ silent: true });
   await Promise.allSettled(bundles.values());
   bundles.clear();
+  compositions.clear();
   const removed = temporary.splice(0);
   for (const dir of removed) rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   return removed;
+}
+
+type Composition = Awaited<ReturnType<typeof selectComposition>>;
+const compositions = new Map<string, Promise<Composition>>();
+
+/** Reads a composition once per bundle, browser and props: the frames of one video all share it. */
+function compositionOf(url: string, job: RenderJob, scale: number, browser: HeadlessBrowser): Promise<Composition> {
+  const key = [url, scale, job.id, JSON.stringify(job.inputProps)].join("\n");
+  let composition = compositions.get(key);
+  if (!composition) {
+    composition = selectComposition({ serveUrl: url, id: job.id, inputProps: job.inputProps, puppeteerInstance: browser });
+    compositions.set(key, composition);
+    composition.catch(() => compositions.delete(key));
+  }
+  return composition;
 }
 
 async function prepare(job: RenderJob, scale: number) {
   const entryPoint = resolve(job.entryPoint ?? ENGINE_ENTRY);
   const url = await serveUrl(entryPoint, resolve(job.assetsDir ?? dirname(job.outPath)), job.files ?? [], job.scenes);
   const browser = await browserAt(scale);
-  const composition = await selectComposition({ serveUrl: url, id: job.id, inputProps: job.inputProps, puppeteerInstance: browser });
+  const composition = await compositionOf(url, job, scale, browser);
   mkdirSync(dirname(job.outPath), { recursive: true });
   return { url, composition, browser };
 }
