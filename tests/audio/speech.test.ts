@@ -59,6 +59,16 @@ describe("speech in audio", () => {
     expect(speechAt(silence, 0, 1000)).toBe(false);
   });
 
+  it("does not take a click of 10 or 20 ms for speech starting, but takes a 40 ms sound", () => {
+    for (const click of [10, 20]) {
+      const pcm = tones(3000, [[300, 900], [1200, 1200 + click], [1400, 2500]]);
+      expect(speechOnsets(pcm), `${click} ms`).toEqual([300, 1400]);
+      expect(speechPauses(pcm).at(-1), `${click} ms`).toEqual({ fromMs: 900, toMs: 1400 });
+      expect(speechAt(pcm, 1150, 1250), `${click} ms`).toBe(false);
+    }
+    expect(speechOnsets(tones(3000, [[300, 900], [1200, 1240], [1400, 2500]]))).toEqual([300, 1200, 1400]);
+  });
+
   it("hears a video's soundtrack in full, so an 's' above 8 kHz between two vowels is not a pause", async () => {
     // At 24 kHz like the voice-over: a vowel, 150 ms of hiss at 9-11 kHz, a vowel.
     const rate = 24000;
