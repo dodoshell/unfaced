@@ -67,6 +67,11 @@ describe("parseScript", () => {
     expect(s.spokenText).toBe("Perché è così? L'acqua… Sì. Ciao!");
   });
 
+  it("drops flags and keycap emoji from the spoken text, keeping plain digits", () => {
+    const s = parseScript(md(`## Hook\nMade in Italy 🇮🇹, top 3 1️⃣ picks #️⃣.\n\n## Body\nStep 2️⃣ is 4 minutes.\n\n## Ending\nBye.\n`));
+    expect(s.spokenText).toBe("Made in Italy, top 3 picks. Step is 4 minutes. Bye.");
+  });
+
   it("joins the lines of one paragraph with a space", () => {
     const s = parseScript(md(`## Hook\nWhy do\ncats purr?\n\n## Body\nOne.\n\n## Ending\nEnd.\n`));
     expect(s.beats[0]!.text).toBe("Why do cats purr?");

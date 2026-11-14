@@ -141,6 +141,9 @@ async function recordVoice(dir: string, text: string, voiceType: number, page: P
   await deps.prepareVoice(wavPath);
   deps.log("Timing every word");
   const words = await deps.align(wavPath, page.language);
+  if (words.length === 0) {
+    throw new Error(`Whisper heard no words in ${wavPath}. Listen to it: if it is silent or noise, run "unfaced doctor" to check the voice; if it sounds right, run make again.`);
+  }
   return { hash, provider: result.provider, durationSec: result.durationSec, words };
 }
 

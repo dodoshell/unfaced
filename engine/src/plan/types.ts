@@ -28,6 +28,8 @@ export interface VideoPlan {
   voice?: number;
   /** The music mood from the catalog, when the soundtrack has music. */
   music?: number;
+  /** The script type from the catalog, so styles can number the beats of a list or a countdown. */
+  scriptType?: number;
   /** The ending type from the catalog, so the last scene can show it. */
   ending?: number;
   /** The page's mascot, shown by the style's scenes. */

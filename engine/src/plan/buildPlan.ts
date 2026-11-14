@@ -31,7 +31,10 @@ export function buildPlan({ script, words, audioDurationSec, page, style, captio
   if (page.duration && (audioDurationSec < page.duration.minSec || audioDurationSec > page.duration.maxSec)) {
     const { minSec, maxSec } = page.duration;
     const target = minSec === maxSec ? `${minSec}s` : `${minSec}–${maxSec}s`;
-    warn(`The voice-over is ${Math.round(audioDurationSec)}s but the page asks for ${target}; shorten or lengthen the script.`);
+    // A whole number can look inside the range (45.3 → 45 for 30–45); then show the tenth.
+    const rounded = Math.round(audioDurationSec);
+    const shown = rounded >= minSec && rounded <= maxSec ? audioDurationSec.toFixed(1) : String(rounded);
+    warn(`The voice-over is ${shown}s but the page asks for ${target}; shorten or lengthen the script.`);
   }
 
   const wordsByBeat = assignWords(script.beats, words);
@@ -65,6 +68,7 @@ export function buildPlan({ script, words, audioDurationSec, page, style, captio
     palette: page.palette ?? readStyle(style).defaultPalette,
     ...(audioSrc ? { audioSrc } : {}),
     ...(voice !== undefined ? { voice } : {}),
+    scriptType: script.scriptType,
     ending: script.ending,
     ...(mascot ? { mascot } : {}),
     scenes,

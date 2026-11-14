@@ -30,6 +30,9 @@ export interface Script {
 const VISUAL = /^>\s*visual:\s*(.*)$/i;
 const LIST_ITEM = /^-\s+/;
 const EMOJI =/[\p{Extended_Pictographic}\p{Emoji_Modifier}‍️]/gu;
+// Keycaps (1️⃣, #️⃣) and flags (pairs of regional indicators) are emoji too, but not pictographs.
+const KEYCAP = /[0-9#*]\uFE0F?\u20E3/gu;
+const FLAG = /\p{Regional_Indicator}/gu;
 
 /** Parses a video's script.md (format: docs/formats/script.md). */
 export function parseScript(markdown: string): Script {
@@ -119,6 +122,8 @@ function speakable(text: string): string {
   const items = lines.filter((l) => LIST_ITEM.test(l)).map((l) => l.replace(LIST_ITEM, "").replace(/[.,;]+$/, ""));
   const read = items.length ? [...lines.filter((l) => !LIST_ITEM.test(l)), `${items.join(", ")}.`].join(" ") : text;
   return read
+    .replace(KEYCAP, "")
+    .replace(FLAG, "")
     .replace(EMOJI, "")
     .replace(/\s+([!?.,;:…])/g, "$1")
     .replace(/\s{2,}/g, " ")

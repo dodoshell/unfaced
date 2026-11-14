@@ -225,6 +225,15 @@ describe("make", () => {
     await expect(makeVideo(video, stubs().deps)).rejects.toThrow(/style 7 .*not ready yet/);
   });
 
+  it("stops with advice when whisper hears no words, without keeping those timings", async () => {
+    const video = setup();
+    const { deps, align, render } = stubs();
+    align.mockResolvedValueOnce([]);
+    await expect(makeVideo(video, deps)).rejects.toThrow(/heard no words in .*voice\.wav/);
+    expect(render).not.toHaveBeenCalled();
+    expect(existsSync(join(video, "timing.json"))).toBe(false);
+  });
+
   it("explains what is missing when the video folder has no script", async () => {
     const video = setup();
     const { deps } = stubs();

@@ -122,6 +122,12 @@ describe("buildPlan", () => {
     expect(warn.mock.calls[0]![0]).toContain("30–45s");
   });
 
+  it("shows a tenth of a second when a whole number would look inside the range", () => {
+    const warn = vi.fn();
+    build({ audioDurationSec: 45.3, page: { ...page, duration: { minSec: 30, maxSec: 45 } }, warn });
+    expect(warn.mock.calls[0]![0]).toContain("45.3s");
+  });
+
   it("does not warn when the voice-over fits the page's duration", () => {
     const warn = vi.fn();
     build({ page: { ...page, duration: { minSec: 5, maxSec: 60 } }, warn });
