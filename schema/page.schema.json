@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dodoshell/unfaced/schema/page.schema.json",
+  "title": "unfaced page profile (page.yaml)",
+  "type": "object",
+  "required": ["name", "language", "niche"],
+  "additionalProperties": false,
+  "$defs": {
+    "choice": {
+      "description": "A catalog number (fixed), a list of numbers (the agent picks one per video) or \"auto\".",
+      "oneOf": [
+        { "type": "integer", "minimum": 1 },
+        { "type": "array", "items": { "type": "integer", "minimum": 1 }, "minItems": 1, "uniqueItems": true },
+        { "const": "auto" }
+      ]
+    }
+  },
+  "properties": {
+    "name": { "type": "string", "minLength": 1 },
+    "language": { "type": "string", "description": "Language of the videos, as a code such as en or it.", "pattern": "^[a-z]{2,3}(-[A-Za-z]{2,4})?$" },
+    "niche": { "type": "string", "minLength": 1 },
+    "style": { "$ref": "#/$defs/choice" },
+    "script": { "$ref": "#/$defs/choice" },
+    "hook": { "$ref": "#/$defs/choice" },
+    "voice": { "$ref": "#/$defs/choice" },
+    "captions": { "$ref": "#/$defs/choice" },
+    "music": { "$ref": "#/$defs/choice" },
+    "ending": { "$ref": "#/$defs/choice" },
+    "duration": {
+      "description": "Target length in seconds: a single number or a range such as 30-45.",
+      "oneOf": [
+        { "type": "integer", "minimum": 5 },
+        { "type": "string", "pattern": "^\\d+\\s*-\\s*\\d+$" }
+      ]
+    },
+    "palette": { "type": "array", "items": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }, "minItems": 1 },
+    "font": { "type": "string" },
+    "mascot": { "type": "string" },
+    "providers": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "voice": { "type": "string" },
+        "ai_clips": { "type": "string" },
+        "images": { "type": "string" }
+      }
+    }
+  }
+}
