@@ -222,7 +222,10 @@ describe("make", () => {
   it("refuses a script choice that is not ready yet", async () => {
     const video = setup();
     writeFileSync(join(video, "script.md"), SCRIPT.replace("ending: 5", "ending: 5\nstyle: 7"));
-    await expect(makeVideo(video, stubs().deps)).rejects.toThrow(/style 7 .*not ready yet/);
+    const { deps } = stubs();
+    // Style 7 stands in for a style that isn't built yet, whatever the real catalog says by now.
+    deps.catalog.get("style", 7).status = "planned";
+    await expect(makeVideo(video, deps)).rejects.toThrow(/style 7 .*not ready yet/);
   });
 
   it("stops with advice when whisper hears no words, without keeping those timings", async () => {
