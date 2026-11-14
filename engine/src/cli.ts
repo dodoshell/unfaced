@@ -1,6 +1,6 @@
 import { Catalog } from "./catalog/catalog.js";
 import { checkVideo, summaryLines } from "./cli/check.js";
-import { defaultChecks, runDoctor } from "./cli/doctor.js";
+import { defaultChecks, keyLines, runDoctor } from "./cli/doctor.js";
 import { makeCover } from "./cli/cover.js";
 import { renderDemos } from "./cli/demo.js";
 import { docText } from "./cli/docs.js";
@@ -13,7 +13,7 @@ import { renderMascotSheet } from "./cli/mascot.js";
 import { pageSummary } from "./cli/page.js";
 import { showText } from "./cli/show.js";
 import { setup } from "./cli/setup.js";
-import { videoEnv } from "./env.js";
+import { loadEnv, videoEnv } from "./env.js";
 import { CATALOG_DIR } from "./paths.js";
 
 const USAGE = `Usage: unfaced <command>
@@ -33,7 +33,7 @@ Commands:
   demo <style|all> [--out <dir>] [--frames]
                                  Render the style demo (the same dog scene in every style) to <dir>/NN-slug.mp4,
                                  or its key moments as PNGs with --frames (default dir: examples/styles)
-  doctor                         Check that everything the free pipeline needs is installed
+  doctor                         Check that everything the free pipeline needs is installed, and say which paid providers' keys are set
   setup                          Download the voice model, whisper and the render browser`;
 
 function need(value: string | undefined, what: string): string {
@@ -99,8 +99,11 @@ async function main(args: string[]): Promise<number> {
     case "mascot":
       await renderMascotSheet(need(rest[0], "the page folder"));
       return 0;
-    case "doctor":
-      return runDoctor(defaultChecks());
+    case "doctor": {
+      const code = await runDoctor(defaultChecks());
+      console.log(["", ...keyLines(loadEnv())].join("\n"));
+      return code;
+    }
     case "setup":
       await setup();
       return runDoctor(defaultChecks());

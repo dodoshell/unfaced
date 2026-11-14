@@ -79,7 +79,7 @@ Never put an API key in `page.yaml`; `unfaced` refuses a profile with something 
 2. `.env` in the folder you run unfaced from.
 3. `~/.unfaced/.env` (or `$UNFACED_HOME/.env`): keys shared by every page.
 
-An empty value (`NAME=`) is skipped, so a copied `.env.example` does not hide a key set further away.
+An empty value (`NAME=`) is skipped, so a copied `.env.example` does not hide a key set further away. `unfaced doctor` says which keys are set in the environment, the current folder's `.env` and `~/.unfaced/.env`, never their values.
 
 | Variable | Used for |
 |---|---|
