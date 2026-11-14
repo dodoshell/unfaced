@@ -5,6 +5,7 @@ Every third-party file shipped in this repository (fonts, music, sound effects, 
 
 | File | Source | Licence |
 |---|---|---|
+| `engine/remotion/fonts/Fredoka.ttf` | [google/fonts](https://github.com/google/fonts/tree/main/ofl/fredoka), The Fredoka Project Authors | SIL OFL 1.1 (`engine/remotion/fonts/OFL-Fredoka.txt`) |
 
 ## Downloaded at first use (not in this repository)
 
