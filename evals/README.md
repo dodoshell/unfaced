@@ -37,12 +37,12 @@ claude plugin eval . --case video-make-stops-for-approval --runs 1 --ablation no
 | `page-setup-asks-first` | page-setup | Only the niche given: asks at most four questions in one message, offers "you choose", writes nothing yet. | Skill fired, no `page.yaml`, "you choose" in the reply, judge |
 | `page-setup-you-choose` | page-setup | "You choose everything": writes `page.yaml` with a fixed ready style, fixed voice and captions, and validates it with `unfaced page`. | Skill fired, file exists, ready style, fixed voice and captions, `unfaced page` ran, judge |
 | `page-setup-key-to-env` | page-setup | API key pasted into `page.yaml`: moves it to `.env` as `ELEVENLABS_API_KEY`, keeps `voice: elevenlabs`. | Skill fired, key gone from `page.yaml`, provider kept, `.env` created with the key, judge |
-| `page-setup-planned-style` | page-setup | Asks for pixel art (09, planned): `page.yaml` keeps style 03; offers a ready style. | Skill fired, style unchanged, judge |
+| `page-setup-unknown-style` | page-setup | Asks for claymation, which the catalog doesn't have: `page.yaml` keeps style 03; offers the closest styles. | Skill fired, style unchanged, judge |
 | `video-ideas-week-plan` | video-ideas | Ideas, series and a 5-post calendar in `ideas.md`, script types 06/09 only, no repeats. | Skill fired, file exists, three sections, page's script types only, judge |
 | `video-ideas-keeps-history` | video-ideas | Existing `ideas.md`: adds one dated section, keeps the old one, repeats nothing. | Skill fired, old section kept, exactly two dated sections, judge |
 | `video-ideas-checks-facts` | video-ideas | No web access: marks ideas "check before scripting"; "cats always land on their feet" treated as a myth. | Skill fired, file exists, mark present, judge |
 | `video-recommend-options` | video-recommend | 2-3 combinations that differ in structure, sample hooks, one ★, page's script types only, no file changed. | Skill fired, catalog read, ★, script types, no Write, no Edit, judge |
-| `video-recommend-planned-style` | video-recommend | Asks for neon synthwave (10, planned): says so, offers ready styles only. | Skill fired, no Edit, judge |
+| `video-recommend-unknown-style` | video-recommend | Asks for an anime look, which the catalog doesn't have: says so, offers catalog styles only. | Skill fired, no Edit, judge |
 | `video-recommend-one-off-style` | video-recommend | Soft 3D "just this once": options use style 01, the choice goes in `script.md`, `page.yaml` untouched. | Skill fired, `page.yaml` not edited or rewritten, `script.md` named, judge |
 | `video-make-stops-for-approval` | video-make | Writes `script.md` (06/09, ending 05, hook of at most 12 words) and stops for approval; never runs `make`, `frames`, `cover`. | Skill fired, file exists, page choices, sections, short hook, no render, judge |
 | `video-make-rush` | video-make | "I'm in a hurry": still stops for approval. | Skill fired, script written, no render, judge |
@@ -80,6 +80,6 @@ A low `Δ` with "Skill fired" failing means the skill didn't trigger on that wor
 
 ## Keeping it current
 
-- `page-setup-you-choose` accepts styles 01 and 03, the ready ones today; widen `graders/ready-style.md` when another style is ready.
-- The planned-style cases use 09 (pixel art) and 10 (neon synthwave); pick other planned styles when those become ready.
+- `page-setup-you-choose` accepts styles 01 to 12, all ready today; widen `graders/ready-style.md` when a style is added, and narrow it if one is ever marked planned.
+- The unknown-style cases ask for claymation and anime; if a style like either is added, ask for a look the catalog still lacks, and update the style list in their judges.
 - If style 03 changes how it draws, render `cats-and-milk` again, extract its frames (`unfaced frames <videoDir> --every 1s`) and replace `fixtures/frames/cats-and-milk/`.

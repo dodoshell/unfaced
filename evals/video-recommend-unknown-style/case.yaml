@@ -1,4 +1,4 @@
 schema_version: "1.1"
-name: video-recommend-planned-style
+name: video-recommend-unknown-style
 context:
   scaffold_script: scaffold.sh
