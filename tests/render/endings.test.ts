@@ -35,13 +35,13 @@ describe("endings", () => {
   });
 
   it("leaves the sign to a style that draws it, whatever scene the ending has", () => {
-    setVideoScenes({ ending: () => null });
+    setVideoScenes({ ending: () => null }, "scenes/index.tsx");
     try {
       expect(engineMarkSpan(plan(3), true)).toBeUndefined();
       expect(engineMarkSpan(plan(3), false)).toEqual({ fromFrame: 90, toFrame: 120 });
       expect(engineMarkSpan(plan(5), false)).toBeUndefined();
     } finally {
-      setVideoScenes({});
+      setVideoScenes({}, "scenes/index.tsx");
     }
   });
 

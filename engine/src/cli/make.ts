@@ -10,6 +10,7 @@ import { CATALOG_DIR } from "../paths.js";
 import { buildPlan } from "../plan/buildPlan.js";
 import type { VideoPlan } from "../plan/types.js";
 import type { CheckReport } from "../check/types.js";
+import { ownScenes } from "../render/ownScenes.js";
 import { renderVideo, type RenderOptions } from "../render/renderVideo.js";
 import { parseScript } from "../script/parseScript.js";
 import { alignWords, type WordTiming } from "../timing/align.js";
@@ -85,6 +86,7 @@ export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDe
   const page = await loadPage(pageDir, deps.catalog);
   const mascot = loadMascot(pageDir);
   const script = parseScript(readFileSync(scriptFile, "utf8"));
+  const scenes = ownScenes(dir, script.beats.map((b) => b.id), deps.log);
 
   const style = choose("style", page, deps, script.choices.style);
   const captions = choose("captions", page, deps, script.choices.captions);
@@ -109,8 +111,7 @@ export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDe
 
   const out = join(dir, "video.mp4");
   deps.log(`Rendering ${plan.durationInFrames} frames`);
-  const scenes = join(dir, "scenes", "index.tsx");
-  await deps.render(plan, out, { assetsDir: dir, ...(existsSync(scenes) ? { scenes } : {}) });
+  await deps.render(plan, out, { assetsDir: dir, ...(scenes ? { scenes } : {}) });
   deps.log(`Done: ${out}`);
   const report = await deps.check(dir);
   for (const line of summaryLines(report)) deps.log(line);

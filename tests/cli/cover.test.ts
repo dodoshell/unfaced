@@ -52,6 +52,14 @@ describe("unfaced cover", () => {
     expect(options).toEqual({ assetsDir: dir, scenes: join(dir, "scenes", "index.tsx") });
   });
 
+  it("stops when scenes/ has no index.tsx, as make does", async () => {
+    const dir = setup();
+    mkdirSync(join(dir, "scenes"));
+    const render = vi.fn(async () => {});
+    await expect(makeCover(dir, undefined, render)).rejects.toThrow(/no index\.tsx/);
+    expect(render).not.toHaveBeenCalled();
+  });
+
   it("asks for make when the video has not been made", async () => {
     await expect(makeCover(mkdtempSync(join(tmpdir(), "unfaced cover ")))).rejects.toThrow(/plan\.json not found.*unfaced make/);
   });

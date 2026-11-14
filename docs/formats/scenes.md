@@ -13,7 +13,7 @@ videos/<video>/
 └── inbox/             images or clips to show; read with staticFile("inbox/<file>")
 ```
 
-`unfaced make` finds `scenes/index.tsx`, bundles it with the engine and renders. Beat ids are `hook`, `b1`, `b2`, … and `ending`, in the order of `script.md`.
+`unfaced make` finds `scenes/index.tsx`, bundles it with the engine and renders. `make`, `frames` and `cover` stop before anything else when the folder has no `index.tsx` or `boxes.json` is not valid. Beat ids are `hook`, `b1`, `b2`, … and `ending`, in the order of `script.md`.
 
 ## index.tsx
 
@@ -75,7 +75,7 @@ The automatic checks know where the style draws text, but not where a video's ow
 }
 ```
 
-A beat with its own scene and no text needs no entry; an ending scene that draws `<EndingMark>` lists the sign's box too. Without an entry the checks test the style's boxes for that beat, which is right when the scene draws `<StyleScene>`; when it draws `<StyleScene>` and text of its own, list both (the style's boxes are in the Layout table of `unfaced show style <n>`).
+A beat with its own scene and no text needs no entry; an ending scene that draws `<EndingMark>` lists the sign's box too. Boxes for a beat the script does not have are never checked, so `make` warns about them. Without an entry the checks test the style's boxes for that beat, which is right when the scene draws `<StyleScene>`; when it draws `<StyleScene>` and text of its own, list both (the style's boxes are in the Layout table of `unfaced show style <n>`).
 
 ## inbox/
 

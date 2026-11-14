@@ -88,6 +88,40 @@ describe("make", () => {
     expect(render).toHaveBeenCalledWith(expect.anything(), join(video, "video.mp4"), { assetsDir: video, scenes: join(video, "scenes", "index.tsx") });
   });
 
+  it("stops before recording anything when scenes/ has no index.tsx", async () => {
+    const video = setup();
+    mkdirSync(join(video, "scenes"));
+    writeFileSync(join(video, "scenes", "index.ts"), "export default {};");
+    const { deps, synthesize, render } = stubs();
+    await expect(makeVideo(video, deps)).rejects.toThrow(/scenes has no index\.tsx.*export default defineScenes/);
+    expect(synthesize).not.toHaveBeenCalled();
+    expect(render).not.toHaveBeenCalled();
+  });
+
+  it("names scenes/boxes.json when it is not valid, before recording anything", async () => {
+    const video = setup();
+    mkdirSync(join(video, "scenes"));
+    writeFileSync(join(video, "scenes", "index.tsx"), "export default {};");
+    const boxes = join(video, "scenes", "boxes.json");
+    const { deps, synthesize } = stubs();
+    for (const text of ["{ b1: [] }", "null", "[]", '{ "b1": [{ "id": "label" }] }']) {
+      writeFileSync(boxes, text);
+      await expect(makeVideo(video, deps), text).rejects.toThrow(boxes);
+    }
+    expect(synthesize).not.toHaveBeenCalled();
+  });
+
+  it("warns about boxes in scenes/boxes.json for beats the video does not have", async () => {
+    const video = setup();
+    mkdirSync(join(video, "scenes"));
+    writeFileSync(join(video, "scenes", "index.tsx"), "export default {};");
+    writeFileSync(join(video, "scenes", "boxes.json"), JSON.stringify({ b1: [], b7: [{ id: "label", x: 100, y: 300, w: 300, h: 100 }] }));
+    const log = vi.fn();
+    await makeVideo(video, { ...stubs().deps, log });
+    expect(log).toHaveBeenCalledWith(expect.stringMatching(/boxes\.json: this video has no beat "b7".*hook, b1, ending/));
+    expect(log).not.toHaveBeenCalledWith(expect.stringContaining('"b1"'));
+  });
+
   it("prepares the voice-over (lead-in and loudness) before timing it", async () => {
     const video = setup();
     const { deps, synthesize, prepareVoice, align } = stubs();
