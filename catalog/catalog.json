@@ -2,7 +2,7 @@
   "$comment": "Index of every catalog entry. Paths are relative to this folder; an anchor (#...) points at a section of a shared file. status: ready = usable now, planned = listed but not built yet.",
   "style": [
     { "num": 1, "slug": "soft-3d", "name": "Soft 3D", "summary": "Rounded toy-like 3D shapes with soft light, like clay figures.", "goodFor": ["kids", "cute animals", "products"], "path": "styles/01-soft-3d/style.json", "status": "ready" },
-    { "num": 2, "slug": "90s-low-poly", "name": "90s low poly", "summary": "Faceted low-polygon 3D with flat shading and a retro game feel.", "goodFor": ["gaming", "nostalgia", "tech"], "path": "styles/02-90s-low-poly/style.json", "status": "planned" },
+    { "num": 2, "slug": "90s-low-poly", "name": "90s low poly", "summary": "Faceted low-polygon 3D with flat shading and a retro game feel.", "goodFor": ["gaming", "nostalgia", "tech"], "path": "styles/02-90s-low-poly/style.json", "status": "ready" },
     { "num": 3, "slug": "flat-cartoon", "name": "Flat cartoon", "summary": "Bold flat shapes, thick outlines and bright colours.", "goodFor": ["facts", "animals", "explainers"], "path": "styles/03-flat-cartoon/style.json", "status": "ready" },
     { "num": 4, "slug": "line-art", "name": "Line art", "summary": "Clean single-weight lines on a plain background, drawn as you watch.", "goodFor": ["explainers", "productivity", "minimal brands"], "path": "styles/04-line-art/style.json", "status": "planned" },
     { "num": 5, "slug": "ink-silhouette", "name": "Ink silhouette", "summary": "Black silhouettes against a coloured sky, high contrast and moody.", "goodFor": ["history", "stories", "mystery"], "path": "styles/05-ink-silhouette/style.json", "status": "planned" },
