@@ -1,20 +1,22 @@
 import { Catalog } from "./catalog/catalog.js";
 import { checkVideo, summaryLines } from "./cli/check.js";
-import { defaultChecks, runDoctor } from "./cli/doctor.js";
+import { defaultChecks, keyLines, runDoctor } from "./cli/doctor.js";
 import { makeCover } from "./cli/cover.js";
 import { renderDemos } from "./cli/demo.js";
 import { docText } from "./cli/docs.js";
 import { parseEvery, renderFrames } from "./cli/frames.js";
 import { buildGallery } from "./gallery/gallery.js";
+import { generateReport } from "./cli/generate.js";
 import { inboxReport } from "./cli/inbox.js";
 import { listLines } from "./cli/list.js";
-import { makeVideo } from "./cli/make.js";
+import { defaultMakeDeps, makeVideo } from "./cli/make.js";
 import { renderMascotSheet } from "./cli/mascot.js";
 import { pageSummary } from "./cli/page.js";
 import { renderHookReel } from "./cli/reel.js";
 import { resultsReport } from "./cli/results.js";
 import { showText } from "./cli/show.js";
 import { setup } from "./cli/setup.js";
+import { loadEnv, videoEnv } from "./env.js";
 import { CATALOG_DIR } from "./paths.js";
 
 const USAGE = `Usage: unfaced <command>
@@ -29,6 +31,7 @@ Commands:
   frames <videoDir> [--every 1s] Render review frames of a made video into <videoDir>/frames/
   cover <videoDir> [--at 1.5]    Render the cover (a frame without captions) to <videoDir>/cover.png
   inbox <videoDir>               Check the files handed off into <videoDir>/inbox/ and list the prompts still waiting for one
+  generate <videoDir>            Make the images and clips inbox/PROMPTS.md asks for with the page's providers, then check the inbox
   results <pageDir>              Compare the numbers in <pageDir>/results.md by platform and by each choice the videos made
   mascot <pageDir>               Render the page's mascot reference sheet to brand/mascot/reference.png
   demo <style|all> [--out <dir>] [--frames]
@@ -40,7 +43,7 @@ Commands:
   gallery [--out <dir>] [--no-stills]
                                  Build the catalog gallery, a static page with a poster of every style's demo
                                  (default dir: gallery/; --no-stills keeps the posters already there)
-  doctor                         Check that everything the free pipeline needs is installed
+  doctor                         Check that everything the free pipeline needs is installed, and say which paid providers' keys are set
   setup                          Download the voice model, whisper and the render browser`;
 
 function need(value: string | undefined, what: string): string {
@@ -67,7 +70,8 @@ async function main(args: string[]): Promise<number> {
       console.log((await pageSummary(need(rest[0], "the page folder"), Catalog.load(CATALOG_DIR))).join("\n"));
       return 0;
     case "make": {
-      const { report } = await makeVideo(need(rest[0], "the video folder"));
+      const video = need(rest[0], "the video folder");
+      const { report } = await makeVideo(video, { ...defaultMakeDeps(), env: videoEnv(video) });
       return report.pass ? 0 : 1;
     }
     case "cover": {
@@ -97,6 +101,11 @@ async function main(args: string[]): Promise<number> {
       console.log(lines.join("\n"));
       return pass ? 0 : 1;
     }
+    case "generate": {
+      const { lines, pass } = await generateReport(need(rest[0], "the video folder"));
+      console.log(lines.join("\n"));
+      return pass ? 0 : 1;
+    }
     case "results": {
       const { lines, pass } = await resultsReport(need(rest[0], "the page folder"), Catalog.load(CATALOG_DIR));
       console.log(lines.join("\n"));
@@ -116,8 +125,11 @@ async function main(args: string[]): Promise<number> {
     case "mascot":
       await renderMascotSheet(need(rest[0], "the page folder"));
       return 0;
-    case "doctor":
-      return runDoctor(defaultChecks());
+    case "doctor": {
+      const code = await runDoctor(defaultChecks());
+      console.log(["", ...keyLines(loadEnv())].join("\n"));
+      return code;
+    }
     case "setup":
       await setup();
       return runDoctor(defaultChecks());

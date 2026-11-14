@@ -21,6 +21,8 @@ export interface Probe {
 
 /** The prompts list the agent writes; not one of the handed-off files. */
 export const PROMPTS_FILE = "PROMPTS.md";
+/** The credit lines `unfaced generate` keeps for stock photos; not one of the handed-off files either. */
+export const CREDITS_FILE = "CREDITS.md";
 
 const KINDS: Record<string, InboxKind> = { ".png": "image", ".jpg": "image", ".jpeg": "image", ".webp": "image", ".mp4": "clip", ".wav": "voice", ".mp3": "voice" };
 const SUPPORTED = "use PNG, JPEG or WebP images, MP4 (H.264) clips, WAV or MP3 voice";
@@ -85,14 +87,14 @@ function judge(kind: InboxKind, probe: Probe): Pick<InboxLine, "status" | "detai
 }
 
 /**
- * One line per entry of `<videoDir>/inbox/` (PROMPTS.md aside) and one per prompt in
- * PROMPTS.md whose file hasn't arrived yet. No inbox folder means nothing to check.
+ * One line per entry of `<videoDir>/inbox/` (PROMPTS.md and CREDITS.md aside) and one per
+ * prompt in PROMPTS.md whose file hasn't arrived yet. No inbox folder means nothing to check.
  */
 export async function checkInbox(videoDir: string, probe: (path: string) => Promise<Probe> = probeMedia): Promise<InboxLine[]> {
   const inbox = join(videoDir, "inbox");
   if (!existsSync(inbox)) return [];
   const lines: InboxLine[] = [];
-  const names = readdirSync(inbox).filter((n) => n !== PROMPTS_FILE).sort();
+  const names = readdirSync(inbox).filter((n) => n !== PROMPTS_FILE && n !== CREDITS_FILE).sort();
   for (const name of names) {
     const path = join(inbox, name);
     if (statSync(path).isDirectory()) {

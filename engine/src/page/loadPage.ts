@@ -4,6 +4,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Ajv2020 } from "ajv/dist/2020.js";
 import { parse } from "yaml";
+import { CLIP_CHOICES, clipProvider, IMAGE_CHOICES, imageProvider } from "../generate/providers.js";
 import { VOICE_PROVIDERS, voiceProviderId } from "../voice/providers.js";
 import { CHOICE_FIELDS, type CatalogLike, type Choice, type ChoiceField, type Page } from "./types.js";
 
@@ -81,6 +82,12 @@ export async function loadPage(dir: string, catalog: CatalogLike): Promise<Page>
   const providers = (data.providers ?? {}) as Partial<Page["providers"]>;
   if (providers.voice !== undefined && !(VOICE_PROVIDERS as readonly string[]).includes(providers.voice)) {
     throw new PageError("providers.voice", `Unknown voice provider "${providers.voice}" in page.yaml; choose one of: ${VOICE_PROVIDERS.join(", ")}`);
+  }
+  if (providers.images !== undefined && !imageProvider(providers.images)) {
+    throw new PageError("providers.images", `Unknown image provider "${providers.images}" in page.yaml; choose one of: ${IMAGE_CHOICES}`);
+  }
+  if (providers.ai_clips !== undefined && !clipProvider(providers.ai_clips)) {
+    throw new PageError("providers.ai_clips", `Unknown clip provider "${providers.ai_clips}" in page.yaml; choose one of: ${CLIP_CHOICES}`);
   }
   return {
     dir,

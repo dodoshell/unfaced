@@ -151,7 +151,9 @@ async function recordVoice(dir: string, text: string, voiceType: number, page: P
   deps.log(`Recording the voice-over (${voice.id}, voice ${voiceType}, ${page.language})`);
   const result = await voice.synthesize(text, { language: page.language, voiceType, outPath: wavPath });
   await deps.prepareVoice(wavPath);
-  return { hash, provider: result.provider, durationSec: result.durationSec, words: await timeWords(wavPath, page.language, deps) };
+  const words = await timeWords(wavPath, page.language, deps);
+  // A voice that stood in for a failed paid one is kept for this video only: next time the paid one is tried again.
+  return { hash: result.provider === voice.id ? hash : `${hash} (${result.provider} stood in)`, provider: result.provider, durationSec: result.durationSec, words };
 }
 
 /** The voice-overs a user can hand off, in the order they are taken. */

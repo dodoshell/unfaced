@@ -1,6 +1,7 @@
 import { spawnSync } from "node:child_process";
 import { existsSync, statfsSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { PROVIDER_KEYS } from "../env.js";
 import { LIBRARY_ROOT, unfacedHome } from "../paths.js";
 import { whisperPaths } from "../timing/align.js";
 import { KOKORO_MODEL } from "../voice/kokoro.js";
@@ -61,6 +62,14 @@ export function defaultChecks(env: NodeJS.ProcessEnv = process.env, platform: No
       },
       fix: `free some space on the drive of ${home}`,
     },
+  ];
+}
+
+/** Which paid providers' keys are set: information only, since every feature works without them. Never prints a value. */
+export function keyLines(env: NodeJS.ProcessEnv): string[] {
+  return [
+    "Optional paid providers (keys from .env; everything works without them):",
+    ...PROVIDER_KEYS.map(({ name, use }) => `${(env[name] ? "set" : "not set").padEnd(8)} ${name} — ${use}`),
   ];
 }
 
