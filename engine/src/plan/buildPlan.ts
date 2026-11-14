@@ -15,8 +15,10 @@ export interface BuildPlanInput {
   style: number;
   captions: number;
   warn: (m: string) => void;
-  /** The voice-over relative to the video folder; defaults to voice.wav. */
-  audioSrc?: string;
+  /** The soundtrack relative to the video folder; defaults to voice.wav, null for a silent video. */
+  audioSrc?: string | null;
+  /** The voice type, so checks know a text-only video has no voice to follow. */
+  voice?: number;
   mascot?: Mascot;
 }
 
@@ -24,7 +26,7 @@ export interface BuildPlanInput {
  * Turns a script and the word timings of its voice-over into frame-accurate scenes:
  * one per beat, starting at the beat's first spoken word, back to back to the end.
  */
-export function buildPlan({ script, words, audioDurationSec, page, style, captions, warn, audioSrc = "voice.wav", mascot }: BuildPlanInput): VideoPlan {
+export function buildPlan({ script, words, audioDurationSec, page, style, captions, voice, warn, audioSrc = "voice.wav", mascot }: BuildPlanInput): VideoPlan {
   const durationInFrames = Math.ceil(audioDurationSec * FPS) + TAIL_FRAMES;
   if (page.duration && (audioDurationSec < page.duration.minSec || audioDurationSec > page.duration.maxSec)) {
     const { minSec, maxSec } = page.duration;
@@ -61,7 +63,8 @@ export function buildPlan({ script, words, audioDurationSec, page, style, captio
     style,
     captions,
     palette: page.palette ?? readStyle(style).defaultPalette,
-    audioSrc,
+    ...(audioSrc ? { audioSrc } : {}),
+    ...(voice !== undefined ? { voice } : {}),
     ending: script.ending,
     ...(mascot ? { mascot } : {}),
     scenes,

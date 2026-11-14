@@ -49,7 +49,7 @@ function stubs() {
   const check = vi.fn<MakeDeps["check"]>(async () => ({ pass: false, issues: [{ check: "clipping", atMs: 0, severity: "error", message: "True peak is -0.4 dBTP" }] }));
   const prepareVoice = vi.fn<MakeDeps["prepareVoice"]>(async () => {});
   const deps: MakeDeps = { catalog: Catalog.load(CATALOG_DIR), voiceProvider: () => voice, prepareVoice, align, render, check, env: {}, log: () => {} };
-  return { deps, synthesize, prepareVoice, align, render, check };
+  return { deps, voice, synthesize, prepareVoice, align, render, check };
 }
 
 describe("make", () => {
@@ -123,6 +123,41 @@ describe("make", () => {
     expect(align).toHaveBeenCalledTimes(2);
   });
 
+  it("records the voice again when the speaker behind the voice type changes", async () => {
+    const video = setup();
+    const { deps, voice, synthesize } = stubs();
+    voice.describeVoice = () => ({ id: "speaker-a@1" });
+    await makeVideo(video, deps);
+    voice.describeVoice = () => ({ id: "speaker-b@1" });
+    await makeVideo(video, deps);
+    expect(synthesize).toHaveBeenCalledTimes(2);
+  });
+
+  it("says when the voice only approximates the page's voice type", async () => {
+    const video = setup();
+    const { deps, voice } = stubs();
+    voice.describeVoice = () => ({ id: "x@1", note: "The free voice has few Italian speakers" });
+    const log = vi.fn();
+    await makeVideo(video, { ...deps, log });
+    expect(log.mock.calls.flat()).toContain("The free voice has few Italian speakers");
+  });
+
+  it("makes a text-only video for voice 8: no voice-over, captions timed at reading pace", async () => {
+    const video = setup();
+    writeFileSync(join(video, "..", "..", "page.yaml"), "name: My cats\nlanguage: en\nniche: cat facts\nstyle: 3\nvoice: 8\ncaptions: 1\nmusic: 8\n");
+    const { deps, synthesize, prepareVoice, align, render } = stubs();
+    await makeVideo(video, deps);
+    expect(synthesize).not.toHaveBeenCalled();
+    expect(prepareVoice).not.toHaveBeenCalled();
+    expect(align).not.toHaveBeenCalled();
+    expect(existsSync(join(video, "voice.wav"))).toBe(false);
+    const plan = JSON.parse(readFileSync(join(video, "plan.json"), "utf8")) as VideoPlan;
+    expect(plan.voice).toBe(8);
+    expect(plan.audioSrc).toBeUndefined();
+    expect(plan.scenes.flatMap((s) => s.words).map((w) => w.text).join(" ")).toBe("Why do cats purr? Cats sleep a lot. That's cats.");
+    expect(render).toHaveBeenCalledOnce();
+  });
+
   it("explains what is missing when the video folder has no script", async () => {
     const video = setup();
     const { deps } = stubs();
@@ -133,7 +168,12 @@ describe("make", () => {
     const video = setup();
     writeFileSync(join(video, "..", "..", "page.yaml"), "name: My cats\nlanguage: en\nniche: cat facts\nstyle: 3\nvoice: 1\ncaptions: 2\n");
     const { deps, synthesize } = stubs();
-    await expect(makeVideo(video, deps)).rejects.toThrow(/captions 2 .*is not ready yet.*unfaced list captions/);
+    // A catalog where captions 2 is still planned.
+    const catalogDir = mkdtempSync(join(tmpdir(), "unfaced catalog "));
+    const raw = JSON.parse(readFileSync(join(CATALOG_DIR, "catalog.json"), "utf8"));
+    raw.captions.find((e: { num: number }) => e.num === 2).status = "planned";
+    writeFileSync(join(catalogDir, "catalog.json"), JSON.stringify(raw));
+    await expect(makeVideo(video, { ...deps, catalog: Catalog.load(catalogDir) })).rejects.toThrow(/captions 2 .*is not ready yet.*unfaced list captions/);
     expect(synthesize).not.toHaveBeenCalled();
   });
 

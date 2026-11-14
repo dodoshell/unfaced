@@ -14,6 +14,7 @@ import { renderVideo, type RenderOptions } from "../render/renderVideo.js";
 import { parseScript } from "../script/parseScript.js";
 import { alignWords, type WordTiming } from "../timing/align.js";
 import { readWavFile, speechPauses } from "../audio/speech.js";
+import { readingTimings } from "../timing/reading.js";
 import { snapToPauses } from "../timing/snap.js";
 import { prepareVoice } from "../voice/prepare.js";
 import { getVoiceProvider } from "../voice/registry.js";
@@ -47,6 +48,9 @@ export const defaultMakeDeps = (): MakeDeps => ({
 
 const SNAP_MIN_PAUSE_MS = 100;
 
+/** Voice 08 in the voice catalog: no voice-over, the captions carry the video. */
+export const TEXT_ONLY_VOICE = 8;
+
 /** Bumped when the voice-over is processed differently, so cached voice-overs are made again. */
 const VOICE_PROCESSING = "lead-in 250, loudnorm -14, pause snap 100";
 
@@ -76,25 +80,11 @@ export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDe
   const style = choose("style", page, deps);
   const captions = choose("captions", page, deps);
   const voiceType = choose("voice", page, deps);
-  const voice = deps.voiceProvider(page.providers.voice, deps.env, deps.log);
+  const textOnly = voiceType === TEXT_ONLY_VOICE;
+  const timing = textOnly ? readingTiming(script.spokenText) : await recordVoice(dir, script.spokenText, voiceType, page, deps);
+  writeFileSync(join(dir, "timing.json"), `${JSON.stringify(timing, null, 2)}\n`);
 
-  const wavPath = join(dir, "voice.wav");
-  const timingFile = join(dir, "timing.json");
-  const hash = createHash("sha256").update(JSON.stringify([script.spokenText, voice.id, voiceType, page.language, VOICE_PROCESSING])).digest("hex");
-  let timing = readTiming(timingFile);
-  if (timing?.hash === hash && existsSync(wavPath)) {
-    deps.log("Voice-over unchanged; reusing voice.wav and timing.json");
-  } else {
-    deps.log(`Recording the voice-over (${voice.id}, voice ${voiceType}, ${page.language})`);
-    const result = await voice.synthesize(script.spokenText, { language: page.language, voiceType, outPath: wavPath });
-    await deps.prepareVoice(wavPath);
-    deps.log("Timing every word");
-    const words = await deps.align(wavPath, page.language);
-    timing = { hash, provider: result.provider, durationSec: result.durationSec, words };
-    writeFileSync(timingFile, `${JSON.stringify(timing, null, 2)}\n`);
-  }
-
-  const plan = buildPlan({ script, words: timing.words, audioDurationSec: timing.durationSec, page, style, captions, warn: deps.log, audioSrc: "voice.wav", mascot });
+  const plan = buildPlan({ script, words: timing.words, audioDurationSec: timing.durationSec, page, style, captions, voice: voiceType, warn: deps.log, audioSrc: textOnly ? null : "voice.wav", mascot });
   writeFileSync(join(dir, "plan.json"), `${JSON.stringify(plan, null, 2)}\n`);
 
   const out = join(dir, "video.mp4");
@@ -104,6 +94,35 @@ export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDe
   deps.log(`Done: ${out}`);
   for (const line of summaryLines(await deps.check(dir))) deps.log(line);
   return plan;
+}
+
+/** Timings for a text-only video: no voice, the captions at reading pace. */
+function readingTiming(text: string): TimingFile {
+  const { words, durationSec } = readingTimings(text);
+  return { hash: "text only", provider: "none", durationSec, words };
+}
+
+/**
+ * Records, prepares and times the voice-over into voice.wav, or reuses it while the
+ * spoken text, the concrete voice and the language stay the same.
+ */
+async function recordVoice(dir: string, text: string, voiceType: number, page: Page, deps: MakeDeps): Promise<TimingFile> {
+  const voice = deps.voiceProvider(page.providers.voice, deps.env, deps.log);
+  const concrete = voice.describeVoice?.(page.language, voiceType);
+  if (concrete?.note) deps.log(concrete.note);
+  const wavPath = join(dir, "voice.wav");
+  const hash = createHash("sha256").update(JSON.stringify([text, voice.id, voiceType, concrete?.id ?? "", page.language, VOICE_PROCESSING])).digest("hex");
+  const cached = readTiming(join(dir, "timing.json"));
+  if (cached?.hash === hash && existsSync(wavPath)) {
+    deps.log("Voice-over unchanged; reusing voice.wav and timing.json");
+    return cached;
+  }
+  deps.log(`Recording the voice-over (${voice.id}, voice ${voiceType}, ${page.language})`);
+  const result = await voice.synthesize(text, { language: page.language, voiceType, outPath: wavPath });
+  await deps.prepareVoice(wavPath);
+  deps.log("Timing every word");
+  const words = await deps.align(wavPath, page.language);
+  return { hash, provider: result.provider, durationSec: result.durationSec, words };
 }
 
 /**

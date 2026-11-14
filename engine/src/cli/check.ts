@@ -9,6 +9,9 @@ import { checkEdges, checkSync, shownWords } from "../check/sync.js";
 import { type CheckReport, toReport } from "../check/types.js";
 import type { VideoPlan } from "../plan/types.js";
 
+/** Voice 08 in the voice catalog: text only, no voice-over. */
+const TEXT_ONLY_VOICE = 8;
+
 export interface CheckDeps {
   readFrames(video: string): Promise<Uint8Array[]>;
   measureLoudness(video: string): Promise<Loudness>;
@@ -30,14 +33,16 @@ export async function checkVideo(videoDir: string, deps: CheckDeps = defaultChec
   const video = join(dir, "video.mp4");
 
   const boxes = placedBoxes(plan, getLayout(plan.style));
-  const soundtrack = await deps.readSoundtrack(video);
+  // A text-only video (voice 08) has no voice to follow; a silent one has no sound to measure.
+  const voiced = plan.voice !== TEXT_ONLY_VOICE && plan.audioSrc !== undefined;
+  const soundtrack = voiced ? await deps.readSoundtrack(video) : undefined;
   const report = toReport([
     ...checkOverlap(boxes, plan.fps),
     ...checkSafeZone(boxes, plan.fps),
-    ...checkSync(shownWords(plan), speechOnsets(soundtrack), plan.fps),
-    ...checkEdges(soundtrack),
+    ...(soundtrack ? checkSync(shownWords(plan), speechOnsets(soundtrack), plan.fps) : []),
+    ...(soundtrack ? checkEdges(soundtrack) : []),
     ...checkFrames(await deps.readFrames(video), plan.fps),
-    ...checkLoudness(await deps.measureLoudness(video)),
+    ...(plan.audioSrc !== undefined ? checkLoudness(await deps.measureLoudness(video)) : []),
   ]);
   writeFileSync(join(dir, "check.json"), `${JSON.stringify(report, null, 2)}\n`);
   return report;

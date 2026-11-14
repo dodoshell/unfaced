@@ -24,6 +24,8 @@ export interface VideoPlan {
   palette: string[];
   /** The soundtrack (voice-over, music or both), relative to the video folder; none for a silent video. */
   audioSrc?: string;
+  /** The voice type from the catalog; 8 means text only (no voice-over). */
+  voice?: number;
   /** The ending type from the catalog, so the last scene can show it. */
   ending?: number;
   /** The page's mascot, shown by the style's scenes. */

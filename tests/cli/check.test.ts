@@ -1,7 +1,7 @@
 import { copyFileSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { CheckReport } from "../../engine/src/check/types.js";
 import { tones } from "../audio/tones.js";
 import { type CheckDeps, checkVideo, summaryLines } from "../../engine/src/cli/check.js";
@@ -37,6 +37,29 @@ describe("check", () => {
     const report = await checkVideo(setup(), deps(0.2));
     expect(report.pass).toBe(false);
     expect(report.issues.map((i) => [i.check, i.severity])).toContainEqual(["clipping", "error"]);
+  });
+
+  it("skips the voice and loudness checks for a silent text-only video", async () => {
+    const dir = setup();
+    const plan = JSON.parse(readFileSync(join(dir, "plan.json"), "utf8"));
+    delete plan.audioSrc;
+    writeFileSync(join(dir, "plan.json"), JSON.stringify({ ...plan, voice: 8 }));
+    const readSoundtrack = vi.fn(async () => tones(1000, []));
+    const measureLoudness = vi.fn(async () => ({ integratedLufs: -70, truePeakDb: -70 }));
+    const report = await checkVideo(dir, { ...deps(-3), readSoundtrack, measureLoudness });
+    expect(readSoundtrack).not.toHaveBeenCalled();
+    expect(measureLoudness).not.toHaveBeenCalled();
+    expect(report).toEqual({ pass: true, issues: [] });
+  });
+
+  it("checks loudness but not the voice for a text-only video with music", async () => {
+    const dir = setup();
+    const plan = JSON.parse(readFileSync(join(dir, "plan.json"), "utf8"));
+    writeFileSync(join(dir, "plan.json"), JSON.stringify({ ...plan, voice: 8, audioSrc: "soundtrack.wav" }));
+    const readSoundtrack = vi.fn(async () => tones(1000, []));
+    const report = await checkVideo(dir, { ...deps(0.5), readSoundtrack });
+    expect(readSoundtrack).not.toHaveBeenCalled();
+    expect(report.issues.map((i) => i.check)).toContain("clipping");
   });
 
   it("asks for make when the video folder has not been made", async () => {

@@ -1,9 +1,12 @@
 import { execFileSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { Catalog } from "../../engine/src/catalog/catalog.js";
+import { CAPTION_STYLES } from "../../engine/remotion/core/captionLayout.js";
+import { getLayout } from "../../engine/remotion/styles/layouts.js";
 import { CATALOG_KINDS } from "../../engine/src/page/types.js";
+import { kokoroVoice } from "../../engine/src/voice/kokoro.js";
 
 const root = join(import.meta.dirname, "..", "..");
 const catalog = Catalog.load(join(root, "catalog"));
@@ -20,7 +23,6 @@ const launch: Record<string, string[]> = {
   duration: ["15 seconds", "30 seconds", "45 seconds", "60 seconds"],
 };
 
-const ready = new Set(["style:3", "script:6", "script:9", "captions:1", "duration:1", "duration:2", "duration:3", "duration:4", "music:8", "ending:5", "voice:1"]);
 
 describe("catalog", () => {
   it("numbers every kind from 1 with no gaps or duplicates", () => {
@@ -36,9 +38,24 @@ describe("catalog", () => {
     }
   });
 
-  it("marks only the Phase 1 entries as ready", () => {
-    const readyNow = CATALOG_KINDS.flatMap((k) => catalog.list(k)).filter((e) => e.status === "ready").map((e) => `${e.kind}:${e.num}`);
-    expect(new Set(readyNow)).toEqual(ready);
+  it("backs every ready entry with what makes it work", () => {
+    const readyOf = (kind: (typeof CATALOG_KINDS)[number]) => catalog.list(kind).filter((e) => e.status === "ready");
+    for (const e of readyOf("style")) expect(() => getLayout(e.num), `style ${e.num}`).not.toThrow();
+    for (const e of readyOf("captions")) expect(CAPTION_STYLES[e.num], `captions ${e.num}`).toBeDefined();
+    for (const e of readyOf("voice")) if (e.num !== 8) expect(() => kokoroVoice("en", e.num), `voice ${e.num}`).not.toThrow();
+  });
+
+  it("documents every entry that lives in a shared file under its own heading", () => {
+    for (const kind of CATALOG_KINDS) {
+      for (const entry of catalog.list(kind)) {
+        const [file, anchor] = entry.path.split("#");
+        if (!anchor) continue;
+        const text = readFileSync(join(catalog.root, file!), "utf8");
+        const num = String(entry.num).padStart(2, "0");
+        expect(text, `${kind} ${entry.num} in ${file}`).toMatch(new RegExp(`^## ${num} `, "m"));
+        if (entry.status === "ready") expect(text.split(new RegExp(`^## ${num} `, "m"))[1]!.split(/^## /m)[0], `${kind} ${entry.num}`).toContain("**Status:** ready");
+      }
+    }
   });
 
   it("points every ready entry at a file that exists", () => {
