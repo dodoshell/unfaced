@@ -6,3 +6,5 @@ export const MASCOT_SHEET_ID = "MascotSheet";
 export const DOG_DEMO_ID = "DogDemo";
 /** Every style demo side by side: the all-styles video and the README GIF. */
 export const STYLES_GRID_ID = "StylesGrid";
+/** Every hook's first example, spoken, each over the next style's title scene. */
+export const HOOK_REEL_ID = "HookReel";

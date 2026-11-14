@@ -10,6 +10,7 @@ import { listLines } from "./cli/list.js";
 import { makeVideo } from "./cli/make.js";
 import { renderMascotSheet } from "./cli/mascot.js";
 import { pageSummary } from "./cli/page.js";
+import { renderHookReel } from "./cli/reel.js";
 import { showText } from "./cli/show.js";
 import { setup } from "./cli/setup.js";
 import { CATALOG_DIR } from "./paths.js";
@@ -31,6 +32,8 @@ Commands:
                                  Render the style demo (the same dog scene in every style) to <dir>/NN-slug.mp4,
                                  or its key moments as PNGs with --frames (default dir: examples/styles);
                                  all also writes <dir>/all-styles.mp4 and docs/media/styles-grid.gif
+  reel hooks [--out <file>]      Render the hook reel: every hook's first example, spoken, each in the next style
+                                 (default file: examples/hooks/hook-reel.mp4)
   doctor                         Check that everything the free pipeline needs is installed
   setup                          Download the voice model, whisper and the render browser`;
 
@@ -87,6 +90,12 @@ async function main(args: string[]): Promise<number> {
       const { lines, pass } = await inboxReport(need(rest[0], "the video folder"));
       console.log(lines.join("\n"));
       return pass ? 0 : 1;
+    }
+    case "reel": {
+      if (rest[0] !== "hooks") throw new Error(`reel makes the hook reel: "unfaced reel hooks".\n\n${USAGE}`);
+      const out = rest.indexOf("--out");
+      await renderHookReel(out >= 0 ? { out: need(rest[out + 1], "a file for --out") } : {});
+      return 0;
     }
     case "mascot":
       await renderMascotSheet(need(rest[0], "the page folder"));
