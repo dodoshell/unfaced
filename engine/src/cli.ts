@@ -7,11 +7,12 @@ import { docText } from "./cli/docs.js";
 import { parseEvery, renderFrames } from "./cli/frames.js";
 import { inboxReport } from "./cli/inbox.js";
 import { listLines } from "./cli/list.js";
-import { makeVideo } from "./cli/make.js";
+import { defaultMakeDeps, makeVideo } from "./cli/make.js";
 import { renderMascotSheet } from "./cli/mascot.js";
 import { pageSummary } from "./cli/page.js";
 import { showText } from "./cli/show.js";
 import { setup } from "./cli/setup.js";
+import { videoEnv } from "./env.js";
 import { CATALOG_DIR } from "./paths.js";
 
 const USAGE = `Usage: unfaced <command>
@@ -57,7 +58,8 @@ async function main(args: string[]): Promise<number> {
       console.log((await pageSummary(need(rest[0], "the page folder"), Catalog.load(CATALOG_DIR))).join("\n"));
       return 0;
     case "make": {
-      const { report } = await makeVideo(need(rest[0], "the video folder"));
+      const video = need(rest[0], "the video folder");
+      const { report } = await makeVideo(video, { ...defaultMakeDeps(), env: videoEnv(video) });
       return report.pass ? 0 : 1;
     }
     case "cover": {

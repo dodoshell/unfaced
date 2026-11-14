@@ -61,4 +61,18 @@ How choices work:
 - A list or `auto` leaves the pick to the agent, one video at a time. The agent writes its pick into the video's `script.md` front matter and says why.
 - A video can override any choice for itself ("style 12 this time") in its `script.md`; `page.yaml` stays as it is.
 
-Never put an API key in `page.yaml`: keys go in a `.env` file next to the pages, and `unfaced` refuses a profile with something that looks like a key.
+## Keys for paid providers
+
+Never put an API key in `page.yaml`; `unfaced` refuses a profile with something that looks like a key. Keys go in a `.env` file, one `NAME=value` per line; `.env.example` at the root of the unfaced repository lists every variable. `unfaced make` reads these files, nearest first, and never replaces a variable already set in the environment:
+
+1. `<page>/.env`: keys for this page only.
+2. `.env` in the folder you run unfaced from.
+3. `~/.unfaced/.env` (or `$UNFACED_HOME/.env`): keys shared by every page.
+
+An empty value (`NAME=`) is skipped, so a copied `.env.example` does not hide a key set further away.
+
+| Variable | Used for |
+|---|---|
+| `ELEVENLABS_API_KEY` | `providers.voice: elevenlabs` |
+
+Without its key a paid provider is skipped: the free one is used and `unfaced` says so.
