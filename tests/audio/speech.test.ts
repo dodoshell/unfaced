@@ -1,5 +1,9 @@
+import { mkdtempSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { parseWav, speechAt, speechOnsets, speechPauses } from "../../engine/src/audio/speech.js";
+import { encodeWav, parseWav, readSoundtrack, speechAt, speechOnsets, speechPauses } from "../../engine/src/audio/speech.js";
+import { runFfmpeg } from "../../engine/src/ffmpeg.js";
 import { RATE, tones } from "./tones.js";
 
 /** A 16-bit mono WAV file holding `samples`. */
@@ -53,6 +57,22 @@ describe("speech in audio", () => {
     const silence = tones(1000, []);
     expect(speechOnsets(silence)).toEqual([]);
     expect(speechAt(silence, 0, 1000)).toBe(false);
+  });
+
+  it("hears a video's soundtrack in full, so an 's' above 8 kHz between two vowels is not a pause", async () => {
+    // At 24 kHz like the voice-over: a vowel, 150 ms of hiss at 9-11 kHz, a vowel.
+    const rate = 24000;
+    const samples = new Float32Array(rate * 2);
+    for (let i = 0; i < samples.length; i++) {
+      const ms = (i / rate) * 1000;
+      const t = i / rate;
+      if ((ms >= 400 && ms < 1000) || (ms >= 1150 && ms < 1600)) samples[i] = 0.5 * Math.sin(2 * Math.PI * 220 * t);
+      else if (ms >= 1000 && ms < 1150) samples[i] = 0.12 * [9000, 9700, 10300, 11000].reduce((sum, f) => sum + Math.sin(2 * Math.PI * f * t), 0);
+    }
+    const dir = mkdtempSync(join(tmpdir(), "unfaced soundtrack "));
+    writeFileSync(join(dir, "voice.wav"), encodeWav({ samples, rate }));
+    await runFfmpeg(["-v", "error", "-i", join(dir, "voice.wav"), "-c:a", "aac", "-b:a", "192k", "-y", join(dir, "video.mp4")]);
+    expect(speechOnsets(await readSoundtrack(join(dir, "video.mp4")))).toEqual([400]);
   });
 
   it("reads a 16-bit WAV, also one piped by ffmpeg with an unknown data size", () => {

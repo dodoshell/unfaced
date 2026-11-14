@@ -67,9 +67,12 @@ export function encodeWav({ samples, rate }: Pcm): Buffer {
   return wav;
 }
 
-/** Decodes a video's soundtrack as 16 kHz mono. */
+/**
+ * Decodes a video's soundtrack as mono at its own sample rate. Resampling lower would drop
+ * the hiss of an "s" or "f" (above 8 kHz at 16 kHz), and the checks would hear a pause there.
+ */
 export async function readSoundtrack(video: string): Promise<Pcm> {
-  const { stdout } = await runFfmpeg(["-v", "error", "-i", resolve(video), "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le", "-f", "wav", "-"]);
+  const { stdout } = await runFfmpeg(["-v", "error", "-i", resolve(video), "-vn", "-ac", "1", "-c:a", "pcm_s16le", "-f", "wav", "-"]);
   return parseWav(stdout);
 }
 
