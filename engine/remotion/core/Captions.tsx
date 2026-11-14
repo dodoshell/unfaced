@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import type { VideoPlan } from "../../src/plan/types.js";
-import { CAPTION_BOX, CAPTION_FONT_SIZE, captionColours, captionPages } from "./captionLayout.js";
+import { CAPTION_BOX, CAPTION_FONT_SIZE, captionColours, captionPages, fitCaptionSize } from "./captionLayout.js";
 import { CAPTION_FONT } from "./fonts.js";
 
 /** Captions 01, word-by-word karaoke: the current phrase, the spoken word lit up. */
@@ -31,7 +31,7 @@ export const Captions: React.FC<{ plan: VideoPlan }> = ({ plan }) => {
           textAlign: "center",
           fontFamily: CAPTION_FONT,
           fontWeight: 700,
-          fontSize: CAPTION_FONT_SIZE,
+          fontSize: fitCaptionSize(page.tokens.map((t) => t.text.trim()), CAPTION_BOX.w, CAPTION_BOX.h, CAPTION_FONT_SIZE, 1.15),
           lineHeight: 1.15,
           overflowWrap: "anywhere",
           color: "#FFFFFF",

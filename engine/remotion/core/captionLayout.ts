@@ -17,6 +17,33 @@ export function captionColours(palette: string[]): { accent: string; highlight: 
   return { accent, highlight, ink: readable(ink) ? ink : (darkest ?? "#000000") };
 }
 
+/** The smallest caption type; below it a phrase is better cut into shorter pages (maxWords). */
+const MIN_CAPTION_SIZE = 24;
+
+/**
+ * The largest type size up to `base` at which a phrase fits a caption box: its longest word
+ * across the width, and its lines, wrapped word by word, within the height the checks trust.
+ * Character widths are estimated: 0.6 em, or 0.7 em in capitals.
+ */
+export function fitCaptionSize(texts: string[], width: number, height: number, base: number, lineHeight: number, upper = false): number {
+  const em = upper ? 0.7 : 0.6;
+  const lengths = texts.map((t) => t.length);
+  for (let size = base; size > MIN_CAPTION_SIZE; size--) {
+    const perLine = width / (size * em);
+    if (Math.max(0, ...lengths) > perLine) continue;
+    let lines = 1;
+    let used = -1;
+    for (const n of lengths) {
+      if (used + 1 + n > perLine) {
+        lines++;
+        used = n;
+      } else used += 1 + n;
+    }
+    if (lines * size * lineHeight <= height) return size;
+  }
+  return MIN_CAPTION_SIZE;
+}
+
 /** Where captions are drawn: the lower middle of the frame, inside the safe zone. */
 export const CAPTION_BOX: Rect = { x: 60, y: 1180, w: 880, h: 330 };
 
