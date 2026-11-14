@@ -42,10 +42,33 @@ function checkoutAbove(start) {
 
 const hasDependencies = (lib) => existsSync(join(lib, "node_modules", "tsx", "dist", "loader.mjs"));
 
-function run(command, args, cwd) {
-  // npm and git can be .cmd scripts on Windows, which need a shell to start.
-  const result = spawnSync(command, args, { cwd, stdio: ["ignore", "inherit", "inherit"], shell: process.platform === "win32" });
-  return result.status === 0;
+/** Runs git without a shell, so its paths reach it whole, spaces and all. */
+function git(args) {
+  return spawnSync("git", args, { stdio: ["ignore", "inherit", "inherit"] }).status === 0;
+}
+
+function npmInstall(cwd) {
+  // npm is a .cmd script on Windows, which needs a shell to start; the folder goes in cwd, so the command holds no path to split.
+  return spawnSync("npm install --no-audit --no-fund", { cwd, stdio: ["ignore", "inherit", "inherit"], shell: true }).status === 0;
+}
+
+const sleep = (ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+
+/** Renames a folder, trying again for a moment: on Windows a virus scanner often holds new files. */
+function moveInto(from, to) {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      renameSync(from, to);
+      return true;
+    } catch (err) {
+      if (attempt === 5) {
+        say(`could not move ${from} to ${to} (${err.code ?? err.message}).`);
+        say(`If ${to} exists, delete it. If a virus scanner is checking the new files, wait a moment. Then run this command again.`);
+        return false;
+      }
+      sleep(attempt * 250);
+    }
+  }
 }
 
 /** Clones the release into ~/.unfaced/lib/<version> and installs it; exits with advice on failure. */
@@ -54,17 +77,17 @@ function install(target) {
   rmSync(tmp, { recursive: true, force: true });
   mkdirSync(dirname(target), { recursive: true });
   say(`installing the unfaced library ${VERSION} into ${target} (first use only; a few minutes)`);
-  if (!run("git", ["clone", "--quiet", "--depth", "1", "--branch", `v${VERSION}`, REPO, tmp])) {
+  if (!git(["-c", "advice.detachedHead=false", "clone", "--quiet", "--depth", "1", "--branch", `v${VERSION}`, REPO, tmp])) {
     rmSync(tmp, { recursive: true, force: true });
     say(`could not download ${REPO} (tag v${VERSION}) with git clone.`);
     say("Check that git is installed and that you can reach GitHub, or clone the repository yourself and set UNFACED_LIB to its folder.");
     process.exit(1);
   }
-  if (!run("npm", ["install", "--no-audit", "--no-fund"], tmp)) {
+  if (!npmInstall(tmp)) {
     say(`npm install failed in ${tmp}; fix the error above and run this command again.`);
     process.exit(1);
   }
-  renameSync(tmp, target);
+  if (!moveInto(tmp, target)) process.exit(1);
   // The voice model, whisper and the render browser.
   if (!cli(target, ["setup"])) say("setup did not finish; run `unfaced doctor` to see what is missing.");
 }
