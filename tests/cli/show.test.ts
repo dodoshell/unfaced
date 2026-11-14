@@ -10,6 +10,13 @@ import { CATALOG_DIR } from "../../engine/src/paths.js";
 
 const catalog = Catalog.load(CATALOG_DIR);
 
+/** A fresh catalog in which style 7 is still planned, whatever the real one says by now. */
+function withPlannedStyle(): Catalog {
+  const fresh = Catalog.load(CATALOG_DIR);
+  fresh.get("style", 7).status = "planned";
+  return fresh;
+}
+
 describe("unfaced show", () => {
   it("prints one entry's own section of a shared catalog file", () => {
     const text = showText(catalog, "hook", 4);
@@ -30,7 +37,7 @@ describe("unfaced show", () => {
   });
 
   it("says plainly when an entry is planned and has nothing to show yet", () => {
-    expect(showText(catalog, "style", 7)).toMatch(/07 Paper cut-out.*planned.*not available yet/s);
+    expect(showText(withPlannedStyle(), "style", 7)).toMatch(/07 Paper cut-out.*planned.*not available yet/s);
   });
 
   it("names the catalogs when the kind is wrong", () => {
@@ -72,7 +79,7 @@ describe("unfaced page", () => {
   });
 
   it("marks a fixed choice that is not ready yet", async () => {
-    const lines = await pageSummary(page("name: P\nlanguage: en\nniche: x\nstyle: 7\n"), catalog);
+    const lines = await pageSummary(page("name: P\nlanguage: en\nniche: x\nstyle: 7\n"), withPlannedStyle());
     expect(lines).toContain("style: 7 Paper cut-out (planned: not available yet)");
   });
 
