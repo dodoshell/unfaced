@@ -3,12 +3,14 @@
 import { layout as softThreeD } from "../../../catalog/styles/01-soft-3d/components/layout.js";
 import { layout as flatCartoon } from "../../../catalog/styles/03-flat-cartoon/components/layout.js";
 import { layout as paperCutOut } from "../../../catalog/styles/07-paper-cut-out/components/layout.js";
+import { layout as watercolour } from "../../../catalog/styles/11-watercolour/components/layout.js";
 import type { StyleKit } from "./registry.js";
 
 const LAYOUTS = new Map<number, StyleKit["layout"]>([
   [1, softThreeD],
   [3, flatCartoon],
   [7, paperCutOut],
+  [11, watercolour],
 ]);
 /** Styles whose last scene draws the ending's sign itself, inside one of its own boxes. */
 const DRAW_ENDING_MARK = new Set<number>([3]);

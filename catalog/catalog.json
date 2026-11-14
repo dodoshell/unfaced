@@ -11,7 +11,7 @@
     { "num": 8, "slug": "vintage-comic", "name": "Vintage comic", "summary": "Halftone dots, ink outlines and panels from old comic books.", "goodFor": ["history", "myths", "bold claims"], "path": "styles/08-vintage-comic/style.json", "status": "planned" },
     { "num": 9, "slug": "16-bit-pixel-art", "name": "16-bit pixel art", "summary": "Chunky pixels and limited palettes from 16-bit consoles.", "goodFor": ["gaming", "tech", "nostalgia"], "path": "styles/09-16-bit-pixel-art/style.json", "status": "planned" },
     { "num": 10, "slug": "neon-synthwave", "name": "Neon synthwave", "summary": "Glowing neon lines on a dark grid under an 80s sunset.", "goodFor": ["tech", "space", "music"], "path": "styles/10-neon-synthwave/style.json", "status": "planned" },
-    { "num": 11, "slug": "watercolour", "name": "Watercolour", "summary": "Soft washes of paint with visible paper texture.", "goodFor": ["nature", "emotional stories", "travel"], "path": "styles/11-watercolour/style.json", "status": "planned" },
+    { "num": 11, "slug": "watercolour", "name": "Watercolour", "summary": "Soft washes of paint with visible paper texture.", "goodFor": ["nature", "emotional stories", "travel"], "path": "styles/11-watercolour/style.json", "status": "ready" },
     { "num": 12, "slug": "kinetic-typography", "name": "Kinetic typography", "summary": "The words are the visuals: big type that moves with the voice.", "goodFor": ["quotes", "motivation", "lists"], "path": "styles/12-kinetic-typography/style.json", "status": "planned" }
   ],
   "script": [
