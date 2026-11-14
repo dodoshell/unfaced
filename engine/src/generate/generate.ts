@@ -1,14 +1,14 @@
 // `unfaced generate`: makes the files inbox/PROMPTS.md asks for with the page's image and clip
 // providers. Without a provider or its key a file is left for manual handoff, as before.
-import { appendFileSync, constants, copyFileSync, existsSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { appendFileSync, constants, copyFileSync, existsSync, mkdtempSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { extname, join } from "node:path";
-import { reach } from "../http.js";
 import { CREDITS_FILE, inboxKind } from "../inbox/inbox.js";
 import type { CatalogLike, Page } from "../page/types.js";
-import { findPhoto, stockQuery, withoutSearchLine } from "./pexels.js";
+import { downloadFile, type FileType, sniffFile } from "./download.js";
+import { findPhoto, PEXELS_FILE_HOSTS, stockQuery, withoutSearchLine } from "./pexels.js";
 import { clipProvider, imageProvider, MODEL_INPUTS, type MediaProvider } from "./providers.js";
-import { runPrediction } from "./replicate.js";
+import { REPLICATE_FILE_HOSTS, runPrediction } from "./replicate.js";
 
 export interface GenerateDeps {
   catalog: CatalogLike;
@@ -36,6 +36,21 @@ const KEYS = {
 
 /** How long a prediction may take before it is cancelled. */
 const TIMEOUT_MS = { image: 5 * 60_000, clip: 15 * 60_000 };
+/** The largest file downloaded. */
+const MAX_BYTES = { image: 50 * 1024 ** 2, clip: 300 * 1024 ** 2 };
+
+/**
+ * What a downloaded file may be, by the extension asked for. A PNG or JPEG is converted to the
+ * other (Pexels serves JPEG); WebP is kept as it comes, since the engine's ffmpeg can't write it.
+ */
+const ACCEPTS: Record<string, { types: FileType[]; label: string }> = {
+  ".png": { types: ["png", "jpeg"], label: "a PNG or JPEG image" },
+  ".jpg": { types: ["png", "jpeg"], label: "a PNG or JPEG image" },
+  ".jpeg": { types: ["png", "jpeg"], label: "a PNG or JPEG image" },
+  ".webp": { types: ["webp"], label: "a WebP image" },
+  ".mp4": { types: ["mp4"], label: "an MP4 clip" },
+};
+const TYPE_EXT: Record<FileType, string> = { png: ".png", jpeg: ".jpg", webp: ".webp", mp4: ".mp4" };
 
 const BY_HAND = "make it by hand from its prompt";
 
@@ -88,13 +103,15 @@ async function makeFile(inbox: string, file: string, kind: "image" | "clip", pro
   const ext = extname(file).toLowerCase();
   const tmp = mkdtempSync(join(tmpdir(), "unfaced generate "));
   try {
-    const raw = join(tmp, `raw${ext}`);
+    const downloaded = join(tmp, "download");
+    const limit = { maxBytes: MAX_BYTES[kind], what: kind === "image" ? "an image" : "a clip", fetch: deps.fetch };
+    const { service } = KEYS[provider.name];
     let detail: string;
     let credit: string | undefined;
     if (provider.name === "pexels") {
       deps.log(`Finding a photo for ${file} on Pexels`);
       const photo = await findPhoto(stockQuery(prompt), key, deps.fetch, ext === ".webp");
-      await download("Pexels", deps.fetch, photo.url, raw);
+      await downloadFile(photo.url, downloaded, { service, hosts: PEXELS_FILE_HOSTS, ...limit });
       credit = photo.credit;
       detail = `${photo.credit} (credit kept in inbox/${CREDITS_FILE})`;
     } else {
@@ -102,9 +119,16 @@ async function makeFile(inbox: string, file: string, kind: "image" | "clip", pro
       const format = kind === "image" ? { output_format: ext === ".webp" ? "webp" : ext === ".png" ? "png" : "jpg" } : {};
       const input = { prompt: withoutSearchLine(prompt), aspect_ratio: "9:16", ...format, ...MODEL_INPUTS[provider.model] };
       const url = await runPrediction(provider.model, input, key, { fetch: deps.fetch, sleep: deps.sleep, now: deps.now, timeoutMs: TIMEOUT_MS[kind] });
-      await download("Replicate", deps.fetch, url, raw);
+      await downloadFile(url, downloaded, { service, hosts: REPLICATE_FILE_HOSTS, ...limit });
       detail = `${kind} from Replicate (${provider.model})`;
     }
+    // Checked by its first bytes before ffmpeg reads it, and named for what it is, since ffmpeg
+    // decodes a picture by its extension.
+    const accepts = ACCEPTS[ext]!;
+    const type = sniffFile(downloaded);
+    if (!type || !accepts.types.includes(type)) throw new Error(`${service} sent something that isn't ${accepts.label} for ${file}; nothing was written`);
+    const raw = join(tmp, `download${TYPE_EXT[type]}`);
+    renameSync(downloaded, raw);
     // WebP is kept as it comes (asked for at 9:16): the engine's ffmpeg can't write it.
     const ready = ext === ".webp" ? raw : join(tmp, `fitted${ext}`);
     if (ready !== raw) await deps.fit(raw, ready);
@@ -119,12 +143,6 @@ async function makeFile(inbox: string, file: string, kind: "image" | "clip", pro
   } finally {
     rmSync(tmp, { recursive: true, force: true });
   }
-}
-
-async function download(service: string, fetchImpl: typeof fetch, url: string, dest: string): Promise<void> {
-  const res = await reach(service, fetchImpl, url);
-  if (!res.ok) throw new Error(`Could not download the file from ${service}: HTTP ${res.status}`);
-  writeFileSync(dest, Buffer.from(await res.arrayBuffer()));
 }
 
 /** Adds a stock photo's credit line to inbox/CREDITS.md, for the post's caption. */

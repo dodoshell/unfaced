@@ -20,23 +20,30 @@ function setup(providers: string, prompts = PROMPTS): string {
 
 const json = (status: number, body: unknown) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
 
-/** Replicate and Pexels as fakes: every prediction succeeds at once unless `refuse` says otherwise. */
-function services(refuse: (model: string) => Response | undefined = () => undefined) {
+/** A file of `type` (its first bytes), followed by `text`. */
+const SIGNATURES: Record<string, string> = { png: "\x89PNG\r\n\x1a\n", jpg: "\xff\xd8\xff\xe0", webp: "RIFF\x10\0\0\0WEBPVP8 ", mp4: "\0\0\0\x18ftypisom" };
+const file = (type: string, text: string) => new Response(new Uint8Array(Buffer.from(SIGNATURES[type] + text, "latin1")));
+
+/**
+ * Replicate and Pexels as fakes: every prediction succeeds at once and its file is what it
+ * should be, unless `refuse` answers the prediction or `deliver` the download instead.
+ */
+function services(refuse: (model: string) => Response | undefined = () => undefined, deliver: (url: string) => Response | undefined = () => undefined) {
   const inputs: Record<string, Record<string, unknown>> = {};
-  const fetchImpl = vi.fn<typeof fetch>(async (url) => {
+  const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
     const u = String(url);
     const create = /^https:\/\/api\.replicate\.com\/v1\/models\/(.+)\/predictions$/.exec(u);
     if (create) {
       const model = create[1]!;
-      const init = fetchImpl.mock.calls.at(-1)![1]!;
-      inputs[model] = (JSON.parse(String(init.body)) as { input: Record<string, unknown> }).input;
-      return refuse(model) ?? json(201, { id: "p1", status: "succeeded", output: `https://replicate.delivery/${model}/out`, urls: { get: "x", cancel: "y" } });
+      inputs[model] = (JSON.parse(String(init?.body)) as { input: Record<string, unknown> }).input;
+      const type = String(inputs[model]!.output_format ?? "mp4");
+      return refuse(model) ?? json(201, { id: "p1", status: "succeeded", output: `https://replicate.delivery/${model}/out.${type}`, urls: { get: "x", cancel: "y" } });
     }
-    if (u.startsWith("https://replicate.delivery/")) return new Response(`made by ${u.split("/").slice(3, 5).join("/")}`);
+    if (u.startsWith("https://replicate.delivery/")) return deliver(u) ?? file(u.split(".").at(-1)!, `made by ${u.split("/").slice(3, 5).join("/")}`);
     if (u.startsWith("https://api.pexels.com/v1/search")) {
       return json(200, { photos: [{ url: "https://www.pexels.com/photo/cat-1/", photographer: "Jane Doe", src: { original: "https://images.pexels.com/photos/1/cat.jpeg" } }] });
     }
-    if (u.startsWith("https://images.pexels.com/")) return new Response("pexels photo");
+    if (u.startsWith("https://images.pexels.com/")) return deliver(u) ?? file("jpg", "pexels photo");
     throw new Error(`unexpected ${u}`);
   });
   return { fetchImpl, inputs };
@@ -55,7 +62,8 @@ function deps(env: NodeJS.ProcessEnv, fetchImpl: typeof fetch): GenerateDeps & {
 }
 
 const probe = async () => ({ video: { codec: "h264", width: 1080, height: 1920 }, durationSec: 5 });
-const inbox = (video: string, file: string) => readFileSync(join(video, "inbox", file), "utf8");
+/** A file in the video's inbox/, its first bytes (the signature) left out. */
+const inbox = (video: string, name: string) => readFileSync(join(video, "inbox", name), "latin1").replace(/^(\x89PNG\r\n\x1a\n|\xff\xd8\xff\xe0|RIFF\x10\0\0\0WEBPVP8 |\0\0\0\x18ftypisom)/, "");
 
 describe("unfaced generate", () => {
   it("makes each missing file with the page's providers into inbox/, fitted to 9:16, then lists the inbox", async () => {
@@ -140,6 +148,25 @@ describe("unfaced generate", () => {
     expect(existsSync(join(video, "inbox", "b2.png"))).toBe(false);
     expect(lines.join("\n")).not.toContain(TOKEN);
     expect(pass).toBe(false);
+  });
+
+  it("refuses a download that isn't what its name says, such as a playlist disguised as .png, before ffmpeg sees it", async () => {
+    const video = setup("  images: replicate\n", "## b2.png\nA cat.\n");
+    const { fetchImpl } = services(undefined, () => new Response("#EXTM3U\n#EXTINF:1,\nfile:///etc/passwd\n#EXT-X-ENDLIST\n"));
+    const d = deps({ REPLICATE_API_TOKEN: TOKEN }, fetchImpl);
+    const { lines, pass } = await generateReport(video, d, probe);
+    expect(lines[0]).toBe("failed   b2.png — Replicate sent something that isn't a PNG or JPEG image for b2.png; nothing was written");
+    expect(d.fit).not.toHaveBeenCalled();
+    expect(existsSync(join(video, "inbox", "b2.png"))).toBe(false);
+    expect(pass).toBe(false);
+  });
+
+  it("downloads only from the provider's own hosts", async () => {
+    const video = setup("  images: replicate\n", "## b2.png\nA cat.\n");
+    const { fetchImpl } = services(() => json(201, { id: "p1", status: "succeeded", output: "https://169.254.169.254/latest/meta-data", urls: { get: "x", cancel: "y" } }));
+    const { lines } = await generateReport(video, deps({ REPLICATE_API_TOKEN: TOKEN }, fetchImpl), probe);
+    expect(lines[0]).toMatch(/^failed {3}b2\.png — Refused to download from 169\.254\.169\.254: Replicate files come only from replicate\.delivery/);
+    expect(fetchImpl.mock.calls.some(([url]) => String(url).includes("169.254"))).toBe(false);
   });
 
   it("finds stock photos on Pexels and keeps their credit line in inbox/CREDITS.md", async () => {

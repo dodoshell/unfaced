@@ -2,6 +2,9 @@ import { reach } from "../http.js";
 
 const SEARCH_LINE = /^\s*search:\s*(.+?)\s*$/i;
 
+/** Where Pexels serves its photos (the `src` links in https://www.pexels.com/api/documentation/#photos-search). */
+export const PEXELS_FILE_HOSTS = ["images.pexels.com"] as const;
+
 /**
  * What to search stock photos for: the prompt's `Search:` line, or else its subject (the first
  * sentence after a "For beat ..." one, up to its first comma).

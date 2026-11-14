@@ -3,6 +3,9 @@ import { reach } from "../http.js";
 const API = "https://api.replicate.com/v1";
 const POLL_MS = 3000;
 
+/** Where Replicate serves the files it makes: https://replicate.com/docs/topics/predictions/output-files */
+export const REPLICATE_FILE_HOSTS = ["replicate.delivery", "*.replicate.delivery"] as const;
+
 export interface PredictionOptions {
   fetch: typeof fetch;
   sleep(ms: number): Promise<void>;

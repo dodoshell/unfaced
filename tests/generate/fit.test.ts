@@ -2,7 +2,7 @@ import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { PNG } from "pngjs";
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import { runFfmpeg } from "../../engine/src/ffmpeg.js";
 import { fitPortrait } from "../../engine/src/generate/fit.js";
 import { probeMedia } from "../../engine/src/inbox/inbox.js";
@@ -25,6 +25,30 @@ describe("fitPortrait", () => {
     await fitPortrait(at("wide.png"), at(`out.${ext}`));
     expect((await probeMedia(at(`out.${ext}`))).video).toEqual({ codec, width: 1080, height: 1920 });
   }, 30_000);
+
+  it.each(["png", "mp4"])("reads only the file itself: a concat list named .%s pointing at another file is refused", async (ext) => {
+    writeFileSync(at(`list.${ext}`), `ffconcat version 1.0\nfile 'wide.${ext}'\n`);
+    await expect(fitPortrait(at(`list.${ext}`), at(`from-list.${ext}`))).rejects.toThrow(/ffmpeg failed/);
+  }, 30_000);
+
+  it.each([
+    ["png", ["-f", "image2", "-pattern_type", "none"]],
+    ["jpg", ["-f", "image2", "-pattern_type", "none"]],
+    ["mp4", ["-f", "mov"]],
+  ])("forces the input format for .%s and lets ffmpeg open local files only", async (ext, format) => {
+    const run = vi.fn<typeof runFfmpeg>(async () => ({ stdout: Buffer.alloc(0), stderr: "" }));
+    await fitPortrait(at(`in.${ext}`), at(`out.${ext}`), run);
+    const args = run.mock.calls[0]![0];
+    const input = args.slice(0, args.indexOf("-i"));
+    expect(input).toEqual(expect.arrayContaining(["-protocol_whitelist", "file"]));
+    expect(input.join(" ")).toContain(format.join(" "));
+  });
+
+  it("refuses to read a type it can't force", async () => {
+    const run = vi.fn<typeof runFfmpeg>();
+    await expect(fitPortrait(at("in.webp"), at("out.png"), run)).rejects.toThrow("Can't read .webp files safely; use .png, .jpg or .mp4");
+    expect(run).not.toHaveBeenCalled();
+  });
 
   it("fills and crops a clip to 1080×1920 H.264, without its sound", async () => {
     expect((await probeMedia(at("wide.mp4"))).audio).toEqual({ codec: "aac" });
