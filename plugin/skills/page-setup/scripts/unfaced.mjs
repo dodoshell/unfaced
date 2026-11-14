@@ -13,7 +13,7 @@
 //   3. ~/.unfaced/lib/<version> ($UNFACED_HOME instead of ~/.unfaced), cloned from the release
 //      tag and installed the first time it is needed.
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, renameSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -71,25 +71,76 @@ function moveInto(from, to) {
   }
 }
 
+/** Whether the process that took `lock` is gone (or never wrote its id within a minute). */
+function abandoned(lock) {
+  try {
+    process.kill(Number(readFileSync(join(lock, "pid"), "utf8")), 0);
+    return false;
+  } catch (err) {
+    if (err.code === "EPERM") return false;
+    if (err.code === "ESRCH") return true;
+    try {
+      return Date.now() - statSync(lock).mtimeMs > 60_000;
+    } catch {
+      return false;
+    }
+  }
+}
+
+/**
+ * Takes the install lock, a folder next to the library (making a folder either succeeds or
+ * finds it there, in one step). While another command holds it, waits; returns false when that
+ * command installed the library meanwhile.
+ */
+function lockInstall(target) {
+  const lock = `${target}.lock`;
+  for (let told = false; ; ) {
+    try {
+      mkdirSync(lock);
+      writeFileSync(join(lock, "pid"), String(process.pid));
+      if (!isLibrary(target)) return true;
+      // Another command installed it while this one waited.
+      rmSync(lock, { recursive: true, force: true });
+      return false;
+    } catch (err) {
+      if (err.code !== "EEXIST") throw err;
+    }
+    if (abandoned(lock)) {
+      rmSync(lock, { recursive: true, force: true });
+      continue;
+    }
+    if (!told) say("another unfaced command is installing the library; waiting for it to finish");
+    told = true;
+    sleep(1000);
+  }
+}
+
 /** Clones the release into ~/.unfaced/lib/<version> and installs it; exits with advice on failure. */
 function install(target) {
+  mkdirSync(dirname(target), { recursive: true });
+  if (!lockInstall(target)) return;
+  const lock = `${target}.lock`;
+  const fail = () => {
+    rmSync(lock, { recursive: true, force: true });
+    process.exit(1);
+  };
   const tmp = `${target}.partial`;
   rmSync(tmp, { recursive: true, force: true });
-  mkdirSync(dirname(target), { recursive: true });
   say(`installing the unfaced library ${VERSION} into ${target} (first use only; a few minutes)`);
   if (!git(["-c", "advice.detachedHead=false", "clone", "--quiet", "--depth", "1", "--branch", `v${VERSION}`, REPO, tmp])) {
     rmSync(tmp, { recursive: true, force: true });
     say(`could not download ${REPO} (tag v${VERSION}) with git clone.`);
     say("Check that git is installed and that you can reach GitHub, or clone the repository yourself and set UNFACED_LIB to its folder.");
-    process.exit(1);
+    fail();
   }
   if (!npmInstall(tmp)) {
     say(`npm install failed in ${tmp}; fix the error above and run this command again.`);
-    process.exit(1);
+    fail();
   }
-  if (!moveInto(tmp, target)) process.exit(1);
-  // The voice model, whisper and the render browser.
+  if (!moveInto(tmp, target)) fail();
+  // The voice model, whisper and the render browser, before another command can use the library.
   if (cli(target, ["setup"]) !== 0) say("setup did not finish; run `unfaced doctor` to see what is missing.");
+  rmSync(lock, { recursive: true, force: true });
 }
 
 function findLibrary() {
@@ -126,7 +177,7 @@ if (args[0] === "where") {
 } else if (args[0] === "--version") {
   console.log(VERSION);
 } else {
-  if (installed && !isLibrary(lib)) install(lib);
+  if (installed && (!isLibrary(lib) || existsSync(`${lib}.lock`))) install(lib);
   if (!hasDependencies(lib)) {
     say(`the unfaced library at ${lib} has no dependencies installed; run \`npm run setup\` in that folder.`);
     process.exit(1);

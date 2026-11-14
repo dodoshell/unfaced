@@ -1,4 +1,4 @@
-import { execFileSync, spawnSync } from "node:child_process";
+import { execFileSync, spawn, spawnSync } from "node:child_process";
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -124,6 +124,28 @@ describe("the skills' launcher", () => {
     expect(existsSync(join(home, "lib", "0.1.0", "engine", "src", "cli.ts"))).toBe(true);
     expect(existsSync(join(home, "lib", "0.1.0.partial"))).toBe(false);
   }, 60_000);
+
+  it("installs once when two commands start the first install at the same time", async () => {
+    const { script, dir } = outsideCopy();
+    const env = { UNFACED_HOME: join(dir, "home"), UNFACED_REPO: releaseRepo(dir) };
+    const clean = Object.fromEntries(Object.entries(process.env).filter(([k]) => !k.startsWith("UNFACED_")));
+    const run = (args: string[]) =>
+      new Promise<{ status: number | null; stdout: string; stderr: string }>((done) => {
+        const child = spawn(process.execPath, [script, ...args], { cwd: tmpdir(), env: { ...clean, ...env } });
+        let stdout = "";
+        let stderr = "";
+        child.stdout.on("data", (d) => (stdout += d));
+        child.stderr.on("data", (d) => (stderr += d));
+        child.on("close", (status) => done({ status, stdout, stderr }));
+      });
+    const [a, b] = await Promise.all([run(["list", "hook"]), run(["list", "voice"])]);
+    expect(a.status, a.stderr).toBe(0);
+    expect(b.status, b.stderr).toBe(0);
+    expect(a.stdout).toMatch(/ran list hook\s*$/);
+    expect(b.stdout).toMatch(/ran list voice\s*$/);
+    expect((a.stdout + b.stdout).match(/ran setup/g)).toHaveLength(1);
+    expect(readdirSync(join(dir, "home", "lib"))).toEqual(["0.1.0"]);
+  }, 120_000);
 
   it("explains an install it cannot move into place", () => {
     const { script, dir } = outsideCopy();
