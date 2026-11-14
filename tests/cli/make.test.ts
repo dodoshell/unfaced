@@ -52,8 +52,12 @@ function stubs() {
     writeFileSync(join(dir, "soundtrack.wav"), "RIFF");
     return "soundtrack.wav";
   });
-  const deps: MakeDeps = { catalog: Catalog.load(CATALOG_DIR), voiceProvider: () => voice, prepareVoice, align, mixMusic, render, check, env: {}, log: () => {} };
-  return { deps, voice, synthesize, prepareVoice, align, mixMusic, render, check };
+  const importVoice = vi.fn<MakeDeps["importVoice"]>(async (_src, wavPath) => {
+    writeFileSync(wavPath, "RIFF");
+    return 3.2;
+  });
+  const deps: MakeDeps = { catalog: Catalog.load(CATALOG_DIR), voiceProvider: () => voice, prepareVoice, importVoice, align, mixMusic, render, check, env: {}, log: () => {} };
+  return { deps, voice, synthesize, prepareVoice, importVoice, align, mixMusic, render, check };
 }
 
 describe("make", () => {
@@ -297,5 +301,58 @@ describe("make", () => {
     const firstReady = Catalog.load(CATALOG_DIR).list("style").find((e) => e.status === "ready")!.num;
     expect(plan.style).toBe(firstReady);
     expect(log.mock.calls.flat().join("\n")).toMatch(new RegExp(`style.*auto.*${firstReady}`, "i"));
+  });
+});
+
+describe("make with a voice-over handed off in inbox/", () => {
+  it("uses inbox/voice.mp3 instead of recording one", async () => {
+    const video = setup();
+    mkdirSync(join(video, "inbox"));
+    writeFileSync(join(video, "inbox", "voice.mp3"), "ID3 one");
+    const { deps, synthesize, importVoice, prepareVoice, align } = stubs();
+    await makeVideo(video, deps);
+    expect(synthesize).not.toHaveBeenCalled();
+    expect(importVoice).toHaveBeenCalledWith(join(video, "inbox", "voice.mp3"), join(video, "voice.wav"));
+    expect(prepareVoice).toHaveBeenCalledWith(join(video, "voice.wav"));
+    expect(align).toHaveBeenCalledWith(join(video, "voice.wav"), "en");
+    expect(JSON.parse(readFileSync(join(video, "timing.json"), "utf8"))).toMatchObject({ provider: "inbox/voice.mp3", durationSec: 3.2 });
+    expect(JSON.parse(readFileSync(join(video, "plan.json"), "utf8"))).toMatchObject({ audioSrc: "voice.wav" });
+  });
+
+  it("reuses it while the file is unchanged, and takes it again when it changes", async () => {
+    const video = setup();
+    mkdirSync(join(video, "inbox"));
+    writeFileSync(join(video, "inbox", "voice.wav"), "RIFF one");
+    const { deps, importVoice } = stubs();
+    await makeVideo(video, deps);
+    await makeVideo(video, deps);
+    expect(importVoice).toHaveBeenCalledTimes(1);
+    writeFileSync(join(video, "inbox", "voice.wav"), "RIFF two");
+    await makeVideo(video, deps);
+    expect(importVoice).toHaveBeenCalledTimes(2);
+  });
+
+  it("takes voice.wav when both are there, and says the other is not used", async () => {
+    const video = setup();
+    mkdirSync(join(video, "inbox"));
+    writeFileSync(join(video, "inbox", "voice.wav"), "RIFF");
+    writeFileSync(join(video, "inbox", "voice.mp3"), "ID3");
+    const log = vi.fn();
+    const { deps, importVoice } = stubs();
+    await makeVideo(video, { ...deps, log });
+    expect(importVoice).toHaveBeenCalledWith(join(video, "inbox", "voice.wav"), join(video, "voice.wav"));
+    expect(log.mock.calls.flat().join("\n")).toContain("inbox/voice.mp3 is not used");
+  });
+
+  it("leaves it out of a text-only video, and says so", async () => {
+    const video = setup();
+    writeFileSync(join(video, "..", "..", "page.yaml"), "name: My cats\nlanguage: en\nniche: cat facts\nstyle: 3\nvoice: 8\ncaptions: 1\nmusic: 8\n");
+    mkdirSync(join(video, "inbox"));
+    writeFileSync(join(video, "inbox", "voice.mp3"), "ID3");
+    const log = vi.fn();
+    const { deps, importVoice } = stubs();
+    await makeVideo(video, { ...deps, log });
+    expect(importVoice).not.toHaveBeenCalled();
+    expect(log.mock.calls.flat().join("\n")).toMatch(/voice 8.*text only.*inbox\/voice\.mp3 is not used/);
   });
 });

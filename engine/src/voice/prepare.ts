@@ -1,5 +1,6 @@
 import { readFileSync, renameSync } from "node:fs";
-import { resolve } from "node:path";
+import { extname, resolve } from "node:path";
+import { parseWav } from "../audio/speech.js";
 import { runFfmpeg } from "../ffmpeg.js";
 
 /** Quiet added before the first word, so it never starts right at the edge of the video. */
@@ -8,6 +9,20 @@ export const LEAD_IN_MS = 250;
 /** Where a voice-over is brought before rendering: the middle of the −16…−12 LUFS range, with headroom under −1 dBTP. */
 export const TARGET_LUFS = -14;
 export const TARGET_TRUE_PEAK = -1.5;
+
+/** The rate imported voice-overs are stored at, the same as the free voice's. */
+const IMPORT_RATE = 24000;
+
+/**
+ * Converts a voice-over made elsewhere (WAV or MP3) to a mono 16-bit WAV at `wavPath`, with its
+ * format named so ffmpeg never guesses one from the content. Returns its length in seconds.
+ */
+export async function importVoice(src: string, wavPath: string): Promise<number> {
+  const format = extname(src).toLowerCase() === ".mp3" ? "mp3" : "wav";
+  await runFfmpeg(["-v", "error", "-f", format, "-i", resolve(src), "-map", "0:a:0", "-ac", "1", "-ar", String(IMPORT_RATE), "-c:a", "pcm_s16le", "-y", resolve(wavPath)]);
+  const { samples, rate } = parseWav(readFileSync(wavPath));
+  return samples.length / rate;
+}
 
 /** The sample rate in a WAV file's fmt chunk. */
 function wavSampleRate(file: string): number {

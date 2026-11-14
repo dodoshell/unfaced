@@ -33,6 +33,7 @@ node "${CLAUDE_SKILL_DIR}/scripts/unfaced.mjs" <command>
    - A duration warning: shorten or lengthen the script.
    - A failed check (exit code 1): fix it (see "Fixing checks"), then make again.
    - Any change to the spoken words after approval: show the user the old and new line and why.
+   - If the user wants their own voice (or one made elsewhere), they record the approved script and drop it into `inbox/` as `voice.wav` or `voice.mp3`; make then uses it instead of recording one.
 8. **Frames:** `unfaced frames <videoDir> --every 1s`. Open every frame. Fix what you see before asking for a review.
 9. **Independent review.** Launch the `video-reviewer` agent (in Claude Code: `unfaced:video-reviewer`). Give it only the video folder's path and the command line that runs unfaced. Don't tell it what you changed or what you think is wrong; its fresh eyes are the point. It writes `review.md` (format: `unfaced docs review`). If you can't launch a subagent, don't review it yourself: ask the user to start a fresh session, one that hasn't seen this conversation, and give it the instructions in `${CLAUDE_SKILL_DIR}/references/video-reviewer.md`, the video folder's path and the command line that runs unfaced.
 10. **Fix and repeat.** If `review.md` says FAIL, fix every `error`, make the video again, render the frames again and ask for a new review. At most three rounds; after the third FAIL, stop and show the user what is left. Fix warnings that are cheap; list the others.

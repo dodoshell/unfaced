@@ -91,6 +91,8 @@ What a file must be:
 
 The render reads only these. Hidden files (starting with `.`), folders and other types are left out.
 
+`inbox/voice.wav` or `inbox/voice.mp3` is the video's voice-over: `unfaced make` uses it instead of recording one (except for voice 08, text only), prepares it like a recorded voice and times its words with whisper. Record the approved script as written, so the captions match.
+
 ### inbox/PROMPTS.md
 
 For manual handoff the agent writes what it needs into `inbox/PROMPTS.md`: one `## <file name>` heading per file, with the prompt under it (the beat it is for, the subject, the style and the mascot from its reference sheet, and "9:16 portrait"). The user makes the files with any service they have and drops them into `inbox/` under those names.
