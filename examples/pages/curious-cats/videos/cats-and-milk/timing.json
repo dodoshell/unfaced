@@ -1,7 +1,7 @@
 {
-  "hash": "b865750fcf96b8ba9cff1e2793cff8ba076a9515907d6ba4e04d0c250fc885c8",
+  "hash": "3cc233a2eeb7ee708f30a678b6d4f26a630ab008fdd5cb671c85681e0d72722e",
   "provider": "kokoro",
-  "durationSec": 31.609083333333334,
+  "durationSec": 31.624041666666667,
   "words": [
     {
       "text": "Still",
@@ -26,11 +26,11 @@
     {
       "text": "a",
       "startMs": 1540,
-      "endMs": 1820
+      "endMs": 1840
     },
     {
       "text": "bowl",
-      "startMs": 1820,
+      "startMs": 1840,
       "endMs": 1880
     },
     {
@@ -39,153 +39,153 @@
       "endMs": 2340
     },
     {
-      "text": "milk,",
+      "text": "milk",
       "startMs": 2340,
-      "endMs": 2770
+      "endMs": 2400
     },
     {
       "text": "you're",
       "startMs": 2770,
-      "endMs": 3160
+      "endMs": 3140
     },
     {
       "text": "doing",
-      "startMs": 3160,
-      "endMs": 3480
+      "startMs": 3140,
+      "endMs": 3170
     },
     {
       "text": "it",
-      "startMs": 3480,
+      "startMs": 3170,
+      "endMs": 3425
+    },
+    {
+      "text": "wrong",
+      "startMs": 3425,
       "endMs": 3680
     },
     {
-      "text": "wrong.",
-      "startMs": 3680,
-      "endMs": 4210
-    },
-    {
-      "text": "Most",
-      "startMs": 4210,
-      "endMs": 4640
+      "text": "most",
+      "startMs": 4220,
+      "endMs": 4620
     },
     {
       "text": "adult",
-      "startMs": 4640,
-      "endMs": 4910
+      "startMs": 4620,
+      "endMs": 4930
     },
     {
       "text": "cats",
-      "startMs": 4910,
+      "startMs": 4930,
       "endMs": 5120
     },
     {
       "text": "can't",
-      "startMs": 5540,
-      "endMs": 5930
+      "startMs": 5550,
+      "endMs": 5940
     },
     {
       "text": "digest",
-      "startMs": 5930,
-      "endMs": 6640
+      "startMs": 5940,
+      "endMs": 6620
     },
     {
       "text": "milk",
-      "startMs": 6900,
-      "endMs": 7100
+      "startMs": 6910,
+      "endMs": 7040
     },
     {
-      "text": "properly.",
-      "startMs": 7100,
-      "endMs": 7360
+      "text": "properly",
+      "startMs": 7040,
+      "endMs": 7160
     },
     {
-      "text": "For",
-      "startMs": 7360,
+      "text": "for",
+      "startMs": 7160,
       "endMs": 7660
     },
     {
       "text": "many",
       "startMs": 7660,
-      "endMs": 7880
+      "endMs": 8120
     },
     {
       "text": "of",
-      "startMs": 7880,
+      "startMs": 8120,
       "endMs": 8320
     },
     {
-      "text": "them,",
+      "text": "them",
       "startMs": 8320,
-      "endMs": 8680
+      "endMs": 8360
     },
     {
-      "text": "one",
-      "startMs": 8680,
-      "endMs": 8960
+      "text": "One",
+      "startMs": 8360,
+      "endMs": 8590
     },
     {
       "text": "bowl",
-      "startMs": 8960,
-      "endMs": 9380
+      "startMs": 8590,
+      "endMs": 8900
     },
     {
       "text": "means",
-      "startMs": 9380,
-      "endMs": 9381
+      "startMs": 8900,
+      "endMs": 9290
     },
     {
       "text": "an",
-      "startMs": 9381,
-      "endMs": 9800
+      "startMs": 9290,
+      "endMs": 9430
     },
     {
       "text": "upset",
-      "startMs": 9800,
-      "endMs": 10420
+      "startMs": 9430,
+      "endMs": 9850
     },
     {
       "text": "stomach",
-      "startMs": 10420,
-      "endMs": 10440
+      "startMs": 9850,
+      "endMs": 10380
     },
     {
       "text": "a",
-      "startMs": 10440,
-      "endMs": 10500
+      "startMs": 10380,
+      "endMs": 10450
     },
     {
       "text": "few",
-      "startMs": 10660,
-      "endMs": 10730
+      "startMs": 10450,
+      "endMs": 10670
     },
     {
       "text": "hours",
-      "startMs": 10730,
-      "endMs": 11110
+      "startMs": 10670,
+      "endMs": 11070
     },
     {
-      "text": "later.",
-      "startMs": 11110,
-      "endMs": 11850
+      "text": "later",
+      "startMs": 11070,
+      "endMs": 11930
     },
     {
-      "text": "Kittens",
+      "text": "kittens",
       "startMs": 11930,
       "endMs": 12500
     },
     {
       "text": "make",
       "startMs": 12500,
-      "endMs": 12700
+      "endMs": 12720
     },
     {
       "text": "an",
-      "startMs": 12700,
-      "endMs": 13100
+      "startMs": 12720,
+      "endMs": 13140
     },
     {
       "text": "enzyme",
-      "startMs": 13100,
+      "startMs": 13140,
       "endMs": 13600
     },
     {
@@ -195,253 +195,253 @@
     },
     {
       "text": "lactase",
-      "startMs": 14080,
-      "endMs": 14230
+      "startMs": 14110,
+      "endMs": 14530
     },
     {
       "text": "to",
       "startMs": 14530,
-      "endMs": 14740
+      "endMs": 14760
     },
     {
       "text": "digest",
-      "startMs": 14740,
-      "endMs": 14840
-    },
-    {
-      "text": "their",
-      "startMs": 14840,
+      "startMs": 14760,
       "endMs": 15300
     },
     {
-      "text": "mother's",
+      "text": "their",
       "startMs": 15300,
+      "endMs": 15580
+    },
+    {
+      "text": "mother's",
+      "startMs": 15580,
       "endMs": 16040
     },
     {
-      "text": "milk,",
+      "text": "milk",
       "startMs": 16040,
-      "endMs": 16410
+      "endMs": 16390
     },
     {
-      "text": "but",
-      "startMs": 16410,
-      "endMs": 16660
+      "text": "But",
+      "startMs": 16430,
+      "endMs": 16680
     },
     {
       "text": "most",
-      "startMs": 16880,
-      "endMs": 17020
+      "startMs": 16890,
+      "endMs": 17000
     },
     {
       "text": "cats",
-      "startMs": 17020,
-      "endMs": 17380
+      "startMs": 17000,
+      "endMs": 17190
     },
     {
       "text": "lose",
-      "startMs": 17380,
-      "endMs": 17640
+      "startMs": 17190,
+      "endMs": 17380
     },
     {
       "text": "it",
-      "startMs": 17640,
-      "endMs": 17860
+      "startMs": 17380,
+      "endMs": 17530
     },
     {
       "text": "as",
-      "startMs": 17860,
-      "endMs": 18020
+      "startMs": 17530,
+      "endMs": 17700
     },
     {
       "text": "they",
-      "startMs": 18020,
+      "startMs": 17700,
       "endMs": 18260
     },
     {
       "text": "grow",
       "startMs": 18260,
-      "endMs": 18580
+      "endMs": 18360
     },
     {
-      "text": "up.",
-      "startMs": 18710,
-      "endMs": 18960
+      "text": "up",
+      "startMs": 18360,
+      "endMs": 18590
     },
     {
-      "text": "And",
-      "startMs": 18970,
-      "endMs": 19260
+      "text": "and",
+      "startMs": 18750,
+      "endMs": 18980
     },
     {
       "text": "here's",
-      "startMs": 19260,
-      "endMs": 19560
+      "startMs": 18980,
+      "endMs": 19280
     },
     {
       "text": "the",
-      "startMs": 19560,
-      "endMs": 19880
+      "startMs": 19280,
+      "endMs": 19900
     },
     {
       "text": "strangest",
-      "startMs": 19880,
-      "endMs": 20440
+      "startMs": 19900,
+      "endMs": 20480
     },
     {
-      "text": "part,",
-      "startMs": 20440,
-      "endMs": 20950
+      "text": "part",
+      "startMs": 20480,
+      "endMs": 20970
     },
     {
       "text": "cats",
-      "startMs": 20950,
-      "endMs": 21130
+      "startMs": 20970,
+      "endMs": 21160
     },
     {
       "text": "can't",
-      "startMs": 21130,
-      "endMs": 21630
+      "startMs": 21160,
+      "endMs": 21470
     },
     {
       "text": "taste",
-      "startMs": 21630,
-      "endMs": 22100
+      "startMs": 21640,
+      "endMs": 22120
     },
     {
       "text": "sweetness",
-      "startMs": 22100,
-      "endMs": 22580
+      "startMs": 22120,
+      "endMs": 22570
     },
     {
       "text": "at",
-      "startMs": 22580,
-      "endMs": 22920
+      "startMs": 22570,
+      "endMs": 22835
     },
     {
-      "text": "all.",
-      "startMs": 22920,
-      "endMs": 23360
+      "text": "all",
+      "startMs": 22835,
+      "endMs": 23000
     },
     {
       "text": "Their",
-      "startMs": 23360,
-      "endMs": 23720
+      "startMs": 23380,
+      "endMs": 23740
     },
     {
       "text": "sweet",
-      "startMs": 23720,
-      "endMs": 23930
+      "startMs": 23740,
+      "endMs": 23940
     },
     {
       "text": "taste",
-      "startMs": 23930,
-      "endMs": 24420
+      "startMs": 23940,
+      "endMs": 24260
     },
     {
       "text": "gene",
-      "startMs": 24420,
-      "endMs": 24620
+      "startMs": 24260,
+      "endMs": 24480
     },
     {
       "text": "is",
-      "startMs": 24620,
-      "endMs": 25060
+      "startMs": 24480,
+      "endMs": 24790
     },
     {
-      "text": "broken,",
-      "startMs": 25060,
-      "endMs": 25360
+      "text": "broken",
+      "startMs": 24790,
+      "endMs": 25100
     },
     {
       "text": "so",
-      "startMs": 25360,
-      "endMs": 25660
+      "startMs": 25100,
+      "endMs": 25250
     },
     {
       "text": "the",
-      "startMs": 25660,
-      "endMs": 25920
+      "startMs": 25250,
+      "endMs": 25500
     },
     {
       "text": "sugar",
-      "startMs": 25920,
-      "endMs": 26030
+      "startMs": 25500,
+      "endMs": 25870
     },
     {
       "text": "in",
-      "startMs": 26030,
-      "endMs": 26160
+      "startMs": 25870,
+      "endMs": 26020
     },
     {
       "text": "milk",
-      "startMs": 26160,
-      "endMs": 26630
+      "startMs": 26020,
+      "endMs": 26330
     },
     {
       "text": "means",
-      "startMs": 26630,
-      "endMs": 27080
+      "startMs": 26650,
+      "endMs": 27220
     },
     {
       "text": "nothing",
-      "startMs": 27080,
-      "endMs": 27250
+      "startMs": 27220,
+      "endMs": 27270
     },
     {
       "text": "to",
-      "startMs": 27250,
-      "endMs": 27380
-    },
-    {
-      "text": "them.",
-      "startMs": 27380,
-      "endMs": 28020
-    },
-    {
-      "text": "Give",
-      "startMs": 28020,
-      "endMs": 28380
+      "startMs": 27270,
+      "endMs": 27510
     },
     {
       "text": "them",
-      "startMs": 28380,
-      "endMs": 28740
+      "startMs": 27510,
+      "endMs": 27730
+    },
+    {
+      "text": "give",
+      "startMs": 27730,
+      "endMs": 28040
+    },
+    {
+      "text": "them",
+      "startMs": 28040,
+      "endMs": 28350
     },
     {
       "text": "water",
+      "startMs": 28350,
+      "endMs": 28740
+    },
+    {
+      "text": "instead",
       "startMs": 28740,
-      "endMs": 29200
+      "endMs": 29210
     },
     {
-      "text": "instead.",
-      "startMs": 29200,
-      "endMs": 30050
-    },
-    {
-      "text": "Your",
-      "startMs": 30050,
-      "endMs": 30580
+      "text": "your",
+      "startMs": 29210,
+      "endMs": 30070
     },
     {
       "text": "carpet",
-      "startMs": 30580,
-      "endMs": 30870
+      "startMs": 30070,
+      "endMs": 30890
     },
     {
       "text": "will",
-      "startMs": 30870,
-      "endMs": 31240
+      "startMs": 30890,
+      "endMs": 31200
     },
     {
       "text": "thank",
-      "startMs": 31240,
-      "endMs": 31630
+      "startMs": 31200,
+      "endMs": 31375
     },
     {
-      "text": "you.",
-      "startMs": 31630,
-      "endMs": 31850
+      "text": "you",
+      "startMs": 31375,
+      "endMs": 31540
     }
   ]
 }
