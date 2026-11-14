@@ -5,7 +5,7 @@ import { ensureModel, type ModelArchive } from "../download.js";
 import type { VoiceProvider } from "./types.js";
 
 // Kokoro-82M v1.0, int8, packaged for sherpa-onnx. See docs/decisions/0001-free-tts.md.
-const MODEL: ModelArchive = {
+export const KOKORO_MODEL: ModelArchive = {
   name: "kokoro-int8-multi-lang-v1_0",
   url: "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-int8-multi-lang-v1_0.tar.bz2",
   sha256: "72c347230107ef8a31098ec4d468a605244beef5f1ed00db97efa13518800653",
@@ -44,7 +44,7 @@ const engines = new Map<string, OfflineTts>();
 async function engineFor(language: string, setup: LanguageSetup): Promise<OfflineTts> {
   const cached = engines.get(language);
   if (cached) return cached;
-  const dir = await ensureModel(MODEL);
+  const dir = await ensureModel(KOKORO_MODEL);
   const tts = new sherpa.OfflineTts({
     model: {
       kokoro: {

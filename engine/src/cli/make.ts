@@ -1,0 +1,107 @@
+import { createHash } from "node:crypto";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { join, resolve } from "node:path";
+import { Catalog } from "../catalog/catalog.js";
+import { loadPage } from "../page/loadPage.js";
+import { resolveChoice } from "../page/resolveChoice.js";
+import type { ChoiceField, Page } from "../page/types.js";
+import { CATALOG_DIR } from "../paths.js";
+import { buildPlan } from "../plan/buildPlan.js";
+import type { VideoPlan } from "../plan/types.js";
+import { renderVideo, type RenderOptions } from "../render/renderVideo.js";
+import { parseScript } from "../script/parseScript.js";
+import { alignWords, type WordTiming } from "../timing/align.js";
+import { getVoiceProvider } from "../voice/registry.js";
+import type { VoiceProvider } from "../voice/types.js";
+
+export interface MakeDeps {
+  catalog: Catalog;
+  voiceProvider(requested: string, env: NodeJS.ProcessEnv, warn: (msg: string) => void): VoiceProvider;
+  align(wavPath: string, language: string): Promise<WordTiming[]>;
+  render(plan: VideoPlan, outPath: string, options: RenderOptions): Promise<void>;
+  env: NodeJS.ProcessEnv;
+  log(msg: string): void;
+}
+
+export const defaultMakeDeps = (): MakeDeps => ({
+  catalog: Catalog.load(CATALOG_DIR),
+  voiceProvider: getVoiceProvider,
+  align: alignWords,
+  render: renderVideo,
+  env: process.env,
+  log: (msg) => console.error(msg),
+});
+
+/** timing.json: the voice-over's word timings, keyed by what produced the voice. */
+interface TimingFile {
+  hash: string;
+  provider: string;
+  durationSec: number;
+  words: WordTiming[];
+}
+
+/**
+ * Makes one video from `<videoDir>/script.md` and the page profile two folders up
+ * (`<page>/videos/<video>/`). Writes voice.wav, timing.json, plan.json and video.mp4
+ * into the video folder; the voice and timings are reused while the spoken text,
+ * voice and language stay the same.
+ */
+export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDeps()): Promise<VideoPlan> {
+  const dir = resolve(videoDir);
+  const scriptFile = join(dir, "script.md");
+  if (!existsSync(scriptFile)) throw new Error(`script.md not found in ${dir}`);
+  const page = await loadPage(resolve(dir, "..", ".."), deps.catalog);
+  const script = parseScript(readFileSync(scriptFile, "utf8"));
+
+  const style = choose("style", page, deps);
+  const captions = choose("captions", page, deps);
+  const voiceType = choose("voice", page, deps);
+  const voice = deps.voiceProvider(page.providers.voice, deps.env, deps.log);
+
+  const wavPath = join(dir, "voice.wav");
+  const timingFile = join(dir, "timing.json");
+  const hash = createHash("sha256").update(JSON.stringify([script.spokenText, voice.id, voiceType, page.language])).digest("hex");
+  let timing = readTiming(timingFile);
+  if (timing?.hash === hash && existsSync(wavPath)) {
+    deps.log("Voice-over unchanged; reusing voice.wav and timing.json");
+  } else {
+    deps.log(`Recording the voice-over (${voice.id}, voice ${voiceType}, ${page.language})`);
+    const result = await voice.synthesize(script.spokenText, { language: page.language, voiceType, outPath: wavPath });
+    deps.log("Timing every word");
+    const words = await deps.align(wavPath, page.language);
+    timing = { hash, provider: result.provider, durationSec: result.durationSec, words };
+    writeFileSync(timingFile, `${JSON.stringify(timing, null, 2)}\n`);
+  }
+
+  const plan = buildPlan({ script, words: timing.words, audioDurationSec: timing.durationSec, page, style, captions, warn: deps.log, audioSrc: "voice.wav" });
+  writeFileSync(join(dir, "plan.json"), `${JSON.stringify(plan, null, 2)}\n`);
+
+  const out = join(dir, "video.mp4");
+  deps.log(`Rendering ${plan.durationInFrames} frames`);
+  await deps.render(plan, out, { assetsDir: dir });
+  deps.log(`Done: ${out}`);
+  return plan;
+}
+
+/**
+ * The page's choice for a catalog. A fixed number is used as is; a list or "auto"
+ * is narrowed to the first ready option (the agent recommends one in Phase 2).
+ */
+function choose(field: ChoiceField, page: Page, deps: MakeDeps): number {
+  const choice = page.choices[field];
+  return resolveChoice(field, choice, deps.catalog, (options) => {
+    const ready = options.find((n) => deps.catalog.get(field, n).status === "ready");
+    if (ready === undefined) throw new Error(`None of the ${field} options ${options.join(", ")} is ready yet; see "unfaced list ${field}"`);
+    deps.log(`${field}: ${JSON.stringify(choice ?? "auto")} → ${ready} (${deps.catalog.get(field, ready).name})`);
+    return ready;
+  });
+}
+
+function readTiming(file: string): TimingFile | undefined {
+  if (!existsSync(file)) return undefined;
+  try {
+    return JSON.parse(readFileSync(file, "utf8")) as TimingFile;
+  } catch {
+    return undefined;
+  }
+}

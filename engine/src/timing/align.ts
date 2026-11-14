@@ -1,7 +1,13 @@
 import { mkdirSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { downloadWhisperModel, installWhisperCpp, transcribe, type TranscriptionJson, type WhisperModel } from "@remotion/install-whisper-cpp";
+import {
+  downloadWhisperModel,
+  installWhisperCpp,
+  transcribe,
+  type TranscriptionJson,
+  type WhisperModel,
+} from "@remotion/install-whisper-cpp";
 import sherpa from "sherpa-onnx-node";
 import { unfacedHome } from "../paths.js";
 
@@ -18,16 +24,33 @@ const WHISPER_RATE = 16000;
 type Segment = TranscriptionJson<true>["transcription"][number];
 type Token = Segment["tokens"][number];
 
+/** Where whisper.cpp and its models live, and which model a language uses. */
+export function whisperPaths(language: string, env: NodeJS.ProcessEnv = process.env) {
+  const home = join(unfacedHome(env), "whisper");
+  const model: WhisperModel = language.toLowerCase().split("-")[0] === "en" ? "base.en" : "base";
+  return {
+    whisperPath: join(home, `whisper.cpp-${WHISPER_CPP_VERSION}`),
+    // whisper.cpp before 1.7.4 names its binary "main".
+    executable: join(home, `whisper.cpp-${WHISPER_CPP_VERSION}`, process.platform === "win32" ? "main.exe" : "main"),
+    modelFolder: join(home, "models"),
+    model,
+    modelFile: join(home, "models", `ggml-${model}.bin`),
+  };
+}
+
+/** Installs whisper.cpp and the model for `language` if they are missing. */
+export async function ensureWhisper(language: string): Promise<ReturnType<typeof whisperPaths>> {
+  const paths = whisperPaths(language);
+  mkdirSync(paths.modelFolder, { recursive: true });
+  await installWhisperCpp({ to: paths.whisperPath, version: WHISPER_CPP_VERSION, printOutput: false });
+  await downloadWhisperModel({ model: paths.model, folder: paths.modelFolder, printOutput: false });
+  return paths;
+}
+
 /** Word-level timestamps for a spoken WAV, from a local whisper.cpp (installed on first use). */
 export async function alignWords(wavPath: string, language: string): Promise<WordTiming[]> {
   const base = language.toLowerCase().split("-")[0]!;
-  const model: WhisperModel = base === "en" ? "base.en" : "base";
-  const home = join(unfacedHome(), "whisper");
-  const whisperPath = join(home, `whisper.cpp-${WHISPER_CPP_VERSION}`);
-  const modelFolder = join(home, "models");
-  mkdirSync(modelFolder, { recursive: true });
-  await installWhisperCpp({ to: whisperPath, version: WHISPER_CPP_VERSION, printOutput: false });
-  await downloadWhisperModel({ model, folder: modelFolder, printOutput: false });
+  const { whisperPath, modelFolder, model } = await ensureWhisper(base);
 
   const work = mkdtempSync(join(tmpdir(), "unfaced-align-"));
   try {

@@ -14,7 +14,9 @@ unfaced helps a person create and run faceless social media pages (Reels, TikTok
 
 ## Commands
 
-- Install: `npm install`
+- Install: `npm run setup` (npm install, then the voice model, whisper and the render browser into `~/.unfaced/`)
+- Check the install: `npm run unfaced -- doctor`
+- Review frames of a made video: `npm run unfaced -- frames <videoDir> --every 1s`
 - Tests: `npm test` (slow tests that synthesize voice or render video: `UNFACED_SLOW=1 npm test`)
 - Types: `npm run typecheck`
 

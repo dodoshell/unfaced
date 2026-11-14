@@ -11,7 +11,8 @@
   "scripts": {
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "unfaced": "tsx engine/src/cli.ts"
+    "unfaced": "tsx engine/src/cli.ts",
+    "setup": "node scripts/setup.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
