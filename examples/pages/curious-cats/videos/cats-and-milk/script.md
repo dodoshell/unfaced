@@ -9,7 +9,7 @@ sources:
 ---
 
 ## Hook
-Still giving your cat a bowl of milk? You're doing it wrong.
+Still giving your cat milk? You're doing it wrong.
 > visual: a cat staring at a saucer of milk
 
 ## Body
