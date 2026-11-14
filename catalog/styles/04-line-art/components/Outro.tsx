@@ -1,6 +1,6 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { Character, type EndingMarkKind, endingMark, endingPose, type Rect, type Scene, useMascot, useVideo } from "../../../../engine/remotion/kit/index.js";
-import { colour, layout } from "./layout.js";
+import { colour, inkColour, layout } from "./layout.js";
 import { drawAt, ellipsePath, FONT, LINE, Pen, Sheet } from "./shared.js";
 
 const HEART = "M 100 172 C 40 132 16 102 16 70 C 16 42 38 22 64 22 C 80 22 92 30 100 44 C 108 30 120 22 136 22 C 162 22 184 42 184 70 C 184 102 160 132 100 172 Z";
@@ -93,7 +93,7 @@ export const Outro: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pa
     <AbsoluteFill>
       <Sheet>
         <g transform={`translate(${inner.x} ${inner.y}) scale(${scale})`}>
-          <Sign kind={endingMark(ending)} ink={colour(palette, 4)} accent={colour(palette, 1)} w={LINE / scale} />
+          <Sign kind={endingMark(ending)} ink={inkColour(palette)} accent={colour(palette, 1)} w={LINE / scale} />
         </g>
       </Sheet>
       {mascot && <Character rig={mascot.rig} pose={endingPose(ending)} x={box.x + box.w / 2} y={1150} size={230} />}

@@ -19,6 +19,7 @@ export { defineScenes, type SceneComponent } from "../core/videoScenes.js";
 export { StyleScene } from "../core/StyleScene.js";
 export { factBadge, factNumber, listParts } from "../core/badges.js";
 export { fitFontSize, fitLines, type FitOptions, wrapLines } from "../core/fit.js";
+export { contrast, liftedOn, luminance, mix, readableOn } from "../core/contrast.js";
 export { loadFont } from "../core/loadFont.js";
 export type { StyleKit, TextBox } from "../styles/registry.js";
 export type { Mascot, Scene, VideoPlan } from "../../src/plan/types.js";

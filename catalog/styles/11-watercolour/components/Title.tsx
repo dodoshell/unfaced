@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { AbsoluteFill } from "remotion";
 import { Character, fitFontSize, type Scene, useMascot } from "../../../../engine/remotion/kit/index.js";
-import { colour, layout } from "./layout.js";
+import { colour, inkColour, layout } from "./layout.js";
 import { blob, CHAR_WIDTH, handwriting, splatter, useDrift, useEase, WashImg, washImage } from "./shared.js";
 
 const PAD = 120;
@@ -59,7 +59,7 @@ export const Title: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pa
           textAlign: "center",
           lineHeight: 1.08,
           transform: ink,
-          ...handwriting(size, colour(palette, 4)),
+          ...handwriting(size, inkColour(palette)),
         }}
       >
         {scene.text}

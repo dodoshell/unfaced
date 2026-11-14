@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { AbsoluteFill } from "remotion";
 import { fitFontSize, listParts, type Rect, type Scene } from "../../../../engine/remotion/kit/index.js";
-import { colour, layout } from "./layout.js";
+import { colour, inkColour, layout } from "./layout.js";
 import { blob, CHAR_WIDTH, handwriting, stroke, useDrift, useEase, WashImg, washImage } from "./shared.js";
 
 const PAD = 40;
@@ -28,7 +28,7 @@ const Item: React.FC<{ index: number; text: string; box: Rect; palette: string[]
   const dotSrc = useMemo(() => washImage(dot, dot, 30, [{ d: blob(dot / 2, dot / 2, dot / 2 - 4, dot / 2 - 6, 50 + index, 0.08), colour: tint, strength: 0.55, wobble: 10, soft: 2 }], [], 50 + index), [dot, tint, index]);
   const left = 24 + dot + 28;
   const size = fitFontSize(text, { w: box.w - left - 30, h: box.h - 16 }, 66, 30, { charWidth: CHAR_WIDTH, lineHeight: 1.05 });
-  const ink = colour(palette, 4);
+  const ink = inkColour(palette);
   return (
     <>
       <Stroke box={box} tint={tint} strength={0.16} seed={60 + index} reveal={paint} drift={drift} palette={palette} />
@@ -103,7 +103,7 @@ export const List: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pal
               lineHeight: 1.02,
               opacity: words,
               transform: drift,
-              ...handwriting(fitFontSize(header, { w: head.w - 100, h: head.h - 30 }, 86, 40, { charWidth: CHAR_WIDTH, lineHeight: 1.02 }), colour(palette, 4)),
+              ...handwriting(fitFontSize(header, { w: head.w - 100, h: head.h - 30 }, 86, 40, { charWidth: CHAR_WIDTH, lineHeight: 1.02 }), inkColour(palette)),
             }}
           >
             {header}

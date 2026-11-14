@@ -2,7 +2,7 @@ import type React from "react";
 import { Easing, interpolate, useCurrentFrame } from "remotion";
 import { loadFont, type Scene, useVideo } from "../../../../engine/remotion/kit/index.js";
 import fontUrl from "../fonts/Cinzel.ttf";
-import { CINZEL, colour } from "./layout.js";
+import { CINZEL, colour, goldOn, nightSky } from "./layout.js";
 
 export const FONT = "Cinzel";
 loadFont(FONT, fontUrl, { weight: "400 900" });
@@ -59,7 +59,7 @@ export function sky(palette: string[]): Sky {
   const ink = luminance(colour(palette, 4)) < 0.35 ? colour(palette, 4) : mix(darkest, "#000000", luminance(darkest) < 0.2 ? 0 : 0.6);
   const glow = luminance(colour(palette, 0)) - luminance(ink) > 0.35 ? colour(palette, 0) : mix(light, "#FFFFFF", 0.25);
   // The top of the sky is darkened towards night, so white type reads on any palette.
-  const night = mix(high, "#000000", 0.62);
+  const night = nightSky(palette);
   return {
     stops: [
       [0, night],
@@ -71,7 +71,7 @@ export function sky(palette: string[]): Sky {
     ],
     glow,
     ink,
-    gold: light,
+    gold: goldOn(palette),
     sun: mix(light, "#FFFFFF", 0.5),
     moon: mix(light, "#FFFFFF", 0.7),
     far: mix(mix(low, glow, 0.35), ink, 0.42),

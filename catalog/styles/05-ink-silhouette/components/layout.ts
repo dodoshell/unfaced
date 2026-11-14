@@ -1,6 +1,7 @@
 // Pure layout: where each scene kind puts its text. The components draw exactly these
 // boxes, and the checks call this without rendering, so keep React out of this file.
 import { listParts } from "../../../../engine/remotion/core/badges.js";
+import { liftedOn, mix } from "../../../../engine/remotion/core/contrast.js";
 import type { Rect } from "../../../../engine/remotion/core/safeZone.js";
 import type { TextBox } from "../../../../engine/remotion/styles/registry.js";
 import type { Scene } from "../../../../engine/src/plan/types.js";
@@ -12,6 +13,12 @@ import style from "../style.json";
  * Short page palettes fall back to the defaults.
  */
 export const colour = (palette: string[], role: 0 | 1 | 2 | 3 | 4): string => palette[role] ?? style.defaultPalette[role]!;
+
+/** The top of the sky: the high sky darkened towards night, so white type reads on any palette. */
+export const nightSky = (palette: string[]): string => mix(colour(palette, 2), "#000000", 0.62);
+
+/** The highlight as the gold of the ornaments, numerals and lead-in: lifted towards white when it would not read on the night sky. */
+export const goldOn = (palette: string[]): string => liftedOn(nightSky(palette), colour(palette, 3));
 
 /** Cinzel's average letter width with the style's letter spacing, as a share of the font size. */
 export const CINZEL = { charWidth: 0.66, lineHeight: 1.18 };

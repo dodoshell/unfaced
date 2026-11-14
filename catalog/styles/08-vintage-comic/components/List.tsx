@@ -1,6 +1,6 @@
 import { AbsoluteFill } from "remotion";
 import { fitFontSize, listParts, type Rect, type Scene } from "../../../../engine/remotion/kit/index.js";
-import { BANGERS, layout } from "./layout.js";
+import { BANGERS, layout, leadInInk } from "./layout.js";
 import { burstPath, FONT, type Inks, inks, lettering, MISREGISTER, Panel, useBoil, useSlam } from "./shared.js";
 
 const STAGGER = 8;
@@ -63,7 +63,7 @@ export const List: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pal
               justifyContent: "center",
               padding: "0 36px",
               textAlign: "center",
-              ...lettering(c.line, fitFontSize(header, { w: headerBox.w - 72, h: headerBox.h - 26 }, 76, 38, BANGERS)),
+              ...lettering(leadInInk(palette, c.line), fitFontSize(header, { w: headerBox.w - 72, h: headerBox.h - 26 }, 76, 38, BANGERS)),
             }}
           >
             {header}

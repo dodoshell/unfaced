@@ -21,7 +21,7 @@ Default palette (`style.json`): `#FAF6EC` `#4F82B3` `#D98B7E` `#E6B866` `#2F3A4C
 
 A page palette maps onto five roles by position: 1 background (the paper), 2 accent (the title's main wash, the fact disc, odd list items, spatter), 3 secondary (the colour bleeding into the title and the fact disc, even list items, the heart), 4 highlight (the title's warm corner, the list header stroke, the outro's ground wash), 5 ink (all lettering, the pen ring). The background washes use 2, 3 and 4. Missing roles fall back to the default palette.
 
-On a light sheet the washes glaze (`mix-blend-mode: multiply`), like real transparent paint, so they only ever darken the paper and the ink stays readable over them. On a dark sheet (background luma under 128) multiply would make them vanish, so they are laid on normally; they read less like watercolour, but the light ink stays readable.
+On a light sheet the washes glaze (`mix-blend-mode: multiply`), like real transparent paint, so they only ever darken the paper and the ink stays readable over them. On a dark sheet (background luma under 128) multiply would make them vanish, so they are laid on normally; they read less like watercolour, but the light ink stays readable. When the ink would read below 3:1 on the paper, as when a short dark palette falls back to the slate ink, the lettering and the pen ring are white or near black instead.
 
 ## Type
 

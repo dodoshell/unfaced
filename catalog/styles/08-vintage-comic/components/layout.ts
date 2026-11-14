@@ -1,6 +1,7 @@
 // Pure layout: where each scene kind puts its text. The components draw exactly these
 // boxes, and the checks call this without rendering, so keep React out of this file.
 import { listParts } from "../../../../engine/remotion/core/badges.js";
+import { contrast, readableOn } from "../../../../engine/remotion/core/contrast.js";
 import type { Rect } from "../../../../engine/remotion/core/safeZone.js";
 import type { TextBox } from "../../../../engine/remotion/styles/registry.js";
 import type { Scene } from "../../../../engine/src/plan/types.js";
@@ -8,6 +9,12 @@ import style from "../style.json";
 
 /** Palette roles by position: 0 background (the paper), 1 accent, 2 secondary, 3 highlight, 4 ink. Short page palettes fall back to the defaults. */
 export const colour = (palette: string[], role: 0 | 1 | 2 | 3 | 4): string => palette[role] ?? style.defaultPalette[role]!;
+
+/** The list lead-in's lettering on the highlight: the dark line colour, or white or near black when the highlight is too dark for it. */
+export function leadInInk(palette: string[], line: string): string {
+  const fill = colour(palette, 3);
+  return contrast(line, fill) >= 3 ? line : readableOn(fill, line);
+}
 
 /** Bangers' average letter width with the style's letter spacing, as a share of the font size. */
 export const BANGERS = { charWidth: 0.46, lineHeight: 1.06 };
