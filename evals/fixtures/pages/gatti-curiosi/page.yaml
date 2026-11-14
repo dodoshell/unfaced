@@ -1,0 +1,11 @@
+# A sample page in Italian for the evals: the cat facts of curious-cats, for Italian viewers.
+name: Gatti Curiosi
+language: it
+niche: curiosità sorprendenti sui gatti, spiegate in modo semplice
+style: 3          # Flat cartoon
+script: [6, 9]    # Surprising answer or Did you know
+voice: 1          # Calm documentary
+captions: 1       # Word-by-word karaoke
+music: 8          # None (add a trending sound when posting)
+ending: 5         # Punchline
+duration: 30-45

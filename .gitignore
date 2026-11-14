@@ -5,3 +5,4 @@ node_modules/
 examples/**/*.mp4
 examples/**/*.wav
 examples/**/videos/**/frames/
+evals/results/

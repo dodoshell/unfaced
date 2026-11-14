@@ -69,6 +69,8 @@ npm run unfaced -- docs script                                 # file formats: p
 npm run unfaced -- doctor                                      # what is missing from the install
 ```
 
+The skills and the reviewer agent have evals in [`evals/`](evals/README.md), run with `claude plugin eval`.
+
 ## A page on disk
 
 ```text

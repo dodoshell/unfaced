@@ -35,6 +35,7 @@ Inside this repository the skills' launcher (`node plugin/launcher/unfaced.mjs <
 - Mascot reference sheet: `npm run unfaced -- mascot <pageDir>`
 - Tests: `npm test` (slow tests that synthesize voice or render video: `UNFACED_SLOW=1 npm test`)
 - Types: `npm run typecheck`
+- Evals for the skills and the reviewer (real model calls that cost money): `claude plugin eval . --scaffold --trust-plugin --allow-tools Bash Write Edit`, or on native Windows `--tag files-only` without `Bash`; see `evals/README.md`
 
 ## Rules
 

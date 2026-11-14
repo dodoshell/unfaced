@@ -1,0 +1,17 @@
+{
+  "pass": false,
+  "issues": [
+    {
+      "check": "loudness",
+      "atMs": 0,
+      "severity": "warning",
+      "message": "Loudness is -19.2 LUFS; aim for -16 to -12 LUFS"
+    },
+    {
+      "check": "sync",
+      "atMs": 14110,
+      "severity": "error",
+      "message": "Captions are 4 frames behind the voice at \"lactase\""
+    }
+  ]
+}
