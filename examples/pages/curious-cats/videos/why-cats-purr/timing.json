@@ -1,16 +1,16 @@
 {
-  "hash": "db8522d07606c04fb9ba01d9a98ea687178c87ab02ca1575ddccacb3bfd88e1d",
+  "hash": "cfb0c1ddcef050c301155fba8eaa55625a2de34d375a6fe6e32717c09f2e0653",
   "provider": "kokoro",
-  "durationSec": 35.344625,
+  "durationSec": 35.210375,
   "words": [
     {
       "text": "Why",
       "startMs": 300,
-      "endMs": 370
+      "endMs": 390
     },
     {
       "text": "do",
-      "startMs": 370,
+      "startMs": 390,
       "endMs": 900
     },
     {
@@ -36,21 +36,21 @@
     {
       "text": "are",
       "startMs": 2780,
-      "endMs": 3020
+      "endMs": 2990
     },
     {
       "text": "happy.",
-      "startMs": 3020,
+      "startMs": 2990,
       "endMs": 3550
     },
     {
       "text": "Everyone",
       "startMs": 3550,
-      "endMs": 4380
+      "endMs": 4400
     },
     {
       "text": "knows",
-      "startMs": 4380,
+      "startMs": 4400,
       "endMs": 4800
     },
     {
@@ -65,12 +65,12 @@
     },
     {
       "text": "that's",
-      "startMs": 5890,
-      "endMs": 6340
+      "startMs": 5900,
+      "endMs": 6320
     },
     {
       "text": "only",
-      "startMs": 6340,
+      "startMs": 6320,
       "endMs": 6640
     },
     {
@@ -86,55 +86,55 @@
     {
       "text": "story.",
       "startMs": 6880,
-      "endMs": 7360
-    },
-    {
-      "text": "Cats",
-      "startMs": 7360,
       "endMs": 7690
     },
     {
+      "text": "Cats",
+      "startMs": 7700,
+      "endMs": 7800
+    },
+    {
       "text": "also",
-      "startMs": 7690,
-      "endMs": 7860
+      "startMs": 7800,
+      "endMs": 8060
     },
     {
       "text": "purr",
-      "startMs": 7860,
-      "endMs": 8100
+      "startMs": 8060,
+      "endMs": 8320
     },
     {
       "text": "when",
-      "startMs": 8100,
-      "endMs": 8350
+      "startMs": 8320,
+      "endMs": 8580
     },
     {
       "text": "they're",
-      "startMs": 8350,
-      "endMs": 8780
+      "startMs": 8580,
+      "endMs": 9240
     },
     {
       "text": "scared,",
-      "startMs": 8780,
-      "endMs": 9270
+      "startMs": 9240,
+      "endMs": 9550
     },
     {
       "text": "when",
-      "startMs": 9270,
-      "endMs": 9520
+      "startMs": 9790,
+      "endMs": 9960
     },
     {
       "text": "they're",
-      "startMs": 9780,
-      "endMs": 9950
+      "startMs": 9960,
+      "endMs": 10260
     },
     {
-      "text": "hurt.",
-      "startMs": 9950,
+      "text": "hurt",
+      "startMs": 10260,
       "endMs": 10540
     },
     {
-      "text": "And",
+      "text": "and",
       "startMs": 10540,
       "endMs": 10780
     },
@@ -151,82 +151,82 @@
     {
       "text": "giving",
       "startMs": 11320,
-      "endMs": 11760
+      "endMs": 11780
     },
     {
-      "text": "birth,",
-      "startMs": 11760,
-      "endMs": 11830
+      "text": "birth.",
+      "startMs": 11780,
+      "endMs": 12250
     },
     {
-      "text": "purring",
-      "startMs": 12240,
+      "text": "Purring",
+      "startMs": 12250,
       "endMs": 12820
     },
     {
       "text": "seems",
       "startMs": 12820,
-      "endMs": 12920
+      "endMs": 13100
     },
     {
       "text": "to",
-      "startMs": 12920,
-      "endMs": 13320
+      "startMs": 13100,
+      "endMs": 13340
     },
     {
       "text": "calm",
-      "startMs": 13320,
-      "endMs": 13560
+      "startMs": 13340,
+      "endMs": 13580
     },
     {
       "text": "them",
-      "startMs": 13560,
+      "startMs": 13580,
       "endMs": 13900
     },
     {
-      "text": "down.",
+      "text": "down",
       "startMs": 13900,
-      "endMs": 14000
+      "endMs": 14260
     },
     {
-      "text": "Like",
-      "startMs": 14000,
+      "text": "like",
+      "startMs": 14260,
       "endMs": 14520
     },
     {
       "text": "humming",
       "startMs": 14520,
-      "endMs": 14760
+      "endMs": 14860
     },
     {
       "text": "to",
-      "startMs": 14760,
+      "startMs": 14860,
       "endMs": 15000
     },
     {
       "text": "yourself",
       "startMs": 15000,
-      "endMs": 15420
+      "endMs": 15590
     },
     {
       "text": "in",
-      "startMs": 15420,
-      "endMs": 15470
+      "startMs": 15590,
+      "endMs": 15760
     },
     {
       "text": "a",
-      "startMs": 15470,
-      "endMs": 15780
+      "startMs": 15760,
+      "endMs": 15800
     },
     {
       "text": "scary",
-      "startMs": 15780,
-      "endMs": 15850
+      "startMs": 15800,
+      "endMs": 16260
     },
     {
       "text": "place.",
-      "startMs": 15850,
-      "endMs": 16400
+      "startMs": 16260,
+      "endMs": 16720
     },
     {
       "text": "Some",
@@ -236,17 +236,17 @@
     {
       "text": "scientists",
       "startMs": 17340,
-      "endMs": 17700
-    },
-    {
-      "text": "even",
-      "startMs": 17700,
       "endMs": 17960
     },
     {
-      "text": "think",
+      "text": "even",
       "startMs": 17960,
-      "endMs": 18400
+      "endMs": 18440
+    },
+    {
+      "text": "think",
+      "startMs": 18440,
+      "endMs": 18620
     },
     {
       "text": "the",
@@ -261,21 +261,21 @@
     {
       "text": "vibrations",
       "startMs": 19320,
-      "endMs": 19920
+      "endMs": 19880
     },
     {
       "text": "help",
-      "startMs": 19920,
+      "startMs": 19880,
       "endMs": 20180
     },
     {
       "text": "their",
       "startMs": 20180,
-      "endMs": 20580
+      "endMs": 20540
     },
     {
       "text": "bones",
-      "startMs": 20580,
+      "startMs": 20540,
       "endMs": 21000
     },
     {
@@ -291,7 +291,7 @@
     {
       "text": "heal.",
       "startMs": 21760,
-      "endMs": 22000
+      "endMs": 22230
     },
     {
       "text": "And",
@@ -306,192 +306,192 @@
     {
       "text": "cats",
       "startMs": 22820,
-      "endMs": 22990
+      "endMs": 23320
     },
     {
       "text": "hide",
-      "startMs": 22990,
-      "endMs": 23280
+      "startMs": 23320,
+      "endMs": 23550
     },
     {
       "text": "a",
-      "startMs": 23280,
-      "endMs": 23360
+      "startMs": 23550,
+      "endMs": 23740
     },
     {
       "text": "tiny",
-      "startMs": 23360,
-      "endMs": 23700
+      "startMs": 23740,
+      "endMs": 24160
     },
     {
       "text": "cry",
-      "startMs": 23700,
-      "endMs": 24080
+      "startMs": 24160,
+      "endMs": 24660
     },
     {
       "text": "inside",
-      "startMs": 24080,
-      "endMs": 24480
+      "startMs": 24660,
+      "endMs": 25020
     },
     {
       "text": "the",
-      "startMs": 24480,
-      "endMs": 24740
+      "startMs": 25020,
+      "endMs": 25200
     },
     {
-      "text": "purr.",
-      "startMs": 24740,
-      "endMs": 25400
+      "text": "purr,",
+      "startMs": 25200,
+      "endMs": 25590
     },
     {
-      "text": "One",
-      "startMs": 25400,
-      "endMs": 25860
+      "text": "one",
+      "startMs": 25590,
+      "endMs": 25950
     },
     {
       "text": "that",
-      "startMs": 25860,
-      "endMs": 26120
+      "startMs": 25950,
+      "endMs": 26190
     },
     {
       "text": "sounds",
-      "startMs": 26120,
-      "endMs": 26370
+      "startMs": 26190,
+      "endMs": 26640
     },
     {
       "text": "a",
-      "startMs": 26370,
-      "endMs": 26600
+      "startMs": 26640,
+      "endMs": 26700
     },
     {
       "text": "lot",
-      "startMs": 26600,
-      "endMs": 26660
+      "startMs": 26860,
+      "endMs": 26940
     },
     {
       "text": "like",
-      "startMs": 26660,
-      "endMs": 26910
+      "startMs": 26940,
+      "endMs": 27230
     },
     {
       "text": "a",
-      "startMs": 26910,
-      "endMs": 27030
+      "startMs": 27230,
+      "endMs": 27300
     },
     {
       "text": "human",
-      "startMs": 27030,
-      "endMs": 27410
+      "startMs": 27300,
+      "endMs": 27670
     },
     {
       "text": "baby.",
-      "startMs": 27410,
-      "endMs": 28270
+      "startMs": 27670,
+      "endMs": 28120
     },
     {
       "text": "People",
-      "startMs": 28270,
-      "endMs": 28820
+      "startMs": 28120,
+      "endMs": 28660
     },
     {
       "text": "find",
-      "startMs": 28820,
-      "endMs": 29020
+      "startMs": 28660,
+      "endMs": 28880
     },
     {
       "text": "it",
-      "startMs": 29020,
-      "endMs": 29260
+      "startMs": 28880,
+      "endMs": 29100
     },
     {
       "text": "very",
-      "startMs": 29260,
-      "endMs": 29760
+      "startMs": 29100,
+      "endMs": 29600
     },
     {
       "text": "hard",
-      "startMs": 29760,
-      "endMs": 30020
+      "startMs": 29600,
+      "endMs": 29670
     },
     {
       "text": "to",
-      "startMs": 30020,
-      "endMs": 30460
+      "startMs": 29670,
+      "endMs": 30220
     },
     {
       "text": "ignore.",
-      "startMs": 30460,
-      "endMs": 30880
+      "startMs": 30220,
+      "endMs": 30740
     },
     {
       "text": "When",
-      "startMs": 30880,
-      "endMs": 31220
+      "startMs": 30740,
+      "endMs": 30900
     },
     {
       "text": "your",
-      "startMs": 31220,
-      "endMs": 31450
+      "startMs": 30900,
+      "endMs": 31140
     },
     {
       "text": "cat",
-      "startMs": 31450,
-      "endMs": 31600
+      "startMs": 31310,
+      "endMs": 31400
     },
     {
       "text": "purrs",
-      "startMs": 31600,
-      "endMs": 31970
+      "startMs": 31400,
+      "endMs": 31660
     },
     {
       "text": "at",
-      "startMs": 31980,
-      "endMs": 32060
+      "startMs": 31660,
+      "endMs": 31781
     },
     {
-      "text": "five",
-      "startMs": 32060,
-      "endMs": 32200
+      "text": "5",
+      "startMs": 31781,
+      "endMs": 31901
     },
     {
       "text": "in",
-      "startMs": 32200,
-      "endMs": 32420
+      "startMs": 31901,
+      "endMs": 32020
     },
     {
       "text": "the",
-      "startMs": 32420,
-      "endMs": 32740
+      "startMs": 32020,
+      "endMs": 32600
     },
     {
       "text": "morning,",
-      "startMs": 32740,
-      "endMs": 33100
+      "startMs": 32600,
+      "endMs": 32960
     },
     {
       "text": "it",
-      "startMs": 33100,
-      "endMs": 33220
+      "startMs": 32960,
+      "endMs": 33080
     },
     {
       "text": "isn't",
-      "startMs": 33220,
-      "endMs": 33680
+      "startMs": 33080,
+      "endMs": 33540
     },
     {
       "text": "love.",
-      "startMs": 33680,
-      "endMs": 34120
+      "startMs": 33540,
+      "endMs": 34000
     },
     {
       "text": "It's",
-      "startMs": 34140,
-      "endMs": 34600
+      "startMs": 34000,
+      "endMs": 34460
     },
     {
       "text": "breakfast.",
-      "startMs": 34600,
-      "endMs": 35000
+      "startMs": 34460,
+      "endMs": 35210
     }
   ]
 }
