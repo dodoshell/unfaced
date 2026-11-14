@@ -1,6 +1,6 @@
 import { AbsoluteFill } from "remotion";
 import { fitFontSize, listParts, type Rect, type Scene } from "../../../../engine/remotion/kit/index.js";
-import { colour, itemSize, ITEM_FIT, layout, listRow, rowText } from "./layout.js";
+import { colour, ITEM_FIT, itemSize, layout, listRow, rowText } from "./layout.js";
 import { brightness, CELL, snap, tone } from "./pixels.js";
 import { Bitmap, BORDER, boxColours, outlineInk, PixelBox, pixelText, STEP, steppedRect, useStepFrame } from "./shared.js";
 
@@ -15,7 +15,6 @@ const CURSOR = ["x......", "xx.....", "xox....", "xoox...", "xooox..", "xoox..."
 
 /** Dark lettering on light fills, white on dark ones. */
 const textOn = (fill: string, ink: string, light = 0.55) => (brightness(fill) > light ? ink : "#FFFFFF");
-
 
 /** A row's number. In a small button the drop shadow would fill the font's counters and turn a 2 into an 8, so it goes, and the number takes the plainer contrast of the two inks. */
 const number = (chip: number, fill: string, ink: string): React.CSSProperties =>

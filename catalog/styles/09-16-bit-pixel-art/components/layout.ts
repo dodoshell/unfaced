@@ -30,7 +30,7 @@ const TIGHT_HEADER_H = 96;
 
 /** Border thickness in cells: ink, two of colour, ink. */
 export const BORDER = 4 * CELL;
-/** List items: one size for every row, as in a game menu, never below `least` (a list far past 7 items, which make warns about, gets no smaller). */
+/** List items: one size for every row, as in a game menu, never below `least`, however many items. */
 export const ITEM_SIZE = { max: 60, min: 28, least: 12 };
 export const ITEM_FIT = { charWidth: 0.55, lineHeight: 1.1 };
 /** The shortest row that holds one line of item text at the smallest size. */

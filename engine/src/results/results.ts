@@ -93,8 +93,11 @@ export function parseResults(markdown: string): { rows: ResultRow[]; problems: s
         else if (sec) row.watched = { sec: Number(sec[1]) };
         else if (clock) row.watched = { sec: Number(clock[1]) * 60 + Number(clock[2]) };
         else bad("Avg watched", `"${value}" needs a unit: a share (71%) or seconds (9.8s)`);
-      } else if (count(value) !== undefined) row[key] = count(value)!;
-      else bad(title(key), `"${value}" is not a number${/^\d{1,3}([,. ']\d{3})+$/.test(value) ? `; write it without separators (${value.replace(/\D/g, "")})` : ""}`);
+      } else {
+        const n = count(value);
+        if (n !== undefined) row[key] = n;
+        else bad(title(key), `"${value}" is not a number${/^\d{1,3}([,. ']\d{3})+$/.test(value) ? `; write it without separators (${value.replace(/\D/g, "")})` : ""}`);
+      }
     });
     const same = rows.find((r) => r.video === row.video && r.platform.toLowerCase() === row.platform.toLowerCase());
     if (same) problems.push(`row ${row.row}: ${row.video} on ${same.platform} already has row ${same.row}; update that row instead`);

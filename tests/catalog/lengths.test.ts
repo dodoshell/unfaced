@@ -32,7 +32,8 @@ function exampleScripts(): Array<[string, string]> {
 describe("example lengths", () => {
   it("keeps every hook example in catalog/hooks.md under 12 words", () => {
     const lines = [...read("catalog", "hooks.md").matchAll(/^ {2}- [A-Z][\w ,'/-]*: "([^"]+)"/gm)].map((m) => m[1]!);
-    expect(lines.length).toBe(45);
+    // Three examples a hook, so a hook whose examples the pattern misses fails here rather than passing unread.
+    expect(lines.length).toBe([...read("catalog", "hooks.md").matchAll(/^## \d\d /gm)].length * 3);
     const long = lines.filter((l) => words(l) > HOOK_MAX).map((l) => `${words(l)}: ${l}`);
     expect(long).toEqual([]);
   });

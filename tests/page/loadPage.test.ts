@@ -131,7 +131,7 @@ describe("loadPage", () => {
     expect(err.message).toBe("API keys must not be stored in page.yaml; use .env");
   });
 
-  it("does not take a long ordinary word or a colour for a key", async () => {
+  it("does not take a phrase with a long word, or a colour, for a key", async () => {
     const page = await loadPage(pageDir(`${minimal}mascot: "Pneumonoultramicroscopicsilicovolcanoconiosis the fox"\npalette: ["#FFF4E0", "#FF6B35"]\n`), stubCatalog);
     expect(page.mascot).toContain("fox");
   });
