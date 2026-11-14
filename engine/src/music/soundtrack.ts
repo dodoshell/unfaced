@@ -2,12 +2,17 @@ import { renameSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { encodeWav, readWavFile } from "../audio/speech.js";
 import { runFfmpeg } from "../ffmpeg.js";
-import { TARGET_LUFS, TARGET_TRUE_PEAK } from "../voice/prepare.js";
+import { TARGET_LUFS } from "../voice/prepare.js";
 import { mixSoundtrack } from "./mix.js";
 import { renderMusic } from "./moods.js";
 
 /** Sample rate of a soundtrack without a voice-over. */
 const MUSIC_RATE = 44100;
+
+/** Music alone aims under the voice-over's ceiling: loudnorm's is not a hard limit, and the AAC encode raises the peaks. */
+const MUSIC_TRUE_PEAK = -2;
+/** Resampling through this rate drops what lies above 16 kHz, which the AAC encode would cut after loudnorm, raising the peaks. */
+const BAND_LIMIT_RATE = 32000;
 
 export const SOUNDTRACK = "soundtrack.wav";
 
@@ -33,7 +38,8 @@ export async function writeSoundtrack(videoDir: string, { mood, durationSec, voi
   writeFileSync(file, encodeWav({ samples, rate }));
   if (!voice) {
     const tmp = `${file}.loud.wav`;
-    await runFfmpeg(["-v", "error", "-i", file, "-af", `loudnorm=I=${TARGET_LUFS}:TP=${TARGET_TRUE_PEAK}:LRA=11`, "-ar", String(rate), "-c:a", "pcm_s16le", "-y", tmp]);
+    const filters = `aresample=${BAND_LIMIT_RATE},aresample=${rate},loudnorm=I=${TARGET_LUFS}:TP=${MUSIC_TRUE_PEAK}:LRA=11`;
+    await runFfmpeg(["-v", "error", "-i", file, "-af", filters, "-ar", String(rate), "-c:a", "pcm_s16le", "-y", tmp]);
     renameSync(tmp, file);
   }
   return SOUNDTRACK;
