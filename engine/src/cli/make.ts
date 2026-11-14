@@ -106,7 +106,7 @@ export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDe
  * The page's choice for a catalog, which must be ready. A fixed number is used as is; a list or "auto"
  * is narrowed to the first ready option (the agent recommends one in Phase 2).
  */
-function choose(field: ChoiceField, page: Page, deps: MakeDeps): number {
+export function choose(field: ChoiceField, page: Page, deps: Pick<MakeDeps, "catalog" | "log">): number {
   const choice = page.choices[field];
   const chosen = resolveChoice(field, choice, deps.catalog, (options) => {
     const ready = options.find((n) => deps.catalog.get(field, n).status === "ready");

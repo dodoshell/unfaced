@@ -1,4 +1,5 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
+import { Character, useMascot } from "../../../../engine/remotion/kit/index.js";
 import type { Scene } from "../../../../engine/src/plan/types.js";
 import { colour, layout } from "./layout.js";
 import { outlined, Starburst, strokedText, useBob, usePop } from "./shared.js";
@@ -6,6 +7,7 @@ import { outlined, Starburst, strokedText, useBob, usePop } from "./shared.js";
 /** The ending: an exclamation badge bursting out of a spinning starburst, with confetti. */
 export const Outro: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, palette }) => {
   const frame = useCurrentFrame();
+  const mascot = useMascot();
   const pop = usePop();
   const bob = useBob(10, 50);
   const box = layout(scene, palette)[0]!;
@@ -42,6 +44,7 @@ export const Outro: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pa
       >
         <div style={{ ...strokedText(ink, 300), marginTop: 24 }}>!</div>
       </div>
+      {mascot && <Character rig={mascot.rig} pose="happy" x={540} y={1150} size={230} />}
     </AbsoluteFill>
   );
 };

@@ -6,6 +6,7 @@ export const placeholderStyle: StyleKit = {
   id: 3,
   defaultPalette: ["#FFF4E0", "#FF6B35", "#2EC4B6", "#FFD23F", "#1B1B3A"],
   layout: () => [{ id: "text", x: 100, y: 300, w: 800, h: 300 }],
+  Figure: () => null,
   Background: ({ palette }) => <AbsoluteFill style={{ backgroundColor: palette[0] }} />,
   SceneView: ({ scene, palette }) => (
     <AbsoluteFill>

@@ -4,6 +4,7 @@ import { defaultChecks, runDoctor } from "./cli/doctor.js";
 import { parseEvery, renderFrames } from "./cli/frames.js";
 import { listLines } from "./cli/list.js";
 import { makeVideo } from "./cli/make.js";
+import { renderMascotSheet } from "./cli/mascot.js";
 import { setup } from "./cli/setup.js";
 import { CATALOG_DIR } from "./paths.js";
 
@@ -14,6 +15,7 @@ Commands:
   make <videoDir>                Make the video in <videoDir> (script.md; page.yaml two folders up)
   check <videoDir>               Run the automatic checks on a made video; writes <videoDir>/check.json
   frames <videoDir> [--every 1s] Render review frames of a made video into <videoDir>/frames/
+  mascot <pageDir>               Render the page's mascot reference sheet to brand/mascot/reference.png
   doctor                         Check that everything the free pipeline needs is installed
   setup                          Download the voice model, whisper and the render browser`;
 
@@ -41,6 +43,9 @@ async function main(args: string[]): Promise<number> {
       await renderFrames(need(rest[0], "the video folder"), at >= 0 ? parseEvery(need(rest[at + 1], "a value for --every")) : 1);
       return 0;
     }
+    case "mascot":
+      await renderMascotSheet(need(rest[0], "the page folder"));
+      return 0;
     case "doctor":
       return runDoctor(defaultChecks());
     case "setup":

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dodoshell/unfaced/schema/mascot.schema.json",
+  "title": "unfaced mascot (brand/mascot/mascot.json)",
+  "description": "A page's recurring character: a species preset from the shared character system, with any part changed. Every style draws it from these fields.",
+  "type": "object",
+  "required": ["name", "species"],
+  "additionalProperties": false,
+  "$defs": {
+    "colour": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }
+  },
+  "properties": {
+    "$schema": { "type": "string" },
+    "name": { "type": "string", "minLength": 1 },
+    "species": { "enum": ["cat", "dog", "fox", "bear", "bunny", "bird", "person", "blob"] },
+    "build": { "enum": ["quadruped", "biped"] },
+    "body": { "enum": ["round", "long", "tall"] },
+    "head": { "enum": ["round", "wide", "tall"] },
+    "ears": { "enum": ["none", "pointy", "floppy", "round", "long"] },
+    "tail": { "enum": ["none", "thin", "fluffy", "short"] },
+    "hair": { "enum": ["none", "tuft", "bob", "spiky"] },
+    "snout": { "enum": ["none", "short", "long", "beak"] },
+    "pattern": { "enum": ["none", "spots", "stripes"] },
+    "colours": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "body": { "$ref": "#/$defs/colour" },
+        "belly": { "$ref": "#/$defs/colour" },
+        "accent": { "$ref": "#/$defs/colour" },
+        "head": { "$ref": "#/$defs/colour" },
+        "legs": { "$ref": "#/$defs/colour" },
+        "hair": { "$ref": "#/$defs/colour" },
+        "ink": { "$ref": "#/$defs/colour" }
+      }
+    },
+    "accessories": { "type": "array", "uniqueItems": true, "items": { "enum": ["glasses", "hat", "scarf", "bow", "collar"] } }
+  }
+}

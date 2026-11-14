@@ -1,6 +1,7 @@
 import type React from "react";
 import type { Rect } from "../core/safeZone.js";
 import type { Scene } from "../../src/plan/types.js";
+import type { FigureProps } from "../core/character/svg.js";
 
 /** A rectangle a style draws text in, named so checks can report it. */
 export interface TextBox extends Rect {
@@ -15,6 +16,8 @@ export interface StyleKit {
   layout(scene: Scene, palette: string[]): TextBox[];
   SceneView: React.FC<{ scene: Scene; palette: string[] }>;
   Background: React.FC<{ palette: string[] }>;
+  /** Paints a character's parts (the mascot, the dog in the style demo); see core/character. */
+  Figure: React.FC<FigureProps>;
 }
 
 const styles = new Map<number, StyleKit>();
