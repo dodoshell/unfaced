@@ -15,7 +15,7 @@ Every command runs through this skill's launcher:
 node "${CLAUDE_SKILL_DIR}/scripts/unfaced.mjs" <command>
 ```
 
-`${CLAUDE_SKILL_DIR}` is the folder this SKILL.md is in. Below, `unfaced <command>` means that line. The first run outside a checkout of unfaced installs the library into `~/.unfaced/` (git and npm needed, a few minutes): tell the user before it starts.
+`${CLAUDE_SKILL_DIR}` is the folder this SKILL.md is in. Below, `unfaced <command>` means that line. The first run outside a checkout of unfaced installs the library into `~/.unfaced/` (git and npm needed, about 1 GB, several minutes): tell the user before it starts, and give that command a timeout of at least 10 minutes.
 
 ## The flow
 
