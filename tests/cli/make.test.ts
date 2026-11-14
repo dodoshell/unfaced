@@ -199,6 +199,25 @@ describe("make", () => {
     expect((JSON.parse(readFileSync(join(video, "plan.json"), "utf8")) as VideoPlan).audioSrc).toBe("voice.wav");
   });
 
+  it("uses the script's own captions and music for this video, leaving the page as it is", async () => {
+    const video = setup();
+    writeFileSync(join(video, "script.md"), SCRIPT.replace("ending: 5", "ending: 5\ncaptions: 4\nmusic: 6"));
+    const { deps, mixMusic } = stubs();
+    const log = vi.fn();
+    await makeVideo(video, { ...deps, log });
+    const plan = JSON.parse(readFileSync(join(video, "plan.json"), "utf8")) as VideoPlan;
+    expect(plan).toMatchObject({ captions: 4, music: 6 });
+    expect(mixMusic).toHaveBeenCalledWith(video, expect.objectContaining({ mood: 6 }));
+    expect(log.mock.calls.flat().join("\n")).toMatch(/captions 4 .*this video.*page.*1/i);
+    expect(readFileSync(join(video, "..", "..", "page.yaml"), "utf8")).toContain("captions: 1");
+  });
+
+  it("refuses a script choice that is not ready yet", async () => {
+    const video = setup();
+    writeFileSync(join(video, "script.md"), SCRIPT.replace("ending: 5", "ending: 5\nstyle: 7"));
+    await expect(makeVideo(video, stubs().deps)).rejects.toThrow(/style 7 .*not ready yet/);
+  });
+
   it("explains what is missing when the video folder has no script", async () => {
     const video = setup();
     const { deps } = stubs();

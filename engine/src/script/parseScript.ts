@@ -9,6 +9,10 @@ export interface Beat {
   visual?: string;
 }
 
+/** Catalog choices a script can make for its own video, over the page's choice. */
+export const VIDEO_CHOICES = ["style", "voice", "captions", "music"] as const;
+export type VideoChoice = (typeof VIDEO_CHOICES)[number];
+
 export interface Script {
   title: string;
   scriptType: number;
@@ -16,6 +20,8 @@ export interface Script {
   ending: number;
   /** Where the facts come from, from the optional `sources` field. */
   sources: string[];
+  /** This video's own style, voice, captions or music, when the front matter sets them. */
+  choices: Partial<Record<VideoChoice, number>>;
   beats: Beat[];
   /** Every beat's text in order, without emoji: what the voice reads. */
   spokenText: string;
@@ -54,6 +60,7 @@ export function parseScript(markdown: string): Script {
     hook: field(meta, "hook", "number"),
     ending: field(meta, "ending", "number"),
     sources: meta.sources === undefined ? [] : ([] as unknown[]).concat(meta.sources).map(String),
+    choices: Object.fromEntries(VIDEO_CHOICES.filter((name) => meta[name] !== undefined).map((name) => [name, field(meta, name, "number")])),
     beats,
     spokenText: beats.map((b) => speakable(b.text)).filter(Boolean).join(" "),
   };

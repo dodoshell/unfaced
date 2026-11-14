@@ -29,7 +29,13 @@ Purring might be how cats heal themselves.
 describe("parseScript", () => {
   it("reads the front matter", () => {
     const s = parseScript(basic);
-    expect(s).toMatchObject({ title: "Why do cats purr?", scriptType: 6, hook: 1, ending: 5 });
+    expect(s).toMatchObject({ title: "Why do cats purr?", scriptType: 6, hook: 1, ending: 5, choices: {} });
+  });
+
+  it("reads this video's own style, voice, captions and music when the front matter sets them", () => {
+    const s = parseScript(basic.replace("ending: 5", "ending: 5\nstyle: 12\nmusic: 8"));
+    expect(s.choices).toEqual({ style: 12, music: 8 });
+    expect(() => parseScript(basic.replace("ending: 5", "ending: 5\nvoice: auto"))).toThrow(/"voice" must be a catalog number/);
   });
 
   it("makes one beat for the hook, one per body paragraph and one for the ending", () => {

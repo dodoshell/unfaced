@@ -84,10 +84,10 @@ export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDe
   const mascot = loadMascot(pageDir);
   const script = parseScript(readFileSync(scriptFile, "utf8"));
 
-  const style = choose("style", page, deps);
-  const captions = choose("captions", page, deps);
-  const voiceType = choose("voice", page, deps);
-  const music = choose("music", page, deps);
+  const style = choose("style", page, deps, script.choices.style);
+  const captions = choose("captions", page, deps, script.choices.captions);
+  const voiceType = choose("voice", page, deps, script.choices.voice);
+  const music = choose("music", page, deps, script.choices.music);
   const textOnly = voiceType === TEXT_ONLY_VOICE;
   const timing = textOnly ? readingTiming(script.spokenText) : await recordVoice(dir, script.spokenText, voiceType, page, deps);
   writeFileSync(join(dir, "timing.json"), `${JSON.stringify(timing, null, 2)}\n`);
@@ -144,12 +144,18 @@ async function recordVoice(dir: string, text: string, voiceType: number, page: P
 }
 
 /**
- * The page's choice for a catalog, which must be ready. A fixed number is used as is; a list or "auto"
- * is narrowed to the first ready option (the agent recommends one in Phase 2).
+ * The catalog entry for one of this video's choices, which must be ready. The script's own
+ * choice (front matter) wins; otherwise the page's fixed number is used as is, and a list or
+ * "auto" is narrowed to the first ready option (the video-make skill writes its pick into the
+ * script, so this fallback is only for scripts made by hand).
  */
-export function choose(field: ChoiceField, page: Page, deps: Pick<MakeDeps, "catalog" | "log">): number {
+export function choose(field: ChoiceField, page: Page, deps: Pick<MakeDeps, "catalog" | "log">, forVideo?: number): number {
   const choice = page.choices[field];
-  const chosen = resolveChoice(field, choice, deps.catalog, (options) => {
+  if (forVideo !== undefined) {
+    const { name } = deps.catalog.get(field, forVideo);
+    if (choice !== forVideo) deps.log(`${field} ${forVideo} (${name}) for this video, from script.md; the page says ${JSON.stringify(choice ?? "auto")}`);
+  }
+  const chosen = forVideo ?? resolveChoice(field, choice, deps.catalog, (options) => {
     const ready = options.find((n) => deps.catalog.get(field, n).status === "ready");
     if (ready === undefined) throw new Error(`None of the ${field} options ${options.join(", ")} is ready yet; see "unfaced list ${field}"`);
     deps.log(`${field}: ${JSON.stringify(choice ?? "auto")} → ${ready} (${deps.catalog.get(field, ready).name})`);
