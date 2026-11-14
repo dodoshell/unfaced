@@ -50,6 +50,13 @@ describe("buildPlan", () => {
     expect(plan.durationInFrames).toBe(Math.ceil(audioDurationSec * 30) + 15);
   });
 
+  it("cuts a seamless loop back to the start after a shorter tail", () => {
+    const loop = build({ script: { ...script, ending: 1 } });
+    expect(loop.durationInFrames).toBeLessThan(build().durationInFrames);
+    expect(loop.durationInFrames).toBeGreaterThan(Math.ceil(audioDurationSec * 30));
+    expect(loop.scenes.at(-1)!.fromFrame + loop.scenes.at(-1)!.durationInFrames).toBe(loop.durationInFrames);
+  });
+
   it("makes contiguous scenes from frame 0 to the end", () => {
     const plan = build();
     expect(plan.scenes[0]!.fromFrame).toBe(0);
@@ -113,6 +120,12 @@ describe("buildPlan", () => {
     expect(warn).toHaveBeenCalledOnce();
     expect(warn.mock.calls[0]![0]).toContain("70s");
     expect(warn.mock.calls[0]![0]).toContain("30–45s");
+  });
+
+  it("shows a tenth of a second when a whole number would look inside the range", () => {
+    const warn = vi.fn();
+    build({ audioDurationSec: 45.3, page: { ...page, duration: { minSec: 30, maxSec: 45 } }, warn });
+    expect(warn.mock.calls[0]![0]).toContain("45.3s");
   });
 
   it("does not warn when the voice-over fits the page's duration", () => {

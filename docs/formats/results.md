@@ -1,0 +1,28 @@
+# Results format
+
+`results.md` sits in the page folder. The user fills it in (or pastes numbers from the platforms' insights) after posting; the `page-results` skill reads it with the videos' scripts and plans and suggests what to change.
+
+```markdown
+# Results
+
+| Video | Platform | Posted | Views | Avg watched | Likes | Comments | Shares | Saves | Follows | Notes |
+|---|---|---|---|---|---|---|---|---|---|---|
+| why-cats-purr | TikTok | 2026-11-14 | 12400 | 71% | 980 | 45 | 120 | 210 | 38 | trending sound added |
+| why-cats-purr | Instagram | 2026-11-14 | 3100 | 9.8s | 240 | 6 | 15 | 40 | 4 | |
+| cats-and-milk | TikTok | 2026-11-16 | 2100 | 38% | 90 | 3 | 4 | 10 | 1 | posted at 23:00 |
+```
+
+| Column | Meaning |
+|---|---|
+| `Video` | The video's folder name in `videos/`. Links the row to its script, choices and length. |
+| `Platform` | `TikTok`, `Instagram`, `YouTube` or another name. |
+| `Posted` | Date as `YYYY-MM-DD`, optionally with a time (`2026-11-14 18:30`). |
+| `Views` | Plays or views as the platform counts them. |
+| `Avg watched` | Average watch time as a share (`71%`) or in seconds (`9.8s`). The most useful number: it says whether the hook and the pacing work. |
+| `Likes`, `Comments`, `Shares`, `Saves`, `Follows` | Counts; leave a cell empty when the platform doesn't show it. |
+| `Notes` | Anything that might explain the numbers: a trending sound, the time of day, a repost. |
+
+- One row per video per platform. Update a row's numbers rather than adding a second row for the same video and platform.
+- Numbers without separators (`12400`, not `12,400` or `12.400`), so they read the same in every language.
+- Other columns are allowed; `page-results` reads the ones it knows and keeps the rest.
+- A week after posting is a fair time to record the numbers; earlier numbers move a lot.

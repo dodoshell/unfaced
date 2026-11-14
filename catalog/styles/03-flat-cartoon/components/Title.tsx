@@ -1,4 +1,5 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
+import { Character, useMascot } from "../../../../engine/remotion/kit/index.js";
 import type { Scene } from "../../../../engine/src/plan/types.js";
 import { colour, fitFontSize, INK, layout } from "./layout.js";
 import { FONT, outlined, Starburst, usePop } from "./shared.js";
@@ -6,6 +7,7 @@ import { FONT, outlined, Starburst, usePop } from "./shared.js";
 /** The hook: a white headline card tilted over a slowly turning starburst. */
 export const Title: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, palette }) => {
   const frame = useCurrentFrame();
+  const mascot = useMascot();
   // Started a few frames early so the very first frame (the platforms' preview) already shows the hook.
   const pop = usePop(-6);
   const burstPop = usePop(-3);
@@ -40,6 +42,7 @@ export const Title: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pa
       >
         {scene.text}
       </div>
+      {mascot && <Character rig={mascot.rig} pose="surprised" x={800} y={1165} size={170} />}
     </AbsoluteFill>
   );
 };

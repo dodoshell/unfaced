@@ -9,6 +9,10 @@ export interface Beat {
   visual?: string;
 }
 
+/** Catalog choices a script can make for its own video, over the page's choice. */
+export const VIDEO_CHOICES = ["style", "voice", "captions", "music"] as const;
+export type VideoChoice = (typeof VIDEO_CHOICES)[number];
+
 export interface Script {
   title: string;
   scriptType: number;
@@ -16,6 +20,8 @@ export interface Script {
   ending: number;
   /** Where the facts come from, from the optional `sources` field. */
   sources: string[];
+  /** This video's own style, voice, captions or music, when the front matter sets them. */
+  choices: Partial<Record<VideoChoice, number>>;
   beats: Beat[];
   /** Every beat's text in order, without emoji: what the voice reads. */
   spokenText: string;
@@ -24,6 +30,9 @@ export interface Script {
 const VISUAL = /^>\s*visual:\s*(.*)$/i;
 const LIST_ITEM = /^-\s+/;
 const EMOJI =/[\p{Extended_Pictographic}\p{Emoji_Modifier}‍️]/gu;
+// Keycaps (1️⃣, #️⃣) and flags (pairs of regional indicators) are emoji too, but not pictographs.
+const KEYCAP = /[0-9#*]\uFE0F?\u20E3/gu;
+const FLAG = /\p{Regional_Indicator}/gu;
 
 /** Parses a video's script.md (format: docs/formats/script.md). */
 export function parseScript(markdown: string): Script {
@@ -54,6 +63,7 @@ export function parseScript(markdown: string): Script {
     hook: field(meta, "hook", "number"),
     ending: field(meta, "ending", "number"),
     sources: meta.sources === undefined ? [] : ([] as unknown[]).concat(meta.sources).map(String),
+    choices: Object.fromEntries(VIDEO_CHOICES.filter((name) => meta[name] !== undefined).map((name) => [name, field(meta, name, "number")])),
     beats,
     spokenText: beats.map((b) => speakable(b.text)).filter(Boolean).join(" "),
   };
@@ -106,12 +116,27 @@ function merge(id: string, kind: Beat["kind"], paragraphs: Paragraph[]): Beat {
   return { id, kind, text: paragraphs.map((p) => p.text).join(" "), ...(visual !== undefined ? { visual } : {}) };
 }
 
-/** What the voice reads: list items become "a, b, c.", emoji are dropped. */
+/** What the voice reads, in the order written: each run of list items becomes "a, b, c.", emoji are dropped. */
 function speakable(text: string): string {
-  const lines = text.split("\n");
-  const items = lines.filter((l) => LIST_ITEM.test(l)).map((l) => l.replace(LIST_ITEM, "").replace(/[.,;]+$/, ""));
-  const read = items.length ? [...lines.filter((l) => !LIST_ITEM.test(l)), `${items.join(", ")}.`].join(" ") : text;
-  return read
+  const parts: string[] = [];
+  let items: string[] = [];
+  const endList = () => {
+    if (items.length) parts.push(`${items.join(", ")}.`);
+    items = [];
+  };
+  for (const line of text.split("\n")) {
+    if (LIST_ITEM.test(line)) {
+      items.push(line.replace(LIST_ITEM, "").replace(/[.,;]+$/, ""));
+    } else {
+      endList();
+      parts.push(line);
+    }
+  }
+  endList();
+  return parts
+    .join(" ")
+    .replace(KEYCAP, "")
+    .replace(FLAG, "")
     .replace(EMOJI, "")
     .replace(/\s+([!?.,;:…])/g, "$1")
     .replace(/\s{2,}/g, " ")

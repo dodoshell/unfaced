@@ -3,7 +3,8 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { checkOverlap, checkSafeZone, type PlacedBox, placedBoxes } from "../../engine/src/check/overlap.js";
 import type { Scene, VideoPlan } from "../../engine/src/plan/types.js";
-import { getLayout } from "../../engine/remotion/styles/layouts.js";
+import { END_MARK_BOX } from "../../engine/remotion/core/endings.js";
+import { drawsEndingMark, getLayout } from "../../engine/remotion/styles/layouts.js";
 
 const box = (id: string, x: number, y: number, w: number, h: number, fromFrame: number, toFrame: number): PlacedBox => ({ id, x, y, w, h, fromFrame, toFrame });
 
@@ -37,11 +38,33 @@ describe("text box checks", () => {
     ]);
   });
 
+  it("adds the ending sign's box over the last scene when the engine draws the sign", () => {
+    const layout = () => [];
+    const scenes = [scene("b1", 0, []), scene("ending", 30, [])];
+    const mark = placedBoxes({ ...plan(scenes), ending: 3 }, layout).find((b) => b.id === "ending mark");
+    expect(mark).toEqual({ id: "ending mark", ...END_MARK_BOX, fromFrame: 30, toFrame: 60 });
+    expect(placedBoxes({ ...plan(scenes), ending: 3 }, layout, true)).toEqual([]);
+    expect(placedBoxes({ ...plan(scenes), ending: 5 }, layout)).toEqual([]);
+    const own = { ending: [{ id: "headline", x: 300, y: 300, w: 480, h: 150 }] };
+    expect(placedBoxes({ ...plan(scenes), ending: 3 }, layout, false, own).map((b) => b.id)).toEqual(["ending headline", "ending mark"]);
+    expect(placedBoxes({ ...plan(scenes), ending: 3 }, layout, true, own).map((b) => b.id)).toEqual(["ending headline"]);
+  });
+
+  it("uses the boxes a video's own scene code declares for its beats instead of the style's", () => {
+    const layout = () => [{ id: "text", x: 110, y: 500, w: 780, h: 400 }];
+    const own = { b2: [{ id: "label", x: 100, y: 300, w: 300, h: 100 }] };
+    const boxes = placedBoxes(plan([scene("b1", 0, []), scene("b2", 30, [])]), layout, false, own);
+    expect(boxes.map((b) => [b.id, b.x, b.fromFrame])).toEqual([
+      ["b1 text", 110, 0],
+      ["b2 label", 100, 30],
+    ]);
+  });
+
   it("finds no overlap and nothing outside the safe zone in the example videos", () => {
     for (const name of ["why-cats-purr", "cats-and-milk"]) {
       const file = join(import.meta.dirname, "..", "..", "examples", "pages", "curious-cats", "videos", name, "plan.json");
       const example = JSON.parse(readFileSync(file, "utf8")) as VideoPlan;
-      const boxes = placedBoxes(example, getLayout(example.style));
+      const boxes = placedBoxes(example, getLayout(example.style), drawsEndingMark(example.style));
       expect([...checkOverlap(boxes, 30), ...checkSafeZone(boxes, 30)], name).toEqual([]);
     }
   });

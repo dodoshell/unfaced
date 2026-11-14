@@ -29,7 +29,13 @@ Purring might be how cats heal themselves.
 describe("parseScript", () => {
   it("reads the front matter", () => {
     const s = parseScript(basic);
-    expect(s).toMatchObject({ title: "Why do cats purr?", scriptType: 6, hook: 1, ending: 5 });
+    expect(s).toMatchObject({ title: "Why do cats purr?", scriptType: 6, hook: 1, ending: 5, choices: {} });
+  });
+
+  it("reads this video's own style, voice, captions and music when the front matter sets them", () => {
+    const s = parseScript(basic.replace("ending: 5", "ending: 5\nstyle: 12\nmusic: 8"));
+    expect(s.choices).toEqual({ style: 12, music: 8 });
+    expect(() => parseScript(basic.replace("ending: 5", "ending: 5\nvoice: auto"))).toThrow(/"voice" must be a catalog number/);
   });
 
   it("makes one beat for the hook, one per body paragraph and one for the ending", () => {
@@ -59,6 +65,16 @@ describe("parseScript", () => {
     expect(s.beats[0]!.text).toBe("Perché è così? L'acqua… 🐱");
     expect(s.beats[2]!.text).toBe("Ciao 👋🏽!");
     expect(s.spokenText).toBe("Perché è così? L'acqua… Sì. Ciao!");
+  });
+
+  it("drops flags and keycap emoji from the spoken text, keeping plain digits", () => {
+    const s = parseScript(md(`## Hook\nMade in Italy 🇮🇹, top 3 1️⃣ picks #️⃣.\n\n## Body\nStep 2️⃣ is 4 minutes.\n\n## Ending\nBye.\n`));
+    expect(s.spokenText).toBe("Made in Italy, top 3 picks. Step is 4 minutes. Bye.");
+  });
+
+  it("reads a paragraph that mixes prose and a list in the order it is written", () => {
+    const s = parseScript(md(`## Hook\nHi.\n\n## Body\nThree things cats hate:\n- water\n- noise\nThe worst is the vacuum.\n\n## Ending\nEnd.\n`));
+    expect(s.spokenText).toBe("Hi. Three things cats hate: water, noise. The worst is the vacuum. End.");
   });
 
   it("joins the lines of one paragraph with a space", () => {

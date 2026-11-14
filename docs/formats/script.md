@@ -37,6 +37,9 @@ Purring might be how cats heal themselves.
 | `hook` | yes | Number from the hook catalog. |
 | `ending` | yes | Number from the ending catalog. |
 | `sources` | no | Where the facts come from: one line or a list. |
+| `style`, `voice`, `captions`, `music` | no | This video's own choice from that catalog. It wins over the page's choice for this video only; `page.yaml` stays as it is. |
+
+When the page leaves a choice open (a list such as `script: [2, 6, 9]`, or `auto`), the agent picks one for the video and writes it here, with the reason in its reply. A one-off change ("style 12 this time") goes here too. `unfaced make` prints a line for every choice that differs from the page. Without a choice here, a fixed number in the page is used, and a list or `auto` falls back to its first ready option.
 
 ## Sections
 
@@ -56,6 +59,8 @@ Three things cats hate:
 - noise
 - closed doors
 ```
+
+The voice reads the paragraph in the order it is written, but a list scene shows every line that is not an item above the items. Keep one lead-in line first, and put anything that follows the list in a paragraph of its own.
 
 ## Visuals
 

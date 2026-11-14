@@ -21,13 +21,36 @@ function existingAncestor(path: string): string {
   return p;
 }
 
-export function defaultChecks(env: NodeJS.ProcessEnv = process.env): Check[] {
+/** True when `command --version` runs. */
+const runs = (command: string) => spawnSync(command, ["--version"]).status === 0;
+
+/**
+ * On macOS and Linux whisper.cpp is built from source (git clone, then make), so its tools
+ * are needed until it is built; Windows downloads a ready binary.
+ */
+function buildTools(executable: string, platform: NodeJS.Platform): Check[] {
+  if (platform === "win32") return [];
+  return [
+    {
+      name: "git, make and a C compiler (to build whisper)",
+      ok: async () => existsSync(executable) || (runs("git") && runs("make") && ["cc", "gcc", "clang"].some(runs)),
+      fix: platform === "darwin" ? "run xcode-select --install" : "install git, make and gcc (on Debian or Ubuntu: sudo apt install git build-essential)",
+    },
+  ];
+}
+
+export function defaultChecks(env: NodeJS.ProcessEnv = process.env, platform: NodeJS.Platform = process.platform): Check[] {
   const home = unfacedHome(env);
   const whisper = whisperPaths("en", env);
+  // English uses its own whisper model; every other language uses the multilingual one.
+  const multilingual = whisperPaths("it", env);
   return [
     { name: "Node 22 or newer", ok: async () => Number(process.versions.node.split(".")[0]) >= 22, fix: "install Node 22 or newer from https://nodejs.org" },
     { name: "Free voice model", ok: async () => existsSync(join(home, "models", KOKORO_MODEL.name)), fix: SETUP },
-    { name: "Whisper", ok: async () => existsSync(whisper.executable) && existsSync(whisper.modelFile), fix: SETUP },
+    ...buildTools(whisper.executable, platform),
+    { name: "Whisper", ok: async () => existsSync(whisper.executable), fix: SETUP },
+    { name: "Whisper model for English", ok: async () => existsSync(whisper.modelFile), fix: SETUP },
+    { name: "Whisper model for other languages", ok: async () => existsSync(multilingual.modelFile), fix: SETUP },
     { name: "Remotion browser", ok: async () => existsSync(join(LIBRARY_ROOT, "node_modules", ".remotion", "chrome-headless-shell")), fix: SETUP },
     { name: "tar", ok: async () => spawnSync("tar", ["--version"]).status === 0, fix: "install tar (it ships with Windows 10+, macOS and Linux)" },
     {

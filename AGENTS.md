@@ -6,21 +6,32 @@ unfaced helps a person create and run faceless social media pages (Reels, TikTok
 
 | The request | Go to |
 |---|---|
-| Make a video for a page | `npm run unfaced -- make <videoDir>` (skills coming in Phase 2) |
-| List styles, scripts, hooks or other catalogs | `npm run unfaced -- list <kind>` |
-| Create or edit a page profile | `schema/page.schema.json` (the `page-setup` skill is coming soon) |
-| Write or fix a video's `script.md` | `docs/formats/script.md` and the script type in `catalog/scripts/` |
+| Start or change a page, or give it a mascot | `plugin/skills/page-setup/SKILL.md` |
+| Ideas, series or a posting calendar | `plugin/skills/video-ideas/SKILL.md` |
+| Options for how to make one idea | `plugin/skills/video-recommend/SKILL.md` |
+| Make a video, from idea to reviewed MP4 | `plugin/skills/video-make/SKILL.md` |
+| Cover, captions and hashtags for posting | `plugin/skills/video-package/SKILL.md` |
+| What the numbers say, what to change | `plugin/skills/page-results/SKILL.md` |
+| Review a made video independently | `plugin/agents/video-reviewer.md` |
+| A file format (page, script, mascot, scenes, review, post, results) | `npm run unfaced -- docs <format>`, or `docs/formats/` |
+| One catalog entry and its rules | `npm run unfaced -- show <kind> <number>` |
 | See a complete page to copy | `examples/pages/curious-cats/` |
-| Review a made video | `npm run unfaced -- check <videoDir>` (writes `check.json`), then `npm run unfaced -- frames <videoDir> --every 1s` and look at `<videoDir>/frames/` |
 | Add a style or a script type | `catalog/` (`CONTRIBUTING.md` is coming soon); a style's look and layout rules live in its `STYLE.md` |
 | Design and plans | `docs/design/`, `docs/plans/` |
+
+Inside this repository the skills' launcher (`node plugin/launcher/unfaced.mjs <command>`) and `npm run unfaced -- <command>` run the same CLI.
 
 ## Commands
 
 - Install: `npm run setup` (npm install, then the voice model, whisper and the render browser into `~/.unfaced/`)
 - Check the install: `npm run unfaced -- doctor`
-- Run the automatic checks on a made video (exits 1 on an error): `npm run unfaced -- check <videoDir>`
-- Review frames of a made video: `npm run unfaced -- frames <videoDir> --every 1s`
+- Catalogs: `npm run unfaced -- list <kind>`, `npm run unfaced -- show <kind> [number]`
+- Check a page profile: `npm run unfaced -- page <pageDir>`
+- Make a video (exits 1 when an automatic check fails): `npm run unfaced -- make <videoDir>`
+- Run the automatic checks again: `npm run unfaced -- check <videoDir>` (writes `check.json`)
+- Review frames: `npm run unfaced -- frames <videoDir> --every 1s`, then look at `<videoDir>/frames/`
+- Cover image: `npm run unfaced -- cover <videoDir> [--at 1.5]`
+- Mascot reference sheet: `npm run unfaced -- mascot <pageDir>`
 - Tests: `npm test` (slow tests that synthesize voice or render video: `UNFACED_SLOW=1 npm test`)
 - Types: `npm run typecheck`
 
@@ -32,3 +43,5 @@ unfaced helps a person create and run faceless social media pages (Reels, TikTok
 - Video output is 1080×1920, 30 fps, H.264 + AAC.
 - Code must work on Windows, macOS and Linux: use `node:path`, never hard-code separators.
 - Never publish to social networks. unfaced only produces files.
+- `plugin/launcher/unfaced.mjs` is copied into every skill's `scripts/`; after changing it, copy it again (a test checks the copies are identical).
+- `plugin/agents/video-reviewer.md` is copied into `plugin/skills/video-make/references/` for agents without subagents; after changing it, copy it again (a test checks the copy is identical).

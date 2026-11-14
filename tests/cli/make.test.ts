@@ -31,7 +31,7 @@ function setup(): string {
   const page = join(root, "my cat page è");
   const video = join(page, "videos", "first video");
   mkdirSync(video, { recursive: true });
-  writeFileSync(join(page, "page.yaml"), "name: My cats\nlanguage: en\nniche: cat facts\nstyle: 3\nvoice: 1\ncaptions: 1\n");
+  writeFileSync(join(page, "page.yaml"), "name: My cats\nlanguage: en\nniche: cat facts\nstyle: 3\nvoice: 1\ncaptions: 1\nmusic: 8\n");
   writeFileSync(join(video, "script.md"), SCRIPT);
   return video;
 }
@@ -48,8 +48,12 @@ function stubs() {
   const render = vi.fn<MakeDeps["render"]>(async (_plan, outPath) => writeFileSync(outPath, "mp4"));
   const check = vi.fn<MakeDeps["check"]>(async () => ({ pass: false, issues: [{ check: "clipping", atMs: 0, severity: "error", message: "True peak is -0.4 dBTP" }] }));
   const prepareVoice = vi.fn<MakeDeps["prepareVoice"]>(async () => {});
-  const deps: MakeDeps = { catalog: Catalog.load(CATALOG_DIR), voiceProvider: () => voice, prepareVoice, align, render, check, env: {}, log: () => {} };
-  return { deps, synthesize, prepareVoice, align, render, check };
+  const mixMusic = vi.fn<MakeDeps["mixMusic"]>(async (dir) => {
+    writeFileSync(join(dir, "soundtrack.wav"), "RIFF");
+    return "soundtrack.wav";
+  });
+  const deps: MakeDeps = { catalog: Catalog.load(CATALOG_DIR), voiceProvider: () => voice, prepareVoice, align, mixMusic, render, check, env: {}, log: () => {} };
+  return { deps, voice, synthesize, prepareVoice, align, mixMusic, render, check };
 }
 
 describe("make", () => {
@@ -62,6 +66,60 @@ describe("make", () => {
     expect(plan).toMatchObject({ style: 3, captions: 1, audioSrc: "voice.wav" });
     expect(plan.scenes.map((s) => s.beatId)).toEqual(["hook", "b1", "ending"]);
     expect(render).toHaveBeenCalledWith(expect.anything(), join(video, "video.mp4"), { assetsDir: video });
+  });
+
+  it("puts the page's mascot and the script's ending into the plan", async () => {
+    const video = setup();
+    const page = join(video, "..", "..");
+    mkdirSync(join(page, "brand", "mascot"), { recursive: true });
+    writeFileSync(join(page, "brand", "mascot", "mascot.json"), JSON.stringify({ name: "Miso", species: "cat" }));
+    await makeVideo(video, stubs().deps);
+    const plan = JSON.parse(readFileSync(join(video, "plan.json"), "utf8")) as VideoPlan;
+    expect(plan.mascot).toMatchObject({ name: "Miso", rig: { species: "cat" } });
+    expect(plan.ending).toBe(5);
+  });
+
+  it("bundles the video's own scene code when it has a scenes/ folder", async () => {
+    const video = setup();
+    mkdirSync(join(video, "scenes"));
+    writeFileSync(join(video, "scenes", "index.tsx"), "export default {};");
+    const { deps, render } = stubs();
+    await makeVideo(video, deps);
+    expect(render).toHaveBeenCalledWith(expect.anything(), join(video, "video.mp4"), { assetsDir: video, scenes: join(video, "scenes", "index.tsx") });
+  });
+
+  it("stops before recording anything when scenes/ has no index.tsx", async () => {
+    const video = setup();
+    mkdirSync(join(video, "scenes"));
+    writeFileSync(join(video, "scenes", "index.ts"), "export default {};");
+    const { deps, synthesize, render } = stubs();
+    await expect(makeVideo(video, deps)).rejects.toThrow(/scenes has no index\.tsx.*export default defineScenes/);
+    expect(synthesize).not.toHaveBeenCalled();
+    expect(render).not.toHaveBeenCalled();
+  });
+
+  it("names scenes/boxes.json when it is not valid, before recording anything", async () => {
+    const video = setup();
+    mkdirSync(join(video, "scenes"));
+    writeFileSync(join(video, "scenes", "index.tsx"), "export default {};");
+    const boxes = join(video, "scenes", "boxes.json");
+    const { deps, synthesize } = stubs();
+    for (const text of ["{ b1: [] }", "null", "[]", '{ "b1": [{ "id": "label" }] }']) {
+      writeFileSync(boxes, text);
+      await expect(makeVideo(video, deps), text).rejects.toThrow(boxes);
+    }
+    expect(synthesize).not.toHaveBeenCalled();
+  });
+
+  it("warns about boxes in scenes/boxes.json for beats the video does not have", async () => {
+    const video = setup();
+    mkdirSync(join(video, "scenes"));
+    writeFileSync(join(video, "scenes", "index.tsx"), "export default {};");
+    writeFileSync(join(video, "scenes", "boxes.json"), JSON.stringify({ b1: [], b7: [{ id: "label", x: 100, y: 300, w: 300, h: 100 }] }));
+    const log = vi.fn();
+    await makeVideo(video, { ...stubs().deps, log });
+    expect(log).toHaveBeenCalledWith(expect.stringMatching(/boxes\.json: this video has no beat "b7".*hook, b1, ending/));
+    expect(log).not.toHaveBeenCalledWith(expect.stringContaining('"b1"'));
   });
 
   it("prepares the voice-over (lead-in and loudness) before timing it", async () => {
@@ -81,6 +139,13 @@ describe("make", () => {
     expect(check).toHaveBeenCalledWith(video);
     expect(check.mock.invocationCallOrder[0]).toBeGreaterThan(render.mock.invocationCallOrder[0]!);
     expect(log.mock.calls.flat()).toEqual(expect.arrayContaining(["Checks: FAIL (1 error, 0 warnings)", expect.stringContaining("clipping")]));
+  });
+
+  it("returns the plan and the check report, so the command can fail when a check fails", async () => {
+    const { deps } = stubs();
+    const made = await makeVideo(setup(), deps);
+    expect(made.plan.style).toBe(3);
+    expect(made.report.pass).toBe(false);
   });
 
   it("reuses the voice and timings when the spoken text has not changed", async () => {
@@ -103,6 +168,106 @@ describe("make", () => {
     expect(align).toHaveBeenCalledTimes(2);
   });
 
+  it("records the voice again when the speaker behind the voice type changes", async () => {
+    const video = setup();
+    const { deps, voice, synthesize } = stubs();
+    voice.describeVoice = () => ({ id: "speaker-a@1" });
+    await makeVideo(video, deps);
+    voice.describeVoice = () => ({ id: "speaker-b@1" });
+    await makeVideo(video, deps);
+    expect(synthesize).toHaveBeenCalledTimes(2);
+  });
+
+  it("says when the voice only approximates the page's voice type", async () => {
+    const video = setup();
+    const { deps, voice } = stubs();
+    voice.describeVoice = () => ({ id: "x@1", note: "The free voice has few Italian speakers" });
+    const log = vi.fn();
+    await makeVideo(video, { ...deps, log });
+    expect(log.mock.calls.flat()).toContain("The free voice has few Italian speakers");
+  });
+
+  it("makes a text-only video for voice 8: no voice-over, captions timed at reading pace", async () => {
+    const video = setup();
+    writeFileSync(join(video, "..", "..", "page.yaml"), "name: My cats\nlanguage: en\nniche: cat facts\nstyle: 3\nvoice: 8\ncaptions: 1\nmusic: 8\n");
+    const { deps, synthesize, prepareVoice, align, render } = stubs();
+    await makeVideo(video, deps);
+    expect(synthesize).not.toHaveBeenCalled();
+    expect(prepareVoice).not.toHaveBeenCalled();
+    expect(align).not.toHaveBeenCalled();
+    expect(existsSync(join(video, "voice.wav"))).toBe(false);
+    const plan = JSON.parse(readFileSync(join(video, "plan.json"), "utf8")) as VideoPlan;
+    expect(plan.voice).toBe(8);
+    expect(plan.audioSrc).toBeUndefined();
+    expect(plan.scenes.flatMap((s) => s.words).map((w) => w.text).join(" ")).toBe("Why do cats purr? Cats sleep a lot. That's cats.");
+    expect(render).toHaveBeenCalledOnce();
+  });
+
+  it("mixes the page's music under the voice into soundtrack.wav", async () => {
+    const video = setup();
+    writeFileSync(join(video, "..", "..", "page.yaml"), "name: My cats\nlanguage: en\nniche: cat facts\nstyle: 3\nvoice: 1\ncaptions: 1\nmusic: 4\n");
+    const { deps, mixMusic } = stubs();
+    await makeVideo(video, deps);
+    const plan = JSON.parse(readFileSync(join(video, "plan.json"), "utf8")) as VideoPlan;
+    expect(mixMusic).toHaveBeenCalledWith(video, { mood: 4, durationSec: plan.durationInFrames / 30, voiceWav: join(video, "voice.wav"), loop: false });
+    expect(plan).toMatchObject({ audioSrc: "soundtrack.wav", music: 4 });
+  });
+
+  it("makes a music-only soundtrack for a text-only video", async () => {
+    const video = setup();
+    writeFileSync(join(video, "..", "..", "page.yaml"), "name: My cats\nlanguage: en\nniche: cat facts\nstyle: 3\nvoice: 8\ncaptions: 2\nmusic: 3\n");
+    const { deps, mixMusic } = stubs();
+    await makeVideo(video, deps);
+    const plan = JSON.parse(readFileSync(join(video, "plan.json"), "utf8")) as VideoPlan;
+    expect(mixMusic).toHaveBeenCalledWith(video, { mood: 3, durationSec: plan.durationInFrames / 30, loop: false });
+    expect(plan.audioSrc).toBe("soundtrack.wav");
+  });
+
+  it("keeps the music going to the cut when the script ends on a seamless loop", async () => {
+    const video = setup();
+    writeFileSync(join(video, "..", "..", "page.yaml"), "name: My cats\nlanguage: en\nniche: cat facts\nstyle: 3\nvoice: 1\ncaptions: 1\nmusic: 5\n");
+    writeFileSync(join(video, "script.md"), SCRIPT.replace("ending: 5", "ending: 1"));
+    const { deps, mixMusic } = stubs();
+    await makeVideo(video, deps);
+    expect(mixMusic).toHaveBeenCalledWith(video, expect.objectContaining({ mood: 5, loop: true }));
+  });
+
+  it("uses the voice-over as the soundtrack when the page has no music", async () => {
+    const video = setup();
+    const { deps, mixMusic } = stubs();
+    await makeVideo(video, deps);
+    expect(mixMusic).not.toHaveBeenCalled();
+    expect((JSON.parse(readFileSync(join(video, "plan.json"), "utf8")) as VideoPlan).audioSrc).toBe("voice.wav");
+  });
+
+  it("uses the script's own captions and music for this video, leaving the page as it is", async () => {
+    const video = setup();
+    writeFileSync(join(video, "script.md"), SCRIPT.replace("ending: 5", "ending: 5\ncaptions: 4\nmusic: 6"));
+    const { deps, mixMusic } = stubs();
+    const log = vi.fn();
+    await makeVideo(video, { ...deps, log });
+    const plan = JSON.parse(readFileSync(join(video, "plan.json"), "utf8")) as VideoPlan;
+    expect(plan).toMatchObject({ captions: 4, music: 6 });
+    expect(mixMusic).toHaveBeenCalledWith(video, expect.objectContaining({ mood: 6 }));
+    expect(log.mock.calls.flat().join("\n")).toMatch(/captions 4 .*this video.*page.*1/i);
+    expect(readFileSync(join(video, "..", "..", "page.yaml"), "utf8")).toContain("captions: 1");
+  });
+
+  it("refuses a script choice that is not ready yet", async () => {
+    const video = setup();
+    writeFileSync(join(video, "script.md"), SCRIPT.replace("ending: 5", "ending: 5\nstyle: 7"));
+    await expect(makeVideo(video, stubs().deps)).rejects.toThrow(/style 7 .*not ready yet/);
+  });
+
+  it("stops with advice when whisper hears no words, without keeping those timings", async () => {
+    const video = setup();
+    const { deps, align, render } = stubs();
+    align.mockResolvedValueOnce([]);
+    await expect(makeVideo(video, deps)).rejects.toThrow(/heard no words in .*voice\.wav/);
+    expect(render).not.toHaveBeenCalled();
+    expect(existsSync(join(video, "timing.json"))).toBe(false);
+  });
+
   it("explains what is missing when the video folder has no script", async () => {
     const video = setup();
     const { deps } = stubs();
@@ -113,7 +278,12 @@ describe("make", () => {
     const video = setup();
     writeFileSync(join(video, "..", "..", "page.yaml"), "name: My cats\nlanguage: en\nniche: cat facts\nstyle: 3\nvoice: 1\ncaptions: 2\n");
     const { deps, synthesize } = stubs();
-    await expect(makeVideo(video, deps)).rejects.toThrow(/captions 2 .*is not ready yet.*unfaced list captions/);
+    // A catalog where captions 2 is still planned.
+    const catalogDir = mkdtempSync(join(tmpdir(), "unfaced catalog "));
+    const raw = JSON.parse(readFileSync(join(CATALOG_DIR, "catalog.json"), "utf8"));
+    raw.captions.find((e: { num: number }) => e.num === 2).status = "planned";
+    writeFileSync(join(catalogDir, "catalog.json"), JSON.stringify(raw));
+    await expect(makeVideo(video, { ...deps, catalog: Catalog.load(catalogDir) })).rejects.toThrow(/captions 2 .*is not ready yet.*unfaced list captions/);
     expect(synthesize).not.toHaveBeenCalled();
   });
 

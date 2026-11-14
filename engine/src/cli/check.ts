@@ -1,13 +1,17 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { getLayout } from "../../remotion/styles/layouts.js";
+import { drawsEndingMark, getLayout } from "../../remotion/styles/layouts.js";
 import { type Pcm, readSoundtrack, speechOnsets } from "../audio/speech.js";
 import { type Loudness, checkLoudness, measureLoudness } from "../check/audio.js";
 import { checkFrames, readGrayFrames } from "../check/frames.js";
 import { checkOverlap, checkSafeZone, placedBoxes } from "../check/overlap.js";
-import { checkEdges, checkSync, shownWords } from "../check/sync.js";
+import { captionedOnsets, checkEdges, checkSync, shownWords } from "../check/sync.js";
 import { type CheckReport, toReport } from "../check/types.js";
 import type { VideoPlan } from "../plan/types.js";
+import { readOwnBoxes } from "../render/ownScenes.js";
+
+/** Voice 08 in the voice catalog: text only, no voice-over. */
+const TEXT_ONLY_VOICE = 8;
 
 export interface CheckDeps {
   readFrames(video: string): Promise<Uint8Array[]>;
@@ -29,15 +33,17 @@ export async function checkVideo(videoDir: string, deps: CheckDeps = defaultChec
   const plan = JSON.parse(readFileSync(join(dir, "plan.json"), "utf8")) as VideoPlan;
   const video = join(dir, "video.mp4");
 
-  const boxes = placedBoxes(plan, getLayout(plan.style));
-  const soundtrack = await deps.readSoundtrack(video);
+  const boxes = placedBoxes(plan, getLayout(plan.style), drawsEndingMark(plan.style), readOwnBoxes(join(dir, "scenes", "boxes.json")));
+  // A text-only video (voice 08) has no voice to follow; a silent one has no sound to measure.
+  const voiced = plan.voice !== TEXT_ONLY_VOICE && plan.audioSrc !== undefined;
+  const soundtrack = voiced ? await deps.readSoundtrack(video) : undefined;
   const report = toReport([
     ...checkOverlap(boxes, plan.fps),
     ...checkSafeZone(boxes, plan.fps),
-    ...checkSync(shownWords(plan), speechOnsets(soundtrack), plan.fps),
-    ...checkEdges(soundtrack),
+    ...(soundtrack ? checkSync(shownWords(plan), captionedOnsets(plan, speechOnsets(soundtrack)), plan.fps) : []),
+    ...(soundtrack ? checkEdges(soundtrack) : []),
     ...checkFrames(await deps.readFrames(video), plan.fps),
-    ...checkLoudness(await deps.measureLoudness(video)),
+    ...(plan.audioSrc !== undefined ? checkLoudness(await deps.measureLoudness(video)) : []),
   ]);
   writeFileSync(join(dir, "check.json"), `${JSON.stringify(report, null, 2)}\n`);
   return report;

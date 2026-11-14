@@ -28,8 +28,26 @@ export function listParts(text: string): { header: string; items: string[] } {
   };
 }
 
-/** The number shown on a fact's badge: its position among the body beats (b2 → 2). */
-export const factNumber = (scene: Scene) => Number(/^b(\d+)$/.exec(scene.beatId)?.[1] ?? 1);
+/** The number on a fact's badge: its place among the video's fact scenes, or its beat number (b2 → 2) without them. */
+export function factNumber(scene: Scene, scenes?: Scene[]): number {
+  const facts = scenes?.filter((s) => s.kind === "fact") ?? [];
+  const place = facts.findIndex((s) => s.beatId === scene.beatId);
+  return place >= 0 ? place + 1 : Number(/^b(\d+)$/.exec(scene.beatId)?.[1] ?? 1);
+}
+
+/** Script types whose body beats are numbered items: 07 how it works (steps), 09 did you know (facts); 02 counts down. */
+const COUNTING_UP = new Set([7, 9]);
+const COUNTDOWN = 2;
+
+/**
+ * What a fact's badge shows: its number when the script type numbers its beats (counting
+ * down for a countdown), nothing for other script types (the badge holds a star instead).
+ */
+export function factBadge(scene: Scene, scenes: Scene[], scriptType: number | undefined): string | undefined {
+  const n = factNumber(scene, scenes);
+  if (scriptType === COUNTDOWN) return String(scenes.filter((s) => s.kind === "fact").length + 1 - n);
+  return scriptType === undefined || COUNTING_UP.has(scriptType) ? String(n) : undefined;
+}
 
 /**
  * The largest font size (step 2 px) at which `text` should fit `box` when wrapped,

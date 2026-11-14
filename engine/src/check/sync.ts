@@ -1,4 +1,4 @@
-import { captionPages } from "../../remotion/core/captionLayout.js";
+import { captionPages, captionStyle, showsCaptions } from "../../remotion/core/captionLayout.js";
 import type { VideoPlan } from "../plan/types.js";
 import { durationMs, type Pcm, speechAt } from "../audio/speech.js";
 import type { CheckIssue } from "./types.js";
@@ -17,7 +17,13 @@ export const EDGE_MS = 80;
 
 /** The words the captions light up, in order, computed exactly as the renderer does. */
 export function shownWords(plan: VideoPlan): ShownWord[] {
-  return captionPages(plan.scenes, plan.fps).flatMap((page) => page.tokens.map((t) => ({ text: t.text.trim(), fromMs: t.fromMs })));
+  return captionPages(plan.scenes, plan.fps, captionStyle(plan.captions).maxWords).flatMap((page) => page.tokens.map((t) => ({ text: t.text.trim(), fromMs: t.fromMs })));
+}
+
+/** The onsets that fall inside a scene whose words the captions show; the others have no caption to check. */
+export function captionedOnsets(plan: VideoPlan, onsets: number[]): number[] {
+  const spans = plan.scenes.filter(showsCaptions).map((s) => [(s.fromFrame / plan.fps) * 1000, ((s.fromFrame + s.durationInFrames) / plan.fps) * 1000] as const);
+  return onsets.filter((t) => spans.some(([from, to]) => t >= from && t < to));
 }
 
 /**

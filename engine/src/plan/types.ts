@@ -1,3 +1,4 @@
+import type { Rig } from "../../remotion/core/character/types.js";
 import type { WordTiming } from "../timing/align.js";
 
 export type SceneKind = "title" | "fact" | "list" | "outro";
@@ -21,7 +22,23 @@ export interface VideoPlan {
   style: number;
   captions: number;
   palette: string[];
-  /** The voice-over, relative to the video folder. */
-  audioSrc: string;
+  /** The soundtrack (voice-over, music or both), relative to the video folder; none for a silent video. */
+  audioSrc?: string;
+  /** The voice type from the catalog; 8 means text only (no voice-over). */
+  voice?: number;
+  /** The music mood from the catalog, when the soundtrack has music. */
+  music?: number;
+  /** The script type from the catalog, so styles can number the beats of a list or a countdown. */
+  scriptType?: number;
+  /** The ending type from the catalog, so the last scene can show it. */
+  ending?: number;
+  /** The page's mascot, shown by the style's scenes. */
+  mascot?: Mascot;
   scenes: Scene[];
+}
+
+/** A page's recurring character: a name and a rig (see brand/mascot/mascot.json). */
+export interface Mascot {
+  name: string;
+  rig: Rig;
 }

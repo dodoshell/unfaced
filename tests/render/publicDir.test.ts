@@ -2,7 +2,8 @@ import { existsSync, mkdirSync, mkdtempSync, readdirSync, writeFileSync } from "
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { stagePublicDir } from "../../engine/src/render/renderVideo.js";
+import type { VideoPlan } from "../../engine/src/plan/types.js";
+import { planFiles, stagePublicDir } from "../../engine/src/render/renderVideo.js";
 
 describe("stagePublicDir", () => {
   it("gives the render only the voice-over, not the rest of the video folder", () => {
@@ -16,5 +17,24 @@ describe("stagePublicDir", () => {
     expect(readdirSync(staged)).toEqual(["voice.wav"]);
     expect(staged.startsWith(tmpdir())).toBe(true);
     expect(existsSync(join(video, "voice.wav"))).toBe(true);
+  });
+
+  it("stages files dropped into inbox/ next to the soundtrack", () => {
+    const video = mkdtempSync(join(tmpdir(), "unfaced video "));
+    writeFileSync(join(video, "voice.wav"), "RIFF");
+    mkdirSync(join(video, "inbox"));
+    writeFileSync(join(video, "inbox", "b2.png"), "png");
+    writeFileSync(join(video, "inbox", ".DS_Store"), "");
+
+    const files = planFiles({ audioSrc: "voice.wav" } as VideoPlan, video);
+    expect(files).toEqual(["voice.wav", "inbox/b2.png"]);
+    const staged = stagePublicDir(video, files);
+    expect(existsSync(join(staged, "inbox", "b2.png"))).toBe(true);
+  });
+
+  it("stages nothing for a silent video without an inbox", () => {
+    const video = mkdtempSync(join(tmpdir(), "unfaced video "));
+    expect(planFiles({} as VideoPlan, video)).toEqual([]);
+    expect(readdirSync(stagePublicDir(video, []))).toEqual([]);
   });
 });

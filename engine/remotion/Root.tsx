@@ -1,6 +1,8 @@
 import { Composition } from "remotion";
 import type { VideoPlan } from "../src/plan/types.js";
-import { COMPOSITION_ID } from "./compositionId.js";
+import { COMPOSITION_ID, MASCOT_SHEET_ID } from "./compositionId.js";
+import { MascotSheet, type MascotSheetProps, SHEET } from "./MascotSheet.js";
+import { rigFor } from "./core/character/rig.js";
 import { UnfacedVideo } from "./UnfacedVideo.js";
 
 // Shown only in Remotion Studio when no plan is passed in.
@@ -16,15 +18,20 @@ const emptyPlan: VideoPlan = {
   scenes: [],
 };
 
+const sampleSheet: MascotSheetProps = { style: 3, mascot: { name: "Miso", rig: rigFor("cat") }, palette: emptyPlan.palette };
+
 export const RemotionRoot: React.FC = () => (
-  <Composition
-    id={COMPOSITION_ID}
-    component={UnfacedVideo}
-    defaultProps={{ plan: emptyPlan }}
-    durationInFrames={emptyPlan.durationInFrames}
-    fps={30}
-    width={1080}
-    height={1920}
-    calculateMetadata={({ props }) => ({ durationInFrames: props.plan.durationInFrames })}
-  />
+  <>
+    <Composition
+      id={COMPOSITION_ID}
+      component={UnfacedVideo}
+      defaultProps={{ plan: emptyPlan }}
+      durationInFrames={emptyPlan.durationInFrames}
+      fps={30}
+      width={1080}
+      height={1920}
+      calculateMetadata={({ props }) => ({ durationInFrames: props.plan.durationInFrames })}
+    />
+    <Composition id={MASCOT_SHEET_ID} component={MascotSheet} defaultProps={sampleSheet} durationInFrames={1} fps={30} width={SHEET.width} height={SHEET.height} />
+  </>
 );

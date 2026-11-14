@@ -1,6 +1,7 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, rmSync } from "node:fs";
 import { join, resolve } from "node:path";
 import type { VideoPlan } from "../plan/types.js";
+import { ownScenes } from "../render/ownScenes.js";
 import { closeRenders, renderStillAt } from "../render/renderVideo.js";
 
 /** Parses an interval such as "1s", "0.5s" or "2" (seconds). */
@@ -10,18 +11,29 @@ export function parseEvery(value: string): number {
   return sec;
 }
 
-/** Renders one PNG every `everySec` seconds of a made video into `<videoDir>/frames/`, for review. */
-export async function renderFrames(videoDir: string, everySec: number, log: (m: string) => void = console.error): Promise<string[]> {
+/**
+ * Renders one PNG every `everySec` seconds of a made video into `<videoDir>/frames/`, for
+ * review, replacing the frames of an earlier run. Uses the video's own scenes/ like make.
+ */
+export async function renderFrames(
+  videoDir: string,
+  everySec: number,
+  log: (m: string) => void = console.error,
+  render: typeof renderStillAt = renderStillAt,
+): Promise<string[]> {
   const dir = resolve(videoDir);
   const planFile = join(dir, "plan.json");
   if (!existsSync(planFile)) throw new Error(`plan.json not found in ${dir}; run "unfaced make" first`);
   const plan = JSON.parse(readFileSync(planFile, "utf8")) as VideoPlan;
   const step = Math.max(1, Math.round(everySec * plan.fps));
   const files: string[] = [];
+  const scenes = ownScenes(dir, plan.scenes.map((s) => s.beatId), log);
+  const options = { assetsDir: dir, ...(scenes ? { scenes } : {}) };
+  rmSync(join(dir, "frames"), { recursive: true, force: true });
   try {
     for (let frame = 0; frame < plan.durationInFrames; frame += step) {
       const file = join(dir, "frames", `frame-${String(frame).padStart(5, "0")}.png`);
-      await renderStillAt(plan, frame, file, { assetsDir: dir });
+      await render(plan, frame, file, options);
       files.push(file);
     }
   } finally {
