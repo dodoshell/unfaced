@@ -276,6 +276,26 @@ describe("make", () => {
     await expect(makeVideo(video, stubs().deps)).rejects.toThrow(/style 7 .*not ready yet/);
   });
 
+  it("refuses a script type, hook or ending that is not in the catalog, before recording any voice", async () => {
+    for (const [line, kind] of [["script_type: 9", "script"], ["hook: 1", "hook"], ["ending: 5", "ending"]] as const) {
+      const video = setup();
+      writeFileSync(join(video, "script.md"), SCRIPT.replace(line, `${line.split(":")[0]}: 51`));
+      const { deps, synthesize } = stubs();
+      await expect(makeVideo(video, deps), kind).rejects.toThrow(new RegExp(`script\\.md: ${kind} 51 does not exist; choose a number from 1–`));
+      expect(synthesize).not.toHaveBeenCalled();
+    }
+  });
+
+  it("refuses a script whose ending is not ready yet", async () => {
+    const video = setup();
+    const { deps } = stubs();
+    const catalogDir = mkdtempSync(join(tmpdir(), "unfaced catalog "));
+    const raw = JSON.parse(readFileSync(join(CATALOG_DIR, "catalog.json"), "utf8"));
+    raw.ending.find((e: { num: number }) => e.num === 5).status = "planned";
+    writeFileSync(join(catalogDir, "catalog.json"), JSON.stringify(raw));
+    await expect(makeVideo(video, { ...deps, catalog: Catalog.load(catalogDir) })).rejects.toThrow(/script\.md: ending 5 .*is not ready yet.*unfaced list ending/);
+  });
+
   it("stops with advice when whisper hears no words, without keeping those timings", async () => {
     const video = setup();
     const { deps, align, render } = stubs();

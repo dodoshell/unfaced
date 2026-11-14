@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { parse } from "yaml";
 import type { Catalog } from "../catalog/catalog.js";
+import { NO_MUSIC } from "../catalog/special.js";
 import { CHOICE_FIELDS, type ChoiceField } from "../page/types.js";
 import type { VideoPlan } from "../plan/types.js";
 import { VIDEO_CHOICES } from "../script/parseScript.js";
@@ -118,7 +119,7 @@ export function readVideoFacts(videoDir: string): VideoFacts {
       style: plan.style,
       captions: plan.captions,
       ...(plan.voice !== undefined ? { voice: plan.voice } : {}),
-      music: plan.music ?? 8,
+      music: plan.music ?? NO_MUSIC,
       ...(plan.scriptType !== undefined ? { script: plan.scriptType } : {}),
       ...(plan.ending !== undefined ? { ending: plan.ending } : {}),
     });

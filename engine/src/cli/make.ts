@@ -1,7 +1,8 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { Catalog } from "../catalog/catalog.js";
+import { Catalog, type CatalogEntry } from "../catalog/catalog.js";
+import { NO_MUSIC, TEXT_ONLY_VOICE } from "../catalog/special.js";
 import { loadPage } from "../page/loadPage.js";
 import { loadMascot } from "../page/mascot.js";
 import { resolveChoice } from "../page/resolveChoice.js";
@@ -12,7 +13,7 @@ import type { VideoPlan } from "../plan/types.js";
 import type { CheckReport } from "../check/types.js";
 import { ownScenes } from "../render/ownScenes.js";
 import { renderVideo, type RenderOptions } from "../render/renderVideo.js";
-import { parseScript } from "../script/parseScript.js";
+import { parseScript, type Script } from "../script/parseScript.js";
 import { alignWords, type WordTiming } from "../timing/align.js";
 import { readWavFile, speechPauses } from "../audio/speech.js";
 import { readingTimings } from "../timing/reading.js";
@@ -59,11 +60,6 @@ export const defaultMakeDeps = (): MakeDeps => ({
 
 const SNAP_MIN_PAUSE_MS = 100;
 
-/** Voice 08 in the voice catalog: no voice-over, the captions carry the video. */
-export const TEXT_ONLY_VOICE = 8;
-/** Music 08 in the music catalog: no music. */
-export const NO_MUSIC = 8;
-
 /** Bumped when the voice-over is processed differently, so cached voice-overs are made again. */
 const VOICE_PROCESSING = "lead-in 250, loudnorm -14, pause snap 100, crushed words";
 
@@ -89,6 +85,7 @@ export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDe
   const page = await loadPage(pageDir, deps.catalog);
   const mascot = loadMascot(pageDir);
   const script = parseScript(readFileSync(scriptFile, "utf8"));
+  checkWriting(script, deps.catalog);
   const scenes = ownScenes(dir, script.beats.map((b) => b.id), deps.log);
 
   const style = choose("style", page, deps, script.choices.style);
@@ -217,6 +214,19 @@ export function choose(field: ChoiceField, page: Page, deps: Pick<MakeDeps, "cat
   const entry = deps.catalog.get(field, chosen);
   if (entry.status !== "ready") throw new Error(`${field} ${chosen} (${entry.name}) is not ready yet; pick a ready one from "unfaced list ${field}"`);
   return chosen;
+}
+
+/** The script type, hook and ending script.md names must be catalog entries that are ready. */
+function checkWriting(script: Script, catalog: Catalog): void {
+  for (const [kind, num] of [["script", script.scriptType], ["hook", script.hook], ["ending", script.ending]] as const) {
+    let entry: CatalogEntry;
+    try {
+      entry = catalog.get(kind, num);
+    } catch (err) {
+      throw new Error(`script.md: ${(err as Error).message}`);
+    }
+    if (entry.status !== "ready") throw new Error(`script.md: ${kind} ${num} (${entry.name}) is not ready yet; pick a ready one from "unfaced list ${kind}"`);
+  }
 }
 
 function readTiming(file: string): TimingFile | undefined {
