@@ -33,6 +33,7 @@ Inside this repository the skills' launcher (`node plugin/launcher/unfaced.mjs <
 - Cover image: `npm run unfaced -- cover <videoDir> [--at 1.5]`
 - Files handed off into a video's `inbox/`: `npm run unfaced -- inbox <videoDir>`
 - Compare a page's numbers (`results.md`) by platform and by choice: `npm run unfaced -- results <pageDir>`
+- Catalog gallery (static page with every entry and a poster per style): `npm run unfaced -- gallery`
 - Mascot reference sheet: `npm run unfaced -- mascot <pageDir>`
 - Tests: `npm test` (slow tests that synthesize voice or render video: `UNFACED_SLOW=1 npm test`)
 - Types: `npm run typecheck`

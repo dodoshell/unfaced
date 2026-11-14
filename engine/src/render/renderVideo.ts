@@ -155,10 +155,10 @@ export async function renderMediaOf(job: RenderJob): Promise<void> {
   await renderMedia({ serveUrl: url, composition, inputProps: job.inputProps, ...encoding, outputLocation: job.outPath });
 }
 
-/** Renders one frame of a composition as a PNG. The bundle is kept until closeRenders(). */
-export async function renderStillOf(job: RenderJob & { frame: number }): Promise<void> {
+/** Renders one frame of a composition as a PNG, optionally scaled. The bundle is kept until closeRenders(). */
+export async function renderStillOf(job: RenderJob & { frame: number; scale?: number }): Promise<void> {
   const { url, composition } = await prepare(job);
-  await renderStill({ serveUrl: url, composition, inputProps: job.inputProps, frame: job.frame, output: job.outPath, imageFormat: "png" });
+  await renderStill({ serveUrl: url, composition, inputProps: job.inputProps, frame: job.frame, output: job.outPath, imageFormat: "png", ...(job.scale ? { scale: job.scale } : {}) });
 }
 
 function videoJob(plan: VideoPlan, outPath: string, options: RenderOptions): RenderJob {

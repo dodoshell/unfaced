@@ -5,6 +5,7 @@ import { makeCover } from "./cli/cover.js";
 import { renderDemos } from "./cli/demo.js";
 import { docText } from "./cli/docs.js";
 import { parseEvery, renderFrames } from "./cli/frames.js";
+import { buildGallery } from "./gallery/gallery.js";
 import { inboxReport } from "./cli/inbox.js";
 import { listLines } from "./cli/list.js";
 import { makeVideo } from "./cli/make.js";
@@ -36,6 +37,9 @@ Commands:
                                  all also writes <dir>/all-styles.mp4 and docs/media/styles-grid.gif
   reel hooks [--out <file>]      Render the hook reel: every hook's first example, spoken, each in the next style
                                  (default file: examples/hooks/hook-reel.mp4)
+  gallery [--out <dir>] [--no-stills]
+                                 Build the catalog gallery, a static page with a poster of every style's demo
+                                 (default dir: gallery/; --no-stills keeps the posters already there)
   doctor                         Check that everything the free pipeline needs is installed
   setup                          Download the voice model, whisper and the render browser`;
 
@@ -102,6 +106,11 @@ async function main(args: string[]): Promise<number> {
       if (rest[0] !== "hooks") throw new Error(`reel makes the hook reel: "unfaced reel hooks".\n\n${USAGE}`);
       const out = rest.indexOf("--out");
       await renderHookReel(out >= 0 ? { out: need(rest[out + 1], "a file for --out") } : {});
+      return 0;
+    }
+    case "gallery": {
+      const out = rest.indexOf("--out");
+      console.log(await buildGallery({ ...(out >= 0 ? { out: need(rest[out + 1], "a folder for --out") } : {}), stills: !rest.includes("--no-stills") }));
       return 0;
     }
     case "mascot":
