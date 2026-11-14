@@ -1,9 +1,6 @@
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { Catalog } from "./catalog/catalog.js";
 import { listLines } from "./cli/list.js";
-
-const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
+import { CATALOG_DIR } from "./paths.js";
 
 const USAGE = `Usage: unfaced <command>
 
@@ -14,7 +11,7 @@ function main(args: string[]): number {
   const [command, ...rest] = args;
   switch (command) {
     case "list": {
-      const catalog = Catalog.load(join(repoRoot, "catalog"));
+      const catalog = Catalog.load(CATALOG_DIR);
       console.log(listLines(catalog, rest[0] ?? "").join("\n"));
       return 0;
     }

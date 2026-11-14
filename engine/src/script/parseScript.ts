@@ -22,7 +22,8 @@ export interface Script {
 }
 
 const VISUAL = /^>\s*visual:\s*(.*)$/i;
-const EMOJI = /[\p{Extended_Pictographic}\p{Emoji_Modifier}‍️]/gu;
+const LIST_ITEM = /^-\s+/;
+const EMOJI =/[\p{Extended_Pictographic}\p{Emoji_Modifier}‍️]/gu;
 
 /** Parses a video's script.md (format: docs/formats/script.md). */
 export function parseScript(markdown: string): Script {
@@ -76,7 +77,9 @@ function splitSections(body: string): Map<string, Paragraph[]> {
     if (spoken.length === 0 && visual !== undefined && previous && previous.visual === undefined) {
       previous.visual = visual; // a visual written as its own paragraph belongs to the one before
     } else if (spoken.length > 0) {
-      current.push({ text: spoken.join(" "), ...(visual !== undefined ? { visual } : {}) });
+      // List items ("- water") keep their own lines; other lines of a paragraph are joined.
+      const text = spoken.some((l) => LIST_ITEM.test(l)) ? spoken.join("\n") : spoken.join(" ");
+      current.push({ text, ...(visual !== undefined ? { visual } : {}) });
     }
     lines = [];
   };
@@ -103,8 +106,12 @@ function merge(id: string, kind: Beat["kind"], paragraphs: Paragraph[]): Beat {
   return { id, kind, text: paragraphs.map((p) => p.text).join(" "), ...(visual !== undefined ? { visual } : {}) };
 }
 
+/** What the voice reads: list items become "a, b, c.", emoji are dropped. */
 function speakable(text: string): string {
-  return text
+  const lines = text.split("\n");
+  const items = lines.filter((l) => LIST_ITEM.test(l)).map((l) => l.replace(LIST_ITEM, "").replace(/[.,;]+$/, ""));
+  const read = items.length ? [...lines.filter((l) => !LIST_ITEM.test(l)), `${items.join(", ")}.`].join(" ") : text;
+  return read
     .replace(EMOJI, "")
     .replace(/\s+([!?.,;:…])/g, "$1")
     .replace(/\s{2,}/g, " ")

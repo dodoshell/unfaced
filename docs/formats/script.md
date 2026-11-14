@@ -48,6 +48,15 @@ The three sections are required and come in this order.
 
 Beats get the ids `hook`, `b1`, `b2`, … and `ending`.
 
+A body paragraph with three or more lines starting with `- ` becomes a list scene. The items keep their own lines on screen and are read as "water, noise, closed doors.":
+
+```markdown
+Three things cats hate:
+- water
+- noise
+- closed doors
+```
+
 ## Visuals
 
 A line starting with `> visual:` describes what should be on screen during that beat. It is never spoken. Put it inside the paragraph it belongs to; a `> visual:` paragraph on its own attaches to the beat before it.
