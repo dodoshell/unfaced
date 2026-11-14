@@ -3,6 +3,14 @@ import { Character, factBadge, factNumber, type Pose, type Scene, useMascot, use
 import { colour, layout } from "./layout.js";
 import { ball, raisedText, useFloat, useSquish } from "./shared.js";
 
+/** A five-pointed star as SVG points around (cx, cy): the fonts have no star character. */
+const starPoints = (cx: number, cy: number, outer: number, inner = outer * 0.45) =>
+  Array.from({ length: 10 }, (_, i) => {
+    const a = (i / 10) * Math.PI * 2 - Math.PI / 2;
+    const k = i % 2 === 0 ? outer : inner;
+    return `${(cx + Math.cos(a) * k).toFixed(1)},${(cy + Math.sin(a) * k).toFixed(1)}`;
+  }).join(" ");
+
 /** The mascot explains each fact a little differently. */
 const FACT_POSES: Pose[] = ["talk", "point", "thinking"];
 
@@ -36,7 +44,7 @@ export const Fact: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pal
   const box = layout(scene, palette)[0]!;
   const { plan } = useVideo();
   const n = factNumber(scene, plan.scenes);
-  const label = factBadge(scene, plan.scenes, plan.scriptType) ?? "★";
+  const label = factBadge(scene, plan.scenes, plan.scriptType);
   const cx = box.x + box.w / 2;
   const cy = box.y + box.h / 2;
   return (
@@ -58,7 +66,13 @@ export const Fact: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pal
           zIndex: 1,
         }}
       >
-        <div style={{ ...raisedText(label.length > 1 ? 210 : 280), marginTop: 10 }}>{label}</div>
+        {label !== undefined ? (
+          <div style={{ ...raisedText(label.length > 1 ? 210 : 280), marginTop: 10 }}>{label}</div>
+        ) : (
+          <svg width={240} height={240} viewBox="0 0 240 240" style={{ filter: "drop-shadow(0 6px 0 rgba(40, 30, 60, 0.18)) drop-shadow(0 14px 24px rgba(40, 30, 60, 0.25))" }}>
+            <polygon points={starPoints(120, 126, 112)} fill="#FFFFFF" stroke="#FFFFFF" strokeWidth={14} strokeLinejoin="round" />
+          </svg>
+        )}
       </div>
       {mascot && <Character rig={mascot.rig} pose={FACT_POSES[n % FACT_POSES.length]!} x={540} y={1150} size={230} />}
     </AbsoluteFill>

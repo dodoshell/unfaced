@@ -3,13 +3,21 @@ import { Character, factBadge, type Scene, useMascot, useVideo } from "../../../
 import { colour, layout } from "./layout.js";
 import { FONT, useEnter } from "./shared.js";
 
+/** A five-pointed star as SVG points around (cx, cy): the fonts have no star character. */
+const starPoints = (cx: number, cy: number, outer: number, inner = outer * 0.45) =>
+  Array.from({ length: 10 }, (_, i) => {
+    const a = (i / 10) * Math.PI * 2 - Math.PI / 2;
+    const k = i % 2 === 0 ? outer : inner;
+    return `${(cx + Math.cos(a) * k).toFixed(1)},${(cy + Math.sin(a) * k).toFixed(1)}`;
+  }).join(" ");
+
 /** A fact: its number, or a star for script types that don't number their beats. The captions carry the words. */
 export const Fact: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, palette }) => {
   const { plan } = useVideo();
   const mascot = useMascot();
   const enter = useEnter();
   const box = layout(scene, palette)[0]!;
-  const label = factBadge(scene, plan.scenes, plan.scriptType) ?? "★";
+  const label = factBadge(scene, plan.scenes, plan.scriptType);
   return (
     <AbsoluteFill>
       <div
@@ -27,11 +35,15 @@ export const Fact: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pal
           justifyContent: "center",
           fontFamily: FONT,
           fontWeight: 700,
-          fontSize: label.length > 1 ? 200 : 260,
+          fontSize: (label ?? "").length > 1 ? 200 : 260,
           transform: `scale(${0.6 + 0.4 * enter})`,
         }}
       >
-        {label}
+        {label ?? (
+          <svg width={240} height={240} viewBox="0 0 240 240">
+            <polygon points={starPoints(120, 126, 112)} fill="#FFFFFF" />
+          </svg>
+        )}
       </div>
       {mascot && <Character rig={mascot.rig} pose="talk" x={540} y={1150} size={230} />}
     </AbsoluteFill>

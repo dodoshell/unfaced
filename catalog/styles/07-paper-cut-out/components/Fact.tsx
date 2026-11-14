@@ -25,7 +25,7 @@ export const Fact: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pal
   const box = layout(scene, palette)[0]!;
   const { plan } = useVideo();
   const n = factNumber(scene, plan.scenes);
-  const label = factBadge(scene, plan.scenes, plan.scriptType) ?? "★";
+  const label = factBadge(scene, plan.scenes, plan.scriptType);
   const disc = colour(palette, 1);
   const R = box.w / 2;
   const cx = box.x + R;
@@ -35,6 +35,7 @@ export const Fact: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pal
     () => ({
       rosette: paperImage(2 * ring, 2 * ring, 40, [{ outline: rosette(ring, ring, ring, 18, 81 + n), fill: colour(palette, 3), shadow: lifted(10, 0.25) }], 81 + n),
       disc: paperImage(box.w, box.h, 40, [{ outline: cutCircle(R, box.h / 2, R - 4, 82 + n), fill: disc, shadow: lifted(16, 0.32) }], 82 + n),
+      bigStar: paperImage(260, 260, 24, [{ outline: star(130, 136, 118, 84 + n), fill: onPaper(disc, palette), shadow: lifted(6, 0.35) }], 84 + n),
       stars: STARS.map((s, i) => paperImage(2 * s.size, 2 * s.size, 14, [{ outline: star(s.size, s.size, s.size, 83 + i + n), fill: colour(palette, s.role), shadow: lifted(5, 0.3), grain: 0.5 }], 83 + i)),
     }),
     [palette, box.w, box.h, R, ring, n, disc],
@@ -72,7 +73,7 @@ export const Fact: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pal
             justifyContent: "center",
             paddingTop: 16,
             fontFamily: FONT,
-            fontSize: label.length > 1 ? 210 : 290,
+            fontSize: (label ?? "").length > 1 ? 210 : 290,
             lineHeight: 1,
             color: onPaper(disc, palette),
             // Patrick Hand has one weight; a stroke of its own colour makes the numeral a sturdier cut-out.
@@ -82,7 +83,11 @@ export const Fact: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pal
             textShadow: "3px 6px 6px rgba(30, 26, 20, 0.35)",
           }}
         >
-          {label}
+          {label ?? (
+            <div style={{ position: "relative", width: 260, height: 260, marginTop: -16 }}>
+              <PaperImg src={images.bigStar} w={260} h={260} pad={24} />
+            </div>
+          )}
         </div>
       </div>
       {mascot && <Puppet rig={mascot.rig} pose={FACT_POSES[n % FACT_POSES.length]!} x={540} y={1150} size={230} />}
