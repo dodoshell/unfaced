@@ -2,7 +2,7 @@ import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, rmSync, 
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { bundle } from "@remotion/bundler";
-import { renderMedia, renderStill, selectComposition } from "@remotion/renderer";
+import { type HeadlessBrowser, openBrowser, renderMedia, renderStill, selectComposition } from "@remotion/renderer";
 import { COMPOSITION_ID } from "../../remotion/compositionId.js";
 import { LIBRARY_ROOT } from "../paths.js";
 import { inboxKind } from "../inbox/inbox.js";
@@ -123,8 +123,27 @@ function serveUrl(entryPoint: string, assetsDir: string, files: string[], scenes
   return cached.url;
 }
 
-/** Deletes every temporary bundle and staged folder this process made; returns the folders removed. */
+const browsers = new Map<number, Promise<HeadlessBrowser>>();
+
+/**
+ * Headless Chrome for renders at `scale`, started once and shared until closeRenders(): left to
+ * itself, Remotion starts one to read the composition and another for each render, about a second each.
+ */
+function browserAt(scale: number): Promise<HeadlessBrowser> {
+  let browser = browsers.get(scale);
+  if (!browser) {
+    browser = openBrowser("chrome", { forceDeviceScaleFactor: scale });
+    browsers.set(scale, browser);
+    browser.catch(() => browsers.delete(scale));
+  }
+  return browser;
+}
+
+/** Closes the browsers and deletes every temporary bundle and staged folder this process made; returns the folders removed. */
 export async function closeRenders(): Promise<string[]> {
+  const open = [...browsers.values()];
+  browsers.clear();
+  for (const browser of open) await (await browser.catch(() => undefined))?.close({ silent: true });
   const removed: string[] = [];
   for (const { url, temp } of bundles.values()) {
     const dir = await url.catch(() => undefined);
@@ -138,28 +157,30 @@ export async function closeRenders(): Promise<string[]> {
   return removed;
 }
 
-async function prepare(job: RenderJob) {
+async function prepare(job: RenderJob, scale: number) {
   const entryPoint = resolve(job.entryPoint ?? ENGINE_ENTRY);
   const url = await serveUrl(entryPoint, resolve(job.assetsDir ?? dirname(job.outPath)), job.files ?? [], job.scenes);
-  const composition = await selectComposition({ serveUrl: url, id: job.id, inputProps: job.inputProps });
+  const browser = await browserAt(scale);
+  const composition = await selectComposition({ serveUrl: url, id: job.id, inputProps: job.inputProps, puppeteerInstance: browser });
   mkdirSync(dirname(job.outPath), { recursive: true });
-  return { url, composition };
+  return { url, composition, browser };
 }
 
-/** Renders a composition to an H.264 + AAC video (or the GIF `job.media` asks for). The bundle is kept until closeRenders(). */
+/** Renders a composition to an H.264 + AAC video (or the GIF `job.media` asks for). The bundle and browser are kept until closeRenders(). */
 export async function renderMediaOf(job: RenderJob): Promise<void> {
-  const { url, composition } = await prepare(job);
+  const { url, composition, browser } = await prepare(job, job.media?.scale ?? 1);
   const encoding = job.media
     ? { codec: "gif" as const, everyNthFrame: job.media.everyNthFrame, scale: job.media.scale, numberOfGifLoops: null }
     : // A silent track when the video has no soundtrack (text only, no music): players and platforms expect one.
       { codec: "h264" as const, audioCodec: "aac" as const, enforceAudioTrack: true };
-  await renderMedia({ serveUrl: url, composition, inputProps: job.inputProps, ...encoding, outputLocation: job.outPath });
+  await renderMedia({ serveUrl: url, composition, inputProps: job.inputProps, ...encoding, outputLocation: job.outPath, puppeteerInstance: browser });
 }
 
-/** Renders one frame of a composition as a PNG, optionally scaled. The bundle is kept until closeRenders(). */
+/** Renders one frame of a composition as a PNG, optionally scaled. The bundle and browser are kept until closeRenders(). */
 export async function renderStillOf(job: RenderJob & { frame: number; scale?: number }): Promise<void> {
-  const { url, composition } = await prepare(job);
-  await renderStill({ serveUrl: url, composition, inputProps: job.inputProps, frame: job.frame, output: job.outPath, imageFormat: "png", ...(job.scale ? { scale: job.scale } : {}) });
+  const scale = job.scale ?? 1;
+  const { url, composition, browser } = await prepare(job, scale);
+  await renderStill({ serveUrl: url, composition, inputProps: job.inputProps, frame: job.frame, output: job.outPath, imageFormat: "png", scale, puppeteerInstance: browser });
 }
 
 function videoJob(plan: VideoPlan, outPath: string, options: RenderOptions): RenderJob {
@@ -176,7 +197,7 @@ export async function renderVideo(plan: VideoPlan, outPath: string, options: Ren
   }
 }
 
-/** Renders one frame as a PNG. The bundle is kept for the next frame until closeRenders(). */
+/** Renders one frame as a PNG. The bundle and browser are kept for the next frame until closeRenders(). */
 export async function renderStillAt(plan: VideoPlan, frame: number, outPath: string, options: RenderOptions = {}): Promise<void> {
   await renderStillOf({ ...videoJob(plan, outPath, options), frame });
 }

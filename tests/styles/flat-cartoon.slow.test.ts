@@ -2,12 +2,12 @@ import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { PNG } from "pngjs";
-import { describe, expect, it } from "vitest";
+import { afterAll, describe, expect, it } from "vitest";
 import { layout } from "../../catalog/styles/03-flat-cartoon/components/layout.js";
 import { CAPTION_BOX } from "../../engine/remotion/core/captionLayout.js";
 import { isInsideSafeZone, type Rect } from "../../engine/remotion/core/safeZone.js";
 import type { Scene, VideoPlan } from "../../engine/src/plan/types.js";
-import { renderStillAt } from "../../engine/src/render/renderVideo.js";
+import { closeRenders, renderStillAt } from "../../engine/src/render/renderVideo.js";
 
 const palette = ["#FFF4E0", "#FF6B35", "#2EC4B6", "#FFD23F", "#1B1B3A"];
 const w = (text: string, startMs: number) => ({ text, startMs, endMs: startMs + 300 });
@@ -45,6 +45,7 @@ describe("style 03 flat cartoon layout", () => {
 describe.skipIf(!process.env.UNFACED_SLOW)("style 03 flat cartoon stills (slow)", () => {
   const out = mkdtempSync(join(tmpdir(), "unfaced flat cartoon "));
   const assetsDir = join(import.meta.dirname, "..", "fixtures", "audio");
+  afterAll(() => closeRenders());
 
   it.each(scenes)("renders a $kind scene that is not one flat colour", async (scene) => {
     const file = join(out, `${scene.kind}.png`);
