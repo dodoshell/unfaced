@@ -64,6 +64,26 @@ describe("make", () => {
     expect(render).toHaveBeenCalledWith(expect.anything(), join(video, "video.mp4"), { assetsDir: video });
   });
 
+  it("puts the page's mascot and the script's ending into the plan", async () => {
+    const video = setup();
+    const page = join(video, "..", "..");
+    mkdirSync(join(page, "brand", "mascot"), { recursive: true });
+    writeFileSync(join(page, "brand", "mascot", "mascot.json"), JSON.stringify({ name: "Miso", species: "cat" }));
+    await makeVideo(video, stubs().deps);
+    const plan = JSON.parse(readFileSync(join(video, "plan.json"), "utf8")) as VideoPlan;
+    expect(plan.mascot).toMatchObject({ name: "Miso", rig: { species: "cat" } });
+    expect(plan.ending).toBe(5);
+  });
+
+  it("bundles the video's own scene code when it has a scenes/ folder", async () => {
+    const video = setup();
+    mkdirSync(join(video, "scenes"));
+    writeFileSync(join(video, "scenes", "index.tsx"), "export default {};");
+    const { deps, render } = stubs();
+    await makeVideo(video, deps);
+    expect(render).toHaveBeenCalledWith(expect.anything(), join(video, "video.mp4"), { assetsDir: video, scenes: join(video, "scenes", "index.tsx") });
+  });
+
   it("prepares the voice-over (lead-in and loudness) before timing it", async () => {
     const video = setup();
     const { deps, synthesize, prepareVoice, align } = stubs();

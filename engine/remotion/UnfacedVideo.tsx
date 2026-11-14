@@ -1,6 +1,6 @@
 import { AbsoluteFill, Html5Audio, Sequence, staticFile } from "remotion";
 import type { VideoPlan } from "../src/plan/types.js";
-import { Captions } from "./core/Captions.js";
+import { CaptionsView } from "./core/CaptionStyles.js";
 import { loadFonts } from "./core/fonts.js";
 import { VideoContext } from "./core/VideoContext.js";
 import { videoScene } from "./core/videoScenes.js";
@@ -24,7 +24,7 @@ export const UnfacedVideo: React.FC<{ plan: VideoPlan }> = ({ plan }) => {
           );
         })}
         {plan.audioSrc && <Html5Audio src={staticFile(plan.audioSrc)} />}
-        {plan.captions === 1 && <Captions plan={plan} />}
+        <CaptionsView plan={plan} />
       </AbsoluteFill>
     </VideoContext.Provider>
   );

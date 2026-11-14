@@ -1,4 +1,4 @@
-import { captionPages } from "../../remotion/core/captionLayout.js";
+import { captionPages, captionStyle } from "../../remotion/core/captionLayout.js";
 import type { VideoPlan } from "../plan/types.js";
 import { durationMs, type Pcm, speechAt } from "../audio/speech.js";
 import type { CheckIssue } from "./types.js";
@@ -17,7 +17,7 @@ export const EDGE_MS = 80;
 
 /** The words the captions light up, in order, computed exactly as the renderer does. */
 export function shownWords(plan: VideoPlan): ShownWord[] {
-  return captionPages(plan.scenes, plan.fps).flatMap((page) => page.tokens.map((t) => ({ text: t.text.trim(), fromMs: t.fromMs })));
+  return captionPages(plan.scenes, plan.fps, captionStyle(plan.captions).maxWords).flatMap((page) => page.tokens.map((t) => ({ text: t.text.trim(), fromMs: t.fromMs })));
 }
 
 /**

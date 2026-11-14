@@ -1,4 +1,4 @@
-import { CAPTION_BOX } from "../../remotion/core/captionLayout.js";
+import { captionStyle } from "../../remotion/core/captionLayout.js";
 import { isInsideSafeZone, type Rect } from "../../remotion/core/safeZone.js";
 import type { StyleKit } from "../../remotion/styles/registry.js";
 import type { VideoPlan } from "../plan/types.js";
@@ -16,7 +16,7 @@ export function placedBoxes(plan: VideoPlan, layout: StyleKit["layout"]): Placed
   return plan.scenes.flatMap((scene) => {
     const frames = { fromFrame: scene.fromFrame, toFrame: scene.fromFrame + scene.durationInFrames };
     const boxes = layout(scene, plan.palette).map(({ id, ...rect }) => ({ id: `${scene.beatId} ${id}`, ...rect, ...frames }));
-    if (scene.words.length > 0) boxes.push({ id: `${scene.beatId} caption`, ...CAPTION_BOX, ...frames });
+    if (scene.words.length > 0) boxes.push({ id: `${scene.beatId} caption`, ...captionStyle(plan.captions).box, ...frames });
     return boxes;
   });
 }

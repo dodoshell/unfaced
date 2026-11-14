@@ -3,6 +3,7 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { Catalog } from "../catalog/catalog.js";
 import { loadPage } from "../page/loadPage.js";
+import { loadMascot } from "../page/mascot.js";
 import { resolveChoice } from "../page/resolveChoice.js";
 import type { ChoiceField, Page } from "../page/types.js";
 import { CATALOG_DIR } from "../paths.js";
@@ -67,7 +68,9 @@ export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDe
   const dir = resolve(videoDir);
   const scriptFile = join(dir, "script.md");
   if (!existsSync(scriptFile)) throw new Error(`script.md not found in ${dir}`);
-  const page = await loadPage(resolve(dir, "..", ".."), deps.catalog);
+  const pageDir = resolve(dir, "..", "..");
+  const page = await loadPage(pageDir, deps.catalog);
+  const mascot = loadMascot(pageDir);
   const script = parseScript(readFileSync(scriptFile, "utf8"));
 
   const style = choose("style", page, deps);
@@ -91,12 +94,13 @@ export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDe
     writeFileSync(timingFile, `${JSON.stringify(timing, null, 2)}\n`);
   }
 
-  const plan = buildPlan({ script, words: timing.words, audioDurationSec: timing.durationSec, page, style, captions, warn: deps.log, audioSrc: "voice.wav" });
+  const plan = buildPlan({ script, words: timing.words, audioDurationSec: timing.durationSec, page, style, captions, warn: deps.log, audioSrc: "voice.wav", mascot });
   writeFileSync(join(dir, "plan.json"), `${JSON.stringify(plan, null, 2)}\n`);
 
   const out = join(dir, "video.mp4");
   deps.log(`Rendering ${plan.durationInFrames} frames`);
-  await deps.render(plan, out, { assetsDir: dir });
+  const scenes = join(dir, "scenes", "index.tsx");
+  await deps.render(plan, out, { assetsDir: dir, ...(existsSync(scenes) ? { scenes } : {}) });
   deps.log(`Done: ${out}`);
   for (const line of summaryLines(await deps.check(dir))) deps.log(line);
   return plan;

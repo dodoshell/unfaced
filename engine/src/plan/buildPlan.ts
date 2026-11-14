@@ -2,7 +2,7 @@ import { readStyle } from "../catalog/styles.js";
 import type { Page } from "../page/types.js";
 import type { Beat, Script } from "../script/parseScript.js";
 import type { WordTiming } from "../timing/align.js";
-import type { Scene, SceneKind, VideoPlan } from "./types.js";
+import type { Mascot, Scene, SceneKind, VideoPlan } from "./types.js";
 
 const FPS = 30;
 const TAIL_FRAMES = 15;
@@ -17,13 +17,14 @@ export interface BuildPlanInput {
   warn: (m: string) => void;
   /** The voice-over relative to the video folder; defaults to voice.wav. */
   audioSrc?: string;
+  mascot?: Mascot;
 }
 
 /**
  * Turns a script and the word timings of its voice-over into frame-accurate scenes:
  * one per beat, starting at the beat's first spoken word, back to back to the end.
  */
-export function buildPlan({ script, words, audioDurationSec, page, style, captions, warn, audioSrc = "voice.wav" }: BuildPlanInput): VideoPlan {
+export function buildPlan({ script, words, audioDurationSec, page, style, captions, warn, audioSrc = "voice.wav", mascot }: BuildPlanInput): VideoPlan {
   const durationInFrames = Math.ceil(audioDurationSec * FPS) + TAIL_FRAMES;
   if (page.duration && (audioDurationSec < page.duration.minSec || audioDurationSec > page.duration.maxSec)) {
     const { minSec, maxSec } = page.duration;
@@ -61,6 +62,8 @@ export function buildPlan({ script, words, audioDurationSec, page, style, captio
     captions,
     palette: page.palette ?? readStyle(style).defaultPalette,
     audioSrc,
+    ending: script.ending,
+    ...(mascot ? { mascot } : {}),
     scenes,
   };
 }
