@@ -183,3 +183,28 @@ export function renderMusic(mood: number, durationSec: number, rate: number): Fl
   if (!render) throw new Error(`music ${mood} has no track; moods with music: ${MOODS.join(", ")} (08 is none)`);
   return render(rate, durationSec);
 }
+
+/** A loop is cut this far inside a longer render, clear of the song's own fade-in (2 s) and fade-out (1 s). */
+const LOOP_MARGIN_SEC = 2.5;
+/** The music past the loop's end fades into its start over this long. */
+const LOOP_CROSSFADE_SEC = 1.5;
+
+/**
+ * Music for a video that loops: the replay runs on without a fade or a jump. A longer track
+ * is rendered and cut away from its fades, and the music just past the cut is crossfaded into
+ * the start, so the last sample leads into the first as it did in the longer track.
+ */
+export function renderLoopingMusic(mood: number, durationSec: number, rate: number): Float32Array {
+  const n = Math.round(durationSec * rate);
+  const margin = Math.round(LOOP_MARGIN_SEC * rate);
+  const fade = Math.min(n, Math.round(LOOP_CROSSFADE_SEC * rate));
+  const long = renderMusic(mood, (n + fade + 2 * margin) / rate, rate);
+  const out = long.slice(margin, margin + n);
+  for (let i = 0; i < fade; i++) {
+    // Equal power, since the two stretches of music are unrelated.
+    const k = ((i / fade) * Math.PI) / 2;
+    out[i] = out[i]! * Math.sin(k) + long[margin + n + i]! * Math.cos(k);
+  }
+  return out;
+}
+

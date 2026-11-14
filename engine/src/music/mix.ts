@@ -10,11 +10,12 @@ const ATTACK_HOPS = 5;
 const RELEASE_HOPS = 30;
 const FADE_IN_SEC = 0.8;
 const FADE_OUT_SEC = 0.9;
-/** A loop keeps the music going to the cut; this short fade only stops a click. */
-const LOOP_FADE_SEC = 0.02;
 
 export interface MixOptions {
-  /** The video loops (ending 01): no audible fade at the edges, so the replay runs on. */
+  /**
+   * The video loops: no fade at the edges, so the replay runs on. The music must be made
+   * for it (renderLoopingMusic), its last sample leading into its first.
+   */
   loop?: boolean;
 }
 
@@ -35,7 +36,7 @@ const p99 = (xs: number[]) => [...xs].sort((a, b) => a - b)[Math.floor(xs.length
  * The soundtrack: the voice-over with the music under it, as long as the music. The
  * music ducks under speech and comes up a little between sentences, always staying
  * well below the voice (so the checks still find where speech starts), and fades in
- * and out (only for a few milliseconds in a loop). Without a voice the music is
+ * and out (not at all in a loop). Without a voice the music is
  * returned faded, at its own level.
  */
 export function mixSoundtrack(music: Float32Array, rate: number, voice?: Pcm, { loop = false }: MixOptions = {}): Float32Array {
@@ -65,10 +66,9 @@ export function mixSoundtrack(music: Float32Array, rate: number, voice?: Pcm, { 
 
   const out = new Float32Array(music.length);
   const total = music.length / rate;
-  const [fadeIn, fadeOut] = loop ? [LOOP_FADE_SEC, LOOP_FADE_SEC] : [FADE_IN_SEC, FADE_OUT_SEC];
   for (let i = 0; i < music.length; i++) {
     const t = i / rate;
-    const fade = Math.min(1, (t / fadeIn) ** 3, ((total - t) / fadeOut) ** 3);
+    const fade = loop ? 1 : Math.min(1, (t / FADE_IN_SEC) ** 3, ((total - t) / FADE_OUT_SEC) ** 3);
     const v = voice && i < voice.samples.length ? voice.samples[i]! : 0;
     out[i] = Math.max(-1, Math.min(1, v + music[i]! * gains[Math.floor(i / hop)]! * fade));
   }

@@ -18,7 +18,7 @@ The last line flows straight back into the first, so the video replays without a
 
 - Write it: an ending line that the hook completes. Read the ending and then the hook out loud: they should sound like one sentence.
 - Example: hook "Cats purr for a reason nobody expected." … ending "And that's exactly why…" → back to "Cats purr for a reason nobody expected."
-- What the video does: the voice-over gets a shorter tail, the last frames fade into the first frame (which already shows the hook), and the music runs to the cut instead of fading out.
+- What the video does: the voice-over gets a shorter tail, the last frames fade into the first frame (which already shows the hook), and the music runs through the cut into its own start, with no fade at either end.
 - Good for: short facts, 15–30 second videos, hook 05 unfinished sentence.
 - Avoid: videos over 45 seconds; the viewer no longer remembers how it started.
 
