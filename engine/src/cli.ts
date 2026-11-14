@@ -2,6 +2,7 @@ import { Catalog } from "./catalog/catalog.js";
 import { checkVideo, summaryLines } from "./cli/check.js";
 import { defaultChecks, runDoctor } from "./cli/doctor.js";
 import { makeCover } from "./cli/cover.js";
+import { renderDemos } from "./cli/demo.js";
 import { docText } from "./cli/docs.js";
 import { parseEvery, renderFrames } from "./cli/frames.js";
 import { listLines } from "./cli/list.js";
@@ -24,6 +25,9 @@ Commands:
   frames <videoDir> [--every 1s] Render review frames of a made video into <videoDir>/frames/
   cover <videoDir> [--at 1.5]    Render the cover (a frame without captions) to <videoDir>/cover.png
   mascot <pageDir>               Render the page's mascot reference sheet to brand/mascot/reference.png
+  demo <style|all> [--out <dir>] [--frames]
+                                 Render the style demo (the same dog scene in every style) to <dir>/NN-slug.mp4,
+                                 or its key moments as PNGs with --frames (default dir: examples/styles)
   doctor                         Check that everything the free pipeline needs is installed
   setup                          Download the voice model, whisper and the render browser`;
 
@@ -69,6 +73,11 @@ async function main(args: string[]): Promise<number> {
     case "frames": {
       const at = rest.indexOf("--every");
       await renderFrames(need(rest[0], "the video folder"), at >= 0 ? parseEvery(need(rest[at + 1], "a value for --every")) : 1);
+      return 0;
+    }
+    case "demo": {
+      const out = rest.indexOf("--out");
+      await renderDemos(need(rest[0], "a style number or all"), { ...(out >= 0 ? { out: need(rest[out + 1], "a folder for --out") } : {}), frames: rest.includes("--frames") });
       return 0;
     }
     case "mascot":

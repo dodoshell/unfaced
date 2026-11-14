@@ -1,6 +1,8 @@
 import { Composition } from "remotion";
 import type { VideoPlan } from "../src/plan/types.js";
-import { COMPOSITION_ID, MASCOT_SHEET_ID } from "./compositionId.js";
+import { COMPOSITION_ID, DOG_DEMO_ID, MASCOT_SHEET_ID } from "./compositionId.js";
+import { DEMO } from "./demo/demoMotion.js";
+import { DogDemo } from "./demo/DogDemo.js";
 import { MascotSheet, type MascotSheetProps, SHEET } from "./MascotSheet.js";
 import { rigFor } from "./core/character/rig.js";
 import { UnfacedVideo } from "./UnfacedVideo.js";
@@ -31,6 +33,15 @@ export const RemotionRoot: React.FC = () => (
       width={1080}
       height={1920}
       calculateMetadata={({ props }) => ({ durationInFrames: props.plan.durationInFrames })}
+    />
+    <Composition
+      id={DOG_DEMO_ID}
+      component={DogDemo}
+      defaultProps={{ style: 3 }}
+      durationInFrames={DEMO.durationInFrames}
+      fps={DEMO.fps}
+      width={1080}
+      height={1920}
     />
     <Composition id={MASCOT_SHEET_ID} component={MascotSheet} defaultProps={sampleSheet} durationInFrames={1} fps={30} width={SHEET.width} height={SHEET.height} />
   </>
