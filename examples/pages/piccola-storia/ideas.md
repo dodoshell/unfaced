@@ -11,8 +11,8 @@
 | 3 | La forchetta che scandalizzò Venezia | Intorno all'anno Mille una principessa bizantina, sposa a Venezia, mangiava con una forchetta d'oro; Pier Damiani la indicò come esempio di lusso. | 05 Story in 60 seconds | 13 Start at the climax | idea |
 | 4 | Gli occhiali sono nati in Italia | Nel 1306, in una predica a Firenze, frate Giordano da Pisa disse che l'arte di fare occhiali era stata trovata da meno di vent'anni. | 05 Story in 60 seconds | 11 Insider secret | idea |
 | 5 | Perché si dice «quarantena» | Nel Trecento le navi in arrivo da luoghi colpiti dalla peste restavano isolate prima trenta, poi quaranta giorni: da lì il nome. | 05 Story in 60 seconds | 02 Absurd number | idea |
-| 6 | Il siciliano che portò il gelato a Parigi | Francesco Procopio dei Coltelli aprì a Parigi il Café Procope nel 1686 e lo rese famoso con gelati e sorbetti. | 10 Mini story | 05 Unfinished sentence | idea |
-| 7 | La prima macchina per l'espresso | Nel 1884 il torinese Angelo Moriondo brevettò una macchina a vapore per fare il caffè «in modo economico e istantaneo». | 10 Mini story | 11 Insider secret | idea |
+| 6 | Il siciliano che portò il gelato a Parigi | Francesco Procopio dei Coltelli aprì a Parigi il Café Procope nel 1686 e lo rese famoso con gelati e sorbetti. | 05 Story in 60 seconds | 05 Unfinished sentence | idea |
+| 7 | La prima macchina per l'espresso | Nel 1884 il torinese Angelo Moriondo brevettò una macchina a vapore per fare il caffè in modo economico e istantaneo. | 05 Story in 60 seconds | 11 Insider secret | idea |
 | 8 | Perché in Italia il 17 porta sfortuna | In numeri romani XVII si può anagrammare in VIXI, «ho vissuto»: cioè «sono morto». | 03 Myth or fact | 06 Bold claim | check before scripting |
 | 9 | I giorni della settimana sono dèi | Lunedì è il giorno della Luna, martedì di Marte, mercoledì di Mercurio, giovedì di Giove, venerdì di Venere; sabato e domenica vengono da «shabbat» e da «dies dominica». | 05 Story in 60 seconds | 05 Unfinished sentence | idea |
 | 10 | La Margherita e la regina | La pizza creata nel 1889 per la regina Margherita è una storia famosa, ma le prove sono poche e discusse. | 03 Myth or fact | 01 Shocking question | check before scripting |
@@ -35,7 +35,7 @@ Sources: 1. Treccani, Vocabolario, «ciao». 2. Treccani, Vocabolario, «salario
 4. La pila di Volta
 5. Il violino di Cremona
 
-**Piccoli eroi** · mini story (10), si apre con «Questa è la storia di...» · una volta a settimana
+**Piccoli eroi** · story in 60 seconds (05), si apre con «Questa è la storia di...» · una volta a settimana
 1. Francesco Procopio e il gelato
 2. Angelo Moriondo e l'espresso
 3. Pellegrino Artusi e il suo libro di cucina

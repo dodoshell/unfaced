@@ -1,6 +1,6 @@
 # Example scripts
 
-One complete `script.md` for each script type, about 30 seconds long (70–80 spoken words). Copy one into a video folder as `script.md` to make it. The guide for each type, with two more examples, is in `catalog/scripts/`.
+One complete `script.md` for each script type, 70–80 spoken words: about 25 seconds with the free voice. Copy one into a video folder as `script.md` to make it. Their `> visual:` notes are briefs for scenes you write (`unfaced docs scenes`); made as they are, the videos show the style's own scenes and the notes are not drawn. The guide for each type, with two more examples, is in `catalog/scripts/`.
 
 | File | Script type | Topic | Hook | Ending |
 |---|---|---|---|---|

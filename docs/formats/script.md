@@ -66,6 +66,8 @@ The voice reads the paragraph in the order it is written, but a list scene shows
 
 A line starting with `> visual:` describes what should be on screen during that beat. It is never spoken. Put it inside the paragraph it belongs to; a `> visual:` paragraph on its own attaches to the beat before it.
 
+A visual is a brief for a scene you write in the video's `scenes/` folder (`unfaced docs scenes`). The style's own scenes never draw it: they show the beat's text and the mascot. So write a scene for every visual you keep, or drop the note. The example scripts in `examples/` and `catalog/scripts/` keep their notes to show where a scene helps; made as they are, their videos show the style's own scenes.
+
 ## What the voice reads
 
 The voice reads every beat in order. Emoji stay in the beat text (captions can show them) but are not read aloud. Write numbers the way they should be said when it matters ("3.8 centimetres", not "3.8cm").
