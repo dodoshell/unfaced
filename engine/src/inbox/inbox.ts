@@ -60,8 +60,32 @@ export function parseProbe(stderr: string): Probe {
   };
 }
 
-/** Reads the start of a file with the ffmpeg that ships with Remotion and describes it. */
+/** A WebP image's size from its RIFF header (lossy, lossless or extended), or undefined if it isn't one. */
+export function webpSize(head: Buffer): { width: number; height: number } | undefined {
+  if (head.length < 25 || head.toString("latin1", 0, 4) !== "RIFF" || head.toString("latin1", 8, 12) !== "WEBP") return undefined;
+  const chunk = head.toString("latin1", 12, 16);
+  if (chunk === "VP8L" && head[20] === 0x2f) {
+    const bits = head.readUInt32LE(21);
+    return { width: (bits & 0x3fff) + 1, height: ((bits >>> 14) & 0x3fff) + 1 };
+  }
+  if (head.length < 30) return undefined;
+  if (chunk === "VP8X") return { width: head.readUIntLE(24, 3) + 1, height: head.readUIntLE(27, 3) + 1 };
+  if (chunk === "VP8 " && head[23] === 0x9d && head[24] === 0x01 && head[25] === 0x2a) {
+    return { width: head.readUInt16LE(26) & 0x3fff, height: head.readUInt16LE(28) & 0x3fff };
+  }
+  return undefined;
+}
+
+/**
+ * Describes a file: a WebP image from its header (the ffmpeg that ships with Remotion can't
+ * decode WebP, the renderer's browser can), anything else from ffmpeg reading its start.
+ */
 export async function probeMedia(path: string): Promise<Probe> {
+  if (extname(path).toLowerCase() === ".webp") {
+    const size = webpSize(readFileSync(path).subarray(0, 30));
+    if (!size) throw new Error(`${path} is not a WebP image`);
+    return { video: { codec: "webp", ...size }, durationSec: undefined };
+  }
   // Stream copy into the null muxer: the ffmpeg that ships with Remotion has few encoders.
   const { stderr } = await runFfmpeg(["-i", resolve(path), "-map", "0", "-c", "copy", "-t", "0.5", "-f", "null", "-"]);
   return parseProbe(stderr);

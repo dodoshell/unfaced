@@ -96,6 +96,43 @@ describe("checking an inbox", () => {
     expect(byFile["CREDITS.md"]).toBeUndefined();
   }, 60_000);
 
+  it("reads a WebP image's size from its header, since the engine's ffmpeg can't decode WebP", async () => {
+    const riff = (chunk: string, body: Buffer) => Buffer.concat([Buffer.from("RIFF"), Buffer.alloc(4), Buffer.from("WEBP"), Buffer.from(chunk), Buffer.alloc(4), body]);
+    const lossy = (w: number, h: number) => {
+      const body = Buffer.alloc(10);
+      body.set([0x9d, 0x01, 0x2a], 3);
+      body.writeUInt16LE(w, 6);
+      body.writeUInt16LE(h, 8);
+      return riff("VP8 ", body);
+    };
+    const lossless = (w: number, h: number) => {
+      const body = Buffer.alloc(5);
+      body[0] = 0x2f;
+      body.writeUInt32LE((w - 1) | ((h - 1) << 14), 1);
+      return riff("VP8L", body);
+    };
+    const extended = (w: number, h: number) => {
+      const body = Buffer.alloc(10);
+      body.writeUIntLE(w - 1, 4, 3);
+      body.writeUIntLE(h - 1, 7, 3);
+      return riff("VP8X", body);
+    };
+    const webp = join(mkdtempSync(join(tmpdir(), "unfaced webp ")), "inbox");
+    mkdirSync(webp);
+    writeFileSync(join(webp, "lossy.webp"), lossy(1080, 1920));
+    writeFileSync(join(webp, "lossless.webp"), lossless(1080, 1920));
+    writeFileSync(join(webp, "extended.webp"), extended(1440, 2560));
+    writeFileSync(join(webp, "square.webp"), lossless(1000, 1000));
+    writeFileSync(join(webp, "fake.webp"), "not an image");
+    const byFile = Object.fromEntries((await checkInbox(join(webp, ".."))).map((l) => [l.file, l]));
+    expect(byFile["lossy.webp"]).toMatchObject({ status: "ok", detail: "image 1080×1920" });
+    expect(byFile["lossless.webp"]).toMatchObject({ status: "ok", detail: "image 1080×1920" });
+    expect(byFile["extended.webp"]).toMatchObject({ status: "ok", detail: "image 1440×2560" });
+    expect(byFile["square.webp"]).toMatchObject({ status: "problem" });
+    expect(byFile["square.webp"]!.detail).toMatch(/1000×1000.*9:16/);
+    expect(byFile["fake.webp"]).toMatchObject({ status: "problem" });
+  });
+
   it("reports a missing inbox as nothing to check", async () => {
     expect(await checkInbox(mkdtempSync(join(tmpdir(), "unfaced no inbox ")))).toEqual([]);
   });
