@@ -24,4 +24,4 @@ Purring seems to calm them down, like humming to yourself in a scary place. Some
 And some cats hide a tiny cry inside the purr, one that sounds a lot like a human baby. People find it very hard to ignore.
 
 ## Ending
-So when your cat purrs at you at five in the morning, it isn't love. It's breakfast.
+When your cat purrs at five in the morning, it isn't love. It's breakfast.

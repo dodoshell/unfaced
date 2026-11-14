@@ -1,6 +1,6 @@
 import { AbsoluteFill } from "remotion";
 import { fitFontSize, listParts, type Rect, type Scene } from "../../../../engine/remotion/kit/index.js";
-import { colour, layout } from "./layout.js";
+import { colour, ITEM_FIT, itemSize, layout, listRow, rowText } from "./layout.js";
 import { brightness, CELL, snap, tone } from "./pixels.js";
 import { Bitmap, BORDER, boxColours, outlineInk, PixelBox, pixelText, STEP, steppedRect, useStepFrame } from "./shared.js";
 
@@ -16,10 +16,9 @@ const CURSOR = ["x......", "xx.....", "xox....", "xoox...", "xooox..", "xoox..."
 /** Dark lettering on light fills, white on dark ones. */
 const textOn = (fill: string, ink: string, light = 0.55) => (brightness(fill) > light ? ink : "#FFFFFF");
 
-const chipSize = (box: Rect) => Math.min(box.h - 2 * BORDER - 2 * CELL, 14 * CELL);
-/** The room a row's text has beside its number chip. */
-const textRoom = (box: Rect) => ({ w: box.w - 2 * BORDER - chipSize(box) - 60, h: box.h - 2 * BORDER - 8 });
-const FIT = { charWidth: 0.55, lineHeight: 1.1 };
+/** A row's number. In a small button the drop shadow would fill the font's counters and turn a 2 into an 8, so it goes, and the number takes the plainer contrast of the two inks. */
+const number = (chip: number, fill: string, ink: string): React.CSSProperties =>
+  chip < 60 ? { ...pixelText(Math.round(chip * 0.62), textOn(fill, ink), ink, 700), textShadow: "none" } : pixelText(Math.round(chip * 0.62), textOn(fill, ink, 0.78), ink, 700);
 
 /** A numbered row that slides in from the left in whole-pixel steps, then types its text out. */
 const Item: React.FC<{ n: number; text: string; box: Rect; size: number; palette: string[]; frame: number }> = ({ n, text, box, size, palette, frame }) => {
@@ -29,7 +28,8 @@ const Item: React.FC<{ n: number; text: string; box: Rect; size: number; palette
   const away = SLIDE[k] ?? 0;
   const ink = outlineInk(palette);
   const { fill, text: lettering, shadow } = boxColours(palette);
-  const chip = chipSize(box);
+  const { chip } = listRow(box);
+  const shown = rowText(text, box, size);
   const chipFill = colour(palette, n % 2 === 1 ? 1 : 2);
   const typed = Math.max(0, Math.floor((frame - start - 2 * STEP) * TYPE_RATE));
   return (
@@ -41,12 +41,12 @@ const Item: React.FC<{ n: number; text: string; box: Rect; size: number; palette
           <rect x={CELL} y={CELL} width={chip - 2 * CELL} height={CELL} fill={tone(chipFill, 0.35)} />
           <rect x={CELL} y={chip - 2 * CELL} width={chip - 2 * CELL} height={CELL} fill={tone(chipFill, -0.3)} />
         </svg>
-        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", ...pixelText(Math.round(chip * 0.62), textOn(chipFill, ink, 0.78), ink, 700) }}>{n}</div>
+        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", ...number(chip, chipFill, ink) }}>{n}</div>
       </div>
       {/* The whole text is laid out from the start, so typing never re-wraps it; untyped letters are just hidden. */}
       <div style={pixelText(size, lettering, shadow, 600)}>
-        {text.slice(0, typed)}
-        <span style={{ color: "transparent", textShadow: "none" }}>{text.slice(typed)}</span>
+        {shown.slice(0, typed)}
+        <span style={{ color: "transparent", textShadow: "none" }}>{shown.slice(typed)}</span>
       </div>
     </PixelBox>
   );
@@ -64,12 +64,12 @@ export const List: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pal
   const shown = items.filter((_, i) => frame >= FIRST_ITEM + i * STAGGER + 2 * STEP).length;
   const target = itemBoxes[shown - 1];
   // One size for every row, as in a game menu: the size the longest row fits at.
-  const size = Math.min(...items.map((text, i) => fitFontSize(text, textRoom(itemBoxes[i]!), 60, 28, FIT)));
+  const size = itemSize(items, itemBoxes);
   return (
     <AbsoluteFill>
       {headerBox && (
         <PixelBox box={headerBox} fill={headFill} border={colour(palette, 1)} ink={ink} contentStyle={{ justifyContent: "center", padding: "0 30px", textAlign: "center" }}>
-          <div style={pixelText(fitFontSize(header, { w: headerBox.w - 2 * BORDER - 60, h: headerBox.h - 2 * BORDER - 4 }, 64, 30, FIT), textOn(headFill, ink), tone(headFill, -0.3), 700)}>
+          <div style={pixelText(fitFontSize(header, { w: headerBox.w - 2 * BORDER - 60, h: headerBox.h - 2 * BORDER - 4 }, 64, 30, ITEM_FIT), textOn(headFill, ink), tone(headFill, -0.3), 700)}>
             {header}
           </div>
         </PixelBox>

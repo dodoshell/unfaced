@@ -20,7 +20,7 @@ Default palette (`style.json`): `#F7C46C` `#D9573B` `#4E2753` `#FFC14D` `#120D16
 
 The five roles by position: 1 background is the glow on the horizon, 2 accent the low sky, 3 secondary the high sky, 4 highlight the sun, the moon and the gold of rules and numerals, 5 ink the silhouettes. Missing roles fall back to the default palette.
 
-The top of the sky is always darkened towards night, so the white type reads over any palette. The silhouettes must be dark (they also sit under the captions): a palette with a light ink, made for dark backgrounds, gets its darkest colour as the silhouettes instead, and the highlight lights the horizon when the background is too dark to glow. Very light secondary colours give a washed-out high sky; the darkening keeps type readable, but the mood is best with a deep secondary.
+The top of the sky is always darkened towards night, so the white type reads over any palette. The silhouettes must be dark (they also sit under the captions): a palette with a light ink, made for dark backgrounds, gets its darkest colour as the silhouettes instead, and the highlight lights the horizon when the background is too dark to glow. A highlight too dark to read on that night (under 3:1) is lifted towards white for the gold, keeping its hue. Very light secondary colours give a washed-out high sky; the darkening keeps type readable, but the mood is best with a deep secondary.
 
 ## Type
 

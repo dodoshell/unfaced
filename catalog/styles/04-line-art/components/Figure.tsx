@@ -1,6 +1,6 @@
 import { useCurrentFrame } from "remotion";
 import { FigureFrame, type FigureProps, type Part, polygonPath, smoothPath } from "../../../../engine/remotion/kit/index.js";
-import { colour } from "./layout.js";
+import { colour, inkColour } from "./layout.js";
 import { drawAt, ellipsePath, FONT, LINE, Pen } from "./shared.js";
 
 /** Frames one part takes to draw, and the most the whole figure takes. */
@@ -96,7 +96,7 @@ function linePart(p: Part, t: number, key: number, { ink, soft, paper, accent, w
  */
 export const Figure: React.FC<FigureProps> = ({ parts, palette, ...place }) => {
   const frame = useCurrentFrame();
-  const pens: Pens = { ink: colour(palette, 4), soft: colour(palette, 2), paper: colour(palette, 0), accent: colour(palette, 1), w: (LINE * 100) / place.size };
+  const pens: Pens = { ink: inkColour(palette), soft: colour(palette, 2), paper: colour(palette, 0), accent: colour(palette, 1), w: (LINE * 100) / place.size };
   const stagger = parts.length > 1 ? Math.min(2, (FIGURE_FRAMES - PART_FRAMES) / (parts.length - 1)) : 0;
   return <FigureFrame {...place}>{parts.map((p, i) => linePart(p, drawAt(frame, i * stagger, PART_FRAMES), i, pens))}</FigureFrame>;
 };

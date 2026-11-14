@@ -15,7 +15,7 @@ Ask a simple question that everyone thinks they can answer, then give the real a
 | Why | One or two facts that make the real answer make sense. | 16–26 s |
 | Ending | The page's ending type (default: punchline). | 26–30 s |
 
-For 15 s, drop the Obvious answer beat and keep Why to one fact. For 45–60 s, give Why three facts and add an example.
+For 15 s, drop the Obvious answer beat, open the Real answer with the Turn ("Actually, ..."), and keep Why to one fact: two body beats. For 45–60 s, give Why three facts and add an example.
 
 In `script.md` the Question is `## Hook`; the Obvious answer, Turn, Real answer and Why are paragraphs of `## Body` (one beat each); the Ending is `## Ending`. See `docs/formats/script.md`.
 

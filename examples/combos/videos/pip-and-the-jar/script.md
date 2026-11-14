@@ -10,7 +10,7 @@ music: 2
 ---
 
 ## Hook
-Pip is halfway up the fridge, and the cookie jar is wobbling.
+Pip is halfway up the fridge. The cookie jar is wobbling.
 
 ## Body
 Pip is a small brown dog, and he wants one thing: that jar.

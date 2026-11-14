@@ -1,6 +1,6 @@
 import { useId } from "react";
 import { FigureFrame, type FigureProps, type Part, plainPart } from "../../../../engine/remotion/kit/index.js";
-import { colour } from "./layout.js";
+import { colour, inkColour } from "./layout.js";
 import { darkSheet, FONT, luma, mix, PIGMENT_SIZE, PIGMENT_TILE } from "./shared.js";
 
 /** Small details painted on afterwards with a fine brush, on top of the washes and without their wobble. */
@@ -66,7 +66,7 @@ export const Figure: React.FC<FigureProps> = ({ parts, palette, ...place }) => {
           </g>
         ))}
       </g>
-      <g filter={`url(#${id}d)`}>{details.map((p, i) => plainPart(p, `d${i}`, { fill: p.kind === "mark" ? () => colour(palette, 4) : undefined, font: FONT }))}</g>
+      <g filter={`url(#${id}d)`}>{details.map((p, i) => plainPart(p, `d${i}`, { fill: p.kind === "mark" ? () => inkColour(palette) : undefined, font: FONT }))}</g>
     </FigureFrame>
   );
 };

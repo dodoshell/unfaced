@@ -24,8 +24,9 @@ const validate = new Ajv2020({ allErrors: true }).compile(schema);
 const knownFields: string[] = Object.keys(schema.properties);
 const providerFields: string[] = Object.keys(schema.properties.providers.properties);
 
-// Prefixes of common API keys: OpenAI and Anthropic (sk-), ElevenLabs and Stripe (sk_), Google (AIza), and xi-.
-const KEY_LIKE = /^(sk[-_]|xi-|AIza)/;
+// Prefixes of common API keys: OpenAI and Anthropic (sk-), ElevenLabs and Stripe (sk_), Google (AIza),
+// xi- and Replicate (r8_); or one unbroken run of 40 or more letters and digits, as Pexels' keys are.
+const KEY_LIKE = /^(sk[-_]|xi-|AIza|r8_)|^[A-Za-z0-9]{40,}$/;
 
 export async function loadPage(dir: string, catalog: CatalogLike): Promise<Page> {
   const file = join(dir, "page.yaml");

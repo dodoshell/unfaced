@@ -55,3 +55,4 @@ All durations at 30 fps. Scenes are drawn on twos (every other frame, like limit
 - Bangers has capitals only, so everything is shouted and names lose their case.
 - The boiling outlines and flickering focus lines are busy by design; scenes over about 10 seconds feel restless. Split long beats.
 - Pastel accent or highlight colours make weak plates: the dots and bursts lose their punch. Strong primaries work best.
+- A dark highlight makes a dark caption box: its lead-in is then lettered in white instead of the line colour, which reads but looks less like print.

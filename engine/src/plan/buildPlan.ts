@@ -6,6 +6,8 @@ import type { WordTiming } from "../timing/align.js";
 import type { Mascot, Scene, SceneKind, VideoPlan } from "./types.js";
 
 const FPS = 30;
+/** The most items a list scene shows legibly; past this the styles shrink or cut them. */
+const LIST_MAX = 7;
 
 export interface BuildPlanInput {
   script: Script;
@@ -40,6 +42,10 @@ export function buildPlan({ script, words, audioDurationSec, page, style, captio
   const wordsByBeat = assignWords(script.beats, words);
   const scenes: Scene[] = [];
   script.beats.forEach((beat, i) => {
+    const items = listItems(beat).length;
+    if (kindOf(beat) === "list" && items > LIST_MAX) {
+      warn(`The list in beat "${beat.id}" has ${items} items; a list shows up to ${LIST_MAX} legibly, so split it into two paragraphs.`);
+    }
     const beatWords = wordsByBeat[i]!;
     const previous = scenes.at(-1);
     if (beatWords.length === 0) {
@@ -78,8 +84,10 @@ export function buildPlan({ script, words, audioDurationSec, page, style, captio
 function kindOf(beat: Beat): SceneKind {
   if (beat.kind === "hook") return "title";
   if (beat.kind === "ending") return "outro";
-  return beat.text.split("\n").filter((l) => /^\s*-\s+/.test(l)).length >= 3 ? "list" : "fact";
+  return listItems(beat).length >= 3 ? "list" : "fact";
 }
+
+const listItems = (beat: Beat): string[] => beat.text.split("\n").filter((l) => /^\s*-\s+/.test(l));
 
 const norm = (w: string) => w.toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
 

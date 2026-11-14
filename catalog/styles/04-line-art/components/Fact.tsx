@@ -1,6 +1,6 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { Character, factBadge, factNumber, type Pose, type Scene, useMascot, useVideo } from "../../../../engine/remotion/kit/index.js";
-import { colour, layout } from "./layout.js";
+import { colour, inkColour, layout } from "./layout.js";
 import { drawAt, ellipsePath, FONT, LINE, Pen, Sheet, useDraw, useSettle } from "./shared.js";
 
 /** The mascot explains each fact a little differently. */
@@ -45,7 +45,7 @@ export const Fact: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pal
   const mascot = useMascot();
   const { plan } = useVideo();
   const box = layout(scene, palette)[0]!;
-  const ink = colour(palette, 4);
+  const ink = inkColour(palette);
   const accent = colour(palette, 1);
   const n = factNumber(scene, plan.scenes);
   const label = factBadge(scene, plan.scenes, plan.scriptType);

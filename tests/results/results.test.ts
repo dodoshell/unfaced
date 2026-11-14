@@ -38,6 +38,22 @@ describe("reading results.md", () => {
     ]);
   });
 
+  it("reads the column names the platforms' insights use", () => {
+    const md = "| Video | Platform | Date | Plays | Average watch time | New followers |\n|---|---|---|---|---|---|\n| a | TikTok | 2026-11-14 | 900 | 8.1s | 3 |\n| b | YouTube | 2026-11-14 | 50 | 40% | 0 |\n";
+    const { rows, problems } = parseResults(md);
+    expect(problems).toEqual([]);
+    expect(rows[0]).toEqual({ row: 1, video: "a", platform: "TikTok", posted: "2026-11-14", views: 900, watched: { sec: 8.1 }, follows: 3 });
+    expect(parseResults("| Video | Platform | Video views | Avg. watch time | Followers |\n|---|---|---|---|---|\n| a | X | 7 | 50% | 2 |\n").rows[0]).toMatchObject({ views: 7, watched: { share: 0.5 }, follows: 2 });
+  });
+
+  it("reads counts the apps shorten with K or M, and watch time written as minutes and seconds", () => {
+    const md = `${HEAD}| a | TikTok | 2026-11-14 | 12.4K | 0:09 | 1.2k | 45 | 3K | 0,5K | 1M | |\n| b | YouTube | 2026-11-14 | 2.5M | 1:05 | | | | | | |\n`;
+    const { rows, problems } = parseResults(md);
+    expect(problems).toEqual([]);
+    expect(rows[0]).toMatchObject({ views: 12400, watched: { sec: 9 }, likes: 1200, shares: 3000, saves: 500, follows: 1000000 });
+    expect(rows[1]).toMatchObject({ views: 2500000, watched: { sec: 65 } });
+  });
+
   it("says when there is no table to read", () => {
     expect(parseResults("# Results\n\nNothing yet.\n").problems).toEqual(["results.md has no table with Video and Platform columns (format: unfaced docs results)"]);
   });

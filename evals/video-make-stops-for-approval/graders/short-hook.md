@@ -1,6 +1,6 @@
 ---
 type: regex
-pattern: '^## Hook\r?\n[ \t]*(?:\S+[ \t]+){0,11}\S+[ \t]*\r?$'
+pattern: '^## Hook[ \t]*\r?\n(?:[ \t]*\r?\n)*[ \t]*(?:[^\s>#]\S*[ \t]+){0,10}[^\s>#]\S*[ \t]*(?:\r?\n(?:[ \t]*\r?$|>|#)|\r?\n?(?![\s\S]))'
 flags: m
 target:
   source: file

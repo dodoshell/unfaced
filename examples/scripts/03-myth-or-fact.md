@@ -20,7 +20,7 @@ Cattle have two types of colour-sensing cells, not three like us, so they strugg
 > visual: the arena in full colour, then in muted yellows and blues
 
 What makes a bull charge is movement. On MythBusters, still red, white and blue flags got the same weak reaction. Waving ones got charged.
-> visual: a bull ignoring three still flags, then chasing a waving one
+> visual: a bull nudging three still flags half-heartedly, then charging a waving one
 
 Why red, then? Tradition, and it hides the blood.
 > visual: a folded red cape on a wooden bench

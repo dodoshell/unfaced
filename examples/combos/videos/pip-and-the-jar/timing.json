@@ -1,392 +1,382 @@
 {
-  "hash": "a4ac0d94f0bd0755bdd5dbdacffa790e9dd0fa5b2723d9799aaf721c28e390d8",
+  "hash": "e58f73c1a2e5e744c7f15805ae4ead42accd43ecad9ca265412c2c7ecc702aab",
   "provider": "kokoro",
-  "durationSec": 27.185958333333332,
+  "durationSec": 27.390583333333332,
   "words": [
     {
       "text": "Pip",
-      "startMs": 260,
-      "endMs": 300
+      "startMs": 300,
+      "endMs": 310
     },
     {
       "text": "is",
-      "startMs": 360,
+      "startMs": 310,
       "endMs": 430
     },
     {
-      "text": "half",
+      "text": "halfway",
       "startMs": 430,
-      "endMs": 780
-    },
-    {
-      "text": "way",
-      "startMs": 780,
       "endMs": 1030
     },
     {
       "text": "up",
       "startMs": 1030,
-      "endMs": 1340
+      "endMs": 1360
     },
     {
       "text": "the",
-      "startMs": 1340,
+      "startMs": 1360,
       "endMs": 1580
     },
     {
-      "text": "fridge,",
-      "startMs": 1580,
-      "endMs": 2120
+      "text": "fridge.",
+      "startMs": 2170,
+      "endMs": 2240
     },
     {
-      "text": "and",
-      "startMs": 2120,
-      "endMs": 2280
-    },
-    {
-      "text": "the",
-      "startMs": 2280,
-      "endMs": 2460
+      "text": "The",
+      "startMs": 2600,
+      "endMs": 2860
     },
     {
       "text": "cookie",
-      "startMs": 2460,
-      "endMs": 2740
+      "startMs": 2860,
+      "endMs": 2970
     },
     {
       "text": "jar",
-      "startMs": 2740,
-      "endMs": 2881
+      "startMs": 2970,
+      "endMs": 3210
     },
     {
       "text": "is",
-      "startMs": 2881,
-      "endMs": 3001
+      "startMs": 3210,
+      "endMs": 3370
     },
     {
       "text": "wobbling.",
-      "startMs": 3001,
-      "endMs": 3770
+      "startMs": 3370,
+      "endMs": 4240
     },
     {
       "text": "Pip",
-      "startMs": 3770,
-      "endMs": 4140
+      "startMs": 4430,
+      "endMs": 4630
     },
     {
       "text": "is",
-      "startMs": 4140,
-      "endMs": 4340
+      "startMs": 4810,
+      "endMs": 4930
     },
     {
       "text": "a",
-      "startMs": 4340,
-      "endMs": 4440
+      "startMs": 4930,
+      "endMs": 5460
     },
     {
       "text": "small",
-      "startMs": 4440,
-      "endMs": 5320
+      "startMs": 5460,
+      "endMs": 5780
     },
     {
       "text": "brown",
-      "startMs": 5320,
-      "endMs": 5680
+      "startMs": 5780,
+      "endMs": 6180
     },
     {
-      "text": "dog,",
-      "startMs": 5680,
-      "endMs": 6040
+      "text": "dog",
+      "startMs": 6180,
+      "endMs": 6620
     },
     {
       "text": "and",
-      "startMs": 6040,
-      "endMs": 6300
+      "startMs": 6620,
+      "endMs": 6760
     },
     {
       "text": "he",
-      "startMs": 6300,
-      "endMs": 6460
+      "startMs": 6760,
+      "endMs": 6920
     },
     {
       "text": "wants",
-      "startMs": 6460,
-      "endMs": 6720
+      "startMs": 6920,
+      "endMs": 7180
     },
     {
       "text": "one",
-      "startMs": 6720,
-      "endMs": 6940
+      "startMs": 7180,
+      "endMs": 7420
     },
     {
       "text": "thing",
-      "startMs": 6940,
-      "endMs": 7290
+      "startMs": 7420,
+      "endMs": 7760
     },
     {
       "text": "that",
-      "startMs": 7290,
-      "endMs": 7540
+      "startMs": 7760,
+      "endMs": 7960
     },
     {
       "text": "jar.",
-      "startMs": 7750,
-      "endMs": 8000
+      "startMs": 7960,
+      "endMs": 8220
     },
     {
       "text": "Every",
-      "startMs": 8000,
-      "endMs": 8370
+      "startMs": 8910,
+      "endMs": 9045
     },
     {
       "text": "morning",
-      "startMs": 8370,
-      "endMs": 8810
+      "startMs": 9045,
+      "endMs": 9180
     },
     {
       "text": "his",
-      "startMs": 8810,
-      "endMs": 9340
+      "startMs": 9180,
+      "endMs": 9800
     },
     {
       "text": "owner",
-      "startMs": 9340,
-      "endMs": 9620
-    },
-    {
-      "text": "lifts",
-      "startMs": 9620,
-      "endMs": 9820
-    },
-    {
-      "text": "it",
-      "startMs": 9820,
+      "startMs": 9800,
       "endMs": 10100
     },
     {
-      "text": "higher,",
+      "text": "lifts",
       "startMs": 10100,
-      "endMs": 10400
+      "endMs": 10300
+    },
+    {
+      "text": "it",
+      "startMs": 10300,
+      "endMs": 10600
+    },
+    {
+      "text": "higher,",
+      "startMs": 10600,
+      "endMs": 11010
     },
     {
       "text": "laces",
-      "startMs": 10550,
-      "endMs": 10720
+      "startMs": 11020,
+      "endMs": 11200
     },
     {
       "text": "her",
-      "startMs": 10720,
-      "endMs": 11140
+      "startMs": 11200,
+      "endMs": 11620
     },
     {
       "text": "running",
-      "startMs": 11140,
-      "endMs": 11460
+      "startMs": 11620,
+      "endMs": 11940
     },
     {
       "text": "shoes",
-      "startMs": 11460,
-      "endMs": 11880
+      "startMs": 11940,
+      "endMs": 12360
     },
     {
       "text": "and",
-      "startMs": 11880,
-      "endMs": 12040
+      "startMs": 12360,
+      "endMs": 12500
     },
     {
       "text": "laves.",
-      "startMs": 12040,
-      "endMs": 12800
+      "startMs": 12500,
+      "endMs": 13080
     },
     {
       "text": "So",
-      "startMs": 12800,
-      "endMs": 12960
+      "startMs": 13080,
+      "endMs": 13250
     },
     {
       "text": "Pip",
-      "startMs": 13110,
-      "endMs": 13366
+      "startMs": 13580,
+      "endMs": 14080
     },
     {
       "text": "stacks",
-      "startMs": 13366,
-      "endMs": 13621
+      "startMs": 14080,
+      "endMs": 14120
     },
     {
       "text": "a",
-      "startMs": 13621,
-      "endMs": 14100
+      "startMs": 14120,
+      "endMs": 14560
     },
     {
       "text": "cushion,",
-      "startMs": 14100,
-      "endMs": 14400
+      "startMs": 14560,
+      "endMs": 15020
     },
     {
       "text": "a",
-      "startMs": 14550,
-      "endMs": 14700
+      "startMs": 15020,
+      "endMs": 15300
     },
     {
       "text": "chair",
-      "startMs": 14700,
-      "endMs": 14850
+      "startMs": 15300,
+      "endMs": 15580
     },
     {
       "text": "and",
-      "startMs": 14850,
-      "endMs": 15240
+      "startMs": 15580,
+      "endMs": 15710
     },
     {
       "text": "the",
-      "startMs": 15240,
-      "endMs": 15420
+      "startMs": 15710,
+      "endMs": 15880
     },
     {
       "text": "laundry",
-      "startMs": 15420,
-      "endMs": 15940
+      "startMs": 15880,
+      "endMs": 16400
     },
     {
       "text": "basket",
-      "startMs": 15940,
-      "endMs": 16310
+      "startMs": 16400,
+      "endMs": 16700
     },
     {
       "text": "and",
-      "startMs": 16310,
-      "endMs": 16520
+      "startMs": 16700,
+      "endMs": 16880
     },
     {
       "text": "climbs.",
-      "startMs": 17100,
-      "endMs": 17240
+      "startMs": 16880,
+      "endMs": 17460
     },
     {
       "text": "The",
-      "startMs": 17620,
-      "endMs": 17860
+      "startMs": 17460,
+      "endMs": 17880
     },
     {
       "text": "jar",
-      "startMs": 17860,
-      "endMs": 17900
+      "startMs": 18090,
+      "endMs": 18300
     },
     {
       "text": "is",
-      "startMs": 17900,
-      "endMs": 18500
+      "startMs": 18300,
+      "endMs": 18980
     },
     {
       "text": "empty.",
-      "startMs": 18500,
-      "endMs": 19040
+      "startMs": 19350,
+      "endMs": 19550
     },
     {
       "text": "The",
-      "startMs": 19260,
-      "endMs": 19540
+      "startMs": 19730,
+      "endMs": 20020
     },
     {
       "text": "cookies",
-      "startMs": 19540,
-      "endMs": 19880
+      "startMs": 20020,
+      "endMs": 20340
     },
     {
       "text": "left",
-      "startMs": 19880,
-      "endMs": 20080
-    },
-    {
-      "text": "an",
-      "startMs": 20080,
-      "endMs": 20280
-    },
-    {
-      "text": "hour",
-      "startMs": 20280,
+      "startMs": 20340,
       "endMs": 20580
     },
     {
-      "text": "ago",
+      "text": "an",
       "startMs": 20580,
-      "endMs": 20720
+      "endMs": 20760
+    },
+    {
+      "text": "hour",
+      "startMs": 20760,
+      "endMs": 21060
+    },
+    {
+      "text": "ago",
+      "startMs": 21060,
+      "endMs": 21340
     },
     {
       "text": "in",
-      "startMs": 20870,
-      "endMs": 21020
+      "startMs": 21340,
+      "endMs": 21480
     },
     {
       "text": "her",
-      "startMs": 21020,
-      "endMs": 21280
+      "startMs": 21480,
+      "endMs": 21740
     },
     {
       "text": "running",
-      "startMs": 21280,
-      "endMs": 21600
+      "startMs": 21740,
+      "endMs": 22170
     },
     {
       "text": "pocket.",
-      "startMs": 22330,
-      "endMs": 22650
+      "startMs": 22170,
+      "endMs": 23120
     },
     {
       "text": "Tomorrow",
-      "startMs": 22650,
-      "endMs": 23240
+      "startMs": 23120,
+      "endMs": 23700
     },
     {
       "text": "there's",
-      "startMs": 23240,
-      "endMs": 23450
+      "startMs": 23700,
+      "endMs": 23980
     },
     {
       "text": "a",
-      "startMs": 23450,
-      "endMs": 23520
+      "startMs": 23980,
+      "endMs": 24090
     },
     {
       "text": "new",
-      "startMs": 23520,
-      "endMs": 23780
+      "startMs": 24090,
+      "endMs": 24270
     },
     {
-      "text": "jar,",
-      "startMs": 24100,
-      "endMs": 24320
+      "text": "jar",
+      "startMs": 24270,
+      "endMs": 24640
     },
     {
       "text": "higher",
-      "startMs": 24320,
-      "endMs": 24580
+      "startMs": 24640,
+      "endMs": 25120
     },
     {
       "text": "than",
-      "startMs": 24580,
-      "endMs": 24860
+      "startMs": 25120,
+      "endMs": 25490
     },
     {
       "text": "ever.",
-      "startMs": 25140,
-      "endMs": 25440
+      "startMs": 25680,
+      "endMs": 26220
     },
     {
       "text": "And",
-      "startMs": 25820,
-      "endMs": 26120
+      "startMs": 26220,
+      "endMs": 26500
     },
     {
       "text": "once",
-      "startMs": 26120,
-      "endMs": 26520
+      "startMs": 26500,
+      "endMs": 26940
     },
     {
-      "text": "again...",
-      "startMs": 26810,
-      "endMs": 27070
+      "text": "again",
+      "startMs": 26940,
+      "endMs": 27160
     }
   ]
 }

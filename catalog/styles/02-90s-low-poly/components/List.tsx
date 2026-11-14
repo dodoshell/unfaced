@@ -1,11 +1,10 @@
 import { AbsoluteFill, Easing, interpolate, useCurrentFrame } from "remotion";
 import { fitFontSize, listParts, type Rect, type Scene } from "../../../../engine/remotion/kit/index.js";
 import { tone } from "./colours.js";
-import { colour, layout } from "./layout.js";
+import { BEVEL, colour, itemSize, layout, listRow, rowText } from "./layout.js";
 import { pointer, Poly } from "./poly.js";
 import { accentFill, arcadeText, menuText, panelFill, shadowInk, useSlide, Window } from "./shared.js";
 
-const BEVEL = 14;
 const FIRST_ITEM = 6;
 const STAGGER = 6;
 const POINTER = pointer();
@@ -34,16 +33,12 @@ const Chip: React.FC<{ n: number; size: number; fill: string; ink: string }> = (
   );
 };
 
-const chipSize = (box: Rect) => Math.min(box.h - 2 * BEVEL - 18, 92);
-/** The room a row's text has beside its number chip. */
-const textRoom = (box: Rect) => ({ w: box.w - 2 * BEVEL - chipSize(box) - 64, h: box.h - 2 * BEVEL - 12 });
-
 /** One menu row sliding in from the right. */
 const Item: React.FC<{ n: number; text: string; box: Rect; size: number; palette: string[] }> = ({ n, text, box, size, palette }) => {
   const slide = useSlide(FIRST_ITEM + (n - 1) * STAGGER);
   const fill = panelFill(palette);
   const ink = shadowInk(palette);
-  const chip = chipSize(box);
+  const { chip } = listRow(box);
   return (
     <Window
       box={box}
@@ -56,7 +51,7 @@ const Item: React.FC<{ n: number; text: string; box: Rect; size: number; palette
       contentStyle={{ gap: 22, padding: "0 24px 0 12px" }}
     >
       <Chip n={n} size={chip} fill={colour(palette, n % 2 === 1 ? 1 : 2)} ink={ink} />
-      <div style={menuText(size, tone(fill[1], -0.6), 700)}>{text}</div>
+      <div style={menuText(size, tone(fill[1], -0.6), 700)}>{rowText(text, box, size)}</div>
     </Window>
   );
 };
@@ -77,7 +72,7 @@ export const List: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pal
   const arcade = arcadeSize > 28;
   const bodySize = fitFontSize(header, room, 64, 32, { charWidth: 0.58, lineHeight: 1.1 });
   // One size for every row, as in a game menu: the size the longest row fits at.
-  const size = Math.min(...items.map((text, i) => fitFontSize(text, textRoom(itemBoxes[i]!), 60, 28, { charWidth: 0.58, lineHeight: 1.12 })));
+  const size = itemSize(items, itemBoxes);
   // The cursor moves to each row as it lands.
   const shown = items.map((_, i) => FIRST_ITEM + i * STAGGER + 4).filter((t) => frame >= t).length;
   const centre = (i: number) => itemBoxes[i]!.y + itemBoxes[i]!.h / 2;

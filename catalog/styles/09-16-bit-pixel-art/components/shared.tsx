@@ -3,7 +3,7 @@ import { useId, useMemo } from "react";
 import { useCurrentFrame } from "remotion";
 import { loadFont, type Rect } from "../../../../engine/remotion/kit/index.js";
 import fontUrl from "../fonts/PixelifySans.ttf";
-import { colour } from "./layout.js";
+import { BORDER, colour } from "./layout.js";
 import { brightness, CELL, mix, type Raster, snap, tone } from "./pixels.js";
 
 loadFont("Pixelify Sans", fontUrl, { weight: "400 700" });
@@ -72,8 +72,7 @@ export interface PixelBoxProps {
   children?: React.ReactNode;
 }
 
-/** Border thickness in cells: ink, two of colour, ink. */
-export const BORDER = 4 * CELL;
+export { BORDER } from "./layout.js";
 
 /**
  * A 16-bit text window: stepped corners, an ink edge, a colour band lit along its top and

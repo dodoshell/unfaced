@@ -1,7 +1,7 @@
 {
-  "hash": "91313ccd49d952f9ebd3757f1f165d07713d5b6039cd6f2e321a8b2e4451fe4e",
+  "hash": "343f08b0eb196f604503787ac7ed1d599206d98e0eb30f6b0a7e4d788f7862e5",
   "provider": "kokoro",
-  "durationSec": 27.192916666666665,
+  "durationSec": 27.1985,
   "words": [
     {
       "text": "Hours",
@@ -11,76 +11,76 @@
     {
       "text": "of",
       "startMs": 1030,
-      "endMs": 1140
+      "endMs": 1120
     },
     {
       "text": "engine",
-      "startMs": 1140,
+      "startMs": 1120,
       "endMs": 1840
     },
     {
       "text": "drone,",
       "startMs": 1840,
-      "endMs": 2390
+      "endMs": 2380
     },
     {
       "text": "headphones",
-      "startMs": 2390,
+      "startMs": 2380,
       "endMs": 3200
     },
     {
-      "text": "on,",
+      "text": "on",
       "startMs": 3200,
-      "endMs": 3540
+      "endMs": 3520
     },
     {
       "text": "and",
-      "startMs": 3540,
-      "endMs": 3690
+      "startMs": 3520,
+      "endMs": 3640
     },
     {
       "text": "the",
-      "startMs": 3690,
-      "endMs": 3940
+      "startMs": 3640,
+      "endMs": 3880
     },
     {
-      "text": "raw",
-      "startMs": 3940,
-      "endMs": 4190
+      "text": "roar",
+      "startMs": 3880,
+      "endMs": 4210
     },
     {
       "text": "vanishes,",
-      "startMs": 4190,
-      "endMs": 4940
+      "startMs": 4210,
+      "endMs": 4930
     },
     {
       "text": "a",
-      "startMs": 4940,
+      "startMs": 4930,
       "endMs": 5280
     },
     {
       "text": "tiny",
       "startMs": 5280,
-      "endMs": 5860
+      "endMs": 5840
     },
     {
       "text": "microphone",
-      "startMs": 5860,
+      "startMs": 5840,
       "endMs": 6400
     },
     {
       "text": "on",
-      "startMs": 6450,
+      "startMs": 6440,
       "endMs": 6600
     },
     {
       "text": "the",
       "startMs": 6600,
-      "endMs": 6820
+      "endMs": 6900
     },
     {
       "text": "outside",
-      "startMs": 6820,
+      "startMs": 6900,
       "endMs": 7200
     },
     {
@@ -96,11 +96,11 @@
     {
       "text": "ear",
       "startMs": 7760,
-      "endMs": 8080
+      "endMs": 8060
     },
     {
       "text": "cup",
-      "startMs": 8260,
+      "startMs": 8250,
       "endMs": 8380
     },
     {
@@ -116,11 +116,11 @@
     {
       "text": "the",
       "startMs": 8940,
-      "endMs": 9200
+      "endMs": 9180
     },
     {
       "text": "noise",
-      "startMs": 9200,
+      "startMs": 9180,
       "endMs": 9620
     },
     {
@@ -156,16 +156,16 @@
     {
       "text": "sound",
       "startMs": 11440,
-      "endMs": 11820
+      "endMs": 11800
     },
     {
       "text": "wave",
-      "startMs": 11820,
-      "endMs": 12200
+      "startMs": 11800,
+      "endMs": 12180
     },
     {
       "text": "upside",
-      "startMs": 12200,
+      "startMs": 12180,
       "endMs": 12760
     },
     {
@@ -186,87 +186,87 @@
     {
       "text": "exact",
       "startMs": 14020,
-      "endMs": 14240
+      "endMs": 14260
     },
     {
       "text": "opposite",
-      "startMs": 14240,
-      "endMs": 14650
+      "startMs": 14260,
+      "endMs": 14640
     },
     {
       "text": "called",
-      "startMs": 14650,
+      "startMs": 14640,
       "endMs": 15210
     },
     {
       "text": "anti-noise.",
       "startMs": 15210,
-      "endMs": 16080
+      "endMs": 16070
     },
     {
       "text": "The",
-      "startMs": 16080,
-      "endMs": 16440
+      "startMs": 16070,
+      "endMs": 16420
     },
     {
       "text": "speaker",
-      "startMs": 16440,
+      "startMs": 16420,
       "endMs": 16840
     },
     {
       "text": "plays",
       "startMs": 16840,
-      "endMs": 17100
+      "endMs": 17180
     },
     {
       "text": "the",
-      "startMs": 17100,
-      "endMs": 17280
+      "startMs": 17180,
+      "endMs": 17350
     },
     {
       "text": "anti-noise",
-      "startMs": 17280,
-      "endMs": 17870
+      "startMs": 17350,
+      "endMs": 18220
     },
     {
       "text": "with",
-      "startMs": 17870,
-      "endMs": 18180
+      "startMs": 18220,
+      "endMs": 18420
     },
     {
       "text": "your",
-      "startMs": 18180,
-      "endMs": 18410
+      "startMs": 18420,
+      "endMs": 18780
     },
     {
-      "text": "music.",
-      "startMs": 18410,
-      "endMs": 19190
+      "text": "music,",
+      "startMs": 19200,
+      "endMs": 19360
     },
     {
-      "text": "Each",
-      "startMs": 19190,
+      "text": "each",
+      "startMs": 19360,
       "endMs": 19600
     },
     {
       "text": "peak",
       "startMs": 19600,
-      "endMs": 19660
+      "endMs": 20000
     },
     {
       "text": "meets",
-      "startMs": 19660,
-      "endMs": 20140
+      "startMs": 20000,
+      "endMs": 20200
     },
     {
       "text": "a",
-      "startMs": 20140,
+      "startMs": 20200,
       "endMs": 20380
     },
     {
       "text": "dip",
       "startMs": 20380,
-      "endMs": 20410
+      "endMs": 20490
     },
     {
       "text": "and",
@@ -276,81 +276,81 @@
     {
       "text": "they",
       "startMs": 20840,
-      "endMs": 21100
+      "endMs": 21120
     },
     {
       "text": "cancel",
-      "startMs": 21100,
+      "startMs": 21120,
       "endMs": 21580
     },
     {
       "text": "out,",
       "startMs": 21580,
-      "endMs": 22030
+      "endMs": 21830
     },
     {
       "text": "so",
-      "startMs": 22040,
-      "endMs": 22280
+      "startMs": 21830,
+      "endMs": 22040
     },
     {
       "text": "the",
-      "startMs": 22280,
-      "endMs": 22520
+      "startMs": 22040,
+      "endMs": 22281
     },
     {
-      "text": "raw",
-      "startMs": 22520,
-      "endMs": 22560
+      "text": "roar",
+      "startMs": 22281,
+      "endMs": 22501
     },
     {
       "text": "never",
-      "startMs": 23010,
-      "endMs": 23600
+      "startMs": 22501,
+      "endMs": 23010
     },
     {
-      "text": "vanished.",
-      "startMs": 23600,
+      "text": "vanished,",
+      "startMs": 23010,
+      "endMs": 23640
+    },
+    {
+      "text": "your",
+      "startMs": 23640,
       "endMs": 24220
     },
     {
-      "text": "Your",
-      "startMs": 24220,
-      "endMs": 24720
-    },
-    {
       "text": "headphones",
-      "startMs": 24720,
+      "startMs": 24230,
       "endMs": 25200
     },
     {
       "text": "drowned",
       "startMs": 25200,
-      "endMs": 25560
+      "endMs": 25230
     },
     {
       "text": "it",
-      "startMs": 25560,
-      "endMs": 25760
+      "startMs": 25230,
+      "endMs": 25380
     },
     {
       "text": "in",
-      "startMs": 25760,
-      "endMs": 25920
+      "startMs": 25380,
+      "endMs": 25530
     },
     {
       "text": "its",
-      "startMs": 25920,
-      "endMs": 26140
+      "startMs": 25530,
+      "endMs": 25750
     },
     {
       "text": "own",
-      "startMs": 26140,
-      "endMs": 26700
+      "startMs": 25750,
+      "endMs": 25970
     },
     {
       "text": "opposite.",
-      "startMs": 26700,
+      "startMs": 25970,
       "endMs": 26970
     }
   ]

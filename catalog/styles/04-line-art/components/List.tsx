@@ -1,6 +1,6 @@
 import { AbsoluteFill } from "remotion";
 import { fitFontSize, listParts, type Rect, type Scene } from "../../../../engine/remotion/kit/index.js";
-import { colour, layout } from "./layout.js";
+import { colour, inkColour, layout } from "./layout.js";
 import { FONT, LINE, Pen, Sheet, useDraw, useSettle } from "./shared.js";
 
 const STAGGER = 7;
@@ -36,7 +36,7 @@ const Row: React.FC<{ index: number; text: string; box: Rect; size: number; pale
         <div style={{ flex: "none", width: NUMBER_W, fontWeight: 300, fontSize: Math.min(64, box.h * 0.5), color: colour(palette, 1), fontVariantNumeric: "tabular-nums", letterSpacing: "-0.02em" }}>
           {String(index + 1).padStart(2, "0")}
         </div>
-        <div style={{ fontWeight: 500, fontSize: size, lineHeight: 1.12, letterSpacing: "-0.01em", color: colour(palette, 4) }}>{text}</div>
+        <div style={{ fontWeight: 500, fontSize: size, lineHeight: 1.12, letterSpacing: "-0.01em", color: inkColour(palette) }}>{text}</div>
       </div>
     </>
   );
@@ -77,7 +77,7 @@ export const List: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pal
               fontSize: fitFontSize(header, { w: headerBox.w, h: headerBox.h - 36 }, 66, 34, { charWidth: 0.56, lineHeight: 1.1 }),
               lineHeight: 1.1,
               letterSpacing: "-0.02em",
-              color: colour(palette, 4),
+              color: inkColour(palette),
               ...settle,
             }}
           >

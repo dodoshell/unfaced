@@ -118,9 +118,22 @@ describe("loadPage", () => {
     expect(err.message).toBe(`Unknown clip provider "replicate:sora" in page.yaml; choose one of: none, replicate, replicate:kling, replicate:veo, replicate:seedance, replicate:<owner>/<model>`);
   });
 
-  it.each(["sk_3f9a8b7c6d5e4f3a2b1c", "sk_live_51Hxyz", "xi-abc", "AIzaSyD-123"])("refuses an API key such as %s anywhere in page.yaml", async (key) => {
+  it.each([
+    "sk_3f9a8b7c6d5e4f3a2b1c",
+    "sk_live_51Hxyz",
+    "xi-abc",
+    "AIzaSyD-123",
+    // Replicate's tokens, and Pexels' keys, which are 56 letters and digits with no prefix.
+    "r8_Fq2kT9vX0aBcDeFgHiJkLmNoPqRsTuVwXyZ01",
+    "563492ad6f91700001000001a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6",
+  ])("refuses an API key such as %s anywhere in page.yaml", async (key) => {
     const err = await errorOf(`${minimal}mascot: ${key}\n`);
     expect(err.message).toBe("API keys must not be stored in page.yaml; use .env");
+  });
+
+  it("does not take a phrase with a long word, or a colour, for a key", async () => {
+    const page = await loadPage(pageDir(`${minimal}mascot: "Pneumonoultramicroscopicsilicovolcanoconiosis the fox"\npalette: ["#FFF4E0", "#FF6B35"]\n`), stubCatalog);
+    expect(page.mascot).toContain("fox");
   });
 
   it("says page.yaml is not valid YAML, and where", async () => {

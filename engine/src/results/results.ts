@@ -38,7 +38,27 @@ const COLUMN: Record<string, keyof Omit<ResultRow, "row">> = {
   saves: "saves",
   follows: "follows",
   notes: "notes",
+  // What the platforms' insights call them, for numbers pasted as they are.
+  date: "posted",
+  plays: "views",
+  "video views": "views",
+  "avg watch time": "watched",
+  "average watch time": "watched",
+  "average watched": "watched",
+  "average view duration": "watched",
+  followers: "follows",
+  "new followers": "follows",
 };
+
+/** A column name as COLUMN keys it: lower case, without dots, single spaces. */
+const columnKey = (name: string) => name.toLowerCase().replace(/\./g, "").replace(/\s+/g, " ").trim();
+
+/** A count, plain (12400) or shortened the way the apps show it (12.4K, 1,2M). */
+function count(value: string): number | undefined {
+  if (/^\d+$/.test(value)) return Number(value);
+  const short = /^(\d+(?:[.,]\d+)?)\s*([km])$/i.exec(value);
+  return short ? Math.round(Number(short[1]!.replace(",", ".")) * (short[2]!.toLowerCase() === "k" ? 1e3 : 1e6)) : undefined;
+}
 
 const cells = (line: string) => line.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map((c) => c.trim());
 const title = (key: string) => key[0]!.toUpperCase() + key.slice(1);
@@ -52,7 +72,7 @@ export function parseResults(markdown: string): { rows: ResultRow[]; problems: s
   });
   if (start < 0) return { rows: [], problems: ["results.md has no table with Video and Platform columns (format: unfaced docs results)"] };
 
-  const header = cells(lines[start]!).map((c) => COLUMN[c.toLowerCase()]);
+  const header = cells(lines[start]!).map((c) => COLUMN[columnKey(c)]);
   const rows: ResultRow[] = [];
   const problems: string[] = [];
   for (let i = start + 2; i < lines.length && lines[i]!.trim().startsWith("|"); i++) {
@@ -68,11 +88,16 @@ export function parseResults(markdown: string): { rows: ResultRow[]; problems: s
       } else if (key === "watched") {
         const share = /^(\d+(?:\.\d+)?)\s*%$/.exec(value);
         const sec = /^(\d+(?:\.\d+)?)\s*s$/i.exec(value);
+        const clock = /^(\d+):([0-5]\d)$/.exec(value);
         if (share) row.watched = { share: Number(share[1]) / 100 };
         else if (sec) row.watched = { sec: Number(sec[1]) };
+        else if (clock) row.watched = { sec: Number(clock[1]) * 60 + Number(clock[2]) };
         else bad("Avg watched", `"${value}" needs a unit: a share (71%) or seconds (9.8s)`);
-      } else if (/^\d+$/.test(value)) row[key] = Number(value);
-      else bad(title(key), `"${value}" is not a number${/^\d{1,3}([,. ']\d{3})+$/.test(value) ? `; write it without separators (${value.replace(/\D/g, "")})` : ""}`);
+      } else {
+        const n = count(value);
+        if (n !== undefined) row[key] = n;
+        else bad(title(key), `"${value}" is not a number${/^\d{1,3}([,. ']\d{3})+$/.test(value) ? `; write it without separators (${value.replace(/\D/g, "")})` : ""}`);
+      }
     });
     const same = rows.find((r) => r.video === row.video && r.platform.toLowerCase() === row.platform.toLowerCase());
     if (same) problems.push(`row ${row.row}: ${row.video} on ${same.platform} already has row ${same.row}; update that row instead`);

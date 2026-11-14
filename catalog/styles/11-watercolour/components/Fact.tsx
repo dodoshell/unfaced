@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { AbsoluteFill } from "remotion";
 import { Character, factBadge, factNumber, type Pose, polygonPath, type Scene, smoothPath, useMascot, useVideo } from "../../../../engine/remotion/kit/index.js";
-import { colour, layout } from "./layout.js";
+import { colour, inkColour, layout } from "./layout.js";
 import { blob, handwriting, type Pt, rng, splatter, useDrift, useEase, WashImg, washImage } from "./shared.js";
 
 /** The mascot explains each fact a little differently. */
@@ -69,8 +69,8 @@ export const Fact: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pal
       <div style={{ position: "absolute", left: box.x, top: box.y, width: box.w, height: box.h }}>
         <WashImg src={wash} x={-PAD} y={-PAD} w={box.w + 2 * PAD} h={box.h + 2 * PAD} palette={palette} style={{ opacity: bloom, transform: `${paint} scale(${0.94 + 0.06 * bloom})` }} />
         <svg width={box.w} height={box.h} style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: ink, transform: drift }}>
-          <path d={penRing(R, R, R - 18, 34 + n)} fill="none" stroke={colour(palette, 4)} strokeWidth={4} strokeLinecap="round" opacity={0.8} />
-          {label === undefined && <path d={penStar(R, R + 8, R * 0.52, 35 + n)} fill="none" stroke={colour(palette, 4)} strokeWidth={9} strokeLinejoin="round" />}
+          <path d={penRing(R, R, R - 18, 34 + n)} fill="none" stroke={inkColour(palette)} strokeWidth={4} strokeLinecap="round" opacity={0.8} />
+          {label === undefined && <path d={penStar(R, R + 8, R * 0.52, 35 + n)} fill="none" stroke={inkColour(palette)} strokeWidth={9} strokeLinejoin="round" />}
         </svg>
         {label !== undefined && (
           <div
@@ -84,7 +84,7 @@ export const Fact: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pal
               lineHeight: 1,
               opacity: ink,
               transform: drift,
-              ...handwriting(label.length > 1 ? 230 : 300, colour(palette, 4)),
+              ...handwriting(label.length > 1 ? 230 : 300, inkColour(palette)),
             }}
           >
             {label}

@@ -39,7 +39,7 @@ Font sizes come from `fitFontSize` so each text fits its box: headline 50–104 
 |---|---|
 | title | `headline` 110,480 780×480 |
 | fact | `badge` 290,400 420×420 |
-| list | `header` 110,300 780×130, then `item1…n` from y 464 (y 300 without a lead-in) stacked down to y 1120 with 26 px gaps, at most 150 px tall |
+| list | `header` 110,300 780×130, then `item1…n` from y 464 (y 300 without a lead-in) stacked down to y 1120 with 26 px gaps, at most 150 px tall. When rows would get shorter than 72 px (one line of 28 px text), the lead-in drops to 100 px and the gaps to 16 px |
 | outro | `mark` 340,440 400×400 |
 
 Decorations (the gem on the title window, the glints, the cursor, the rings, the background crystals) may leave the boxes; they carry no text.
@@ -56,6 +56,6 @@ All durations at 30 fps.
 
 - WebGL: every figure is its own small WebGL canvas. Chrome keeps about 16 at once, so a custom scene with more than about ten figures on screen at the same time starts losing the oldest ones. The style's own props are SVG and don't count.
 - Press Start 2P is wide: a lead-in over about 15 characters drops to 32 px on two lines, and past about 50 it falls back to Rubik. Keep lead-ins short.
-- More than 5 list items make the rows short and the shared item size small; split the list across two beats.
+- More than 5 list items make the rows short: an item that does not fit its row at 28 px is cut after the lines that fit, with an ellipsis, and past 8 items the text shrinks below 28 px. Keep items short, and split a list of more than 5 across two beats.
 - Cheek colours with transparency are drawn opaque on 3D figures, so blush reads stronger than in the 2D styles.
 - Very light backgrounds wash out the sky's triangles and the mountain facets; keep the background mid to dark.

@@ -51,5 +51,5 @@ All durations at 30 fps. Every line is drawn on with `stroke-dashoffset`, eased 
 - The figures redraw at every scene start, so the mascot is not visible on frame 0 of a scene; the title's preview frame shows the hook and its box, without the mascot.
 - Long hooks: past about 16 words the headline drops to its 52 px minimum. Keep hooks short.
 - The secondary colour must stay visible on the background (it draws the rules); a secondary close to the background hides them.
-- Palettes with a light ink on a light background, or a dark ink on a dark one, lose everything: line art has no cards behind the words.
+- Line art has no cards behind the words, so when the palette's ink reads below 3:1 on the background (a light ink on a light background, a dark ink on a dark one, or a short dark palette that falls back to the default slate ink) every line and word is drawn in white or near black instead, and the page's ink is not used.
 - A fact scene shows no words of its own, only the circle; a fact longer than about 8 seconds rests on the slowly growing arc. Split long facts.

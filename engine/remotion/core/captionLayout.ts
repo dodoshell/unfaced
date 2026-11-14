@@ -1,4 +1,5 @@
 import { type Caption, createTikTokStyleCaptions, type TikTokPage } from "@remotion/captions";
+import type { CSSProperties } from "react";
 import type { Scene } from "../../src/plan/types.js";
 import { contrast, isHex, luminance } from "./contrast.js";
 import type { Rect } from "./safeZone.js";
@@ -67,6 +68,15 @@ export const CAPTION_STYLES: Record<number, CaptionStyle> = {
   5: { box: CAPTION_BOX, maxWords: 4, fontSize: 84 },
   6: { box: CAPTION_BOX, maxWords: 6, fontSize: 70 },
 };
+
+/**
+ * The box a caption style draws its phrase in. The type is sized from estimated letter widths,
+ * so a word wider than estimated breaks inside the box instead of running out of it.
+ */
+export function captionBoxCss(n: number, align: "center" | "flex-end" = "center"): CSSProperties {
+  const { box } = captionStyle(n);
+  return { position: "absolute", left: box.x, top: box.y, width: box.w, height: box.h, display: "flex", alignItems: align, justifyContent: "center", textAlign: "center", overflowWrap: "anywhere" };
+}
 
 export function captionStyle(n: number): CaptionStyle {
   const style = CAPTION_STYLES[n];

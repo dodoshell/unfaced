@@ -60,7 +60,7 @@ Three things cats hate:
 - closed doors
 ```
 
-The voice reads the paragraph in the order it is written, but a list scene shows every line that is not an item above the items. Keep one lead-in line first, and put anything that follows the list in a paragraph of its own.
+The voice reads the paragraph in the order it is written, but a list scene shows every line that is not an item above the items. Keep one lead-in line first, and put anything that follows the list in a paragraph of its own. Keep a list to 7 items or fewer: past that the styles show the items small or cut them, and `make` warns. Split a longer list into two paragraphs.
 
 ## Visuals
 

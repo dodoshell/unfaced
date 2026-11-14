@@ -1,6 +1,6 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { Character, fitFontSize, type Scene, useMascot } from "../../../../engine/remotion/kit/index.js";
-import { colour, layout } from "./layout.js";
+import { colour, inkColour, layout } from "./layout.js";
 import { FONT, LINE, Pen, rectPath, Sheet, useDraw } from "./shared.js";
 
 const PAD_X = 64;
@@ -15,7 +15,7 @@ const UNDERLINE = 150;
 export const Title: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, palette }) => {
   const mascot = useMascot();
   const box = layout(scene, palette)[0]!;
-  const ink = colour(palette, 4);
+  const ink = inkColour(palette);
   const under = useDraw(4, 22);
   const trace = Math.min(1, useCurrentFrame() / Math.max(1, scene.durationInFrames - 1));
   const size = fitFontSize(scene.text, { w: box.w - 2 * PAD_X, h: box.h - 2 * PAD_Y - 50 }, 132, 52, { charWidth: 0.55, lineHeight: 1.1 });
