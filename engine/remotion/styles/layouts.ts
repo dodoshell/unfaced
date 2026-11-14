@@ -1,15 +1,19 @@
 // Each style's pure text layout, importable without React or fonts so checks can run
 // in Node. A style with components adds one line here as well as in installed.ts.
 import { layout as softThreeD } from "../../../catalog/styles/01-soft-3d/components/layout.js";
+import { layout as lowPoly } from "../../../catalog/styles/02-90s-low-poly/components/layout.js";
 import { layout as flatCartoon } from "../../../catalog/styles/03-flat-cartoon/components/layout.js";
+import { layout as pixelArt } from "../../../catalog/styles/09-16-bit-pixel-art/components/layout.js";
 import type { StyleKit } from "./registry.js";
 
 const LAYOUTS = new Map<number, StyleKit["layout"]>([
   [1, softThreeD],
+  [2, lowPoly],
   [3, flatCartoon],
+  [9, pixelArt],
 ]);
 /** Styles whose last scene draws the ending's sign itself, inside one of its own boxes. */
-const DRAW_ENDING_MARK = new Set<number>([3]);
+const DRAW_ENDING_MARK = new Set<number>([3, 9]);
 
 /** The styles that have a layout, in catalog order. */
 export const stylesWithLayout = (): number[] => [...LAYOUTS.keys()].sort((a, b) => a - b);
