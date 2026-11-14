@@ -82,7 +82,9 @@ function scenesEntry(scenes: string): { entry: string; dir: string } {
   return { entry, dir };
 }
 
-const bundles = new Map<string, { url: Promise<string>; temp: string[] }>();
+const bundles = new Map<string, Promise<string>>();
+/** Every temporary folder a bundle made, kept apart from `bundles` so a failed bundle's folders are deleted too. */
+const temporary: string[] = [];
 
 /** Bundles once per entry point, scenes and staged files (their paths, sizes and times). */
 function serveUrl(entryPoint: string, assetsDir: string, files: string[], scenes?: string): Promise<string> {
@@ -91,18 +93,20 @@ function serveUrl(entryPoint: string, assetsDir: string, files: string[], scenes
     return `${f}:${s.size}:${s.mtimeMs}`;
   });
   const key = [entryPoint, assetsDir, scenes ?? "", ...stats].join("\n");
-  let cached = bundles.get(key);
-  if (!cached) {
+  let url = bundles.get(key);
+  if (!url) {
     const staged = stagePublicDir(assetsDir, files);
-    const temp = [staged];
+    const outDir = mkdtempSync(join(tmpdir(), "unfaced-bundle-"));
+    temporary.push(staged, outDir);
     let entry = entryPoint;
     if (scenes) {
       const generated = scenesEntry(scenes);
       entry = generated.entry;
-      temp.push(generated.dir);
+      temporary.push(generated.dir);
     }
-    const url = bundle({
+    url = bundle({
       entryPoint: entry,
+      outDir,
       publicDir: staged,
       webpackOverride: (config) => ({
         ...config,
@@ -116,11 +120,10 @@ function serveUrl(entryPoint: string, assetsDir: string, files: string[], scenes
         },
       }),
     });
-    cached = { url, temp };
-    bundles.set(key, cached);
+    bundles.set(key, url);
     url.catch(() => bundles.delete(key));
   }
-  return cached.url;
+  return url;
 }
 
 const browsers = new Map<number, Promise<HeadlessBrowser>>();
@@ -144,16 +147,10 @@ export async function closeRenders(): Promise<string[]> {
   const open = [...browsers.values()];
   browsers.clear();
   for (const browser of open) await (await browser.catch(() => undefined))?.close({ silent: true });
-  const removed: string[] = [];
-  for (const { url, temp } of bundles.values()) {
-    const dir = await url.catch(() => undefined);
-    for (const d of [dir, ...temp]) {
-      if (!d) continue;
-      rmSync(d, { recursive: true, force: true });
-      removed.push(d);
-    }
-  }
+  await Promise.allSettled(bundles.values());
   bundles.clear();
+  const removed = temporary.splice(0);
+  for (const dir of removed) rmSync(dir, { recursive: true, force: true, maxRetries: 5 });
   return removed;
 }
 
