@@ -151,7 +151,8 @@ export async function renderMediaOf(job: RenderJob): Promise<void> {
   const { url, composition } = await prepare(job);
   const encoding = job.media
     ? { codec: "gif" as const, everyNthFrame: job.media.everyNthFrame, scale: job.media.scale, numberOfGifLoops: null }
-    : { codec: "h264" as const, audioCodec: "aac" as const };
+    : // A silent track when the video has no soundtrack (text only, no music): players and platforms expect one.
+      { codec: "h264" as const, audioCodec: "aac" as const, enforceAudioTrack: true };
   await renderMedia({ serveUrl: url, composition, inputProps: job.inputProps, ...encoding, outputLocation: job.outPath });
 }
 
