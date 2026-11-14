@@ -2,7 +2,7 @@
 
 Scenarios for the six skills and the `video-reviewer` agent, run with Claude Code's `claude plugin eval`. Each case is a folder with a `prompt.md` (what a user types, plus run limits), `graders/` (how the result is scored) and, when it needs a page on disk, a `case.yaml` and `scaffold.sh` that copy a sample page into the empty workspace first.
 
-Every run is a real Claude Code session on your account: it costs money (see [Cost](#cost)).
+Every run is a real Claude Code session on your account: it counts against your plan's usage, or your API bill when Claude Code uses an API key (see [Cost](#cost)).
 
 ## Where the suite lives
 
@@ -70,7 +70,7 @@ claude plugin eval . --case video-make-stops-for-approval --runs 1 --ablation no
 
 ## Cost
 
-Measured: `page-setup-key-to-env`, one run without baseline, cost $0.15 and took 36 s. The default run is 23 cases × 3 runs × 2 arms = 138 sessions plus three judge calls per `llm` grader per run; the `video-make` and reviewer cases cost the most (the reviewer reads 33 images). For a quick pass use `--runs 1 --ablation none` (23 sessions), pick a cheaper model with `--model`, and cap the spend with `--max-cost-usd`.
+Measured: `page-setup-key-to-env`, one run without baseline, cost $0.15 and took 36 s; the 15 `files-only` cases, one run each without baseline, cost $4.26 and took 11 minutes. The costs are list-price estimates: on a Claude plan nothing is charged, but the runs use the plan's limits, and a run that hits a limit scores 0 without grading (run it again after the reset). The default run is 23 cases × 3 runs × 2 arms = 138 sessions plus three judge calls per `llm` grader per run; the `video-make` and reviewer cases cost the most (the reviewer reads 33 images). For a quick pass use `--runs 1 --ablation none` (23 sessions), pick a cheaper model with `--model`, and cap the spend with `--max-cost-usd`.
 
 ## Reading the results
 

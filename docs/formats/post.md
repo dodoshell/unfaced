@@ -25,7 +25,7 @@ Save this for the next time your cat purrs on you.
 ## YouTube Shorts
 
 Title: Why do cats purr when they're hurt? #shorts
-Description: Purring isn't just happiness. Sources: Muggenthaler 2001, Journal of the Acoustical Society of America.
+Description: Purring isn't just happiness. Sources: Muggenthaler 2001, Journal of the Acoustical Society of America. #catfacts #cats #animalfacts
 
 ## Notes
 
@@ -35,7 +35,7 @@ Description: Purring isn't just happiness. Sources: Muggenthaler 2001, Journal o
 
 Rules:
 
-- Write in the page's language. Keep the platform names and the field labels (`Title:`, `Description:`) in English.
+- Write in the page's language. Keep the headings (the platform names and `Notes`) and the labels (`Video:`, `Cover:`, `Length:`, `Title:`, `Description:`) in English.
 - The first line of each caption is a hook of its own: the platforms cut captions after about one line.
 - 3 to 5 hashtags per platform: one or two broad, the rest about the niche. No banned or unrelated tags.
 - Don't promise what the video doesn't show, and don't repeat the whole script.
