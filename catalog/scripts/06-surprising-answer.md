@@ -17,10 +17,12 @@ Ask a simple question that everyone thinks they can answer, then give the real a
 
 For 15 s, drop the Obvious answer beat and keep Why to one fact. For 45–60 s, give Why three facts and add an example.
 
+In `script.md` the Question is `## Hook`; the Obvious answer, Turn, Real answer and Why are paragraphs of `## Body` (one beat each); the Ending is `## Ending`. See `docs/formats/script.md`.
+
 ## Rules
 
 - The question must be answerable in one word or one short phrase. "Why is the sky blue?" works; "How does weather work?" does not.
-- The real answer must be true and checkable. Note the source in the script's front matter.
+- The real answer must be true and checkable. List the source in `sources`.
 - Say the real answer before explaining it. Never make the viewer wait past 16 s.
 - One idea per sentence. Sentences of 12 words or fewer read best as captions.
 - Never mock the viewer for the obvious answer; everyone believed it.
@@ -30,25 +32,27 @@ For 15 s, drop the Obvious answer beat and keep Why to one fact. For 45–60 s, 
 ```markdown
 ---
 title: What colour is a polar bear?
-source: Smithsonian's National Zoo, "Polar bear" fact sheet
+script_type: 6
+hook: 1
+ending: 5
+sources: Smithsonian's National Zoo, "Polar bear" fact sheet
 ---
 
-## Question
+## Hook
 What colour is a polar bear?
+> visual: a polar bear on the ice, looking at the camera
 
-## Obvious answer
+## Body
 White. Obviously.
 
-## Turn
 Actually, not even close.
+> visual: a big red cross over the white bear
 
-## Real answer
 A polar bear's skin is black, and its fur is see-through.
+> visual: close-up of black skin under clear hairs
 
-## Why
-Each hair is a hollow, clear tube.
-It scatters sunlight, so the coat looks white.
-The black skin underneath soaks up heat.
+Each hair is a hollow, clear tube. It scatters sunlight, so the coat looks white. The black skin underneath soaks up heat.
+> visual: sunlight bouncing inside a hollow hair
 
 ## Ending
 So a polar bear is a black bear in a very clever coat.
@@ -59,25 +63,26 @@ So a polar bear is a black bear in a very clever coat.
 ```markdown
 ---
 title: How many hearts does an octopus have?
-source: Monterey Bay Aquarium, "Giant Pacific octopus"
+script_type: 6
+hook: 1
+ending: 5
+sources: Monterey Bay Aquarium, "Giant Pacific octopus"
 ---
 
-## Question
+## Hook
 How many hearts does an octopus have?
+> visual: an octopus waving one arm
 
-## Obvious answer
+## Body
 One, like every other animal.
 
-## Turn
 Not this one.
 
-## Real answer
 An octopus has three hearts.
+> visual: three hearts beating in a row
 
-## Why
-Two hearts pump blood through the gills.
-The third pumps it to the rest of the body.
-And that third heart stops beating when the octopus swims.
+Two hearts pump blood through the gills. The third pumps it to the rest of the body. And that third heart stops beating when the octopus swims.
+> visual: the third heart going still as the octopus swims
 
 ## Ending
 That's why octopuses would rather crawl.

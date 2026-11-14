@@ -16,12 +16,14 @@ Chain three to five related facts about one topic, each a little stranger than t
 
 For 15 s, use two facts. For 45 s, use four; for 60 s, five. The strangest fact always comes last.
 
+In `script.md` the Hook is `## Hook`, each fact is one paragraph of `## Body`, and the Ending is `## Ending`. See `docs/formats/script.md`.
+
 ## Rules
 
 - All facts are about one topic. A list of random facts loses the viewer.
 - Each fact is one or two sentences and starts with its subject, not with "Did you know".
 - Say "Did you know" at most once, in the hook.
-- Every fact must be true and checkable. List the sources in the script's front matter.
+- Every fact must be true and checkable. List the sources in `sources`.
 - Order by surprise, not by importance.
 
 ## Example 1: Cats
@@ -29,22 +31,27 @@ For 15 s, use two facts. For 45 s, use four; for 60 s, five. The strangest fact 
 ```markdown
 ---
 title: Three things you didn't know about cats
-source: Cornell Feline Health Center; Smithsonian Magazine
+script_type: 9
+hook: 1
+ending: 5
+sources:
+  - Cornell Feline Health Center
+  - Smithsonian Magazine
 ---
 
 ## Hook
 Did you know your cat is hiding three secrets?
+> visual: a cat peeking out of a cardboard box
 
-## Fact 1
+## Body
 Cats sleep up to sixteen hours a day.
+> visual: a cat asleep while a clock spins fast
 
-## Fact 2
-Adult cats rarely meow at each other.
-They save meowing for humans.
+Adult cats rarely meow at each other. They save meowing for humans.
+> visual: two cats staring silently, then one meowing at a person
 
-## Fact 3
-A cat's purr sits between 25 and 150 hertz.
-Vibrations in that range are being studied to help bones heal.
+A cat's purr sits between 25 and 150 hertz. Vibrations in that range are being studied to help bones heal.
+> visual: sound waves around a purring cat
 
 ## Ending
 So your cat isn't lazy. It's a tiny healing machine on standby.
@@ -55,21 +62,25 @@ So your cat isn't lazy. It's a tiny healing machine on standby.
 ```markdown
 ---
 title: The Moon is weirder than you think
-source: NASA Science, "Earth's Moon"
+script_type: 9
+hook: 14
+ending: 5
+sources: NASA Science, "Earth's Moon"
 ---
 
 ## Hook
 You see it almost every night, and you've never noticed this.
+> visual: a full moon over rooftops
 
-## Fact 1
+## Body
 The Moon always shows us the same face.
+> visual: the Moon orbiting Earth with the same side always facing it
 
-## Fact 2
 It is moving away from Earth by about 3.8 centimetres a year.
+> visual: a ruler stretching between Earth and the Moon
 
-## Fact 3
-Footprints left on the Moon in 1969 are still there.
-With no wind or rain, they could last millions of years.
+Footprints left on the Moon in 1969 are still there. With no wind or rain, they could last millions of years.
+> visual: a boot print in grey dust
 
 ## Ending
 Somewhere up there, a boot print is older than your parents and will outlive us all.
