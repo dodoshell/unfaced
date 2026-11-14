@@ -56,6 +56,12 @@ export function parseScript(markdown: string): Script {
     ...body.map((p, i) => ({ id: `b${i + 1}`, kind: "body" as const, text: p.text, ...(p.visual ? { visual: p.visual } : {}) })),
     merge("ending", "ending", ending),
   ];
+  // A beat the voice can't read would get no time on screen, and a script of them a silent video.
+  for (const beat of beats) {
+    if (/[\p{L}\p{N}]/u.test(speakable(beat.text))) continue;
+    const where = beat.kind === "body" ? `body paragraph ${beat.id.slice(1)}` : `## ${beat.kind === "hook" ? "Hook" : "Ending"}`;
+    throw new Error(`script.md: ${where} has nothing for the voice to say; write the words the narrator reads (> visual: lines and emoji are not read aloud)`);
+  }
 
   return {
     title: field(meta, "title", "string"),

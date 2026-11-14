@@ -104,6 +104,12 @@ describe("parseScript", () => {
     expect(() => parseScript(md(`## Hook\nHi.\n\n## Body\nOne.\n`))).toThrow("script.md needs a ## Ending section");
   });
 
+  it("refuses a beat with nothing for the voice to say, naming it, instead of making a silent video", () => {
+    expect(() => parseScript(md(`## Hook\n🐱🐱\n\n## Body\nOne.\n\n## Ending\nEnd.\n`))).toThrow(/## Hook has nothing for the voice to say/);
+    expect(() => parseScript(md(`## Hook\nHi.\n\n## Body\nOne.\n\n🎉\n\n## Ending\nEnd.\n`))).toThrow(/body paragraph 2 has nothing for the voice to say/);
+    expect(() => parseScript(md(`## Hook\nHi.\n\n## Body\nOne.\n\n## Ending\n> visual: a cat waving\n`))).toThrow(/## Ending/);
+  });
+
   it("names a missing or invalid front matter field", () => {
     expect(() => parseScript("## Hook\nHi.\n")).toThrow(/front matter/);
     expect(() => parseScript(basic.replace("hook: 1", "hook: one"))).toThrow(/"hook" must be a catalog number/);
