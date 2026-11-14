@@ -44,7 +44,9 @@ Commands:
                                  Build the catalog gallery, a static page with a poster of every style's demo
                                  (default dir: gallery/; --no-stills keeps the posters already there)
   doctor                         Check that everything the free pipeline needs is installed, and say which paid providers' keys are set
-  setup                          Download the voice model, whisper and the render browser`;
+  setup                          Download the voice model, whisper and the render browser
+
+Set UNFACED_DEBUG=1 to print where an error came from (its stack) along with its message.`;
 
 function need(value: string | undefined, what: string): string {
   if (!value) throw new Error(`Missing ${what}.\n\n${USAGE}`);
@@ -147,6 +149,7 @@ async function main(args: string[]): Promise<number> {
 try {
   process.exitCode = await main(process.argv.slice(2));
 } catch (err) {
-  console.error(err instanceof Error ? err.message : String(err));
+  // The message is advice for the user; the stack is for whoever debugs unfaced itself.
+  console.error(err instanceof Error ? (process.env.UNFACED_DEBUG && err.stack) || err.message : String(err));
   process.exitCode = 1;
 }
