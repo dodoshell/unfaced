@@ -8,7 +8,8 @@
 //
 // Where the library comes from, first match wins:
 //   1. $UNFACED_LIB, a folder holding the library;
-//   2. a checkout of the unfaced repository containing the current folder or this script;
+//   2. the checkout of the unfaced repository this script lives in (never one found around the
+//      current folder: that may be anyone's code, and running it would run their code);
 //   3. ~/.unfaced/lib/<version> ($UNFACED_HOME instead of ~/.unfaced), cloned from the release
 //      tag and installed the first time it is needed.
 import { spawnSync } from "node:child_process";
@@ -77,7 +78,7 @@ function findLibrary() {
     }
     return { lib: resolve(fromEnv), installed: false };
   }
-  const checkout = checkoutAbove(process.cwd()) ?? checkoutAbove(dirname(fileURLToPath(import.meta.url)));
+  const checkout = checkoutAbove(dirname(fileURLToPath(import.meta.url)));
   if (checkout) return { lib: checkout, installed: false };
   const home = process.env.UNFACED_HOME || join(homedir(), ".unfaced");
   return { lib: join(home, "lib", VERSION), installed: true };

@@ -53,9 +53,15 @@ describe("the skills' launcher", () => {
     expect(launch(launcher, ["where"])).toMatchObject({ status: 0, stdout: root });
   });
 
-  it("uses the checkout the user is working in", () => {
-    const { script } = outsideCopy();
-    expect(launch(script, ["where"], {}, join(root, "examples"))).toMatchObject({ status: 0, stdout: root });
+  it("never runs a library found around the current folder, which may be anyone's code", () => {
+    const { script, dir } = outsideCopy();
+    const home = join(dir, "home");
+    const installed = join(home, "lib", "0.1.0");
+    fakeLibrary(installed);
+    const untrusted = join(dir, "downloaded repo");
+    fakeLibrary(untrusted);
+    mkdirSync(join(untrusted, "sub"));
+    expect(launch(script, ["where"], { UNFACED_HOME: home }, join(untrusted, "sub"))).toMatchObject({ status: 0, stdout: installed });
   });
 
   it("uses UNFACED_LIB when it is set, and refuses a folder that is not a library", () => {

@@ -34,7 +34,7 @@ The first command that needs the engine installs it into `~/.unfaced/` (git, Nod
 
 **Other agents** (best effort): `npx skills add dodoshell/unfaced`. The skills are plain instructions and a Node launcher; where an agent has no subagents, the review runs in a fresh session instead.
 
-**From a clone**: `npm run setup`, then use the CLI directly (below). The skills detect a local checkout and use it.
+**From a clone**: `npm run setup`, then use the CLI directly (below). The skills inside the clone use it; to point an installed plugin at your clone, set `UNFACED_LIB` to its folder.
 
 ## Catalogs
 
