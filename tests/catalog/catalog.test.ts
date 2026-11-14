@@ -79,7 +79,7 @@ describe("unfaced list", () => {
     const lines = out.trim().split(/\r?\n/);
     expect(lines).toHaveLength(12);
     expect(lines[2]).toMatch(/^03 {2}Flat cartoon — /);
-    expect(lines[2]).not.toContain("(planned)");
-    expect(lines[0]).toContain("(planned)");
+    const styles = catalog.list("style");
+    styles.forEach((entry, i) => expect(lines[i]!.includes("(planned)"), lines[i]).toBe(entry.status === "planned"));
   });
 });

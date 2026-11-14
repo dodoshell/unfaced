@@ -5,6 +5,7 @@ This folder is a working minimal style: plain cards, one font, flat figures. Cop
 1. Copy `_template/` to `NN-slug/` (the number and slug from `catalog/catalog.json`).
 2. In `style.json` set `id`, `slug`, `name` (as in the catalog) and a five-colour `defaultPalette`.
 3. Draw the look in `components/`: `Background`, the four scene kinds (`Title`, `Fact`, `List`, `Outro`) and `Figure`, the painter for characters and the demo's park.
+   A 3D style paints the same parts as lit solids with `Figure3D` (`engine/remotion/core/three/`); see `01-soft-3d`.
 4. Keep `components/layout.ts` pure (no React): it returns every text box of a scene, the components draw exactly those boxes, and `unfaced check` tests them without rendering.
 5. Put the style's fonts in `fonts/` with their licence (OFL or similar), load them with `loadFont`, and add a row to `LICENSES/README.md`.
 6. Register it: one import and one `registerStyle` line in `engine/remotion/styles/installed.ts`, one line in `engine/remotion/styles/layouts.ts` (and `DRAW_ENDING_MARK` if the outro draws the ending's sign), and `"status": "ready"` in `catalog/catalog.json`.

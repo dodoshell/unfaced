@@ -19,6 +19,7 @@
     "@types/pngjs": "^6.0.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@types/three": "0.186.0",
     "pixelmatch": "^8.0.0",
     "pngjs": "^7.0.0",
     "tsx": "^4.23.15",
@@ -30,15 +31,18 @@
     "esbuild@0.28.1": true
   },
   "dependencies": {
+    "@react-three/fiber": "9.8.2",
     "@remotion/bundler": "4.0.543",
     "@remotion/captions": "4.0.543",
     "@remotion/install-whisper-cpp": "4.0.543",
     "@remotion/renderer": "4.0.543",
+    "@remotion/three": "4.0.543",
     "ajv": "^8.20.0",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "remotion": "4.0.543",
     "sherpa-onnx-node": "1.13.8",
+    "three": "0.186.0",
     "yaml": "^2.9.1"
   }
 }

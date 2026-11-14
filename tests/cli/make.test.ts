@@ -260,7 +260,8 @@ describe("make", () => {
     const log = vi.fn();
     await makeVideo(video, { ...deps, log });
     const plan = JSON.parse(readFileSync(join(video, "plan.json"), "utf8")) as VideoPlan;
-    expect(plan.style).toBe(3);
-    expect(log.mock.calls.flat().join("\n")).toMatch(/style.*auto.*3/i);
+    const firstReady = Catalog.load(CATALOG_DIR).list("style").find((e) => e.status === "ready")!.num;
+    expect(plan.style).toBe(firstReady);
+    expect(log.mock.calls.flat().join("\n")).toMatch(new RegExp(`style.*auto.*${firstReady}`, "i"));
   });
 });
