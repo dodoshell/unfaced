@@ -6,8 +6,9 @@ import { FONT, outlined, Starburst, usePop } from "./shared.js";
 /** The hook: a white headline card tilted over a slowly turning starburst. */
 export const Title: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, palette }) => {
   const frame = useCurrentFrame();
-  const pop = usePop();
-  const burstPop = usePop(4);
+  // Started a few frames early so the very first frame (the platforms' preview) already shows the hook.
+  const pop = usePop(-6);
+  const burstPop = usePop(-3);
   const box = layout(scene, palette)[0]!;
   const ink = colour(palette, 4);
   const size = fitFontSize(scene.text, { w: box.w - 2 * (INK + 40), h: box.h - 2 * (INK + 30) }, 104, 52);

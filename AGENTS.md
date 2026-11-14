@@ -9,7 +9,10 @@ unfaced helps a person create and run faceless social media pages (Reels, TikTok
 | Make a video for a page | `npm run unfaced -- make <videoDir>` (skills coming in Phase 2) |
 | List styles, scripts, hooks or other catalogs | `npm run unfaced -- list <kind>` |
 | Create or edit a page profile | `schema/page.schema.json` (the `page-setup` skill is coming soon) |
-| Add a style or a script type | `catalog/` (`CONTRIBUTING.md` is coming soon) |
+| Write or fix a video's `script.md` | `docs/formats/script.md` and the script type in `catalog/scripts/` |
+| See a complete page to copy | `examples/pages/curious-cats/` |
+| Review a made video | `npm run unfaced -- frames <videoDir> --every 1s`, then look at `<videoDir>/frames/` |
+| Add a style or a script type | `catalog/` (`CONTRIBUTING.md` is coming soon); a style's look and layout rules live in its `STYLE.md` |
 | Design and plans | `docs/design/`, `docs/plans/` |
 
 ## Commands

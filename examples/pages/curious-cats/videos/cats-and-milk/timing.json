@@ -1,0 +1,447 @@
+{
+  "hash": "0a1a3dbb77f99bc6317852c62418cf5e58c9e03f1cce3775c04f19b77d95610e",
+  "provider": "kokoro",
+  "durationSec": 31.60575,
+  "words": [
+    {
+      "text": "Still",
+      "startMs": 220,
+      "endMs": 500
+    },
+    {
+      "text": "giving",
+      "startMs": 500,
+      "endMs": 900
+    },
+    {
+      "text": "your",
+      "startMs": 900,
+      "endMs": 1290
+    },
+    {
+      "text": "cat",
+      "startMs": 1290,
+      "endMs": 1470
+    },
+    {
+      "text": "a",
+      "startMs": 1470,
+      "endMs": 1600
+    },
+    {
+      "text": "bowl",
+      "startMs": 1600,
+      "endMs": 1880
+    },
+    {
+      "text": "of",
+      "startMs": 1880,
+      "endMs": 2060
+    },
+    {
+      "text": "milk.",
+      "startMs": 2060,
+      "endMs": 2600
+    },
+    {
+      "text": "You're",
+      "startMs": 2600,
+      "endMs": 3000
+    },
+    {
+      "text": "doing",
+      "startMs": 3000,
+      "endMs": 3340
+    },
+    {
+      "text": "it",
+      "startMs": 3340,
+      "endMs": 3460
+    },
+    {
+      "text": "wrong.",
+      "startMs": 3460,
+      "endMs": 4140
+    },
+    {
+      "text": "Most",
+      "startMs": 4140,
+      "endMs": 4430
+    },
+    {
+      "text": "adult",
+      "startMs": 4430,
+      "endMs": 4850
+    },
+    {
+      "text": "cats",
+      "startMs": 4850,
+      "endMs": 5360
+    },
+    {
+      "text": "can't",
+      "startMs": 5360,
+      "endMs": 5820
+    },
+    {
+      "text": "digest",
+      "startMs": 5820,
+      "endMs": 6380
+    },
+    {
+      "text": "milk",
+      "startMs": 6380,
+      "endMs": 6880
+    },
+    {
+      "text": "properly.",
+      "startMs": 6880,
+      "endMs": 7440
+    },
+    {
+      "text": "For",
+      "startMs": 7440,
+      "endMs": 7660
+    },
+    {
+      "text": "many",
+      "startMs": 7660,
+      "endMs": 7860
+    },
+    {
+      "text": "of",
+      "startMs": 7860,
+      "endMs": 8060
+    },
+    {
+      "text": "them,",
+      "startMs": 8060,
+      "endMs": 8420
+    },
+    {
+      "text": "one",
+      "startMs": 8420,
+      "endMs": 8720
+    },
+    {
+      "text": "bowl",
+      "startMs": 8720,
+      "endMs": 9100
+    },
+    {
+      "text": "means",
+      "startMs": 9100,
+      "endMs": 9320
+    },
+    {
+      "text": "an",
+      "startMs": 9320,
+      "endMs": 9560
+    },
+    {
+      "text": "upset",
+      "startMs": 9560,
+      "endMs": 10160
+    },
+    {
+      "text": "stomach",
+      "startMs": 10160,
+      "endMs": 10220
+    },
+    {
+      "text": "a",
+      "startMs": 10220,
+      "endMs": 10410
+    },
+    {
+      "text": "few",
+      "startMs": 10410,
+      "endMs": 10590
+    },
+    {
+      "text": "hours",
+      "startMs": 10590,
+      "endMs": 10850
+    },
+    {
+      "text": "later.",
+      "startMs": 10850,
+      "endMs": 11580
+    },
+    {
+      "text": "Kittens",
+      "startMs": 11580,
+      "endMs": 12240
+    },
+    {
+      "text": "make",
+      "startMs": 12240,
+      "endMs": 12460
+    },
+    {
+      "text": "an",
+      "startMs": 12460,
+      "endMs": 12840
+    },
+    {
+      "text": "enzyme",
+      "startMs": 12840,
+      "endMs": 13360
+    },
+    {
+      "text": "called",
+      "startMs": 13360,
+      "endMs": 13660
+    },
+    {
+      "text": "lactase",
+      "startMs": 13660,
+      "endMs": 13930
+    },
+    {
+      "text": "to",
+      "startMs": 13930,
+      "endMs": 14500
+    },
+    {
+      "text": "digest",
+      "startMs": 14500,
+      "endMs": 14540
+    },
+    {
+      "text": "their",
+      "startMs": 14540,
+      "endMs": 15320
+    },
+    {
+      "text": "mother's",
+      "startMs": 15320,
+      "endMs": 15780
+    },
+    {
+      "text": "milk,",
+      "startMs": 15780,
+      "endMs": 16220
+    },
+    {
+      "text": "but",
+      "startMs": 16220,
+      "endMs": 16420
+    },
+    {
+      "text": "most",
+      "startMs": 16420,
+      "endMs": 16760
+    },
+    {
+      "text": "cats",
+      "startMs": 16760,
+      "endMs": 17120
+    },
+    {
+      "text": "lose",
+      "startMs": 17120,
+      "endMs": 17150
+    },
+    {
+      "text": "it",
+      "startMs": 17150,
+      "endMs": 17300
+    },
+    {
+      "text": "as",
+      "startMs": 17300,
+      "endMs": 17780
+    },
+    {
+      "text": "they",
+      "startMs": 17780,
+      "endMs": 18020
+    },
+    {
+      "text": "grow",
+      "startMs": 18020,
+      "endMs": 18320
+    },
+    {
+      "text": "up.",
+      "startMs": 18320,
+      "endMs": 18710
+    },
+    {
+      "text": "And",
+      "startMs": 18710,
+      "endMs": 19000
+    },
+    {
+      "text": "here's",
+      "startMs": 19000,
+      "endMs": 19300
+    },
+    {
+      "text": "the",
+      "startMs": 19300,
+      "endMs": 19640
+    },
+    {
+      "text": "strangest",
+      "startMs": 19640,
+      "endMs": 20220
+    },
+    {
+      "text": "part.",
+      "startMs": 20220,
+      "endMs": 20800
+    },
+    {
+      "text": "Cats",
+      "startMs": 20800,
+      "endMs": 20890
+    },
+    {
+      "text": "can't",
+      "startMs": 20890,
+      "endMs": 21250
+    },
+    {
+      "text": "taste",
+      "startMs": 21250,
+      "endMs": 21980
+    },
+    {
+      "text": "sweetness",
+      "startMs": 21980,
+      "endMs": 22290
+    },
+    {
+      "text": "at",
+      "startMs": 22290,
+      "endMs": 22430
+    },
+    {
+      "text": "all.",
+      "startMs": 22430,
+      "endMs": 23200
+    },
+    {
+      "text": "Their",
+      "startMs": 23200,
+      "endMs": 23460
+    },
+    {
+      "text": "sweet",
+      "startMs": 23460,
+      "endMs": 23760
+    },
+    {
+      "text": "taste",
+      "startMs": 23760,
+      "endMs": 24180
+    },
+    {
+      "text": "gene",
+      "startMs": 24180,
+      "endMs": 24400
+    },
+    {
+      "text": "is",
+      "startMs": 24400,
+      "endMs": 24800
+    },
+    {
+      "text": "broken,",
+      "startMs": 24800,
+      "endMs": 25040
+    },
+    {
+      "text": "so",
+      "startMs": 25040,
+      "endMs": 25400
+    },
+    {
+      "text": "the",
+      "startMs": 25400,
+      "endMs": 25660
+    },
+    {
+      "text": "sugar",
+      "startMs": 25660,
+      "endMs": 25940
+    },
+    {
+      "text": "in",
+      "startMs": 25940,
+      "endMs": 26160
+    },
+    {
+      "text": "milk",
+      "startMs": 26160,
+      "endMs": 26480
+    },
+    {
+      "text": "means",
+      "startMs": 26480,
+      "endMs": 26940
+    },
+    {
+      "text": "nothing",
+      "startMs": 26940,
+      "endMs": 27200
+    },
+    {
+      "text": "to",
+      "startMs": 27200,
+      "endMs": 27400
+    },
+    {
+      "text": "them.",
+      "startMs": 27400,
+      "endMs": 27900
+    },
+    {
+      "text": "Give",
+      "startMs": 27900,
+      "endMs": 28150
+    },
+    {
+      "text": "them",
+      "startMs": 28150,
+      "endMs": 28500
+    },
+    {
+      "text": "water",
+      "startMs": 28500,
+      "endMs": 29040
+    },
+    {
+      "text": "instead.",
+      "startMs": 29040,
+      "endMs": 29920
+    },
+    {
+      "text": "Your",
+      "startMs": 29920,
+      "endMs": 30320
+    },
+    {
+      "text": "carpet",
+      "startMs": 30320,
+      "endMs": 30680
+    },
+    {
+      "text": "will",
+      "startMs": 30680,
+      "endMs": 30940
+    },
+    {
+      "text": "thank",
+      "startMs": 30940,
+      "endMs": 31260
+    },
+    {
+      "text": "you.",
+      "startMs": 31260,
+      "endMs": 31490
+    }
+  ]
+}
