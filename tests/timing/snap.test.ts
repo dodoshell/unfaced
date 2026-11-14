@@ -25,6 +25,17 @@ describe("snapToPauses", () => {
     expect(snapToPauses(words, [pause(4680, 4860), pause(4940, 5050)])).toEqual([w("Jaguar", 4360, 4580), w("up", 4860, 4870), w("to", 5050, 5360), w("about", 5360, 5440)]);
   });
 
+  it("starts a word whisper put wholly inside a pause, nearer its end, after the pause", () => {
+    // "...that jar. | Every morning": whisper fills the paragraph pause with "Every" and starts "morning" where the voice says "Every".
+    const words = [w("that", 7810, 8010), w("jar.", 8010, 8260), w("Every", 8260, 8960), w("morning", 8960, 9220)];
+    expect(snapToPauses(words, [pause(8150, 8970)])).toEqual([w("that", 7810, 8010), w("jar.", 8010, 8260), w("Every", 8950, 8960), w("morning", 8960, 9220)]);
+  });
+
+  it("keeps a word whisper put wholly inside a pause, nearer its start, before the pause", () => {
+    const words = [w("that", 7810, 8010), w("jar.", 8160, 8260), w("Every", 9000, 9200)];
+    expect(snapToPauses(words, [pause(8150, 8970)])).toEqual([w("that", 7810, 8010), w("jar.", 8160, 8260), w("Every", 8970, 9200)]);
+  });
+
   it("ignores a pause with no word starting within 800 ms of its end", () => {
     const words = [w("Cats", 1000, 1300)];
     expect(snapToPauses(words, [pause(0, 100)])).toEqual(words);
@@ -42,7 +53,17 @@ describe("evenOutCrushedWords", () => {
     expect([out[0], out[3]]).toEqual([words[0], words[3]]);
   });
 
-  it("leaves short words alone when they are short in the voice too, or follow a pause", () => {
+  it("gives a squeezed word after a pause a share of the word after it", () => {
+    const words = [w("jar.", 8010, 8260), w("Every", 8950, 8960), w("morning", 8960, 9220)];
+    const out = evenOutCrushedWords(words);
+    expect(out[1]!.startMs).toBe(8950);
+    expect(out[1]!.endMs).toBe(out[2]!.startMs);
+    expect(out[1]!.endMs - out[1]!.startMs).toBeGreaterThanOrEqual(120);
+    expect(out[2]!.endMs - out[2]!.startMs).toBeGreaterThanOrEqual(120);
+    expect([out[0], out[2]!.endMs]).toEqual([words[0], 9220]);
+  });
+
+  it("leaves short words alone when they are short in the voice too, or stand alone after a pause", () => {
     const fine = [w("make", 6830, 7280), w("a", 7290, 7340), w("bed", 7340, 7700)];
     expect(evenOutCrushedWords(fine)).toEqual(fine);
     const afterPause = [w("so", 23780, 23880), w("it", 24300, 24310)];

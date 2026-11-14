@@ -59,14 +59,19 @@ describe("speech in audio", () => {
     expect(speechAt(silence, 0, 1000)).toBe(false);
   });
 
-  it("does not take a click of 10 or 20 ms for speech starting, but takes a 40 ms sound", () => {
-    for (const click of [10, 20]) {
+  it("does not take a click of 10, 20 or 30 ms for speech starting, but takes a 40 ms sound", () => {
+    for (const click of [10, 20, 30]) {
       const pcm = tones(3000, [[300, 900], [1200, 1200 + click], [1400, 2500]]);
       expect(speechOnsets(pcm), `${click} ms`).toEqual([300, 1400]);
       expect(speechPauses(pcm).at(-1), `${click} ms`).toEqual({ fromMs: 900, toMs: 1400 });
       expect(speechAt(pcm, 1150, 1250), `${click} ms`).toBe(false);
     }
     expect(speechOnsets(tones(3000, [[300, 900], [1200, 1240], [1400, 2500]]))).toEqual([300, 1200, 1400]);
+  });
+
+  it("hears one pause through the 20-30 ms pulses the free voice leaves between paragraphs", () => {
+    const pcm = tones(3000, [[300, 900], [1020, 1050], [1170, 1190], [1340, 1370], [1500, 2500]]);
+    expect(speechPauses(pcm).at(-1)).toEqual({ fromMs: 900, toMs: 1500 });
   });
 
   it("hears a video's soundtrack in full, so an 's' above 8 kHz between two vowels is not a pause", async () => {

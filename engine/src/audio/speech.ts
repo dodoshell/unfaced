@@ -15,8 +15,8 @@ const SPEECH_SHARE = 0.1;
 const FLOOR = 0.001;
 /** A pause at least this long before speech makes the speech an onset (a new phrase). */
 export const MIN_PAUSE_MS = 150;
-/** A sound shorter than this on its own is a click or a lip smack, not speech. */
-const MIN_SPEECH_MS = 30;
+/** A sound shorter than this on its own is a click, a lip smack or one of the pulses the free voice leaves in a pause, not speech. */
+const MIN_SPEECH_MS = 40;
 
 /** Reads a 16-bit PCM WAV, mixed down to mono. A data size ffmpeg could not fill in (piped output) means "to the end". */
 export function parseWav(wav: Buffer): Pcm {
