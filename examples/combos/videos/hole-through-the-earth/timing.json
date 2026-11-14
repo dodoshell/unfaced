@@ -1,26 +1,26 @@
 {
-  "hash": "c29e9ab36de6f452cce8460aba6a5ac70354f917fc6587e8918f86fa748e63b2",
+  "hash": "ff669dae081a18b89fb3e861c833795cd7c83be913881ff4a666d2fe901bbb04",
   "provider": "kokoro",
-  "durationSec": 28.712,
+  "durationSec": 28.704166666666666,
   "words": [
     {
       "text": "what",
-      "startMs": 220,
-      "endMs": 321
+      "startMs": 320,
+      "endMs": 330
     },
     {
       "text": "if",
-      "startMs": 321,
+      "startMs": 330,
       "endMs": 331
     },
     {
       "text": "you",
       "startMs": 331,
-      "endMs": 740
+      "endMs": 720
     },
     {
       "text": "jumped",
-      "startMs": 740,
+      "startMs": 720,
       "endMs": 980
     },
     {
@@ -56,11 +56,11 @@
     {
       "text": "earth",
       "startMs": 2610,
-      "endMs": 2630
+      "endMs": 2640
     },
     {
       "text": "say",
-      "startMs": 2630,
+      "startMs": 2640,
       "endMs": 2800
     },
     {
@@ -86,11 +86,11 @@
     {
       "text": "Spain",
       "startMs": 3560,
-      "endMs": 4060
+      "endMs": 4050
     },
     {
       "text": "the",
-      "startMs": 4060,
+      "startMs": 4050,
       "endMs": 4280
     },
     {
@@ -116,11 +116,11 @@
     {
       "text": "tunnel",
       "startMs": 4900,
-      "endMs": 5250
+      "endMs": 5240
     },
     {
       "text": "comes",
-      "startMs": 5250,
+      "startMs": 5240,
       "endMs": 5620
     },
     {
@@ -136,16 +136,16 @@
     {
       "text": "New",
       "startMs": 5940,
-      "endMs": 6260
+      "endMs": 6280
     },
     {
       "text": "Zealand",
-      "startMs": 6260,
-      "endMs": 6630
+      "startMs": 6280,
+      "endMs": 6640
     },
     {
       "text": "the",
-      "startMs": 6630,
+      "startMs": 6690,
       "endMs": 6840
     },
     {
@@ -180,12 +180,12 @@
     },
     {
       "text": "heat",
-      "startMs": 8140,
-      "endMs": 8470
+      "startMs": 8470,
+      "endMs": 8560
     },
     {
       "text": "gravity",
-      "startMs": 8470,
+      "startMs": 8560,
       "endMs": 8980
     },
     {
@@ -251,21 +251,21 @@
     {
       "text": "about",
       "startMs": 12050,
-      "endMs": 12360
+      "endMs": 12370
     },
     {
       "text": "19",
-      "startMs": 12360,
+      "startMs": 12370,
       "endMs": 12670
     },
     {
       "text": "minutes",
       "startMs": 12670,
-      "endMs": 13060
+      "endMs": 13050
     },
     {
       "text": "later",
-      "startMs": 13060,
+      "startMs": 13050,
       "endMs": 13340
     },
     {
@@ -296,11 +296,11 @@
     {
       "text": "at",
       "startMs": 14700,
-      "endMs": 14980
+      "endMs": 15000
     },
     {
       "text": "kilometers",
-      "startMs": 14980,
+      "startMs": 15000,
       "endMs": 15440
     },
     {
@@ -331,11 +331,11 @@
     {
       "text": "you",
       "startMs": 17040,
-      "endMs": 17280
+      "endMs": 17260
     },
     {
       "text": "back",
-      "startMs": 17280,
+      "startMs": 17260,
       "endMs": 17380
     },
     {
@@ -366,26 +366,26 @@
     {
       "text": "right",
       "startMs": 18550,
-      "endMs": 18870
+      "endMs": 18860
     },
     {
       "text": "at",
-      "startMs": 18870,
+      "startMs": 18860,
       "endMs": 18960
     },
     {
       "text": "the",
       "startMs": 18960,
-      "endMs": 19380
+      "endMs": 19360
     },
     {
       "text": "edge",
-      "startMs": 19380,
-      "endMs": 19540
+      "startMs": 19360,
+      "endMs": 19520
     },
     {
       "text": "in",
-      "startMs": 19540,
+      "startMs": 19520,
       "endMs": 19640
     },
     {
@@ -395,12 +395,12 @@
     },
     {
       "text": "Zealand",
-      "startMs": 20320,
-      "endMs": 20480
+      "startMs": 20310,
+      "endMs": 20520
     },
     {
       "text": "nobody",
-      "startMs": 20480,
+      "startMs": 20520,
       "endMs": 20570
     },
     {
@@ -420,27 +420,27 @@
     },
     {
       "text": "you",
-      "startMs": 21200,
+      "startMs": 21310,
       "endMs": 21390
     },
     {
       "text": "fall",
       "startMs": 21390,
-      "endMs": 21940
+      "endMs": 21920
     },
     {
       "text": "again",
-      "startMs": 21940,
-      "endMs": 22000
+      "startMs": 21920,
+      "endMs": 21990
     },
     {
       "text": "all",
-      "startMs": 22000,
-      "endMs": 22260
+      "startMs": 21990,
+      "endMs": 22250
     },
     {
       "text": "the",
-      "startMs": 22260,
+      "startMs": 22250,
       "endMs": 22600
     },
     {
@@ -456,61 +456,61 @@
     {
       "text": "to",
       "startMs": 23020,
-      "endMs": 23280
+      "endMs": 23300
     },
     {
       "text": "Spain",
-      "startMs": 23280,
-      "endMs": 23780
+      "startMs": 23300,
+      "endMs": 23770
     },
     {
       "text": "back",
-      "startMs": 23780,
-      "endMs": 24020
+      "startMs": 23770,
+      "endMs": 24000
     },
     {
       "text": "and",
-      "startMs": 24020,
+      "startMs": 24000,
       "endMs": 24220
     },
     {
       "text": "forth",
       "startMs": 24220,
-      "endMs": 24580
+      "endMs": 24600
     },
     {
       "text": "forever",
-      "startMs": 24580,
+      "startMs": 24600,
       "endMs": 24940
     },
     {
       "text": "but",
-      "startMs": 24950,
+      "startMs": 24940,
       "endMs": 25160
     },
     {
       "text": "earth",
       "startMs": 25160,
-      "endMs": 25480
+      "endMs": 25460
     },
     {
       "text": "spins",
-      "startMs": 25480,
+      "startMs": 25460,
       "endMs": 25520
     },
     {
       "text": "so",
       "startMs": 25520,
-      "endMs": 25620
+      "endMs": 25630
     },
     {
       "text": "you",
-      "startMs": 25620,
-      "endMs": 25890
+      "startMs": 25630,
+      "endMs": 25880
     },
     {
       "text": "would",
-      "startMs": 25890,
+      "startMs": 25880,
       "endMs": 26260
     },
     {
@@ -526,11 +526,11 @@
     {
       "text": "wall",
       "startMs": 26750,
-      "endMs": 26900
+      "endMs": 26880
     },
     {
       "text": "first",
-      "startMs": 26900,
+      "startMs": 26880,
       "endMs": 27270
     },
     {
