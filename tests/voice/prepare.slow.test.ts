@@ -13,8 +13,12 @@ describe.skipIf(!process.env.UNFACED_SLOW)("voice preparation (slow)", () => {
     const wav = join(mkdtempSync(join(tmpdir(), "unfaced voice è ")), "voice.wav");
     copyFileSync(join(import.meta.dirname, "..", "fixtures", "audio", "hello.wav"), wav);
 
-    const before = speechOnsets(readWavFile(wav))[0]!;
-    await prepareVoice(wav);
+    const original = readWavFile(wav);
+    const before = speechOnsets(original)[0]!;
+    const seconds = await prepareVoice(wav);
+    const prepared = readWavFile(wav);
+    expect(seconds).toBe(prepared.samples.length / prepared.rate);
+    expect(seconds).toBeCloseTo(original.samples.length / original.rate + LEAD_IN_MS / 1000, 2);
 
     const { integratedLufs, truePeakDb } = await measureLoudness(wav);
     expect(integratedLufs).toBeGreaterThanOrEqual(LOUDNESS_RANGE[0]);

@@ -47,7 +47,7 @@ function stubs() {
   );
   const render = vi.fn<MakeDeps["render"]>(async (_plan, outPath) => writeFileSync(outPath, "mp4"));
   const check = vi.fn<MakeDeps["check"]>(async () => ({ pass: false, issues: [{ check: "clipping", atMs: 0, severity: "error", message: "True peak is -0.4 dBTP" }] }));
-  const prepareVoice = vi.fn<MakeDeps["prepareVoice"]>(async () => {});
+  const prepareVoice = vi.fn<MakeDeps["prepareVoice"]>(async () => 4);
   const mixMusic = vi.fn<MakeDeps["mixMusic"]>(async (dir) => {
     writeFileSync(join(dir, "soundtrack.wav"), "RIFF");
     return "soundtrack.wav";
@@ -133,6 +133,15 @@ describe("make", () => {
     expect(prepareVoice).toHaveBeenCalledWith(join(video, "voice.wav"));
     expect(prepareVoice.mock.invocationCallOrder[0]).toBeGreaterThan(synthesize.mock.invocationCallOrder[0]!);
     expect(prepareVoice.mock.invocationCallOrder[0]).toBeLessThan(align.mock.invocationCallOrder[0]!);
+  });
+
+  it("times the video by the prepared voice-over, lead-in included, so the end never cuts the last word", async () => {
+    const video = setup();
+    const { deps, prepareVoice } = stubs();
+    prepareVoice.mockResolvedValueOnce(4.25);
+    const { plan } = await makeVideo(video, deps);
+    expect(JSON.parse(readFileSync(join(video, "timing.json"), "utf8"))).toMatchObject({ durationSec: 4.25 });
+    expect(plan.durationInFrames).toBe(Math.ceil(4.25 * 30) + 15);
   });
 
   it("runs the automatic checks on the finished video and logs their summary", async () => {
@@ -346,12 +355,13 @@ describe("make with a voice-over handed off in inbox/", () => {
     mkdirSync(join(video, "inbox"));
     writeFileSync(join(video, "inbox", "voice.mp3"), "ID3 one");
     const { deps, synthesize, importVoice, prepareVoice, align } = stubs();
+    prepareVoice.mockResolvedValueOnce(3.45);
     await makeVideo(video, deps);
     expect(synthesize).not.toHaveBeenCalled();
     expect(importVoice).toHaveBeenCalledWith(join(video, "inbox", "voice.mp3"), join(video, "voice.wav"));
     expect(prepareVoice).toHaveBeenCalledWith(join(video, "voice.wav"));
     expect(align).toHaveBeenCalledWith(join(video, "voice.wav"), "en");
-    expect(JSON.parse(readFileSync(join(video, "timing.json"), "utf8"))).toMatchObject({ provider: "inbox/voice.mp3", durationSec: 3.2 });
+    expect(JSON.parse(readFileSync(join(video, "timing.json"), "utf8"))).toMatchObject({ provider: "inbox/voice.mp3", durationSec: 3.45 });
     expect(JSON.parse(readFileSync(join(video, "plan.json"), "utf8"))).toMatchObject({ audioSrc: "voice.wav" });
   });
 

@@ -28,8 +28,8 @@ import type { VoiceProvider } from "../voice/types.js";
 export interface MakeDeps {
   catalog: Catalog;
   voiceProvider(requested: string, env: NodeJS.ProcessEnv, warn: (msg: string) => void): VoiceProvider;
-  /** Adds the lead-in and brings the voice-over to the target loudness, in place. */
-  prepareVoice(wavPath: string): Promise<void>;
+  /** Adds the lead-in and brings the voice-over to the target loudness, in place; returns the prepared length in seconds. */
+  prepareVoice(wavPath: string): Promise<number>;
   /** Converts a voice-over handed off in inbox/ (WAV or MP3) to `wavPath`; returns its length in seconds. */
   importVoice(src: string, wavPath: string): Promise<number>;
   align(wavPath: string, language: string): Promise<WordTiming[]>;
@@ -61,7 +61,7 @@ export const defaultMakeDeps = (): MakeDeps => ({
 const SNAP_MIN_PAUSE_MS = 100;
 
 /** Bumped when the voice-over is processed differently, so cached voice-overs are made again. */
-const VOICE_PROCESSING = "lead-in 250, loudnorm -14, pause snap 100, crushed words";
+const VOICE_PROCESSING = "lead-in 250, loudnorm -14, pause snap 100, crushed words, prepared length";
 
 /** timing.json: the voice-over's word timings, keyed by what produced the voice. */
 interface TimingFile {
@@ -147,10 +147,10 @@ async function recordVoice(dir: string, text: string, voiceType: number, page: P
   }
   deps.log(`Recording the voice-over (${voice.id}, voice ${voiceType}, ${page.language})`);
   const result = await voice.synthesize(text, { language: page.language, voiceType, outPath: wavPath });
-  await deps.prepareVoice(wavPath);
+  const durationSec = await deps.prepareVoice(wavPath);
   const words = await timeWords(wavPath, page.language, deps);
   // A voice that stood in for a failed paid one is kept for this video only: next time the paid one is tried again.
-  return { hash: result.provider === voice.id ? hash : `${hash} (${result.provider} stood in)`, provider: result.provider, durationSec: result.durationSec, words };
+  return { hash: result.provider === voice.id ? hash : `${hash} (${result.provider} stood in)`, provider: result.provider, durationSec, words };
 }
 
 /** The voice-overs a user can hand off, in the order they are taken. */
@@ -177,8 +177,8 @@ async function takeHandedOffVoice(dir: string, voice: { file: string; name: stri
     return cached;
   }
   deps.log(`Using ${voice.name} as the voice-over (handed off, so the page's voice type is not used)`);
-  const durationSec = await deps.importVoice(voice.file, wavPath);
-  await deps.prepareVoice(wavPath);
+  await deps.importVoice(voice.file, wavPath);
+  const durationSec = await deps.prepareVoice(wavPath);
   return { hash, provider: voice.name, durationSec, words: await timeWords(wavPath, page.language, deps) };
 }
 

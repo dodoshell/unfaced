@@ -38,10 +38,13 @@ function wavSampleRate(file: string): number {
  * (EBU R128), keeping its sample rate.
  * The true-peak ceiling wins over the loudness target, so short or very peaky speech
  * can land a little under it, still inside the −16…−12 LUFS range.
+ * Returns the prepared length in seconds, lead-in included: the length the video follows.
  */
-export async function prepareVoice(wavPath: string): Promise<void> {
+export async function prepareVoice(wavPath: string): Promise<number> {
   const file = resolve(wavPath);
   const tmp = `${file}.prepared.wav`;
   await runFfmpeg(["-v", "error", "-i", file, "-af", `adelay=${LEAD_IN_MS}:all=1,loudnorm=I=${TARGET_LUFS}:TP=${TARGET_TRUE_PEAK}:LRA=11`, "-ar", String(wavSampleRate(file)), "-c:a", "pcm_s16le", "-y", tmp]);
   renameSync(tmp, file);
+  const { samples, rate } = parseWav(readFileSync(file));
+  return samples.length / rate;
 }
