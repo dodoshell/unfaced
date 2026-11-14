@@ -40,7 +40,7 @@ sources:
 ---
 
 ## Hook
-Did you know your cat is hiding three secrets?
+What three secrets is your cat keeping from you?
 > visual: a cat peeking out of a cardboard box
 
 ## Body
@@ -63,7 +63,7 @@ So your cat isn't lazy. It's a tiny healing machine on standby.
 ---
 title: The Moon is weirder than you think
 script_type: 9
-hook: 14
+hook: 9
 ending: 5
 sources: NASA Science, "Earth's Moon"
 ---
@@ -83,5 +83,5 @@ Footprints left on the Moon in 1969 are still there. With no wind or rain, they 
 > visual: a boot print in grey dust
 
 ## Ending
-Somewhere up there, a boot print is older than your parents and will outlive us all.
+Up there, a boot print older than your parents will outlive us all.
 ```

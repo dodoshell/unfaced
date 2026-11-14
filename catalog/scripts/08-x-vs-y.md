@@ -76,7 +76,7 @@ African or Asian elephant: which one is the real giant?
 > visual: two elephants walking towards each other
 
 ## Body
-Weight. A big African savannah bull: about six tonnes. An Asian bull averages three and a half. Africa wins.
+Weight. Even the lightest African savannah bulls, at four and a half tonnes, outweigh the average Asian bull, at three and a half. Africa wins.
 > visual: both elephants on a giant scale, tipping to the African side
 
 Ears. African ears are huge, shaped a bit like Africa. Asian ears are small and round. Africa again.

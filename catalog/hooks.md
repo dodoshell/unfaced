@@ -63,7 +63,7 @@ Open on a picture that looks like it can't be real, and say what it is.
 - Examples:
   - Nature: "This lake is pink, and nobody added anything to it."
   - Engineering: "This bridge is held up by nothing but its own shape."
-  - Animals: "This frog has a see-through belly. You can watch its heart beat."
+  - Animals: "This frog has a see-through belly. Watch its heart beat."
 - Good for: nature, space, engineering, any style that can draw the image well.
 - Avoid: when the style can't show the image clearly in the first frame.
 
@@ -104,8 +104,8 @@ Promise that the last item is the best one.
 - Write it: say how many items there are and that the last one is the strongest. Then count down (script 02).
 - Examples:
   - Animals: "Five animals that cheat death, and number one is immortal."
-  - Tech: "Four gadgets you didn't know you needed. Wait for the last one."
-  - Travel: "Three places you can't visit, and the last one is in Europe."
+  - Tech: "Four gadgets you didn't know you needed. Wait for number one."
+  - Travel: "Three places you can't visit. Number one is in Europe."
 - Good for: lists, top N countdown (script 02).
 - Avoid: when the last item isn't really the best; viewers notice.
 
@@ -171,7 +171,7 @@ Share what people in the field know and others don't.
 
 Dare the viewer to guess, spot or try something.
 
-- Write it: a direct dare with a time limit or a condition ("in three seconds", "without pausing"). Give the answer late in the video.
+- Write it: a direct dare with a time limit or a condition ("in three seconds", "without pausing"). Give the answer only after the viewer has had a few seconds to guess, never in the hook itself.
 - Examples:
   - Puzzles: "You have three seconds to spot the odd one out."
   - Language: "Bet you can't say this word without laughing."
@@ -188,7 +188,7 @@ Open on the most dramatic moment, then rewind.
 - Write it: the peak moment in the present tense, then "Here's how we got here" or a cut back. The body tells the story in order (script 05).
 - Examples:
   - History: "The ship is sinking, and the band keeps playing."
-  - Space: "Apollo 13 is two hundred thousand miles from home, and a tank just exploded."
+  - Space: "Apollo 13, two hundred thousand miles from home. A tank explodes."
   - Business: "The company has one day of money left."
 - Good for: stories, history, story in 60 seconds (script 05).
 - Avoid: stories whose climax needs set-up to make sense.

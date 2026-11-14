@@ -32,7 +32,7 @@ It is written to `examples/hooks/hook-reel.mp4` (not kept in the repository; it 
 
 - Nature: "This lake is pink, and nobody added anything to it."
 - Engineering: "This bridge is held up by nothing but its own shape."
-- Animals: "This frog has a see-through belly. You can watch its heart beat."
+- Animals: "This frog has a see-through belly. Watch its heart beat."
 
 ## 05 Unfinished sentence
 
@@ -49,8 +49,8 @@ It is written to `examples/hooks/hook-reel.mp4` (not kept in the repository; it 
 ## 07 Countdown tease
 
 - Animals: "Five animals that cheat death, and number one is immortal."
-- Tech: "Four gadgets you didn't know you needed. Wait for the last one."
-- Travel: "Three places you can't visit, and the last one is in Europe."
+- Tech: "Four gadgets you didn't know you needed. Wait for number one."
+- Travel: "Three places you can't visit. Number one is in Europe."
 
 ## 08 POV
 
@@ -85,7 +85,7 @@ It is written to `examples/hooks/hook-reel.mp4` (not kept in the repository; it 
 ## 13 Start at the climax
 
 - History: "The ship is sinking, and the band keeps playing."
-- Space: "Apollo 13 is two hundred thousand miles from home, and a tank just exploded."
+- Space: "Apollo 13, two hundred thousand miles from home. A tank explodes."
 - Business: "The company has one day of money left."
 
 ## 14 Relatable pain

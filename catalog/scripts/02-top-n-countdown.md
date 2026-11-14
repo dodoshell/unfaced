@@ -43,13 +43,13 @@ Three giant moons, and number one is bigger than a planet.
 > visual: three moons lined up in silhouette
 
 ## Body
-Callisto, around Jupiter. It's the most heavily cratered object in the solar system.
+Callisto, around Jupiter: about 4,800 kilometres across. It's the most heavily cratered object in the solar system.
 > visual: a grey moon covered edge to edge in craters
 
-Titan, around Saturn. It's the only moon with a thick atmosphere, and it has lakes of liquid methane and ethane.
+Titan, around Saturn: about 5,150 kilometres across, and the only moon with a thick atmosphere.
 > visual: a hazy orange moon with dark lakes
 
-And number one: Ganymede, around Jupiter. It's bigger than the planet Mercury, and it's the only moon with its own magnetic field.
+And number one: Ganymede, around Jupiter: 5,268 kilometres across, bigger than the planet Mercury. It's also the only moon with its own magnetic field.
 > visual: Ganymede next to a smaller Mercury
 
 ## Ending

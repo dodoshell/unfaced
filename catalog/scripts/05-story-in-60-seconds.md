@@ -53,7 +53,7 @@ Around midday, it bursts. Almost nine million litres of molasses pour out.
 A sticky wave several metres high floods the streets, faster than anyone can run. Twenty-one people die, and more than 150 are hurt.
 > visual: people climbing lampposts as the wave passes below
 
-The company is blamed, and most states pass laws to certify engineers.
+A court blames the company, and Massachusetts and most other states pass laws to certify engineers.
 > visual: an engineer's stamp landing on a blueprint
 
 ## Ending
