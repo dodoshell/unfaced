@@ -25,7 +25,7 @@ Save this for the next time your cat purrs on you.
 ## YouTube Shorts
 
 Title: Why do cats purr when they're hurt? #shorts
-Description: Purring isn't just happiness. Sources: Muggenthaler 2001, Journal of the Acoustical Society of America.
+Description: Purring isn't just happiness. Sources: Muggenthaler 2001, Journal of the Acoustical Society of America. #catfacts #cats #animalfacts
 
 ## Notes
 

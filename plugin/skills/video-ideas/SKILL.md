@@ -66,4 +66,5 @@ Sources: 1. ASPCA, "Why does my cat knead?"
 | A script or hook type the page doesn't allow | Use only the page's numbers, or ready ones when it says `auto`. |
 | Unchecked "facts" | Confirm with a source, or mark `check before scripting`. |
 | Repeating a video the page already has | Read `videos/` and `ideas.md` first. |
+| Reusing an earlier idea as an episode of a new series | Build new series from new ideas only. |
 | Overwriting `ideas.md` | Add a dated section. |

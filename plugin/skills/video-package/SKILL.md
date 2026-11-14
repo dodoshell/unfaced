@@ -26,6 +26,34 @@ node "${CLAUDE_SKILL_DIR}/scripts/unfaced.mjs" <command>
    - One section per platform: TikTok, Instagram Reels, YouTube Shorts, unless the user posts only to some.
    - The first line of every caption is a hook of its own; 3 to 5 hashtags; sources for factual claims.
    - Under `Notes`: which cover to use, and for music 08 (none) a reminder to add a trending sound in the app.
+   - Even when unfaced can't run, the file has this shape; the headings and the `Title:` and `Description:` labels stay in English whatever the page's language, and everything else is in that language:
+
+     ```markdown
+     # <video title>
+
+     Video: video.mp4 · Cover: cover.png (frame at 00:01.0) · Length: 00:34
+
+     ## TikTok
+
+     <caption, its first line a hook>
+
+     #tag #tag #tag
+
+     ## Instagram Reels
+
+     <caption>
+
+     #tag #tag #tag
+
+     ## YouTube Shorts
+
+     Title: <under 100 characters>
+     Description: <one or two lines, with the sources> #tag #tag #tag
+
+     ## Notes
+
+     - <which cover to use, a sound to add>
+     ```
 4. **Update `ideas.md`** if the video is listed there: `made` if it isn't yet, `posted` once the user says it is out.
 5. **Reply** with the paths of `video.mp4`, `cover.png` and `post.md`, and the TikTok caption so the user can see the tone. Remind them that unfaced doesn't post.
 

@@ -19,12 +19,24 @@ node "${CLAUDE_SKILL_DIR}/scripts/unfaced.mjs" <command>
 
 ## Steps
 
-1. **Get the numbers.** Read `<pageDir>/results.md` (format: `unfaced docs results`). If the user gives numbers in chat, add them as rows (one per video and platform, numbers without separators) and show what you added. If there are none, explain which numbers to collect from each platform's insights and stop. A video with numbers is out: set its status in `ideas.md` to `posted` if it isn't.
+1. **Get the numbers.** Read `<pageDir>/results.md` (format: `unfaced docs results`). If the user gives numbers in chat, add them as rows, creating the file if it is missing, and paste the rows you added into your reply so the user can check them. Even when unfaced can't run, the table is:
+
+   ```markdown
+   # Results
+
+   | Video | Platform | Posted | Views | Avg watched | Likes | Comments | Shares | Saves | Follows | Notes |
+   |---|---|---|---|---|---|---|---|---|---|---|
+   | why-cats-purr | TikTok | 2026-11-14 | 12400 | 71% | 980 | 45 | 120 | 210 | 38 | |
+   ```
+
+   One row per video (its folder name in `videos/`) and platform; numbers without separators (`12400`, not `12,400`); average watched as `71%` or `9.8s`; an empty cell for what you weren't told.
+
+   If there are no numbers at all, in the file or in chat, explain which numbers to collect from each platform's insights and that they go in `results.md`, and stop there: no guesses about what is wrong (the hooks, the length, the music) and no changes until there are numbers. A video with numbers is out: set its status in `ideas.md` to `posted` if it isn't.
 2. **Join and compare.** Run `unfaced results <pageDir>`. It joins every row with what its video was made with (`plan.json`, and the hook from `script.md`), ranks each platform's videos by average watched (seconds converted with the video's length) with shares + saves, follows and comments per view, and gives the median watched of every choice that varies (hook, script type, ending, length, style...). It exits 1 when a row can't be read or names a folder that isn't in `videos/`: fix what its `## Check` section lists and run it again.
 3. **Read past the ranking.** Average watched says whether the hook and pacing work; the rates per view say different things (table below). Keep platforms apart.
 4. **Judge the signal honestly.** With fewer than 3 videos in a group, or one video far ahead of the rest, say the evidence is thin. Early numbers (less than a week after posting) move a lot. Don't explain differences with choices that didn't vary.
 5. **Suggest at most three changes.** For each: what to change (a `page.yaml` field, a writing habit, the posting time), the numbers behind it, what it should improve, and how to test it (for example, "the next 6 videos alternate hook 02 and 04; compare their average watched").
-6. **Apply only with consent.** Ask before editing `page.yaml`; after editing, run `unfaced page <pageDir>`. Changes to how scripts are written go to the user as advice, and to `ideas.md` as notes if they agree.
+6. **Apply only with consent.** Ask before editing `page.yaml`: a user asking what to change wants the list, not the edit. After editing, run `unfaced page <pageDir>`. Changes to how scripts are written go to the user as advice, and to `ideas.md` as notes if they agree.
 7. **Record** the analysis at the end of `results.md` under `## Notes, <date>`: the changes suggested and which were applied.
 
 ## Reading the numbers
@@ -42,6 +54,8 @@ node "${CLAUDE_SKILL_DIR}/scripts/unfaced.mjs" <command>
 | Mistake | Instead |
 |---|---|
 | Ten suggestions | At most three, strongest evidence first. |
+| Guessing a cause before there are numbers | Ask for the numbers and stop. |
+| A suggestion with no test | Every one says which next videos try it and which number to compare. |
 | Calling a winner from two videos | Say the signal is thin and propose a test. |
 | Comparing views across platforms | Keep platforms apart. |
 | Editing `page.yaml` without asking | Ask, then validate with `unfaced page`. |
