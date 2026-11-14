@@ -1,11 +1,11 @@
 {
-  "hash": "dba5f40bbc2635b766283290a40a72477162709b54c9ec7b4ad9c460625d4b78",
+  "hash": "2ad4cebaeafaa76bcf7a2bc89d125c2c5325dc84f1ba2e14e4651189fc6c6989",
   "provider": "kokoro",
-  "durationSec": 27.653,
+  "durationSec": 27.672541666666667,
   "words": [
     {
       "text": "Three",
-      "startMs": 340,
+      "startMs": 330,
       "endMs": 680
     },
     {
@@ -26,376 +26,391 @@
     {
       "text": "earth",
       "startMs": 1480,
-      "endMs": 1670
+      "endMs": 1680
     },
     {
       "text": "and",
-      "startMs": 1670,
-      "endMs": 1860
+      "startMs": 1680,
+      "endMs": 1880
     },
     {
       "text": "number",
-      "startMs": 1860,
-      "endMs": 2180
+      "startMs": 1880,
+      "endMs": 2200
     },
     {
       "text": "one",
-      "startMs": 2180,
-      "endMs": 2460
+      "startMs": 2200,
+      "endMs": 2480
     },
     {
       "text": "outweighs",
-      "startMs": 2460,
-      "endMs": 2860
+      "startMs": 2480,
+      "endMs": 2880
     },
     {
       "text": "the",
-      "startMs": 2860,
-      "endMs": 3020
+      "startMs": 2880,
+      "endMs": 3040
     },
     {
       "text": "king",
-      "startMs": 3020,
-      "endMs": 3370
+      "startMs": 3040,
+      "endMs": 3380
     },
     {
       "text": "number",
-      "startMs": 3370,
-      "endMs": 3840
+      "startMs": 3380,
+      "endMs": 3860
     },
     {
       "text": "three",
-      "startMs": 3840,
-      "endMs": 4080
+      "startMs": 3860,
+      "endMs": 4100
     },
     {
       "text": "the",
-      "startMs": 4080,
-      "endMs": 4110
+      "startMs": 4100,
+      "endMs": 4360
     },
     {
-      "text": "jaguar",
-      "startMs": 4110,
+      "text": "Jaguar",
+      "startMs": 4360,
       "endMs": 4580
     },
     {
       "text": "up",
-      "startMs": 4830,
-      "endMs": 4840
+      "startMs": 4840,
+      "endMs": 4850
     },
     {
       "text": "to",
-      "startMs": 5030,
-      "endMs": 5340
+      "startMs": 5050,
+      "endMs": 5360
     },
     {
       "text": "about",
-      "startMs": 5340,
+      "startMs": 5360,
       "endMs": 5440
     },
     {
       "text": "a",
       "startMs": 5440,
-      "endMs": 5780
+      "endMs": 5800
     },
     {
       "text": "hundred",
-      "startMs": 5780,
-      "endMs": 6040
+      "startMs": 5800,
+      "endMs": 6060
     },
     {
       "text": "and",
-      "startMs": 6040,
+      "startMs": 6060,
       "endMs": 6240
     },
     {
       "text": "ten",
       "startMs": 6240,
-      "endMs": 6460
+      "endMs": 6480
     },
     {
       "text": "kilos",
-      "startMs": 6460,
-      "endMs": 7020
+      "startMs": 6480,
+      "endMs": 6720
     },
     {
-      "text": "with",
-      "startMs": 7020,
-      "endMs": 7140
+      "text": "With",
+      "startMs": 6720,
+      "endMs": 7160
     },
     {
       "text": "the",
-      "startMs": 7140,
-      "endMs": 7420
+      "startMs": 7160,
+      "endMs": 7480
     },
     {
-      "text": "Strongest",
-      "startMs": 7420,
-      "endMs": 7830
+      "text": "strongest",
+      "startMs": 7480,
+      "endMs": 7850
     },
     {
       "text": "bite",
-      "startMs": 7830,
-      "endMs": 8140
+      "startMs": 7850,
+      "endMs": 7990
     },
     {
       "text": "of",
-      "startMs": 8140,
-      "endMs": 8260
+      "startMs": 7990,
+      "endMs": 8280
     },
     {
       "text": "any",
-      "startMs": 8260,
-      "endMs": 8480
+      "startMs": 8280,
+      "endMs": 8500
     },
     {
       "text": "big",
-      "startMs": 8480,
-      "endMs": 8520
+      "startMs": 8500,
+      "endMs": 8501
     },
     {
       "text": "cat",
-      "startMs": 8520,
-      "endMs": 8710
+      "startMs": 8501,
+      "endMs": 8670
     },
     {
       "text": "for",
-      "startMs": 8710,
-      "endMs": 8980
+      "startMs": 8670,
+      "endMs": 9000
     },
     {
       "text": "its",
-      "startMs": 8980,
-      "endMs": 9090
+      "startMs": 9000,
+      "endMs": 9070
     },
     {
       "text": "size",
-      "startMs": 9090,
-      "endMs": 9360
+      "startMs": 9070,
+      "endMs": 9380
     },
     {
-      "text": "it",
-      "startMs": 9360,
-      "endMs": 9480
+      "text": "It",
+      "startMs": 9380,
+      "endMs": 9500
     },
     {
       "text": "can",
-      "startMs": 9480,
-      "endMs": 9830
+      "startMs": 9500,
+      "endMs": 9840
     },
     {
       "text": "crack",
-      "startMs": 9830,
-      "endMs": 10030
+      "startMs": 9840,
+      "endMs": 10050
     },
     {
       "text": "a",
-      "startMs": 10030,
-      "endMs": 10090
+      "startMs": 10050,
+      "endMs": 10110
     },
     {
       "text": "turtle's",
-      "startMs": 10090,
-      "endMs": 10940
+      "startMs": 10110,
+      "endMs": 10960
     },
     {
       "text": "shell",
-      "startMs": 10940,
-      "endMs": 11300
+      "startMs": 10960,
+      "endMs": 11320
     },
     {
       "text": "number",
-      "startMs": 11300,
-      "endMs": 11720
+      "startMs": 11320,
+      "endMs": 11470
     },
     {
       "text": "two",
-      "startMs": 11720,
-      "endMs": 11880
+      "startMs": 11470,
+      "endMs": 11700
     },
     {
       "text": "the",
-      "startMs": 11880,
-      "endMs": 12080
+      "startMs": 11700,
+      "endMs": 12120
     },
     {
       "text": "lion",
-      "startMs": 12080,
-      "endMs": 12160
+      "startMs": 12120,
+      "endMs": 12200
     },
     {
       "text": "a",
-      "startMs": 12530,
-      "endMs": 12740
+      "startMs": 12200,
+      "endMs": 12280
     },
     {
       "text": "big",
-      "startMs": 12740,
-      "endMs": 13000
+      "startMs": 12280,
+      "endMs": 12540
     },
     {
       "text": "male",
-      "startMs": 13000,
-      "endMs": 13240
+      "startMs": 12540,
+      "endMs": 13260
     },
     {
       "text": "weighs",
-      "startMs": 13240,
-      "endMs": 13320
+      "startMs": 13260,
+      "endMs": 13290
     },
     {
       "text": "up",
-      "startMs": 13320,
+      "startMs": 13290,
       "endMs": 13600
     },
     {
       "text": "to",
       "startMs": 13600,
-      "endMs": 14200
+      "endMs": 13800
     },
     {
-      "text": "250",
-      "startMs": 14200,
-      "endMs": 14380
+      "text": "two",
+      "startMs": 13800,
+      "endMs": 14140
+    },
+    {
+      "text": "hundred",
+      "startMs": 14140,
+      "endMs": 14300
+    },
+    {
+      "text": "and",
+      "startMs": 14300,
+      "endMs": 14480
+    },
+    {
+      "text": "fifty",
+      "startMs": 14480,
+      "endMs": 14760
     },
     {
       "text": "kilos",
-      "startMs": 14380,
-      "endMs": 14720
+      "startMs": 14760,
+      "endMs": 15000
     },
     {
       "text": "and",
-      "startMs": 14720,
-      "endMs": 14930
+      "startMs": 15000,
+      "endMs": 15420
     },
     {
       "text": "his",
-      "startMs": 14930,
-      "endMs": 15240
+      "startMs": 15420,
+      "endMs": 15660
     },
     {
       "text": "roar",
-      "startMs": 15240,
-      "endMs": 15960
+      "startMs": 15660,
+      "endMs": 15980
     },
     {
       "text": "carries",
-      "startMs": 15960,
-      "endMs": 16330
+      "startMs": 15980,
+      "endMs": 16340
     },
     {
       "text": "eight",
-      "startMs": 16330,
-      "endMs": 16740
+      "startMs": 16340,
+      "endMs": 16441
     },
     {
-      "text": "kilometers",
-      "startMs": 16740,
-      "endMs": 17000
+      "text": "Kilimeters",
+      "startMs": 16620,
+      "endMs": 17090
     },
     {
       "text": "and",
-      "startMs": 17320,
-      "endMs": 17540
+      "startMs": 17340,
+      "endMs": 17560
     },
     {
       "text": "number",
-      "startMs": 17540,
-      "endMs": 17820
+      "startMs": 17560,
+      "endMs": 17840
     },
     {
       "text": "one",
-      "startMs": 17820,
-      "endMs": 18060
+      "startMs": 17840,
+      "endMs": 18080
     },
     {
       "text": "the",
-      "startMs": 18060,
-      "endMs": 18280
+      "startMs": 18080,
+      "endMs": 18300
     },
     {
       "text": "tiger",
-      "startMs": 18280,
+      "startMs": 18300,
       "endMs": 18440
     },
     {
       "text": "the",
-      "startMs": 18710,
+      "startMs": 18730,
       "endMs": 19000
     },
     {
       "text": "biggest",
       "startMs": 19000,
-      "endMs": 19320
+      "endMs": 19340
     },
     {
       "text": "males",
-      "startMs": 19320,
-      "endMs": 19680
+      "startMs": 19340,
+      "endMs": 19700
     },
     {
       "text": "top",
-      "startMs": 19920,
-      "endMs": 20060
+      "startMs": 19940,
+      "endMs": 20080
     },
     {
       "text": "300",
-      "startMs": 20060,
-      "endMs": 20520
+      "startMs": 20080,
+      "endMs": 20540
     },
     {
       "text": "kilos",
-      "startMs": 20520,
-      "endMs": 20780
+      "startMs": 20540,
+      "endMs": 21140
     },
     {
       "text": "about",
-      "startMs": 20780,
-      "endMs": 21420
+      "startMs": 21140,
+      "endMs": 21500
     },
     {
       "text": "50",
-      "startMs": 21420,
-      "endMs": 21780
+      "startMs": 21500,
+      "endMs": 21800
     },
     {
       "text": "more",
-      "startMs": 21780,
-      "endMs": 21980
+      "startMs": 21800,
+      "endMs": 22000
     },
     {
       "text": "than",
-      "startMs": 21980,
-      "endMs": 22160
+      "startMs": 22000,
+      "endMs": 22100
     },
     {
       "text": "a",
-      "startMs": 22160,
-      "endMs": 22220
+      "startMs": 22100,
+      "endMs": 22240
     },
     {
       "text": "big",
-      "startMs": 22220,
-      "endMs": 22500
+      "startMs": 22240,
+      "endMs": 22520
     },
     {
       "text": "lion",
-      "startMs": 22500,
-      "endMs": 22890
+      "startMs": 22520,
+      "endMs": 22560
     },
     {
       "text": "and",
-      "startMs": 22890,
-      "endMs": 23080
+      "startMs": 22910,
+      "endMs": 23120
     },
     {
       "text": "unlike",
-      "startMs": 23080,
-      "endMs": 23420
+      "startMs": 23120,
+      "endMs": 23460
     },
     {
       "text": "most",
-      "startMs": 23620,
+      "startMs": 23630,
       "endMs": 23740
     },
     {
@@ -404,18 +419,18 @@
       "endMs": 23800
     },
     {
-      "text": "it",
-      "startMs": 24150,
-      "endMs": 24360
+      "text": "It",
+      "startMs": 23800,
+      "endMs": 24170
     },
     {
       "text": "loves",
-      "startMs": 24360,
-      "endMs": 24600
+      "startMs": 24170,
+      "endMs": 24400
     },
     {
       "text": "to",
-      "startMs": 24600,
+      "startMs": 24400,
       "endMs": 24860
     },
     {
@@ -426,62 +441,57 @@
     {
       "text": "which",
       "startMs": 24920,
-      "endMs": 25220
+      "endMs": 25230
     },
     {
       "text": "one",
-      "startMs": 25220,
-      "endMs": 25560
+      "startMs": 25230,
+      "endMs": 25580
     },
     {
       "text": "would",
-      "startMs": 25560,
+      "startMs": 25580,
       "endMs": 25720
     },
     {
       "text": "you",
       "startMs": 25720,
-      "endMs": 25920
+      "endMs": 25940
     },
     {
       "text": "want",
-      "startMs": 25920,
-      "endMs": 26200
+      "startMs": 25940,
+      "endMs": 26160
     },
     {
       "text": "as",
-      "startMs": 26200,
-      "endMs": 26260
+      "startMs": 26160,
+      "endMs": 26280
     },
     {
       "text": "a",
-      "startMs": 26260,
-      "endMs": 26500
+      "startMs": 26280,
+      "endMs": 26520
     },
     {
       "text": "very",
-      "startMs": 26500,
-      "endMs": 26760
+      "startMs": 26520,
+      "endMs": 26780
     },
     {
       "text": "large",
-      "startMs": 26760,
-      "endMs": 27100
+      "startMs": 26780,
+      "endMs": 27120
     },
     {
       "text": "house",
-      "startMs": 27100,
+      "startMs": 27120,
       "endMs": 27360
     },
     {
-      "text": "cat",
+      "text": "cat?",
       "startMs": 27360,
-      "endMs": 27420
-    },
-    {
-      "text": "a",
-      "startMs": 27530,
-      "endMs": 27560
+      "endMs": 27440
     }
   ]
 }
