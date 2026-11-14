@@ -8,6 +8,8 @@ import { describe, expect, it } from "vitest";
 const root = join(import.meta.dirname, "..", "..");
 const launcher = join(root, "plugin", "launcher", "unfaced.mjs");
 const SKILLS = ["page-setup", "video-ideas", "video-recommend", "video-make", "video-package", "page-results"];
+/** The library version the launcher asks for, which names its install folder and the release tag it clones. */
+const VERSION = /const VERSION = "([^"]+)"/.exec(readFileSync(launcher, "utf8"))![1]!;
 
 /** Runs a copy of the launcher with a clean environment (no UNFACED_* from the developer's shell). */
 function launch(script: string, args: string[], env: Record<string, string> = {}, cwd = tmpdir()) {
@@ -34,7 +36,7 @@ function fakeLibrary(dir: string): void {
   writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "unfaced" }));
 }
 
-/** A git repo tagged v0.1.0 to install from with UNFACED_REPO; its postinstall points tsx at this checkout's, so nothing is downloaded. */
+/** A git repo tagged with the launcher's version to install from with UNFACED_REPO; its postinstall points tsx at this checkout's, so nothing is downloaded. */
 function releaseRepo(dir: string, cli = 'console.log(`ran ${process.argv.slice(2).join(" ")}`);\n'): string {
   const repo = join(dir, "unfaced repo");
   fakeLibrary(repo);
@@ -50,7 +52,7 @@ function releaseRepo(dir: string, cli = 'console.log(`ran ${process.argv.slice(2
   git("init", "--quiet");
   git("add", ".");
   git("commit", "--quiet", "-m", "release");
-  git("tag", "v0.1.0");
+  git("tag", `v${VERSION}`);
   return repo;
 }
 
@@ -77,7 +79,7 @@ describe("the skills' launcher", () => {
   it("never runs a library found around the current folder, which may be anyone's code", () => {
     const { script, dir } = outsideCopy();
     const home = join(dir, "home");
-    const installed = join(home, "lib", "0.1.0");
+    const installed = join(home, "lib", VERSION);
     fakeLibrary(installed);
     const untrusted = join(dir, "downloaded repo");
     fakeLibrary(untrusted);
@@ -95,7 +97,7 @@ describe("the skills' launcher", () => {
 
   it("outside a checkout, uses the library installed for its version in UNFACED_HOME", () => {
     const { script, dir } = outsideCopy();
-    const lib = join(dir, "home", "lib", "0.1.0");
+    const lib = join(dir, "home", "lib", VERSION);
     fakeLibrary(lib);
     expect(launch(script, ["where"], { UNFACED_HOME: join(dir, "home") })).toMatchObject({ status: 0, stdout: lib });
     const noDeps = launch(script, ["list", "hook"], { UNFACED_HOME: join(dir, "home") });
@@ -108,8 +110,8 @@ describe("the skills' launcher", () => {
     const r = launch(script, ["list", "hook"], { UNFACED_HOME: join(dir, "home"), UNFACED_REPO: join(dir, "no-such-repo") });
     expect(r.status).toBe(1);
     expect(r.stderr).toMatch(/could not download[\s\S]*UNFACED_LIB/);
-    expect(existsSync(join(dir, "home", "lib", "0.1.0"))).toBe(false);
-    expect(existsSync(join(dir, "home", "lib", "0.1.0.partial"))).toBe(false);
+    expect(existsSync(join(dir, "home", "lib", VERSION))).toBe(false);
+    expect(existsSync(join(dir, "home", "lib", `${VERSION}.partial`))).toBe(false);
   });
 
   it("installs the release on first use, into a home folder whose path has spaces, and runs the command", () => {
@@ -121,8 +123,8 @@ describe("the skills' launcher", () => {
     expect(r.status).toBe(0);
     expect(r.stdout).toContain("ran setup");
     expect(r.stdout).toMatch(/ran list hook$/);
-    expect(existsSync(join(home, "lib", "0.1.0", "engine", "src", "cli.ts"))).toBe(true);
-    expect(existsSync(join(home, "lib", "0.1.0.partial"))).toBe(false);
+    expect(existsSync(join(home, "lib", VERSION, "engine", "src", "cli.ts"))).toBe(true);
+    expect(existsSync(join(home, "lib", `${VERSION}.partial`))).toBe(false);
   }, 60_000);
 
   it("installs once when two commands start the first install at the same time", async () => {
@@ -144,17 +146,17 @@ describe("the skills' launcher", () => {
     expect(a.stdout).toMatch(/ran list hook\s*$/);
     expect(b.stdout).toMatch(/ran list voice\s*$/);
     expect((a.stdout + b.stdout).match(/ran setup/g)).toHaveLength(1);
-    expect(readdirSync(join(dir, "home", "lib"))).toEqual(["0.1.0"]);
+    expect(readdirSync(join(dir, "home", "lib"))).toEqual([VERSION]);
   }, 120_000);
 
   it("explains an install it cannot move into place", () => {
     const { script, dir } = outsideCopy();
     const home = join(dir, "home");
-    mkdirSync(join(home, "lib", "0.1.0"), { recursive: true });
-    writeFileSync(join(home, "lib", "0.1.0", "notes.txt"), "not a library");
+    mkdirSync(join(home, "lib", VERSION), { recursive: true });
+    writeFileSync(join(home, "lib", VERSION, "notes.txt"), "not a library");
     const r = launch(script, ["list", "hook"], { UNFACED_HOME: home, UNFACED_REPO: releaseRepo(dir) });
     expect(r.status).toBe(1);
-    expect(r.stderr).toMatch(/could not move [\s\S]*0\.1\.0\.partial[\s\S]*run this command again/);
+    expect(r.stderr).toMatch(new RegExp(`could not move [\\s\\S]*${VERSION.replace(/\./g, "\\.")}\\.partial[\\s\\S]*run this command again`));
     expect(r.stderr).not.toMatch(/\n\s+at /);
   }, 60_000);
 
