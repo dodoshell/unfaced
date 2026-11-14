@@ -27,7 +27,21 @@ declare module "sherpa-onnx-node" {
   }
 
   export function writeWave(path: string, audio: GeneratedAudio): void;
+  /** Reads a mono 16-bit PCM WAV as float samples. */
+  export function readWave(path: string): GeneratedAudio;
 
-  const sherpa: { OfflineTts: typeof OfflineTts; writeWave: typeof writeWave };
+  export class LinearResampler {
+    constructor(inputSampleRate: number, outputSampleRate: number);
+    resample(samples: Float32Array): Float32Array;
+    /** Resamples the last chunk and emits buffered samples. */
+    flush(samples: Float32Array): Float32Array;
+  }
+
+  const sherpa: {
+    OfflineTts: typeof OfflineTts;
+    writeWave: typeof writeWave;
+    readWave: typeof readWave;
+    LinearResampler: typeof LinearResampler;
+  };
   export default sherpa;
 }
