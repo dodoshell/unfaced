@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import type { VideoPlan } from "../../src/plan/types.js";
 import { Captions } from "./Captions.js";
-import { captionColours, captionPages, captionStyle, fitCaptionSize, keywordIndex } from "./captionLayout.js";
+import { captionBoxCss, captionColours, captionPages, captionStyle, fitCaptionSize, keywordIndex } from "./captionLayout.js";
 import { CAPTION_FONT } from "./fonts.js";
 
 interface Shown {
@@ -36,10 +36,9 @@ function fitSize(n: number, texts: string[], lineHeight: number, { padX = 0, pad
 }
 
 const Box: React.FC<{ n: number; children: React.ReactNode; align?: "center" | "flex-end"; style?: React.CSSProperties }> = ({ n, children, align = "center", style }) => {
-  const { box } = captionStyle(n);
   return (
     <AbsoluteFill>
-      <div style={{ position: "absolute", left: box.x, top: box.y, width: box.w, height: box.h, display: "flex", alignItems: align, justifyContent: "center", textAlign: "center", ...style }}>
+      <div style={{ ...captionBoxCss(n, align), ...style }}>
         {children}
       </div>
     </AbsoluteFill>

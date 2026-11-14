@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CAPTION_STYLES, captionColours, captionPages, captionStyle, fitCaptionSize, keywordIndex } from "../../engine/remotion/core/captionLayout.js";
+import { CAPTION_STYLES, captionBoxCss, captionColours, captionPages, captionStyle, fitCaptionSize, keywordIndex } from "../../engine/remotion/core/captionLayout.js";
 import { isInsideSafeZone } from "../../engine/remotion/core/safeZone.js";
 import { placedBoxes } from "../../engine/src/check/overlap.js";
 import { shownWords } from "../../engine/src/check/sync.js";
@@ -16,6 +16,13 @@ describe("caption styles", () => {
     const catalog = Catalog.load(CATALOG_DIR);
     expect(Object.keys(CAPTION_STYLES).map(Number).sort()).toEqual(catalog.ids("captions"));
     for (const [n, style] of Object.entries(CAPTION_STYLES)) expect(isInsideSafeZone(style.box), `captions ${n}`).toBe(true);
+  });
+
+  it("breaks a word too long for the box inside it, in every caption style, rather than letting it run out", () => {
+    for (const n of Object.keys(CAPTION_STYLES).map(Number)) {
+      const { box } = captionStyle(n);
+      expect(captionBoxCss(n), `captions ${n}`).toMatchObject({ left: box.x, top: box.y, width: box.w, height: box.h, overflowWrap: "anywhere" });
+    }
   });
 
   it("keeps white caption text on a dark ink, even when the palette's ink is light like chalk", () => {
