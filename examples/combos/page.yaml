@@ -1,0 +1,8 @@
+# Five sample videos of about 30 seconds, each a different combination.
+# Every script.md sets its own style, voice, captions and music in its front matter;
+# no two videos share a style, script type, hook, voice, caption style, music mood or ending.
+name: unfaced combos
+language: en
+niche: one-off sample videos, each made with a different mix of the catalogs
+duration: 25-40
+mascot: "Pip, a small brown dog with a red collar"

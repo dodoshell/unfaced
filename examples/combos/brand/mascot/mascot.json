@@ -1,0 +1,7 @@
+{
+  "$schema": "../../../../schema/mascot.schema.json",
+  "name": "Pip",
+  "species": "dog",
+  "colours": { "accent": "#D62828" },
+  "accessories": ["collar"]
+}
