@@ -70,7 +70,7 @@ claude plugin eval . --case video-make-stops-for-approval --runs 1 --ablation no
 
 ## Cost
 
-Measured: `page-setup-key-to-env`, one run without baseline, cost $0.15 and took 36 s; the 15 `files-only` cases, one run each without baseline, cost $4.26 and took 11 minutes. The costs are list-price estimates: on a Claude plan nothing is charged, but the runs use the plan's limits, and a run that hits one scores 0 without grading (run it again after the reset). The default run is 23 cases × 3 runs × 2 arms = 138 sessions plus three judge calls per `llm` grader per run; the `video-make` and reviewer cases cost the most (the reviewer reads 33 images). For a quick pass use `--runs 1 --ablation none` (23 sessions), pick a cheaper model with `--model`, and cap the spend with `--max-cost-usd`.
+Measured: `page-setup-key-to-env`, one run without baseline, cost $0.15 and took 36 s; the 15 `files-only` cases, one run each without baseline, cost $4.26 and took 11 minutes. The costs are list-price estimates: on a Claude plan nothing is charged, but the runs use the plan's limits, and a run that hits a limit scores 0 without grading (run it again after the reset). The default run is 23 cases × 3 runs × 2 arms = 138 sessions plus three judge calls per `llm` grader per run; the `video-make` and reviewer cases cost the most (the reviewer reads 33 images). For a quick pass use `--runs 1 --ablation none` (23 sessions), pick a cheaper model with `--model`, and cap the spend with `--max-cost-usd`.
 
 ## Reading the results
 

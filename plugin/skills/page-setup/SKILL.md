@@ -19,7 +19,7 @@ node "${CLAUDE_SKILL_DIR}/scripts/unfaced.mjs" <command>
 
 ## New page
 
-1. **Learn the page.** In one message, ask at most four short questions, one line and one thing each, and none about what the user already told you: who the page is for (and its niche, if they haven't said), the language of the videos, the mood (calm, funny, dramatic, cosy...), and whether they want a recurring mascot. Add: "or say 'you choose'". If they say so, decide everything yourself and say what you decided.
+1. **Learn the page.** In one message, ask at most four short questions, one line each, and skip what the user already told you: the niche and who the page is for, the language of the videos, the mood (calm, funny, dramatic, cosy...), and whether they want a recurring mascot. Add: "or say 'you choose'". If they say so, decide everything yourself and say what you decided.
 2. **Read the format:** `unfaced docs page`. The folder is `pages/<slug>/` in the current project unless the user names another.
 3. **Pick every choice** (style, script, hook, voice, captions, music, ending, duration). For each kind, run `unfaced list <kind>` and read the candidates with `unfaced show <kind> <number>` (its "Good for" and "Pairs well with" lines). Then:
    - Fixed numbers for what makes the page recognisable: `style`, `voice`, `captions`, usually `music`.

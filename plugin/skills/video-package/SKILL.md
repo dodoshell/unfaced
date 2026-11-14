@@ -27,7 +27,7 @@ node "${CLAUDE_SKILL_DIR}/scripts/unfaced.mjs" <command>
    - The first line of every caption is a hook of its own; 3 to 5 hashtags; sources for factual claims.
    - A caption teases the video: it doesn't retell the whole script or promise anything the video doesn't show.
    - Under `Notes`: which cover to use, and for music 08 (none) a reminder to add a trending sound in the app.
-   - Even when unfaced can't run, the file has this shape; the headings and the `Title:` and `Description:` labels stay in English whatever the page's language, and everything else is in that language:
+   - Even when unfaced can't run, the file has this shape; the headings and the labels (`Video:`, `Cover:`, `Length:`, `Title:`, `Description:`) stay in English whatever the page's language, and everything else is in that language:
 
      ```markdown
      # <video title>
