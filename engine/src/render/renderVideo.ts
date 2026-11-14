@@ -28,6 +28,8 @@ export interface RenderJob {
   scenes?: string;
   /** How renderMediaOf encodes: H.264 + AAC by default, or a looping GIF with every nth frame, scaled. */
   media?: { codec: "gif"; everyNthFrame: number; scale: number };
+  /** How many browser tabs render frames at once; Remotion picks from the CPU count when unset. */
+  concurrency?: number;
 }
 
 export const ENGINE_ENTRY = join(LIBRARY_ROOT, "engine", "remotion", "index.ts");
@@ -170,7 +172,7 @@ export async function renderMediaOf(job: RenderJob): Promise<void> {
     ? { codec: "gif" as const, everyNthFrame: job.media.everyNthFrame, scale: job.media.scale, numberOfGifLoops: null }
     : // A silent track when the video has no soundtrack (text only, no music): players and platforms expect one.
       { codec: "h264" as const, audioCodec: "aac" as const, enforceAudioTrack: true };
-  await renderMedia({ serveUrl: url, composition, inputProps: job.inputProps, ...encoding, outputLocation: job.outPath, puppeteerInstance: browser });
+  await renderMedia({ serveUrl: url, composition, inputProps: job.inputProps, ...encoding, outputLocation: job.outPath, puppeteerInstance: browser, concurrency: job.concurrency ?? null });
 }
 
 /** Renders one frame of a composition as a PNG, optionally scaled. The bundle and browser are kept until closeRenders(). */

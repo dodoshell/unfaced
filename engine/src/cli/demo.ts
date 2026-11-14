@@ -27,6 +27,9 @@ const GIF = { codec: "gif", everyNthFrame: 3, scale: 0.5 } as const;
 /** The moments worth a look: the run, the take-off, the catch, the landing, the end. */
 export const DEMO_FRAMES = [0, 40, 72, 80, 86, 95, 105, 140, 179];
 
+/** Browser tabs rendering the grid at once. */
+const GRID_CONCURRENCY = 2;
+
 const defaultDeps = (): DemoDeps => ({ catalog: Catalog.load(CATALOG_DIR), renderMedia: renderMediaOf, renderStill: renderStillOf, log: (m) => console.error(m) });
 
 /**
@@ -67,7 +70,8 @@ export async function renderDemos(which: string, options: DemoOptions = {}, deps
         const n = String(style).padStart(2, "0");
         return { src: `${n}-${entry.slug}.mp4`, label: `${n} ${entry.name}` };
       });
-      const grid = { id: STYLES_GRID_ID, assetsDir: out, files: cells.map((c) => c.src) };
+      // Every tab of the grid decodes all the demos at full size: a tab per CPU core took several GB and failed on a busy machine.
+      const grid = { id: STYLES_GRID_ID, assetsDir: out, files: cells.map((c) => c.src), concurrency: GRID_CONCURRENCY };
       const video = join(out, "all-styles.mp4");
       await deps.renderMedia({ ...grid, inputProps: { cells, bands: true }, outPath: video });
       deps.log(`All styles: ${video}`);

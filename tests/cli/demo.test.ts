@@ -51,6 +51,14 @@ describe("demo", () => {
     expect(files.slice(-2)).toEqual([join(out, "all-styles.mp4"), gif]);
   });
 
+  it("renders the grid with only a couple of browser tabs at once, since each tab plays every style's video", async () => {
+    const { d, videos } = deps();
+    await renderDemos("all", { out }, d);
+    const grids = videos.filter((v) => v.id === STYLES_GRID_ID);
+    expect(grids.map((g) => g.concurrency)).toEqual([2, 2]);
+    expect(videos.filter((v) => v.id === DOG_DEMO_ID).every((v) => v.concurrency === undefined)).toBe(true);
+  });
+
   it("makes no grid for a single style or for stills", async () => {
     const { d, videos } = deps();
     await renderDemos("3", { out }, d);
