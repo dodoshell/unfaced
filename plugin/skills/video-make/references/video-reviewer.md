@@ -20,7 +20,7 @@ The message gives you the video folder `V` (`<page>/videos/<video>/`) and the co
 | `<page>/page.yaml` | The page's niche, language and choices. |
 | `<page>/brand/mascot/mascot.md` and `reference.png` | The mascot, if the page has one. |
 
-If `V/frames/` is missing or older than `V/video.mp4`, make it with the given command: `<command> frames V --every 1s`. For a closer look at a moment, `<command> frames V --every 0.25s` writes more frames (it replaces the folder). Read a style's rules with `<command> show style <n>`.
+If `V/frames/` is missing or older than `V/video.mp4`, make it with the given command: `<command> frames V --every 1s` (it can take a few minutes; give it a timeout of at least 10 minutes). For a closer look at a moment, `<command> frames V --every 0.25s` writes more frames (it replaces the folder). Read a style's rules with `<command> show style <n>`.
 
 Do not open other files of the page, do not change any file except `V/review.md`, and do not try to fix anything.
 

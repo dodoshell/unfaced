@@ -24,7 +24,7 @@ node "${CLAUDE_SKILL_DIR}/scripts/unfaced.mjs" <command>
 3. **Build 2–3 combinations that really differ**, for example one proven and one bolder, or one short loop and one longer story. Each combination has:
    - script type, hook and ending, by number and name;
    - a sample hook line and a sample ending line written for this idea, following that hook's and ending's rules;
-   - style, voice, captions and music: the page's number when it is fixed (say "page"), otherwise your pick;
+   - style, voice, captions and music: the user's one-off choice for this video if they made one, else the page's number when it is fixed (say "page"), otherwise your pick;
    - the target length and its word budget;
    - one line on why it fits this idea.
 4. **Recommend one** (mark it ★) and say why in one sentence. Ask the user to pick, change a part, or say "you choose".
@@ -49,6 +49,7 @@ node "${CLAUDE_SKILL_DIR}/scripts/unfaced.mjs" <command>
 | Mistake | Instead |
 |---|---|
 | Combinations that differ only in music | Change the structure: script type, hook, ending or length. |
-| A planned entry, or one outside the page's list | Only ready entries the page allows. |
+| A planned entry, or one outside the page's list | Only ready entries the page allows, or the user's one-off choice. |
+| A look the catalog doesn't have ("anime") | Say there is no such style and build the options from the closest ready ones. |
 | Generic sample lines ("Did you know...?") | Write the real hook for this idea, under 12 words. |
 | Changing `page.yaml` for this video | Per-video choices go in `script.md`. |
