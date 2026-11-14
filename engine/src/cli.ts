@@ -5,6 +5,7 @@ import { makeCover } from "./cli/cover.js";
 import { renderDemos } from "./cli/demo.js";
 import { docText } from "./cli/docs.js";
 import { parseEvery, renderFrames } from "./cli/frames.js";
+import { generateReport } from "./cli/generate.js";
 import { inboxReport } from "./cli/inbox.js";
 import { listLines } from "./cli/list.js";
 import { defaultMakeDeps, makeVideo } from "./cli/make.js";
@@ -27,6 +28,7 @@ Commands:
   frames <videoDir> [--every 1s] Render review frames of a made video into <videoDir>/frames/
   cover <videoDir> [--at 1.5]    Render the cover (a frame without captions) to <videoDir>/cover.png
   inbox <videoDir>               Check the files handed off into <videoDir>/inbox/ and list the prompts still waiting for one
+  generate <videoDir>            Make the images and clips inbox/PROMPTS.md asks for with the page's providers, then check the inbox
   mascot <pageDir>               Render the page's mascot reference sheet to brand/mascot/reference.png
   demo <style|all> [--out <dir>] [--frames]
                                  Render the style demo (the same dog scene in every style) to <dir>/NN-slug.mp4,
@@ -86,6 +88,11 @@ async function main(args: string[]): Promise<number> {
     }
     case "inbox": {
       const { lines, pass } = await inboxReport(need(rest[0], "the video folder"));
+      console.log(lines.join("\n"));
+      return pass ? 0 : 1;
+    }
+    case "generate": {
+      const { lines, pass } = await generateReport(need(rest[0], "the video folder"));
       console.log(lines.join("\n"));
       return pass ? 0 : 1;
     }

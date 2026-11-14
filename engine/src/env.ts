@@ -7,6 +7,8 @@ import { unfacedHome } from "./paths.js";
 /** Every variable the paid providers read; all optional, since each falls back to a free path. */
 export const PROVIDER_KEYS = [
   { name: "ELEVENLABS_API_KEY", use: "ElevenLabs voice (providers.voice: elevenlabs)" },
+  { name: "REPLICATE_API_TOKEN", use: "Replicate images and clips (providers.images or providers.ai_clips: replicate)" },
+  { name: "PEXELS_API_KEY", use: "Pexels stock photos (providers.images: pexels; the key is free)" },
 ] as const;
 
 interface EnvOptions {

@@ -1,6 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { encodeWav } from "../audio/speech.js";
+import { reach } from "../http.js";
 import type { VoiceProvider } from "./types.js";
 
 /** Speaks every language ElevenLabs supports from the same voices, so no per-language table is needed. */
@@ -36,24 +37,14 @@ function voiceFor(voiceType: number) {
  * https://elevenlabs.io/docs/api-reference/text-to-speech/convert
  */
 async function textToSpeech(text: string, voiceId: string, speed: number, apiKey: string, fetchImpl: typeof fetch): Promise<Buffer> {
-  let res: Response;
-  try {
-    res = await fetchImpl(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=pcm_${SAMPLE_RATE}`, {
-      method: "POST",
-      headers: { "xi-api-key": apiKey, "content-type": "application/json" },
-      body: JSON.stringify({ text, model_id: ELEVENLABS_MODEL, voice_settings: { speed } }),
-    });
-  } catch (e) {
-    throw new Error(`Could not reach ElevenLabs: ${reason(e)}`);
-  }
+  const res = await reach("ElevenLabs", fetchImpl, `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=pcm_${SAMPLE_RATE}`, {
+    method: "POST",
+    headers: { "xi-api-key": apiKey, "content-type": "application/json" },
+    body: JSON.stringify({ text, model_id: ELEVENLABS_MODEL, voice_settings: { speed } }),
+  });
   if (!res.ok) throw new Error(await refusal(res));
   return Buffer.from(await res.arrayBuffer());
 }
-
-const reason = (e: unknown): string => {
-  const err = e instanceof Error ? e : new Error(String(e));
-  return err.cause instanceof Error ? `${err.message} (${err.cause.message})` : err.message;
-};
 
 /** What a refused call means, from its status and the `detail` ElevenLabs sends back. */
 async function refusal(res: Response): Promise<string> {

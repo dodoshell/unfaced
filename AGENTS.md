@@ -32,6 +32,7 @@ Inside this repository the skills' launcher (`node plugin/launcher/unfaced.mjs <
 - Review frames: `npm run unfaced -- frames <videoDir> --every 1s`, then look at `<videoDir>/frames/`
 - Cover image: `npm run unfaced -- cover <videoDir> [--at 1.5]`
 - Files handed off into a video's `inbox/`: `npm run unfaced -- inbox <videoDir>`
+- Images and clips for `inbox/PROMPTS.md` from the page's providers: `npm run unfaced -- generate <videoDir>`
 - Mascot reference sheet: `npm run unfaced -- mascot <pageDir>`
 - Tests: `npm test` (slow tests that synthesize voice or render video: `UNFACED_SLOW=1 npm test`)
 - Types: `npm run typecheck`

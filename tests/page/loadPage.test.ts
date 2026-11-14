@@ -96,6 +96,28 @@ describe("loadPage", () => {
     expect((await loadPage(fixture, stubCatalog)).providers.voice).toBe("free");
   });
 
+  it.each([
+    ["pexels", "replicate"],
+    ["replicate", "replicate:veo"],
+    ["replicate:black-forest-labs/flux-dev", "replicate:kwaivgi/kling-v2.6"],
+    ["none", "none"],
+  ])("accepts images: %s and ai_clips: %s", async (images, clips) => {
+    const page = await loadPage(pageDir(`${minimal}providers:\n  images: ${images}\n  ai_clips: ${clips}\n`), stubCatalog);
+    expect(page.providers).toMatchObject({ images, ai_clips: clips });
+  });
+
+  it("names the image providers it knows", async () => {
+    const err = await errorOf(`${minimal}providers:\n  images: midjourney\n`);
+    expect(err.field).toBe("providers.images");
+    expect(err.message).toBe(`Unknown image provider "midjourney" in page.yaml; choose one of: none, pexels, replicate, replicate:<owner>/<model>`);
+  });
+
+  it("names the clip providers and models it knows", async () => {
+    const err = await errorOf(`${minimal}providers:\n  ai_clips: replicate:sora\n`);
+    expect(err.field).toBe("providers.ai_clips");
+    expect(err.message).toBe(`Unknown clip provider "replicate:sora" in page.yaml; choose one of: none, replicate, replicate:kling, replicate:veo, replicate:seedance, replicate:<owner>/<model>`);
+  });
+
   it.each(["sk_3f9a8b7c6d5e4f3a2b1c", "sk_live_51Hxyz", "xi-abc", "AIzaSyD-123"])("refuses an API key such as %s anywhere in page.yaml", async (key) => {
     const err = await errorOf(`${minimal}mascot: ${key}\n`);
     expect(err.message).toBe("API keys must not be stored in page.yaml; use .env");

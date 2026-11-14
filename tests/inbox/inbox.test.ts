@@ -70,6 +70,7 @@ describe("checking an inbox", () => {
     writeFileSync(at("notes.mov"), "");
     writeFileSync(at(".DS_Store"), "");
     writeFileSync(at("PROMPTS.md"), "## tall.png\nA red sky.\n\n## sunset.png\nA sunset over the sea.\n");
+    writeFileSync(at("CREDITS.md"), "# Credits\n\n- tall.png: Photo by Jane Doe on Pexels\n");
   }, 60_000);
 
   it("gives one line per file and per prompt still waiting for its file", async () => {
@@ -92,6 +93,7 @@ describe("checking an inbox", () => {
     expect(byFile["sunset.png"]).toMatchObject({ status: "waiting" });
     expect(byFile["sunset.png"]!.detail).toMatch(/PROMPTS\.md/);
     expect(byFile["PROMPTS.md"]).toBeUndefined();
+    expect(byFile["CREDITS.md"]).toBeUndefined();
   }, 60_000);
 
   it("reports a missing inbox as nothing to check", async () => {
