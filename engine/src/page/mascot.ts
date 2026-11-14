@@ -6,6 +6,7 @@ import type { Rig } from "../../remotion/core/character/types.js";
 import { LIBRARY_ROOT } from "../paths.js";
 import type { Mascot } from "../plan/types.js";
 import { PageError } from "./loadPage.js";
+import { readText } from "../text.js";
 
 const schema = JSON.parse(readFileSync(join(LIBRARY_ROOT, "schema", "mascot.schema.json"), "utf8"));
 const validate = new Ajv2020({ allErrors: true }).compile(schema);
@@ -19,7 +20,7 @@ export function loadMascot(pageDir: string): Mascot | undefined {
   if (!existsSync(file)) return undefined;
   let data: Record<string, unknown>;
   try {
-    data = JSON.parse(readFileSync(file, "utf8"));
+    data = JSON.parse(readText(file));
   } catch (e) {
     throw new PageError("mascot", `brand/mascot/mascot.json is not valid JSON: ${e instanceof Error ? e.message : String(e)}`);
   }

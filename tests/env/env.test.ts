@@ -44,6 +44,23 @@ describe("loadEnv", () => {
     expect(env.REPLICATE_API_TOKEN).toBeUndefined();
   });
 
+  it("reads a .env saved with a byte order mark or in UTF-16, as Windows editors and PowerShell 5.1 write it", () => {
+    const text = "ELEVENLABS_API_KEY=key-one\r\nPEXELS_API_KEY=key-two\r\n";
+    const utf16 = (body: string, bigEndian: boolean) => {
+      const le = Buffer.from(`﻿${body}`, "utf16le");
+      return bigEndian ? Buffer.from(le).swap16() : le;
+    };
+    for (const [label, bytes] of [
+      ["UTF-8 with BOM", Buffer.from(`﻿${text}`, "utf8")],
+      ["UTF-16 LE", utf16(text, false)],
+      ["UTF-16 BE", utf16(text, true)],
+    ] as const) {
+      const { page, cwd, home } = folders({});
+      writeFileSync(join(page, ".env"), bytes);
+      expect(loadEnv(page, { env: { UNFACED_HOME: home }, cwd }), label).toMatchObject({ ELEVENLABS_API_KEY: "key-one", PEXELS_API_KEY: "key-two" });
+    }
+  });
+
   it("works without any .env file, and without a page", () => {
     const { page, cwd, home } = folders({ cwd: "PEXELS_API_KEY=from-cwd\n" });
     expect(loadEnv(page, { env: { UNFACED_HOME: home, PATH: "x" }, cwd })).toEqual({ UNFACED_HOME: home, PATH: "x", PEXELS_API_KEY: "from-cwd" });

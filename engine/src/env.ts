@@ -1,8 +1,9 @@
 // Keys for the paid providers live in .env files, never in page.yaml.
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { parseEnv } from "node:util";
 import { unfacedHome } from "./paths.js";
+import { readText } from "./text.js";
 
 /** Every variable the paid providers read; all optional, since each falls back to a free path. */
 export const PROVIDER_KEYS = [
@@ -27,7 +28,7 @@ export function loadEnv(pageDir?: string, { env = process.env, cwd = process.cwd
   const files = [...(pageDir ? [join(pageDir, ".env")] : []), join(cwd, ".env"), join(unfacedHome(env), ".env")];
   for (const file of new Set(files.map((f) => resolve(f)))) {
     if (!existsSync(file)) continue;
-    for (const [name, value] of Object.entries(parseEnv(readFileSync(file, "utf8")))) {
+    for (const [name, value] of Object.entries(parseEnv(readText(file)))) {
       if (value && !loaded[name]) loaded[name] = value;
     }
   }
