@@ -60,6 +60,8 @@ Three things cats hate:
 - closed doors
 ```
 
+The voice reads the paragraph in the order it is written, but a list scene shows every line that is not an item above the items. Keep one lead-in line first, and put anything that follows the list in a paragraph of its own.
+
 ## Visuals
 
 A line starting with `> visual:` describes what should be on screen during that beat. It is never spoken. Put it inside the paragraph it belongs to; a `> visual:` paragraph on its own attaches to the beat before it.

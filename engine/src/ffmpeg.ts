@@ -6,6 +6,10 @@ import { RenderInternals } from "@remotion/renderer";
  * Runs the ffmpeg that ships with Remotion, the same way Remotion does (from its own
  * folder, so file arguments must be absolute). Resolves with stdout and stderr;
  * rejects with the end of stderr when ffmpeg fails.
+ *
+ * RenderInternals is not Remotion's public API: it can change in any release. That is one
+ * reason every Remotion package is pinned to the same exact version in package.json; when
+ * upgrading them, check that getExecutablePath still takes these options.
  */
 export function runFfmpeg(args: string[], input?: Buffer): Promise<{ stdout: Buffer; stderr: string }> {
   const exe = RenderInternals.getExecutablePath({ type: "ffmpeg", indent: false, logLevel: "error", binariesDirectory: null });

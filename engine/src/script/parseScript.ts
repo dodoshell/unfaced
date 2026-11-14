@@ -116,12 +116,25 @@ function merge(id: string, kind: Beat["kind"], paragraphs: Paragraph[]): Beat {
   return { id, kind, text: paragraphs.map((p) => p.text).join(" "), ...(visual !== undefined ? { visual } : {}) };
 }
 
-/** What the voice reads: list items become "a, b, c.", emoji are dropped. */
+/** What the voice reads, in the order written: each run of list items becomes "a, b, c.", emoji are dropped. */
 function speakable(text: string): string {
-  const lines = text.split("\n");
-  const items = lines.filter((l) => LIST_ITEM.test(l)).map((l) => l.replace(LIST_ITEM, "").replace(/[.,;]+$/, ""));
-  const read = items.length ? [...lines.filter((l) => !LIST_ITEM.test(l)), `${items.join(", ")}.`].join(" ") : text;
-  return read
+  const parts: string[] = [];
+  let items: string[] = [];
+  const endList = () => {
+    if (items.length) parts.push(`${items.join(", ")}.`);
+    items = [];
+  };
+  for (const line of text.split("\n")) {
+    if (LIST_ITEM.test(line)) {
+      items.push(line.replace(LIST_ITEM, "").replace(/[.,;]+$/, ""));
+    } else {
+      endList();
+      parts.push(line);
+    }
+  }
+  endList();
+  return parts
+    .join(" ")
     .replace(KEYCAP, "")
     .replace(FLAG, "")
     .replace(EMOJI, "")

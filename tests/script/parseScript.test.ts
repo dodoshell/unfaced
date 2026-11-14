@@ -72,6 +72,11 @@ describe("parseScript", () => {
     expect(s.spokenText).toBe("Made in Italy, top 3 picks. Step is 4 minutes. Bye.");
   });
 
+  it("reads a paragraph that mixes prose and a list in the order it is written", () => {
+    const s = parseScript(md(`## Hook\nHi.\n\n## Body\nThree things cats hate:\n- water\n- noise\nThe worst is the vacuum.\n\n## Ending\nEnd.\n`));
+    expect(s.spokenText).toBe("Hi. Three things cats hate: water, noise. The worst is the vacuum. End.");
+  });
+
   it("joins the lines of one paragraph with a space", () => {
     const s = parseScript(md(`## Hook\nWhy do\ncats purr?\n\n## Body\nOne.\n\n## Ending\nEnd.\n`));
     expect(s.beats[0]!.text).toBe("Why do cats purr?");
