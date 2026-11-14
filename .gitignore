@@ -1,2 +1,7 @@
-.superpowers/
 node_modules/
+.superpowers/
+.env
+**/out/
+examples/**/videos/**/*.mp4
+examples/**/videos/**/*.wav
+examples/**/videos/**/frames/

@@ -1,0 +1,43 @@
+{
+  "name": "unfaced",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Agent skills to create and run faceless social media pages.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "unfaced": "tsx engine/src/cli.ts",
+    "setup": "node scripts/setup.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/pngjs": "^6.0.5",
+    "@types/react": "^19.3.0",
+    "pixelmatch": "^8.0.0",
+    "pngjs": "^7.0.0",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "esbuild@0.28.1": true
+  },
+  "dependencies": {
+    "@remotion/bundler": "4.0.543",
+    "@remotion/captions": "4.0.543",
+    "@remotion/install-whisper-cpp": "4.0.543",
+    "@remotion/renderer": "4.0.543",
+    "ajv": "^8.20.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "remotion": "4.0.543",
+    "sherpa-onnx-node": "1.13.8",
+    "yaml": "^2.9.1"
+  }
+}

@@ -1,0 +1,503 @@
+{
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationInFrames": 964,
+  "style": 3,
+  "captions": 1,
+  "palette": [
+    "#FFF4E0",
+    "#FF6B35",
+    "#2EC4B6",
+    "#FFD23F",
+    "#1B1B3A"
+  ],
+  "audioSrc": "voice.wav",
+  "scenes": [
+    {
+      "beatId": "hook",
+      "kind": "title",
+      "text": "Still giving your cat a bowl of milk? You're doing it wrong.",
+      "fromFrame": 0,
+      "durationInFrames": 126,
+      "words": [
+        {
+          "text": "Still",
+          "startMs": 310,
+          "endMs": 760
+        },
+        {
+          "text": "giving",
+          "startMs": 760,
+          "endMs": 1000
+        },
+        {
+          "text": "your",
+          "startMs": 1000,
+          "endMs": 1280
+        },
+        {
+          "text": "cat",
+          "startMs": 1280,
+          "endMs": 1540
+        },
+        {
+          "text": "a",
+          "startMs": 1540,
+          "endMs": 1820
+        },
+        {
+          "text": "bowl",
+          "startMs": 1820,
+          "endMs": 1880
+        },
+        {
+          "text": "of",
+          "startMs": 1880,
+          "endMs": 2340
+        },
+        {
+          "text": "milk?",
+          "startMs": 2340,
+          "endMs": 2770
+        },
+        {
+          "text": "You're",
+          "startMs": 2770,
+          "endMs": 3160
+        },
+        {
+          "text": "doing",
+          "startMs": 3160,
+          "endMs": 3480
+        },
+        {
+          "text": "it",
+          "startMs": 3480,
+          "endMs": 3680
+        },
+        {
+          "text": "wrong.",
+          "startMs": 3680,
+          "endMs": 4210
+        }
+      ]
+    },
+    {
+      "beatId": "b1",
+      "kind": "fact",
+      "text": "Most adult cats can't digest milk properly. For many of them, one bowl means an upset stomach a few hours later.",
+      "fromFrame": 126,
+      "durationInFrames": 231,
+      "words": [
+        {
+          "text": "Most",
+          "startMs": 4210,
+          "endMs": 4640
+        },
+        {
+          "text": "adult",
+          "startMs": 4640,
+          "endMs": 4910
+        },
+        {
+          "text": "cats",
+          "startMs": 4910,
+          "endMs": 5120
+        },
+        {
+          "text": "can't",
+          "startMs": 5540,
+          "endMs": 5930
+        },
+        {
+          "text": "digest",
+          "startMs": 5930,
+          "endMs": 6640
+        },
+        {
+          "text": "milk",
+          "startMs": 6900,
+          "endMs": 7100
+        },
+        {
+          "text": "properly.",
+          "startMs": 7100,
+          "endMs": 7360
+        },
+        {
+          "text": "For",
+          "startMs": 7360,
+          "endMs": 7660
+        },
+        {
+          "text": "many",
+          "startMs": 7660,
+          "endMs": 7880
+        },
+        {
+          "text": "of",
+          "startMs": 7880,
+          "endMs": 8320
+        },
+        {
+          "text": "them,",
+          "startMs": 8320,
+          "endMs": 8680
+        },
+        {
+          "text": "one",
+          "startMs": 8680,
+          "endMs": 8960
+        },
+        {
+          "text": "bowl",
+          "startMs": 8960,
+          "endMs": 9380
+        },
+        {
+          "text": "means",
+          "startMs": 9380,
+          "endMs": 9381
+        },
+        {
+          "text": "an",
+          "startMs": 9381,
+          "endMs": 9800
+        },
+        {
+          "text": "upset",
+          "startMs": 9800,
+          "endMs": 10420
+        },
+        {
+          "text": "stomach",
+          "startMs": 10420,
+          "endMs": 10440
+        },
+        {
+          "text": "a",
+          "startMs": 10440,
+          "endMs": 10500
+        },
+        {
+          "text": "few",
+          "startMs": 10660,
+          "endMs": 10730
+        },
+        {
+          "text": "hours",
+          "startMs": 10730,
+          "endMs": 11110
+        },
+        {
+          "text": "later.",
+          "startMs": 11110,
+          "endMs": 11850
+        }
+      ]
+    },
+    {
+      "beatId": "b2",
+      "kind": "fact",
+      "text": "Kittens make an enzyme called lactase to digest their mother's milk. But most cats lose it as they grow up.",
+      "fromFrame": 357,
+      "durationInFrames": 212,
+      "words": [
+        {
+          "text": "Kittens",
+          "startMs": 11930,
+          "endMs": 12500
+        },
+        {
+          "text": "make",
+          "startMs": 12500,
+          "endMs": 12700
+        },
+        {
+          "text": "an",
+          "startMs": 12700,
+          "endMs": 13100
+        },
+        {
+          "text": "enzyme",
+          "startMs": 13100,
+          "endMs": 13600
+        },
+        {
+          "text": "called",
+          "startMs": 13600,
+          "endMs": 13920
+        },
+        {
+          "text": "lactase",
+          "startMs": 14080,
+          "endMs": 14230
+        },
+        {
+          "text": "to",
+          "startMs": 14530,
+          "endMs": 14740
+        },
+        {
+          "text": "digest",
+          "startMs": 14740,
+          "endMs": 14840
+        },
+        {
+          "text": "their",
+          "startMs": 14840,
+          "endMs": 15300
+        },
+        {
+          "text": "mother's",
+          "startMs": 15300,
+          "endMs": 16040
+        },
+        {
+          "text": "milk.",
+          "startMs": 16040,
+          "endMs": 16410
+        },
+        {
+          "text": "But",
+          "startMs": 16410,
+          "endMs": 16660
+        },
+        {
+          "text": "most",
+          "startMs": 16880,
+          "endMs": 17020
+        },
+        {
+          "text": "cats",
+          "startMs": 17020,
+          "endMs": 17380
+        },
+        {
+          "text": "lose",
+          "startMs": 17380,
+          "endMs": 17640
+        },
+        {
+          "text": "it",
+          "startMs": 17640,
+          "endMs": 17860
+        },
+        {
+          "text": "as",
+          "startMs": 17860,
+          "endMs": 18020
+        },
+        {
+          "text": "they",
+          "startMs": 18020,
+          "endMs": 18260
+        },
+        {
+          "text": "grow",
+          "startMs": 18260,
+          "endMs": 18580
+        },
+        {
+          "text": "up.",
+          "startMs": 18710,
+          "endMs": 18960
+        }
+      ]
+    },
+    {
+      "beatId": "b3",
+      "kind": "fact",
+      "text": "And here's the strangest part. Cats can't taste sweetness at all. Their sweet taste gene is broken, so the sugar in milk means nothing to them.",
+      "fromFrame": 569,
+      "durationInFrames": 271,
+      "words": [
+        {
+          "text": "And",
+          "startMs": 18970,
+          "endMs": 19260
+        },
+        {
+          "text": "here's",
+          "startMs": 19260,
+          "endMs": 19560
+        },
+        {
+          "text": "the",
+          "startMs": 19560,
+          "endMs": 19880
+        },
+        {
+          "text": "strangest",
+          "startMs": 19880,
+          "endMs": 20440
+        },
+        {
+          "text": "part.",
+          "startMs": 20440,
+          "endMs": 20950
+        },
+        {
+          "text": "Cats",
+          "startMs": 20950,
+          "endMs": 21130
+        },
+        {
+          "text": "can't",
+          "startMs": 21130,
+          "endMs": 21630
+        },
+        {
+          "text": "taste",
+          "startMs": 21630,
+          "endMs": 22100
+        },
+        {
+          "text": "sweetness",
+          "startMs": 22100,
+          "endMs": 22580
+        },
+        {
+          "text": "at",
+          "startMs": 22580,
+          "endMs": 22920
+        },
+        {
+          "text": "all.",
+          "startMs": 22920,
+          "endMs": 23360
+        },
+        {
+          "text": "Their",
+          "startMs": 23360,
+          "endMs": 23720
+        },
+        {
+          "text": "sweet",
+          "startMs": 23720,
+          "endMs": 23930
+        },
+        {
+          "text": "taste",
+          "startMs": 23930,
+          "endMs": 24420
+        },
+        {
+          "text": "gene",
+          "startMs": 24420,
+          "endMs": 24620
+        },
+        {
+          "text": "is",
+          "startMs": 24620,
+          "endMs": 25060
+        },
+        {
+          "text": "broken,",
+          "startMs": 25060,
+          "endMs": 25360
+        },
+        {
+          "text": "so",
+          "startMs": 25360,
+          "endMs": 25660
+        },
+        {
+          "text": "the",
+          "startMs": 25660,
+          "endMs": 25920
+        },
+        {
+          "text": "sugar",
+          "startMs": 25920,
+          "endMs": 26030
+        },
+        {
+          "text": "in",
+          "startMs": 26030,
+          "endMs": 26160
+        },
+        {
+          "text": "milk",
+          "startMs": 26160,
+          "endMs": 26630
+        },
+        {
+          "text": "means",
+          "startMs": 26630,
+          "endMs": 27080
+        },
+        {
+          "text": "nothing",
+          "startMs": 27080,
+          "endMs": 27250
+        },
+        {
+          "text": "to",
+          "startMs": 27250,
+          "endMs": 27380
+        },
+        {
+          "text": "them.",
+          "startMs": 27380,
+          "endMs": 28020
+        }
+      ]
+    },
+    {
+      "beatId": "ending",
+      "kind": "outro",
+      "text": "Give them water instead. Your carpet will thank you.",
+      "fromFrame": 840,
+      "durationInFrames": 124,
+      "words": [
+        {
+          "text": "Give",
+          "startMs": 28020,
+          "endMs": 28380
+        },
+        {
+          "text": "them",
+          "startMs": 28380,
+          "endMs": 28740
+        },
+        {
+          "text": "water",
+          "startMs": 28740,
+          "endMs": 29200
+        },
+        {
+          "text": "instead.",
+          "startMs": 29200,
+          "endMs": 30050
+        },
+        {
+          "text": "Your",
+          "startMs": 30050,
+          "endMs": 30580
+        },
+        {
+          "text": "carpet",
+          "startMs": 30580,
+          "endMs": 30870
+        },
+        {
+          "text": "will",
+          "startMs": 30870,
+          "endMs": 31240
+        },
+        {
+          "text": "thank",
+          "startMs": 31240,
+          "endMs": 31630
+        },
+        {
+          "text": "you.",
+          "startMs": 31630,
+          "endMs": 31850
+        }
+      ]
+    }
+  ]
+}

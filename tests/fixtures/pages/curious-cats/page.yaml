@@ -1,0 +1,20 @@
+name: Curious Cats
+language: en
+niche: science facts about cats
+
+style: 7
+script: [2, 6, 9]
+hook: auto
+voice: 3
+captions: 1
+music: auto
+ending: 1
+duration: 30-45
+palette: ["#1B1B1F", "#F5C542", "#FFFFFF"]
+font: auto
+mascot: "Miso, an orange cat with round glasses"
+
+providers:
+  voice: kokoro
+  ai_clips: none
+  images: none

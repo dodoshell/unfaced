@@ -1,0 +1,14 @@
+{
+  "name": "unfaced",
+  "owner": { "name": "dodoshell", "url": "https://github.com/dodoshell" },
+  "metadata": {
+    "description": "Create and run faceless social media pages with your coding agent."
+  },
+  "plugins": [
+    {
+      "name": "unfaced",
+      "source": "./plugin",
+      "description": "Plan, script and produce videos for faceless pages: numbered styles, scripts, hooks and voices, a page profile for consistency, free by default."
+    }
+  ]
+}
