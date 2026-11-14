@@ -11,6 +11,7 @@ import { makeVideo } from "./cli/make.js";
 import { renderMascotSheet } from "./cli/mascot.js";
 import { pageSummary } from "./cli/page.js";
 import { renderHookReel } from "./cli/reel.js";
+import { resultsReport } from "./cli/results.js";
 import { showText } from "./cli/show.js";
 import { setup } from "./cli/setup.js";
 import { CATALOG_DIR } from "./paths.js";
@@ -27,6 +28,7 @@ Commands:
   frames <videoDir> [--every 1s] Render review frames of a made video into <videoDir>/frames/
   cover <videoDir> [--at 1.5]    Render the cover (a frame without captions) to <videoDir>/cover.png
   inbox <videoDir>               Check the files handed off into <videoDir>/inbox/ and list the prompts still waiting for one
+  results <pageDir>              Compare the numbers in <pageDir>/results.md by platform and by each choice the videos made
   mascot <pageDir>               Render the page's mascot reference sheet to brand/mascot/reference.png
   demo <style|all> [--out <dir>] [--frames]
                                  Render the style demo (the same dog scene in every style) to <dir>/NN-slug.mp4,
@@ -88,6 +90,11 @@ async function main(args: string[]): Promise<number> {
     }
     case "inbox": {
       const { lines, pass } = await inboxReport(need(rest[0], "the video folder"));
+      console.log(lines.join("\n"));
+      return pass ? 0 : 1;
+    }
+    case "results": {
+      const { lines, pass } = await resultsReport(need(rest[0], "the page folder"), Catalog.load(CATALOG_DIR));
       console.log(lines.join("\n"));
       return pass ? 0 : 1;
     }
