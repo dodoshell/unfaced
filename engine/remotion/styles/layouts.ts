@@ -3,15 +3,17 @@
 import { layout as softThreeD } from "../../../catalog/styles/01-soft-3d/components/layout.js";
 import { layout as flatCartoon } from "../../../catalog/styles/03-flat-cartoon/components/layout.js";
 import { layout as inkSilhouette } from "../../../catalog/styles/05-ink-silhouette/components/layout.js";
+import { layout as vintageComic } from "../../../catalog/styles/08-vintage-comic/components/layout.js";
 import type { StyleKit } from "./registry.js";
 
 const LAYOUTS = new Map<number, StyleKit["layout"]>([
   [1, softThreeD],
   [3, flatCartoon],
   [5, inkSilhouette],
+  [8, vintageComic],
 ]);
 /** Styles whose last scene draws the ending's sign itself, inside one of its own boxes. */
-const DRAW_ENDING_MARK = new Set<number>([3, 5]);
+const DRAW_ENDING_MARK = new Set<number>([3, 5, 8]);
 
 /** The styles that have a layout, in catalog order. */
 export const stylesWithLayout = (): number[] => [...LAYOUTS.keys()].sort((a, b) => a - b);
