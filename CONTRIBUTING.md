@@ -40,12 +40,12 @@ Attach a few frames to the pull request.
 
 1. Copy `catalog/scripts/_template.md` to `catalog/scripts/NN-slug.md` and write its purpose, the beats with their timing, the rules, and two complete example scripts in different niches.
 2. Add one more complete script to `examples/scripts/` (see its `README.md`).
-3. Set `"status": "ready"` for the entry in `catalog/catalog.json`.
+3. Add its entry to `catalog/catalog.json`, after the others: `num`, `slug`, `name`, a one-line `summary`, `goodFor`, `path` and `"status": "ready"`.
 4. `npx vitest run tests/script` checks that every example parses and names its script type.
 
 ## Hooks, endings and the other catalogs
 
-Hooks are written entries in `catalog/hooks.md`: a rule set and three examples in different niches. Endings, voices, caption styles and music moods also need engine code (an end sign, a voice per provider, a caption renderer, a music generator): open an issue first so we can agree on the shape.
+Hooks are written entries in `catalog/hooks.md`: a rule set and three examples in different niches, plus an entry in `catalog/catalog.json` (its `path` is `hooks.md#NN-slug`). Copy the three examples to `examples/hooks/README.md` too; the hook reel and the gallery read them from `catalog/hooks.md`. Endings, voices, caption styles and music moods also need engine code (an end sign, a voice per provider, a caption renderer, a music generator): open an issue first so we can agree on the shape.
 
 ## Skills
 

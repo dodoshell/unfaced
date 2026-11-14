@@ -26,7 +26,7 @@ node "${CLAUDE_SKILL_DIR}/scripts/unfaced.mjs" <command>
    - One section per platform: TikTok, Instagram Reels, YouTube Shorts, unless the user posts only to some.
    - The first line of every caption is a hook of its own; 3 to 5 hashtags; sources for factual claims.
    - Under `Notes`: which cover to use, and for music 08 (none) a reminder to add a trending sound in the app.
-4. **Update `ideas.md`** if the video is listed there: status `made`.
+4. **Update `ideas.md`** if the video is listed there: `made` if it isn't yet, `posted` once the user says it is out.
 5. **Reply** with the paths of `video.mp4`, `cover.png` and `post.md`, and the TikTok caption so the user can see the tone. Remind them that unfaced doesn't post.
 
 ## Common mistakes

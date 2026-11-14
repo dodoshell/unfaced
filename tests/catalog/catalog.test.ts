@@ -83,3 +83,26 @@ describe("unfaced list", () => {
     styles.forEach((entry, i) => expect(lines[i]!.includes("(planned)"), lines[i]).toBe(entry.status === "planned"));
   });
 });
+
+describe("examples/hooks", () => {
+  /** Each hook's examples, keyed by its "## NN Name" heading, as `Niche: "line"`; `indent` is the examples' list indent. */
+  const examples = (text: string, indent: string) => {
+    const byHook = new Map<string, string[]>();
+    let hook = "";
+    for (const line of text.split(/\r?\n/)) {
+      const heading = /^## (\d\d .+)$/.exec(line);
+      if (heading) byHook.set((hook = heading[1]!), []);
+      const example = new RegExp(`^${indent}- ([A-Z][\\w ,'/-]*): (".+)$`).exec(line);
+      if (hook && example) byHook.get(hook)!.push(`${example[1]}: ${example[2]}`);
+    }
+    return byHook;
+  };
+
+  it("holds the same three examples for every hook as catalog/hooks.md", () => {
+    const fromCatalog = examples(readFileSync(join(root, "catalog", "hooks.md"), "utf8"), "  ");
+    const fromReadme = examples(readFileSync(join(root, "examples", "hooks", "README.md"), "utf8"), "");
+    expect(fromCatalog.size).toBe(15);
+    for (const lines of fromCatalog.values()) expect(lines.length).toBe(3);
+    expect(Object.fromEntries(fromReadme)).toEqual(Object.fromEntries(fromCatalog));
+  });
+});

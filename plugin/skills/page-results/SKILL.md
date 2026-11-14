@@ -19,7 +19,7 @@ node "${CLAUDE_SKILL_DIR}/scripts/unfaced.mjs" <command>
 
 ## Steps
 
-1. **Get the numbers.** Read `<pageDir>/results.md` (format: `unfaced docs results`). If the user gives numbers in chat, add them as rows (one per video and platform, numbers without separators) and show what you added. If there are none, explain which numbers to collect from each platform's insights and stop.
+1. **Get the numbers.** Read `<pageDir>/results.md` (format: `unfaced docs results`). If the user gives numbers in chat, add them as rows (one per video and platform, numbers without separators) and show what you added. If there are none, explain which numbers to collect from each platform's insights and stop. A video with numbers is out: set its status in `ideas.md` to `posted` if it isn't.
 2. **Join and compare.** Run `unfaced results <pageDir>`. It joins every row with what its video was made with (`plan.json`, and the hook from `script.md`), ranks each platform's videos by average watched (seconds converted with the video's length) with shares + saves, follows and comments per view, and gives the median watched of every choice that varies (hook, script type, ending, length, style...). It exits 1 when a row can't be read or names a folder that isn't in `videos/`: fix what its `## Check` section lists and run it again.
 3. **Read past the ranking.** Average watched says whether the hook and pacing work; the rates per view say different things (table below). Keep platforms apart.
 4. **Judge the signal honestly.** With fewer than 3 videos in a group, or one video far ahead of the rest, say the evidence is thin. Early numbers (less than a week after posting) move a lot. Don't explain differences with choices that didn't vary.

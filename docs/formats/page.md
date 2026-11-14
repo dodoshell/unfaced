@@ -13,9 +13,9 @@ A page is a folder. Its profile, `page.yaml`, keeps every video consistent: the 
 └── videos/<video>/        one folder per video, named with a short slug
     ├── script.md          what the narrator says (unfaced docs script)
     ├── scenes/            optional: the video's own scene code (unfaced docs scenes)
-    ├── inbox/             optional: images or clips made elsewhere, used by the scenes
+    ├── inbox/             optional: images, clips or a voice-over made elsewhere (unfaced docs scenes)
     └── ...                made by unfaced: voice.wav, timing.json, soundtrack.wav, plan.json,
-                           video.mp4, check.json, frames/, review.md, cover.png, post.md
+                           video.mp4, check.json, frames/, cover.png; written by the agents: review.md, post.md
 ```
 
 ## page.yaml
@@ -50,7 +50,7 @@ providers:
 | `niche` | yes | What the page is about, in one line. Ideas and recommendations start from it. |
 | `style`, `script`, `hook`, `voice`, `captions`, `music`, `ending` | no | A catalog number, a list of numbers, or `auto` (the default). See `unfaced list <kind>`. |
 | `duration` | no | Target length in seconds, `30` or `30-45`. `unfaced make` warns when a voice-over falls outside it. |
-| `palette` | no | Colours as `#RRGGBB`. Styles map them to roles; style 03 reads background, accent, secondary, highlight, ink. |
+| `palette` | no | Colours as `#RRGGBB`. Every style maps them to five roles: background, accent, secondary, highlight, ink. |
 | `font` | no | Reserved; styles use their own font for now. |
 | `mascot` | no | A one-line description; the character is defined in `brand/mascot/mascot.json`. |
 | `providers` | no | Which provider makes the voice, clips and images (see Providers below). Free by default; a paid one without its key falls back to the free one and says so. |

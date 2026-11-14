@@ -65,7 +65,7 @@ Promise a continuation in the next video, so viewers follow to see it.
 One short line that lands the video: funny, surprising or both. It reframes what the viewer just learned rather than repeating it.
 
 - Keep it under 15 words.
-- Put it on its own scene with nothing else on screen but the caption.
+- Give it the last scene to itself: no other words on screen but the caption.
 - Example: "So a polar bear is a black bear in a very clever coat."
 - Sign: none; the style's own last scene (an exclamation badge in style 03) carries it.
 - Good for: facts, humour, animals.

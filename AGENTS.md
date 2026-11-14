@@ -35,6 +35,8 @@ Inside this repository the skills' launcher (`node plugin/launcher/unfaced.mjs <
 - Images and clips for `inbox/PROMPTS.md` from the page's providers: `npm run unfaced -- generate <videoDir>`
 - Compare a page's numbers (`results.md`) by platform and by choice: `npm run unfaced -- results <pageDir>`
 - Catalog gallery (static page with every entry and a poster per style): `npm run unfaced -- gallery`
+- Style demo (the same dog scene in every style): `npm run unfaced -- demo <style|all> [--frames]`; `all` also writes `docs/media/styles-grid.gif`
+- Hook reel (every hook's first example, spoken, each in the next style): `npm run unfaced -- reel hooks`
 - Mascot reference sheet: `npm run unfaced -- mascot <pageDir>`
 - Tests: `npm test` (slow tests that synthesize voice or render video: `UNFACED_SLOW=1 npm test`)
 - Types: `npm run typecheck`

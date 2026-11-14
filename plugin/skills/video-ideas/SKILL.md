@@ -56,7 +56,7 @@ Sources: 1. ASPCA, "Why does my cat knead?"
 | Mon | 2026-11-16 | Idea 1 |
 ```
 
-`Status` moves through `idea`, `scripted`, `made`, `posted`; video-make and video-package update it.
+`Status` moves through `idea`, `scripted`, `made`, `posted`: video-make sets `scripted` when the user approves the script and `made` when it hands the video over; `posted` follows when the user says the video is out, or when page-results gets numbers for it.
 
 ## Common mistakes
 
