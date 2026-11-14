@@ -18,6 +18,27 @@ const AVERAGE = 480;
 /** Anton's cap height as a share of the font size: lines are stacked by their capitals. */
 export const CAP = 0.86;
 
+/** How far Anton's accented capitals reach above the caps (È, Ù and Ä reach up to 1.10 em), and a cedilla below the baseline, in ems. */
+const ACCENT_RISE = 0.25;
+const CEDILLA_DROP = 0.31;
+/** Room left between a mark and the line next to it, as a share of the smaller size. */
+const MARK_CLEARANCE = 0.06;
+const MARK_ABOVE = /[̀-̌]/;
+const MARK_BELOW = /[̧̨]/;
+
+/** How far `text`'s capitals reach above the cap height, in ems: an accent's height, or 0. */
+export const rise = (text: string): number => (MARK_ABOVE.test(text.toUpperCase().normalize("NFD")) ? ACCENT_RISE : 0);
+
+/** How far `text`'s capitals reach below the baseline, in ems: a cedilla's depth, or 0. */
+export const drop = (text: string): number => (MARK_BELOW.test(text.toUpperCase().normalize("NFD")) ? CEDILLA_DROP : 0);
+
+/** The space between the capitals of two stacked lines: the usual gap, or more where an accent or a cedilla reaches into it. */
+export function lineGap(above: { text: string; size: number }, below: { text: string; size: number }, gap: number): number {
+  const smaller = Math.min(above.size, below.size);
+  const marks = drop(above.text) * above.size + rise(below.text) * below.size;
+  return marks > 0 ? Math.max(gap * smaller, marks + MARK_CLEARANCE * smaller) : gap * smaller;
+}
+
 /** The width of `text` set in Anton capitals, in ems. */
 export function textWidth(text: string): number {
   let w = 0;
@@ -84,8 +105,8 @@ export function fitLines(text: string, box: { w: number; h: number }, { maxLines
   for (let n = 1; n <= Math.min(maxLines, words.length); n++) {
     const lines = splitEven(words, n).map((l) => l.join(" "));
     const sizes = lines.map((l) => Math.min(maxSize, w / textWidth(l)));
-    const gaps = sizes.slice(1).reduce((sum, s, i) => sum + gap * Math.min(s, sizes[i]!), 0);
-    const height = sizes.reduce((sum, s) => sum + s * CAP, 0) + gaps;
+    // Every gap and mark grows with the sizes, so one shrink fits the whole stack.
+    const height = stackHeight(lines.map((text, i) => ({ text, size: sizes[i]!, width: 0 })), gap);
     const shrink = Math.min(1, box.h / height);
     const set = lines.map((l, i) => ({ text: l, size: Math.floor(sizes[i]! * shrink), width: Math.floor(sizes[i]! * shrink * textWidth(l)) }));
     const score = Math.min(...set.map((l) => l.size));
@@ -97,9 +118,21 @@ export function fitLines(text: string, box: { w: number; h: number }, { maxLines
   return best;
 }
 
-/** The height of a stack of lines, gaps included. */
+/** The height of a stack of lines: their capitals, the gaps, and the accents of the first line and the cedillas of the last. */
 export function stackHeight(lines: TypeLine[], gap = 0.12): number {
-  return lines.reduce((sum, l, i) => sum + l.size * CAP + (i > 0 ? gap * Math.min(l.size, lines[i - 1]!.size) : 0), 0);
+  if (lines.length === 0) return 0;
+  const caps = lines.reduce((sum, l, i) => sum + l.size * CAP + (i > 0 ? lineGap(lines[i - 1]!, l, gap) : 0), 0);
+  return rise(lines[0]!.text) * lines[0]!.size + caps + drop(lines.at(-1)!.text) * lines.at(-1)!.size;
+}
+
+/** Where each line's capitals start (their top), the stack centred in the height of `box` with its accents and cedillas inside it. */
+export function placeLines(lines: TypeLine[], box: { y: number; h: number }, gap = 0.12): { line: TypeLine; top: number }[] {
+  if (lines.length === 0) return [];
+  let y = box.y + (box.h - stackHeight(lines, gap)) / 2 + rise(lines[0]!.text) * lines[0]!.size;
+  return lines.map((line, i) => {
+    if (i > 0) y += lines[i - 1]!.size * CAP + lineGap(lines[i - 1]!, line, gap);
+    return { line, top: y };
+  });
 }
 
 /** Small words that never make the key word of a phrase. */

@@ -1,6 +1,6 @@
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import { Character, type Scene, useMascot } from "../../../../engine/remotion/kit/index.js";
-import { CAP, fitLines, keyword, stackHeight } from "./kinetic.js";
+import { CAP, drop, fitLines, keyword, lineGap, placeLines, rise } from "./kinetic.js";
 import { colour, layout } from "./layout.js";
 import { Line, paper, punch, typeOn, usePush } from "./shared.js";
 
@@ -29,22 +29,19 @@ export const Title: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pa
   // Without a voice that matches the written hook word for word, the band doesn't punch.
   const hit = spoken ? Math.round((spoken.startMs / 1000) * fps) - scene.fromFrame : undefined;
   const band = colour(palette, 3);
-  let y = box.y + (box.h - stackHeight(lines, GAP)) / 2;
-  const placed = lines.map((line, i) => {
-    if (i > 0) y += GAP * Math.min(line.size, lines[i - 1]!.size);
-    const top = y;
-    y += line.size * CAP;
-    return { line, top };
-  });
+  const placed = placeLines(lines, box, GAP);
   return (
     <AbsoluteFill>
       <div style={{ position: "absolute", inset: 0, transform: `scale(${push})`, transformOrigin: `${box.x + box.w / 2}px ${box.y + box.h / 2}px` }}>
         {placed.map(({ line, top }, i) => {
           const isKey = i === keyLine;
-          // The band reaches at most halfway into the gaps, so the lines next to it stay on the ground.
-          const gapTo = (other?: { size: number }) => (other ? GAP * Math.min(line.size, other.size) : line.size);
-          const padTop = Math.min(line.size * 0.09, gapTo(lines[i - 1]) / 2);
-          const padBottom = Math.min(line.size * 0.09, gapTo(lines[i + 1]) / 2);
+          // The band reaches at most halfway into the gaps, so the lines next to it stay on the ground,
+          // but always covers the line's own accents and cedillas (the gaps leave room for them).
+          const above = i > 0 ? lineGap(lines[i - 1]!, line, GAP) : line.size;
+          const below = i < lines.length - 1 ? lineGap(line, lines[i + 1]!, GAP) : line.size;
+          const marks = (em: number) => (em > 0 ? (em + 0.02) * line.size : 0);
+          const padTop = Math.max(Math.min(line.size * 0.09, above / 2), marks(rise(line.text)));
+          const padBottom = Math.max(Math.min(line.size * 0.09, below / 2), marks(drop(line.text)));
           return (
             <div key={i}>
               {isKey && (

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useCurrentFrame, useVideoConfig } from "remotion";
 import { captionStyle, type Rect, type Scene, useVideo } from "../../../../engine/remotion/kit/index.js";
-import { beatAt, CAP, fitLines, stageBeats } from "./kinetic.js";
+import { beatAt, fitLines, placeLines, stageBeats } from "./kinetic.js";
 import { blocks, Line, punch, slam, typeOn } from "./shared.js";
 
 /** Where the colour block reaches past the stage box, above and below. */
@@ -33,7 +33,7 @@ export const Stage: React.FC<{ scene: Scene; palette: string[]; box: Rect; offse
       <div style={{ position: "absolute", left: 0, top: box.y - BLEED, width: 1080, height: box.h + 2 * BLEED, backgroundColor: fill }} />
       {line && (
         <div style={{ position: "absolute", left: 0, top: 0, width: 1080, height: 1920, transform: `scale(${scale})`, transformOrigin: `${box.x + box.w / 2}px ${box.y + box.h / 2}px` }}>
-          <Line line={line} x={box.x + (box.w - line.width) / 2} y={box.y + (box.h - line.size * CAP) / 2} fill={ink} />
+          <Line line={line} x={box.x + (box.w - line.width) / 2} y={placeLines([line], box)[0]!.top} fill={ink} />
         </div>
       )}
       {beat.ticks.map((t, i) => (

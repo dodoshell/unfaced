@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { beatAt, CAP, fitLines, keyword, listReveal, stackHeight, stageBeats, stageText, textWidth } from "../../catalog/styles/12-kinetic-typography/components/kinetic.js";
+import { beatAt, CAP, drop, fitLines, keyword, listReveal, placeLines, rise, stackHeight, stageBeats, stageText, textWidth } from "../../catalog/styles/12-kinetic-typography/components/kinetic.js";
 import { layout } from "../../catalog/styles/12-kinetic-typography/components/layout.js";
 import type { Scene } from "../../engine/src/plan/types.js";
 
@@ -26,6 +26,33 @@ describe("style 12 type setting", () => {
     }
     const short = fitLines("Why do cats purr?", box, { maxLines: 7, maxSize: 400, fill: 0.96 });
     expect(short.length).toBe(3);
+  });
+
+  it("leaves room for accents above the capitals and cedillas below, inside the box", () => {
+    const box = layout(scene("title", "x"), [])[0]!;
+    for (const hook of ["Perché il gatto è sempre più curioso di te?", "Ecco perché è così", "Il caffè è pronto, ça va?"]) {
+      const lines = fitLines(hook, box, { maxLines: 7, maxSize: 400, gap: 0.12, fill: 0.96 });
+      const placed = placeLines(lines, box, 0.12);
+      // How far each line's marks reach: accents rise to 1.10 em (caps at 0.86), a cedilla drops 0.31 em.
+      const top = (i: number) => placed[i]!.top - (rise(lines[i]!.text) * lines[i]!.size);
+      const bottom = (i: number) => placed[i]!.top + lines[i]!.size * CAP + drop(lines[i]!.text) * lines[i]!.size;
+      expect(top(0), hook).toBeGreaterThanOrEqual(box.y);
+      expect(bottom(lines.length - 1), hook).toBeLessThanOrEqual(box.y + box.h);
+      for (let i = 1; i < lines.length; i++) expect(top(i), `${hook}: line ${i}`).toBeGreaterThan(bottom(i - 1));
+    }
+    expect(rise("PIÙ")).toBeGreaterThan(0.2);
+    expect(rise("PIU")).toBe(0);
+    expect(drop("ÇA")).toBeGreaterThan(0.3);
+  });
+
+  it("keeps the usual gap between lines without accents", () => {
+    const lines = [
+      { text: "WHY DO", size: 300, width: 800 },
+      { text: "CATS PURR?", size: 200, width: 800 },
+    ];
+    const placed = placeLines(lines, { y: 0, h: 1000 }, 0.12);
+    expect(placed[1]!.top - (placed[0]!.top + 300 * CAP)).toBeCloseTo(0.12 * 200, 6);
+    expect(stackHeight(lines, 0.12)).toBeCloseTo(300 * CAP + 0.12 * 200 + 200 * CAP, 6);
   });
 
   it("sets a single key word on one line, as big as the stage allows", () => {

@@ -1,26 +1,20 @@
 import { useMemo } from "react";
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import { listParts, type Rect, type Scene } from "../../../../engine/remotion/kit/index.js";
-import { CAP, fitLines, listReveal, stackHeight, type TypeLine } from "./kinetic.js";
+import { CAP, fitLines, listReveal, placeLines, type TypeLine } from "./kinetic.js";
 import { colour, layout } from "./layout.js";
 import { Line, paper, slam, typeOn } from "./shared.js";
 
 const GAP = 0.12;
 
 /** A stack of lines, left aligned, centred in the height of `box`. */
-const Stack: React.FC<{ lines: TypeLine[]; box: Rect; fill: string }> = ({ lines, box, fill }) => {
-  let y = box.y + (box.h - stackHeight(lines, GAP)) / 2;
-  return (
-    <>
-      {lines.map((line, i) => {
-        if (i > 0) y += GAP * Math.min(line.size, lines[i - 1]!.size);
-        const top = y;
-        y += line.size * CAP;
-        return <Line key={i} line={line} x={box.x} y={top} fill={fill} />;
-      })}
-    </>
-  );
-};
+const Stack: React.FC<{ lines: TypeLine[]; box: Rect; fill: string }> = ({ lines, box, fill }) => (
+  <>
+    {placeLines(lines, box, GAP).map(({ line, top }, i) => (
+      <Line key={i} line={line} x={box.x} y={top} fill={fill} />
+    ))}
+  </>
+);
 
 /**
  * A list: the lead-in in big capitals, then each item slamming in as the voice reaches it, behind
