@@ -16,6 +16,10 @@ export { FRAME, SAFE_ZONE, type Rect } from "../core/safeZone.js";
 export { useVideo, VideoContext } from "../core/VideoContext.js";
 export { defineScenes, type SceneComponent } from "../core/videoScenes.js";
 export { StyleScene } from "../core/StyleScene.js";
+export { factBadge, factNumber, listParts } from "../core/badges.js";
+export { fitFontSize, type FitOptions, wrapLines } from "../core/fit.js";
+export { loadFont } from "../core/loadFont.js";
+export type { StyleKit, TextBox } from "../styles/registry.js";
 export type { Mascot, Scene, VideoPlan } from "../../src/plan/types.js";
 
 /** The page's mascot, if the page has one. */

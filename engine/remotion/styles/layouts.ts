@@ -7,6 +7,9 @@ const LAYOUTS = new Map<number, StyleKit["layout"]>([[3, flatCartoon]]);
 /** Styles whose last scene draws the ending's sign itself, inside one of its own boxes. */
 const DRAW_ENDING_MARK = new Set<number>([3]);
 
+/** The styles that have a layout, in catalog order. */
+export const stylesWithLayout = (): number[] => [...LAYOUTS.keys()].sort((a, b) => a - b);
+
 export function getLayout(style: number): StyleKit["layout"] {
   const layout = LAYOUTS.get(style);
   if (!layout) throw new Error(`Style ${style} has no layout yet; styles with a layout: ${[...LAYOUTS.keys()].join(", ")}`);
