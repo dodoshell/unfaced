@@ -62,13 +62,13 @@
     { "num": 6, "slug": "highlight-keyword", "name": "Highlight keyword", "summary": "Full lines with the key word in a highlight colour.", "goodFor": ["explainers", "education"], "path": "captions.md#06-highlight-keyword", "status": "ready" }
   ],
   "music": [
-    { "num": 1, "slug": "suspense", "name": "Suspense", "summary": "Slow tension that builds under the voice.", "goodFor": ["mystery", "cliffhangers"], "path": "music.md#01-suspense", "status": "planned" },
-    { "num": 2, "slug": "epic", "name": "Epic", "summary": "Big drums and strings for dramatic moments.", "goodFor": ["history", "space", "sport"], "path": "music.md#02-epic", "status": "planned" },
-    { "num": 3, "slug": "lo-fi", "name": "Lo-fi", "summary": "Relaxed beats for calm, cosy content.", "goodFor": ["study", "how it works", "relaxing"], "path": "music.md#03-lo-fi", "status": "planned" },
-    { "num": 4, "slug": "upbeat", "name": "Upbeat", "summary": "Bright and bouncy, keeps the pace high.", "goodFor": ["lists", "life hacks"], "path": "music.md#04-upbeat", "status": "planned" },
-    { "num": 5, "slug": "playful", "name": "Playful", "summary": "Light and silly, for cartoons and animals.", "goodFor": ["animals", "kids", "humour"], "path": "music.md#05-playful", "status": "planned" },
-    { "num": 6, "slug": "emotional", "name": "Emotional", "summary": "Soft piano and strings for moving stories.", "goodFor": ["stories", "nature"], "path": "music.md#06-emotional", "status": "planned" },
-    { "num": 7, "slug": "mystery", "name": "Mystery", "summary": "Strange, sparse sounds for unexplained things.", "goodFor": ["mystery", "space", "deep sea"], "path": "music.md#07-mystery", "status": "planned" },
+    { "num": 1, "slug": "suspense", "name": "Suspense", "summary": "Slow tension that builds under the voice.", "goodFor": ["mystery", "cliffhangers"], "path": "music.md#01-suspense", "status": "ready" },
+    { "num": 2, "slug": "epic", "name": "Epic", "summary": "Big drums and strings for dramatic moments.", "goodFor": ["history", "space", "sport"], "path": "music.md#02-epic", "status": "ready" },
+    { "num": 3, "slug": "lo-fi", "name": "Lo-fi", "summary": "Relaxed beats for calm, cosy content.", "goodFor": ["study", "how it works", "relaxing"], "path": "music.md#03-lo-fi", "status": "ready" },
+    { "num": 4, "slug": "upbeat", "name": "Upbeat", "summary": "Bright and bouncy, keeps the pace high.", "goodFor": ["lists", "life hacks"], "path": "music.md#04-upbeat", "status": "ready" },
+    { "num": 5, "slug": "playful", "name": "Playful", "summary": "Light and silly, for cartoons and animals.", "goodFor": ["animals", "kids", "humour"], "path": "music.md#05-playful", "status": "ready" },
+    { "num": 6, "slug": "emotional", "name": "Emotional", "summary": "Soft piano and strings for moving stories.", "goodFor": ["stories", "nature"], "path": "music.md#06-emotional", "status": "ready" },
+    { "num": 7, "slug": "mystery", "name": "Mystery", "summary": "Strange, sparse sounds for unexplained things.", "goodFor": ["mystery", "space", "deep sea"], "path": "music.md#07-mystery", "status": "ready" },
     { "num": 8, "slug": "none", "name": "None", "summary": "No music: voice only, or a trending sound added when posting.", "goodFor": ["trending sounds", "voice-led videos"], "path": "music.md#08-none", "status": "ready" }
   ],
   "ending": [

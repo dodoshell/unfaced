@@ -6,6 +6,7 @@ import { Catalog } from "../../engine/src/catalog/catalog.js";
 import { CAPTION_STYLES } from "../../engine/remotion/core/captionLayout.js";
 import { getLayout } from "../../engine/remotion/styles/layouts.js";
 import { CATALOG_KINDS } from "../../engine/src/page/types.js";
+import { MOODS } from "../../engine/src/music/moods.js";
 import { kokoroVoice } from "../../engine/src/voice/kokoro.js";
 
 const root = join(import.meta.dirname, "..", "..");
@@ -43,6 +44,7 @@ describe("catalog", () => {
     for (const e of readyOf("style")) expect(() => getLayout(e.num), `style ${e.num}`).not.toThrow();
     for (const e of readyOf("captions")) expect(CAPTION_STYLES[e.num], `captions ${e.num}`).toBeDefined();
     for (const e of readyOf("voice")) if (e.num !== 8) expect(() => kokoroVoice("en", e.num), `voice ${e.num}`).not.toThrow();
+    for (const e of readyOf("music")) if (e.num !== 8) expect(MOODS, `music ${e.num}`).toContain(e.num);
   });
 
   it("documents every entry that lives in a shared file under its own heading", () => {

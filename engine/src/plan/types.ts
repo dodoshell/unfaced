@@ -26,6 +26,8 @@ export interface VideoPlan {
   audioSrc?: string;
   /** The voice type from the catalog; 8 means text only (no voice-over). */
   voice?: number;
+  /** The music mood from the catalog, when the soundtrack has music. */
+  music?: number;
   /** The ending type from the catalog, so the last scene can show it. */
   ending?: number;
   /** The page's mascot, shown by the style's scenes. */

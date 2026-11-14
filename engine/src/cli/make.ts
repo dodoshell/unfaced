@@ -16,6 +16,7 @@ import { alignWords, type WordTiming } from "../timing/align.js";
 import { readWavFile, speechPauses } from "../audio/speech.js";
 import { readingTimings } from "../timing/reading.js";
 import { snapToPauses } from "../timing/snap.js";
+import { writeSoundtrack } from "../music/soundtrack.js";
 import { prepareVoice } from "../voice/prepare.js";
 import { getVoiceProvider } from "../voice/registry.js";
 import { checkVideo, summaryLines } from "./check.js";
@@ -27,6 +28,8 @@ export interface MakeDeps {
   /** Adds the lead-in and brings the voice-over to the target loudness, in place. */
   prepareVoice(wavPath: string): Promise<void>;
   align(wavPath: string, language: string): Promise<WordTiming[]>;
+  /** Writes the soundtrack (the music mood under the voice-over, if any) into the video folder; returns its file name. */
+  mixMusic(videoDir: string, mood: number, durationSec: number, voiceWav?: string): Promise<string>;
   render(plan: VideoPlan, outPath: string, options: RenderOptions): Promise<void>;
   check(videoDir: string): Promise<CheckReport>;
   env: NodeJS.ProcessEnv;
@@ -40,6 +43,7 @@ export const defaultMakeDeps = (): MakeDeps => ({
   // Whisper's times, with each word after a pause moved to where the voice really starts it.
   // Pauses down to 100 ms are used, so every pause the 150 ms sync check finds is covered.
   align: async (wavPath, language) => snapToPauses(await alignWords(wavPath, language), speechPauses(readWavFile(wavPath), SNAP_MIN_PAUSE_MS)),
+  mixMusic: writeSoundtrack,
   render: renderVideo,
   check: (videoDir) => checkVideo(videoDir),
   env: process.env,
@@ -50,6 +54,8 @@ const SNAP_MIN_PAUSE_MS = 100;
 
 /** Voice 08 in the voice catalog: no voice-over, the captions carry the video. */
 export const TEXT_ONLY_VOICE = 8;
+/** Music 08 in the music catalog: no music. */
+export const NO_MUSIC = 8;
 
 /** Bumped when the voice-over is processed differently, so cached voice-overs are made again. */
 const VOICE_PROCESSING = "lead-in 250, loudnorm -14, pause snap 100";
@@ -80,11 +86,17 @@ export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDe
   const style = choose("style", page, deps);
   const captions = choose("captions", page, deps);
   const voiceType = choose("voice", page, deps);
+  const music = choose("music", page, deps);
   const textOnly = voiceType === TEXT_ONLY_VOICE;
   const timing = textOnly ? readingTiming(script.spokenText) : await recordVoice(dir, script.spokenText, voiceType, page, deps);
   writeFileSync(join(dir, "timing.json"), `${JSON.stringify(timing, null, 2)}\n`);
 
   const plan = buildPlan({ script, words: timing.words, audioDurationSec: timing.durationSec, page, style, captions, voice: voiceType, warn: deps.log, audioSrc: textOnly ? null : "voice.wav", mascot });
+  if (music !== NO_MUSIC) {
+    deps.log(`Mixing music ${music} (${deps.catalog.get("music", music).name}) under the ${textOnly ? "captions" : "voice-over"}`);
+    plan.audioSrc = await deps.mixMusic(dir, music, plan.durationInFrames / plan.fps, textOnly ? undefined : join(dir, "voice.wav"));
+    plan.music = music;
+  }
   writeFileSync(join(dir, "plan.json"), `${JSON.stringify(plan, null, 2)}\n`);
 
   const out = join(dir, "video.mp4");
