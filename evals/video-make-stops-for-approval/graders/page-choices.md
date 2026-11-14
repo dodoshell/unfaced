@@ -1,6 +1,6 @@
 ---
 type: regex
-pattern: '^script_type:\s*0?[69]\s*$[\s\S]*^ending:\s*0?5\s*$'
+pattern: '^script_type:[ \t]*0?[69][ \t]*(?:#.*)?\r?$[\s\S]*^ending:[ \t]*0?5[ \t]*(?:#.*)?\r?$'
 flags: m
 target:
   source: file
