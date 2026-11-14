@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { getLayout } from "../../remotion/styles/layouts.js";
+import { drawsEndingMark, getLayout } from "../../remotion/styles/layouts.js";
 import { type Pcm, readSoundtrack, speechOnsets } from "../audio/speech.js";
 import { type Loudness, checkLoudness, measureLoudness } from "../check/audio.js";
 import { checkFrames, readGrayFrames } from "../check/frames.js";
@@ -32,7 +32,7 @@ export async function checkVideo(videoDir: string, deps: CheckDeps = defaultChec
   const plan = JSON.parse(readFileSync(join(dir, "plan.json"), "utf8")) as VideoPlan;
   const video = join(dir, "video.mp4");
 
-  const boxes = placedBoxes(plan, getLayout(plan.style));
+  const boxes = placedBoxes(plan, getLayout(plan.style), drawsEndingMark(plan.style));
   // A text-only video (voice 08) has no voice to follow; a silent one has no sound to measure.
   const voiced = plan.voice !== TEXT_ONLY_VOICE && plan.audioSrc !== undefined;
   const soundtrack = voiced ? await deps.readSoundtrack(video) : undefined;

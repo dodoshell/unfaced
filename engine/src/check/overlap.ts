@@ -1,4 +1,5 @@
 import { captionStyle } from "../../remotion/core/captionLayout.js";
+import { END_MARK_BOX, endingMarkSpan } from "../../remotion/core/endings.js";
 import { isInsideSafeZone, type Rect } from "../../remotion/core/safeZone.js";
 import type { StyleKit } from "../../remotion/styles/registry.js";
 import type { VideoPlan } from "../plan/types.js";
@@ -11,14 +12,19 @@ export interface PlacedBox extends Rect {
   toFrame: number;
 }
 
-/** Every text box the video draws: the style's boxes in each scene, plus the caption box over scenes with words. */
-export function placedBoxes(plan: VideoPlan, layout: StyleKit["layout"]): PlacedBox[] {
+/**
+ * Every text box the video draws: the style's boxes in each scene, the caption box over
+ * scenes with words, and the ending's sign when the engine draws it (`styleDrawsMark` false).
+ */
+export function placedBoxes(plan: VideoPlan, layout: StyleKit["layout"], styleDrawsMark = false): PlacedBox[] {
+  const mark = styleDrawsMark ? undefined : endingMarkSpan(plan);
+  const markBox: PlacedBox[] = mark ? [{ id: "ending mark", ...END_MARK_BOX, ...mark }] : [];
   return plan.scenes.flatMap((scene) => {
     const frames = { fromFrame: scene.fromFrame, toFrame: scene.fromFrame + scene.durationInFrames };
     const boxes = layout(scene, plan.palette).map(({ id, ...rect }) => ({ id: `${scene.beatId} ${id}`, ...rect, ...frames }));
     if (scene.words.length > 0) boxes.push({ id: `${scene.beatId} caption`, ...captionStyle(plan.captions).box, ...frames });
     return boxes;
-  });
+  }).concat(markBox);
 }
 
 const overlaps = (a: PlacedBox, b: PlacedBox): boolean =>

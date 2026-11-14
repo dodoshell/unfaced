@@ -16,7 +16,8 @@ import { alignWords, type WordTiming } from "../timing/align.js";
 import { readWavFile, speechPauses } from "../audio/speech.js";
 import { readingTimings } from "../timing/reading.js";
 import { snapToPauses } from "../timing/snap.js";
-import { writeSoundtrack } from "../music/soundtrack.js";
+import { SEAMLESS_LOOP } from "../../remotion/core/endings.js";
+import { type SoundtrackRequest, writeSoundtrack } from "../music/soundtrack.js";
 import { prepareVoice } from "../voice/prepare.js";
 import { getVoiceProvider } from "../voice/registry.js";
 import { checkVideo, summaryLines } from "./check.js";
@@ -29,7 +30,7 @@ export interface MakeDeps {
   prepareVoice(wavPath: string): Promise<void>;
   align(wavPath: string, language: string): Promise<WordTiming[]>;
   /** Writes the soundtrack (the music mood under the voice-over, if any) into the video folder; returns its file name. */
-  mixMusic(videoDir: string, mood: number, durationSec: number, voiceWav?: string): Promise<string>;
+  mixMusic(videoDir: string, request: SoundtrackRequest): Promise<string>;
   render(plan: VideoPlan, outPath: string, options: RenderOptions): Promise<void>;
   check(videoDir: string): Promise<CheckReport>;
   env: NodeJS.ProcessEnv;
@@ -94,7 +95,12 @@ export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDe
   const plan = buildPlan({ script, words: timing.words, audioDurationSec: timing.durationSec, page, style, captions, voice: voiceType, warn: deps.log, audioSrc: textOnly ? null : "voice.wav", mascot });
   if (music !== NO_MUSIC) {
     deps.log(`Mixing music ${music} (${deps.catalog.get("music", music).name}) under the ${textOnly ? "captions" : "voice-over"}`);
-    plan.audioSrc = await deps.mixMusic(dir, music, plan.durationInFrames / plan.fps, textOnly ? undefined : join(dir, "voice.wav"));
+    plan.audioSrc = await deps.mixMusic(dir, {
+      mood: music,
+      durationSec: plan.durationInFrames / plan.fps,
+      ...(textOnly ? {} : { voiceWav: join(dir, "voice.wav") }),
+      loop: plan.ending === SEAMLESS_LOOP,
+    });
     plan.music = music;
   }
   writeFileSync(join(dir, "plan.json"), `${JSON.stringify(plan, null, 2)}\n`);

@@ -1,13 +1,18 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { Character, useMascot } from "../../../../engine/remotion/kit/index.js";
+import { Character, EndingMark, endingMark, endingPose, useMascot, useVideo } from "../../../../engine/remotion/kit/index.js";
 import type { Scene } from "../../../../engine/src/plan/types.js";
 import { colour, layout } from "./layout.js";
 import { outlined, Starburst, strokedText, useBob, usePop } from "./shared.js";
 
-/** The ending: an exclamation badge bursting out of a spinning starburst, with confetti. */
+/**
+ * The ending: a badge bursting out of a spinning starburst, with confetti. The badge holds
+ * the ending's sign (a question bubble, a follow button...) or, for a punchline, an exclamation mark.
+ */
 export const Outro: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, palette }) => {
   const frame = useCurrentFrame();
   const mascot = useMascot();
+  const ending = useVideo()?.plan.ending;
+  const mark = endingMark(ending);
   const pop = usePop();
   const bob = useBob(10, 50);
   const box = layout(scene, palette)[0]!;
@@ -42,9 +47,14 @@ export const Outro: React.FC<{ scene: Scene; palette: string[] }> = ({ scene, pa
           justifyContent: "center",
         }}
       >
-        <div style={{ ...strokedText(ink, 300), marginTop: 24 }}>!</div>
+        {!mark && <div style={{ ...strokedText(ink, 300), marginTop: 24 }}>!</div>}
       </div>
-      {mascot && <Character rig={mascot.rig} pose="happy" x={540} y={1150} size={230} />}
+      {mark && (
+        <div style={{ position: "absolute", left: 0, top: bob, width: 1080, height: 1920, transform: `scale(${pop})`, transformOrigin: `${cx}px ${cy}px` }}>
+          <EndingMark kind={mark} box={{ x: box.x + box.w * 0.18, y: box.y + box.h * 0.18, w: box.w * 0.64, h: box.h * 0.64 }} fill={colour(palette, 1)} ink={ink} />
+        </div>
+      )}
+      {mascot && <Character rig={mascot.rig} pose={endingPose(ending)} x={540} y={1150} size={230} />}
     </AbsoluteFill>
   );
 };

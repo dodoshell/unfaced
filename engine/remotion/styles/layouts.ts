@@ -4,9 +4,14 @@ import { layout as flatCartoon } from "../../../catalog/styles/03-flat-cartoon/c
 import type { StyleKit } from "./registry.js";
 
 const LAYOUTS = new Map<number, StyleKit["layout"]>([[3, flatCartoon]]);
+/** Styles whose last scene draws the ending's sign itself, inside one of its own boxes. */
+const DRAW_ENDING_MARK = new Set<number>([3]);
 
 export function getLayout(style: number): StyleKit["layout"] {
   const layout = LAYOUTS.get(style);
   if (!layout) throw new Error(`Style ${style} has no layout yet; styles with a layout: ${[...LAYOUTS.keys()].join(", ")}`);
   return layout;
 }
+
+/** Whether the style draws the ending's sign itself (otherwise the engine draws it in END_MARK_BOX). */
+export const drawsEndingMark = (style: number): boolean => DRAW_ENDING_MARK.has(style);

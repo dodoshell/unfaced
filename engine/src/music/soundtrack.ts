@@ -11,14 +11,24 @@ const MUSIC_RATE = 44100;
 
 export const SOUNDTRACK = "soundtrack.wav";
 
+export interface SoundtrackRequest {
+  /** A music mood from the catalog (1–7). */
+  mood: number;
+  durationSec: number;
+  /** The prepared voice-over, if the video has one. */
+  voiceWav?: string;
+  /** The video loops (ending 01), so the music runs to the cut. */
+  loop?: boolean;
+}
+
 /**
  * Makes `<videoDir>/soundtrack.wav`: the music mood under the voice-over (which is
  * already at the target loudness), or the music alone brought to the target loudness.
  */
-export async function writeSoundtrack(videoDir: string, mood: number, durationSec: number, voiceWav?: string): Promise<string> {
+export async function writeSoundtrack(videoDir: string, { mood, durationSec, voiceWav, loop = false }: SoundtrackRequest): Promise<string> {
   const voice = voiceWav ? readWavFile(voiceWav) : undefined;
   const rate = voice?.rate ?? MUSIC_RATE;
-  const samples = mixSoundtrack(renderMusic(mood, durationSec, rate), rate, voice);
+  const samples = mixSoundtrack(renderMusic(mood, durationSec, rate), rate, voice, { loop });
   const file = join(videoDir, SOUNDTRACK);
   writeFileSync(file, encodeWav({ samples, rate }));
   if (!voice) {

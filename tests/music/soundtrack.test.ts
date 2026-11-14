@@ -10,7 +10,7 @@ import { tones } from "../audio/tones.js";
 describe("writeSoundtrack", () => {
   it("brings a music-only soundtrack to the platforms' loudness", async () => {
     const dir = mkdtempSync(join(tmpdir(), "unfaced soundtrack "));
-    expect(await writeSoundtrack(dir, 3, 6)).toBe("soundtrack.wav");
+    expect(await writeSoundtrack(dir, { mood: 3, durationSec: 6 })).toBe("soundtrack.wav");
     const file = join(dir, "soundtrack.wav");
     const pcm = readWavFile(file);
     expect(pcm.rate).toBe(44100);
@@ -25,7 +25,7 @@ describe("writeSoundtrack", () => {
     const dir = mkdtempSync(join(tmpdir(), "unfaced soundtrack "));
     const voice = tones(5000, [[400, 1600], [2200, 3400], [4000, 4600]]);
     writeFileSync(join(dir, "voice.wav"), encodeWav(voice));
-    await writeSoundtrack(dir, 4, 5, join(dir, "voice.wav"));
+    await writeSoundtrack(dir, { mood: 4, durationSec: 5, voiceWav: join(dir, "voice.wav") });
     const pcm = readWavFile(join(dir, "soundtrack.wav"));
     expect(pcm.rate).toBe(voice.rate);
     expect(speechOnsets(pcm)).toEqual(speechOnsets(voice));

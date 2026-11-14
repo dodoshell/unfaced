@@ -168,7 +168,7 @@ describe("make", () => {
     const { deps, mixMusic } = stubs();
     await makeVideo(video, deps);
     const plan = JSON.parse(readFileSync(join(video, "plan.json"), "utf8")) as VideoPlan;
-    expect(mixMusic).toHaveBeenCalledWith(video, 4, plan.durationInFrames / 30, join(video, "voice.wav"));
+    expect(mixMusic).toHaveBeenCalledWith(video, { mood: 4, durationSec: plan.durationInFrames / 30, voiceWav: join(video, "voice.wav"), loop: false });
     expect(plan).toMatchObject({ audioSrc: "soundtrack.wav", music: 4 });
   });
 
@@ -178,8 +178,17 @@ describe("make", () => {
     const { deps, mixMusic } = stubs();
     await makeVideo(video, deps);
     const plan = JSON.parse(readFileSync(join(video, "plan.json"), "utf8")) as VideoPlan;
-    expect(mixMusic).toHaveBeenCalledWith(video, 3, plan.durationInFrames / 30, undefined);
+    expect(mixMusic).toHaveBeenCalledWith(video, { mood: 3, durationSec: plan.durationInFrames / 30, loop: false });
     expect(plan.audioSrc).toBe("soundtrack.wav");
+  });
+
+  it("keeps the music going to the cut when the script ends on a seamless loop", async () => {
+    const video = setup();
+    writeFileSync(join(video, "..", "..", "page.yaml"), "name: My cats\nlanguage: en\nniche: cat facts\nstyle: 3\nvoice: 1\ncaptions: 1\nmusic: 5\n");
+    writeFileSync(join(video, "script.md"), SCRIPT.replace("ending: 5", "ending: 1"));
+    const { deps, mixMusic } = stubs();
+    await makeVideo(video, deps);
+    expect(mixMusic).toHaveBeenCalledWith(video, expect.objectContaining({ mood: 5, loop: true }));
   });
 
   it("uses the voice-over as the soundtrack when the page has no music", async () => {

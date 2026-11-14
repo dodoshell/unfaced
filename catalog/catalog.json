@@ -72,12 +72,12 @@
     { "num": 8, "slug": "none", "name": "None", "summary": "No music: voice only, or a trending sound added when posting.", "goodFor": ["trending sounds", "voice-led videos"], "path": "music.md#08-none", "status": "ready" }
   ],
   "ending": [
-    { "num": 1, "slug": "seamless-loop", "name": "Seamless loop", "summary": "The last line flows back into the first, so the video replays.", "goodFor": ["short facts", "15-second videos"], "path": "endings.md#01-seamless-loop", "status": "planned" },
-    { "num": 2, "slug": "cliffhanger", "name": "Cliffhanger", "summary": "Stop just before the answer.", "goodFor": ["series", "stories"], "path": "endings.md#02-cliffhanger", "status": "planned" },
-    { "num": 3, "slug": "comment-question", "name": "Comment question", "summary": "Ask the viewer a question to answer in the comments.", "goodFor": ["opinions", "comparisons"], "path": "endings.md#03-comment-question", "status": "planned" },
-    { "num": 4, "slug": "follow-for-part-2", "name": "Follow for part 2", "summary": "Promise a continuation in the next video.", "goodFor": ["series", "long stories"], "path": "endings.md#04-follow-for-part-2", "status": "planned" },
+    { "num": 1, "slug": "seamless-loop", "name": "Seamless loop", "summary": "The last line flows back into the first, so the video replays.", "goodFor": ["short facts", "15-second videos"], "path": "endings.md#01-seamless-loop", "status": "ready" },
+    { "num": 2, "slug": "cliffhanger", "name": "Cliffhanger", "summary": "Stop just before the answer.", "goodFor": ["series", "stories"], "path": "endings.md#02-cliffhanger", "status": "ready" },
+    { "num": 3, "slug": "comment-question", "name": "Comment question", "summary": "Ask the viewer a question to answer in the comments.", "goodFor": ["opinions", "comparisons"], "path": "endings.md#03-comment-question", "status": "ready" },
+    { "num": 4, "slug": "follow-for-part-2", "name": "Follow for part 2", "summary": "Promise a continuation in the next video.", "goodFor": ["series", "long stories"], "path": "endings.md#04-follow-for-part-2", "status": "ready" },
     { "num": 5, "slug": "punchline", "name": "Punchline", "summary": "End on a short, funny or surprising line.", "goodFor": ["facts", "humour", "animals"], "path": "endings.md#05-punchline", "status": "ready" },
-    { "num": 6, "slug": "callback-to-the-hook", "name": "Callback to the hook", "summary": "Answer or echo the opening line.", "goodFor": ["questions", "stories"], "path": "endings.md#06-callback-to-the-hook", "status": "planned" }
+    { "num": 6, "slug": "callback-to-the-hook", "name": "Callback to the hook", "summary": "Answer or echo the opening line.", "goodFor": ["questions", "stories"], "path": "endings.md#06-callback-to-the-hook", "status": "ready" }
   ],
   "duration": [
     { "num": 1, "slug": "15-seconds", "name": "15 seconds", "summary": "One fact, one punch. Best for loops.", "goodFor": ["loops", "single facts"], "path": "durations.md#01-15-seconds", "status": "ready" },

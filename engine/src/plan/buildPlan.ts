@@ -1,3 +1,4 @@
+import { tailFrames } from "../../remotion/core/endings.js";
 import { readStyle } from "../catalog/styles.js";
 import type { Page } from "../page/types.js";
 import type { Beat, Script } from "../script/parseScript.js";
@@ -5,7 +6,6 @@ import type { WordTiming } from "../timing/align.js";
 import type { Mascot, Scene, SceneKind, VideoPlan } from "./types.js";
 
 const FPS = 30;
-const TAIL_FRAMES = 15;
 
 export interface BuildPlanInput {
   script: Script;
@@ -27,7 +27,7 @@ export interface BuildPlanInput {
  * one per beat, starting at the beat's first spoken word, back to back to the end.
  */
 export function buildPlan({ script, words, audioDurationSec, page, style, captions, voice, warn, audioSrc = "voice.wav", mascot }: BuildPlanInput): VideoPlan {
-  const durationInFrames = Math.ceil(audioDurationSec * FPS) + TAIL_FRAMES;
+  const durationInFrames = Math.ceil(audioDurationSec * FPS) + tailFrames(script.ending);
   if (page.duration && (audioDurationSec < page.duration.minSec || audioDurationSec > page.duration.maxSec)) {
     const { minSec, maxSec } = page.duration;
     const target = minSec === maxSec ? `${minSec}s` : `${minSec}–${maxSec}s`;

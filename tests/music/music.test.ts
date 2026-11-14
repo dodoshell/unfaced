@@ -69,6 +69,14 @@ describe("mixSoundtrack", () => {
     expect(rms(textOnly, 0, 0.08 * RATE)).toBeLessThan(0.01 * rms(textOnly));
     expect(rms(textOnly, textOnly.length - 0.08 * RATE)).toBeLessThan(0.01 * rms(textOnly));
   });
+
+  it("keeps the music going to the very edges of a looping video, with only a click-free touch of fade", () => {
+    const loop = mixSoundtrack(renderMusic(4, 4, RATE), RATE, undefined, { loop: true });
+    expect(rms(loop, 0.05 * RATE, 0.25 * RATE)).toBeGreaterThan(0.3 * rms(loop));
+    expect(rms(loop, loop.length - 0.25 * RATE, loop.length - 0.05 * RATE)).toBeGreaterThan(0.3 * rms(loop));
+    expect(Math.abs(loop[0]!)).toBeLessThan(0.01);
+    expect(Math.abs(loop.at(-1)!)).toBeLessThan(0.01);
+  });
 });
 
 describe("encodeWav", () => {

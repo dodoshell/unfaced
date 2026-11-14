@@ -50,6 +50,13 @@ describe("buildPlan", () => {
     expect(plan.durationInFrames).toBe(Math.ceil(audioDurationSec * 30) + 15);
   });
 
+  it("cuts a seamless loop back to the start after a shorter tail", () => {
+    const loop = build({ script: { ...script, ending: 1 } });
+    expect(loop.durationInFrames).toBeLessThan(build().durationInFrames);
+    expect(loop.durationInFrames).toBeGreaterThan(Math.ceil(audioDurationSec * 30));
+    expect(loop.scenes.at(-1)!.fromFrame + loop.scenes.at(-1)!.durationInFrames).toBe(loop.durationInFrames);
+  });
+
   it("makes contiguous scenes from frame 0 to the end", () => {
     const plan = build();
     expect(plan.scenes[0]!.fromFrame).toBe(0);

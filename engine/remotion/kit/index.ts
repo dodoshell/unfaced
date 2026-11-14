@@ -10,6 +10,8 @@ export { rigFor } from "../core/character/rig.js";
 export { FigureFrame, type FigureProps, mirrorParts, plainPart, polygonPath, smoothPath } from "../core/character/svg.js";
 export { ACCESSORIES, FIGURE_BOX, POSES, SPECIES, type Part, type Pose, type Rig, type Species } from "../core/character/types.js";
 export { CAPTION_BOX } from "../core/captionLayout.js";
+export { EndingMark, type EndingMarkProps, markColours } from "../core/EndingMark.js";
+export { END_MARK_BOX, type EndingMarkKind, endingMark, endingPose } from "../core/endings.js";
 export { FRAME, SAFE_ZONE, type Rect } from "../core/safeZone.js";
 export { useVideo, VideoContext } from "../core/VideoContext.js";
 export { defineScenes, type SceneComponent } from "../core/videoScenes.js";
