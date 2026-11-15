@@ -147,7 +147,8 @@ const OutlinePop: React.FC<{ plan: VideoPlan }> = ({ plan }) => {
       <div style={{ fontFamily: CAPTION_FONT, fontWeight: 700, fontSize: size, lineHeight: 1.1, textWrap: "balance", wordSpacing: "0.3em" }}>
         {page.tokens.map((t, i) => {
           const age = ((nowMs - t.fromMs) / 1000) * fps;
-          const pop = age < 0 ? 0 : spring({ frame: age, fps, config: { damping: 9, stiffness: 240, mass: 0.6 } });
+          // A word that grew past full size would touch its neighbours: the bounce barely overshoots.
+          const pop = age < 0 ? 0 : spring({ frame: age, fps, config: { damping: 18, stiffness: 240, mass: 0.6 } });
           const speaking = nowMs >= t.fromMs && nowMs < t.toMs;
           return (
             <span key={i}>
