@@ -1,0 +1,116 @@
+# unfaced
+
+*Esta é uma tradução; se ela for diferente da [versão em inglês](../../../README.md), vale a versão em inglês, que está sempre atualizada.*
+
+**Crie e gerencie páginas faceless nas redes sociais com o seu agente de programação.**
+
+**Leia em:** [English](../../../README.md) · [Italiano](../it/README.md) · [Español](../es/README.md) · [Français](../fr/README.md) · Português (Brasil)
+
+Escolha estilos, tipos de roteiro, ganchos e vozes numerados, salve tudo num perfil de página e transforme ideias de uma linha em vídeos verticais prontos para Reels, TikTok e Shorts. Gratuito por padrão; serviços pagos são opcionais.
+
+![A mesma cena nos doze estilos](../../media/styles-grid.gif)
+
+## O que você pode fazer
+
+Peça ao seu agente, com as suas palavras:
+
+| Você diz | O que acontece |
+|---|---|
+| "Comece uma página sobre curiosidades surpreendentes de gatos, em português" | **page-setup** faz algumas perguntas (ou escolhe tudo se você disser "você escolhe"), escreve o `page.yaml` a partir dos catálogos numerados e pode criar um mascote que fica igual em todos os vídeos. |
+| "Me dá ideias para a semana que vem" | **video-ideas** escreve dez ideias verificadas, duas ou três séries recorrentes e um calendário no `ideas.md`. |
+| "Como eu faço aquele sobre sovar a massa?" | **video-recommend** sugere 2–3 combinações (tipo de roteiro, gancho, final, duração...) com um exemplo de gancho para cada uma. |
+| "Pode fazer" | **video-make** pesquisa e escreve o roteiro, **para e espera a sua aprovação**, depois grava a voz, desenha as cenas, renderiza, roda as verificações automáticas e pede para um agente revisor independente olhar cada frame antes de te entregar o `video.mp4`. |
+| "Deixa pronto para postar" | **video-package** renderiza o `cover.png` e escreve o `post.md`: legendas, hashtags e um título para cada plataforma. |
+| "Aqui estão os meus números, o que eu devo mudar?" | **page-results** compara os vídeos do `results.md` por plataforma e por cada escolha feita, e sugere no máximo três mudanças, cada uma com um jeito de testar. |
+
+O unfaced nunca posta nada. Ele cria arquivos; quem publica é você, ou a sua ferramenta de agendamento.
+
+## Instalação
+
+**Nunca usou um terminal?** Siga o guia [Primeiros passos, sem programar](getting-started.md): o app do Claude para desktop, uma pasta e algumas frases para o Claude.
+
+**Claude Code** (suporte principal):
+
+```text
+/plugin marketplace add dodoshell/unfaced
+/plugin install unfaced@unfaced
+```
+
+O primeiro comando que precisa do motor instala ele em `~/.unfaced/` (git, Node 22+ e cerca de 1 GB para o modelo de voz, o whisper e o navegador de renderização).
+
+**Outros agentes** (sem garantia total): `npx skills add dodoshell/unfaced`. As skills são instruções simples e um launcher em Node; quando o agente não tem subagentes, a revisão roda numa sessão nova.
+
+**A partir de um clone**: `npm run setup` e depois use a CLI diretamente (veja abaixo). As skills dentro do clone usam ela; para apontar um plugin instalado para o seu clone, defina `UNFACED_LIB` com a pasta dele.
+
+## Catálogos
+
+Todos os itens estão prontos para usar. `unfaced list <kind>` lista um catálogo, `unfaced show <kind> <number>` mostra o guia de um item e `unfaced gallery` gera uma página que mostra todos eles, com um pôster de cada estilo.
+
+| Catálogo | Itens |
+|---|---|
+| Estilos (12) | 3D suave, low poly anos 90, cartoon flat, line art, silhueta em nanquim, quadro-negro, recorte de papel, quadrinho vintage, pixel art 16 bits, synthwave neon, aquarela, tipografia cinética |
+| Tipos de roteiro (10) | monte isso, contagem regressiva top N, mito ou verdade, e se, história em 60 segundos, resposta surpreendente, como funciona, X vs Y, você sabia, mini-história |
+| Ganchos (15) | pergunta chocante, número absurdo, "você está fazendo errado", imagem impossível, POV, começar pelo clímax... cada um com regras e três exemplos |
+| Vozes (8) | documentário calmo, enérgica, contadora de histórias, sussurro, deadpan, calorosa e amigável, âncora de telejornal, nenhuma (só texto) |
+| Legendas (6) | karaokê palavra por palavra, negrito centralizado, máquina de escrever, terço inferior minimalista, contorno pop, palavra-chave destacada |
+| Música (8) | suspense, épica, lo-fi, animada, divertida, emocionante, mistério (todas feitas em código, MIT), nenhuma |
+| Finais (6) | loop contínuo, cliffhanger, pergunta nos comentários, siga para a parte 2, punchline, retorno ao gancho |
+| Durações (4) | 15, 30, 45 e 60 segundos, com regras de ritmo |
+
+## Exemplos
+
+- [`examples/pages/`](../../../examples/pages/): três páginas para copiar. *Curious Cats* (cartoon flat, curiosidades de gatos) com dois vídeos prontos: roteiros, tempos de cada palavra, planos e resultados das verificações, prontos para renderizar de novo com `unfaced make`; *Space in 60* (synthwave neon, uma grande ideia sobre o espaço por minuto, cliffhangers) e *Piccola Storia* (aquarela, em italiano: as pequenas histórias por trás de palavras e objetos do dia a dia), cada uma com mascote, ideias e calendário.
+- [`examples/combos/`](../../../examples/combos/): cinco vídeos de exemplo com uns 30 segundos; nenhum repete estilo, tipo de roteiro, gancho, voz, estilo de legenda, clima musical ou final. Os roteiros, planos e verificações estão aqui; os MP4 vão anexados em cada release.
+- [`examples/scripts/`](../../../examples/scripts/): um `script.md` completo para cada tipo de roteiro.
+- [`examples/hooks/`](../../../examples/hooks/): todos os ganchos com três exemplos de nichos diferentes. O reel de ganchos, com cada gancho narrado no estilo seguinte, vai anexado em cada release.
+
+## Como funciona
+
+- **Gratuito e local**: `script.md` → voz (Kokoro, offline; inglês e italiano com suporte principal) → tempos de cada palavra (whisper.cpp) → cenas sincronizadas no frame exato → música mixada por baixo da voz → um MP4 de 1080×1920 a 30 fps renderizado com Remotion. Sem chave de API, sem GPU.
+- **Pago só se você quiser**: ElevenLabs para a voz, Pexels (chave gratuita) para fotos de banco de imagens, Replicate para imagens e clipes gerados (`unfaced generate`). As chaves ficam no `.env`, nunca no `page.yaml`; sem chave, o caminho gratuito é usado e o unfaced avisa.
+- **Um sistema de personagens**: oito espécies e dez poses, com o mesmo movimento em todos os estilos, para que o mascote da página fique sempre fiel ao modelo.
+- **Cenas próprias de cada vídeo**: quando um momento pede um diagrama ou uma cena específica, o agente escreve uma pequena cena em React para ele (`docs/formats/scenes.md`); todo o resto usa as cenas do estilo.
+- **Duas revisões**: verificações automáticas (texto sobreposto, a área segura das plataformas, legendas sincronizadas com a voz com no máximo 2 frames de diferença, frames pretos ou congelados, volume, palavras cortadas) e um agente revisor independente que vê só os arquivos, nunca a conversa que gerou o vídeo.
+
+## A CLI
+
+```bash
+npm run unfaced -- page examples/pages/curious-cats            # check a page profile
+npm run unfaced -- make examples/pages/curious-cats/videos/why-cats-purr
+npm run unfaced -- frames examples/pages/curious-cats/videos/why-cats-purr --every 1s
+npm run unfaced -- cover examples/pages/curious-cats/videos/why-cats-purr
+npm run unfaced -- results my-page                             # compare the posted videos' numbers (results.md)
+npm run unfaced -- docs script                                 # file formats: page, script, mascot, scenes, review, post, results
+npm run unfaced -- doctor                                      # what is missing from the install
+npm run unfaced -- help                                        # every command
+```
+
+As skills e o agente revisor têm evals em [`evals/`](../../../evals/README.md), que rodam com `claude plugin eval`.
+
+## Uma página no disco
+
+```text
+my-page/
+  page.yaml              the profile: language, niche, style, script types, voice, ...
+  brand/mascot/          the mascot: mascot.json, mascot.md, reference.png
+  ideas.md               ideas, series and the calendar
+  results.md             how the posted videos did
+  videos/
+    why-cats-purr/
+      script.md          hook, body beats, ending (docs/formats/script.md)
+      scenes/            optional scene code for this video
+      inbox/             optional images, clips or a voice-over you hand off
+      video.mp4          made by unfaced make
+      check.json         the automatic checks
+      review.md          the independent review
+      cover.png, post.md ready to post
+```
+
+## Como contribuir
+
+Novos estilos, tipos de roteiro e ganchos são bem-vindos: veja o [`CONTRIBUTING.md`](../../../CONTRIBUTING.md).
+
+## Licença
+
+MIT. Os recursos de terceiros mantêm as suas próprias licenças, listadas em [`LICENSES/`](../../../LICENSES/README.md).
+A renderização usa o [Remotion](https://www.remotion.dev), que é gratuito para pessoas físicas e empresas de até três pessoas; empresas maiores precisam de uma [licença do Remotion](https://www.remotion.dev/license).
