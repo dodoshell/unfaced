@@ -36,9 +36,12 @@ Crea una cartella vuota, per esempio `Documents/my-pages`. Ogni pagina che gesti
 
 ## 4. Aggiungi unfaced
 
-**Dall'app:** clicca **+** accanto alla casella dei messaggi, poi **Plugins**. Se lì puoi aggiungere un marketplace, aggiungi `dodoshell/unfaced` e installa **unfaced**.
+1. Clicca **+** accanto alla casella dei messaggi, poi **Plugins** → **Browse plugins**.
+2. Clicca la freccia accanto a **+ Add** (in alto a destra) e scegli **Add marketplace**.
+3. Scrivi `dodoshell/unfaced` e conferma.
+4. **unfaced** compare nell'elenco: clicca **Add to this computer**.
 
-**Se l'app non te lo permette**, fallo una volta sola da un terminale (l'app legge le stesse impostazioni):
+**Se la tua app non ha Add marketplace**, fallo invece una volta sola da un terminale (l'app legge le stesse impostazioni):
 
 1. Apri **PowerShell** (Windows: menu Start, scrivi PowerShell) o **Terminale** (macOS).
 2. Installa la riga di comando di Claude Code incollando questa riga e premendo Invio:
@@ -57,7 +60,7 @@ Avvia una nuova sessione nella scheda Code: unfaced è pronto. I plugin aggiunti
 
 Scrivi a Claude come scriveresti a un collega:
 
-> Apri una pagina di curiosità sorprendenti sui gatti, in italiano. Lo stile sceglilo tu.
+> Apri una pagina TikTok faceless di curiosità sorprendenti sui gatti, in italiano. Lo stile sceglilo tu.
 
 La prima volta unfaced installa il suo motore video (circa 1 GB). Claude te lo dice prima di iniziare; ci vogliono diversi minuti. Claude ti chiede anche il permesso prima di eseguire comandi o scrivere file: consentili per questa cartella.
 

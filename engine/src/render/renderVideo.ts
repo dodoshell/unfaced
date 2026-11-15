@@ -7,6 +7,7 @@ import { COMPOSITION_ID } from "../../remotion/compositionId.js";
 import { LIBRARY_ROOT } from "../paths.js";
 import { inboxKind } from "../inbox/inbox.js";
 import type { VideoPlan } from "../plan/types.js";
+import { libraryBrowser } from "./browser.js";
 
 export interface RenderOptions {
   /** Remotion entry point; defaults to the engine's, with every built style. */
@@ -138,7 +139,7 @@ const browsers = new Map<number, Promise<HeadlessBrowser>>();
 function browserAt(scale: number): Promise<HeadlessBrowser> {
   let browser = browsers.get(scale);
   if (!browser) {
-    browser = openBrowser("chrome", { forceDeviceScaleFactor: scale });
+    browser = libraryBrowser().then((browserExecutable) => openBrowser("chrome", { browserExecutable, forceDeviceScaleFactor: scale }));
     browsers.set(scale, browser);
     browser.catch(() => browsers.delete(scale));
   }

@@ -16,7 +16,7 @@ Pídeselo a tu agente, con tus propias palabras:
 
 | Tú dices | Qué pasa |
 |---|---|
-| "Crea una página sobre datos sorprendentes de gatos, en español" | **page-setup** te hace unas cuantas preguntas (o lo elige todo si dices "elige tú"), escribe `page.yaml` a partir de los catálogos numerados y puede crear una mascota que se vea igual en todos los videos. |
+| "Crea una página faceless de TikTok sobre datos sorprendentes de gatos, en español" | **page-setup** te hace unas cuantas preguntas (o lo elige todo si dices "elige tú"), escribe `page.yaml` a partir de los catálogos numerados y puede crear una mascota que se vea igual en todos los videos. |
 | "Dame ideas para la próxima semana" | **video-ideas** escribe diez ideas verificadas, dos o tres series recurrentes y un calendario en `ideas.md`. |
 | "¿Cómo debería hacer el del amasado?" | **video-recommend** te propone 2–3 combinaciones (tipo de guion, gancho, final, duración...) con un gancho de ejemplo para cada una. |
 | "Hazlo" | **video-make** investiga y escribe el guion, **se detiene para que lo apruebes**, y luego graba la voz, dibuja las escenas, renderiza, pasa los controles automáticos y hace que un agente revisor independiente mire cada fotograma antes de entregarte `video.mp4`. |

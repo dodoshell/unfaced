@@ -2,7 +2,8 @@ import { spawnSync } from "node:child_process";
 import { existsSync, statfsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { PROVIDER_KEYS } from "../env.js";
-import { LIBRARY_ROOT, unfacedHome } from "../paths.js";
+import { unfacedHome } from "../paths.js";
+import { libraryBrowserPath } from "../render/browser.js";
 import { whisperPaths } from "../timing/align.js";
 import { KOKORO_MODEL } from "../voice/kokoro.js";
 
@@ -54,7 +55,7 @@ export function defaultChecks(env: NodeJS.ProcessEnv = process.env, platform: No
     { name: "Whisper", ok: async () => existsSync(whisper.executable), fix: setup },
     { name: "Whisper model for English", ok: async () => existsSync(whisper.modelFile), fix: setup },
     { name: "Whisper model for other languages", ok: async () => existsSync(multilingual.modelFile), fix: setup },
-    { name: "Remotion browser", ok: async () => existsSync(join(LIBRARY_ROOT, "node_modules", ".remotion", "chrome-headless-shell")), fix: setup },
+    { name: "Remotion browser", ok: async () => existsSync(libraryBrowserPath()), fix: setup },
     { name: "tar", ok: async () => spawnSync("tar", ["--version"]).status === 0, fix: "install tar (it ships with Windows 10+, macOS and Linux)" },
     {
       name: "2 GB free disk space",

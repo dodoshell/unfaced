@@ -143,7 +143,8 @@ const OutlinePop: React.FC<{ plan: VideoPlan }> = ({ plan }) => {
   const size = fitSize(5, texts(page), 1.1);
   return (
     <Box n={5}>
-      <div style={{ fontFamily: CAPTION_FONT, fontWeight: 700, fontSize: size, lineHeight: 1.1, textWrap: "balance" }}>
+      {/* The 14px stroke fills the space between words; fitSize already counts 0.6em per space. */}
+      <div style={{ fontFamily: CAPTION_FONT, fontWeight: 700, fontSize: size, lineHeight: 1.1, textWrap: "balance", wordSpacing: "0.3em" }}>
         {page.tokens.map((t, i) => {
           const age = ((nowMs - t.fromMs) / 1000) * fps;
           const pop = age < 0 ? 0 : spring({ frame: age, fps, config: { damping: 9, stiffness: 240, mass: 0.6 } });

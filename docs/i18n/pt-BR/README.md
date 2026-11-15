@@ -16,7 +16,7 @@ Peça ao seu agente, com as suas palavras:
 
 | Você diz | O que acontece |
 |---|---|
-| "Comece uma página sobre curiosidades surpreendentes de gatos, em português" | **page-setup** faz algumas perguntas (ou escolhe tudo se você disser "você escolhe"), escreve o `page.yaml` a partir dos catálogos numerados e pode criar um mascote que fica igual em todos os vídeos. |
+| "Comece uma página faceless no TikTok sobre curiosidades surpreendentes de gatos, em português" | **page-setup** faz algumas perguntas (ou escolhe tudo se você disser "você escolhe"), escreve o `page.yaml` a partir dos catálogos numerados e pode criar um mascote que fica igual em todos os vídeos. |
 | "Me dá ideias para a semana que vem" | **video-ideas** escreve dez ideias verificadas, duas ou três séries recorrentes e um calendário no `ideas.md`. |
 | "Como eu faço aquele sobre sovar a massa?" | **video-recommend** sugere 2–3 combinações (tipo de roteiro, gancho, final, duração...) com um exemplo de gancho para cada uma. |
 | "Pode fazer" | **video-make** pesquisa e escreve o roteiro, **para e espera a sua aprovação**, depois grava a voz, desenha as cenas, renderiza, roda as verificações automáticas e pede para um agente revisor independente olhar cada frame antes de te entregar o `video.mp4`. |

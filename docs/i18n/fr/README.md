@@ -16,7 +16,7 @@ Demandez à votre agent, avec vos propres mots :
 
 | Vous dites | Ce qui se passe |
 |---|---|
-| « Crée une page sur des faits étonnants sur les chats, en français » | **page-setup** vous pose quelques questions (ou choisit tout si vous dites « choisis pour moi »), écrit `page.yaml` à partir des catalogues numérotés, et peut créer une mascotte identique dans chaque vidéo. |
+| « Crée une page TikTok faceless sur des faits étonnants sur les chats, en français » | **page-setup** vous pose quelques questions (ou choisit tout si vous dites « choisis pour moi »), écrit `page.yaml` à partir des catalogues numérotés, et peut créer une mascotte identique dans chaque vidéo. |
 | « Donne-moi des idées pour la semaine prochaine » | **video-ideas** écrit dix idées vérifiées, deux ou trois séries récurrentes et un calendrier dans `ideas.md`. |
 | « Comment je devrais faire celle sur le pétrissage ? » | **video-recommend** propose 2 à 3 combinaisons (type de script, hook, fin, durée...) avec un exemple de hook pour chacune. |
 | « Fais-la » | **video-make** fait les recherches et écrit le script, **attend votre validation**, puis enregistre la voix, dessine les scènes, fait le rendu, lance les vérifications automatiques et demande à un agent relecteur indépendant d'examiner chaque image avant de vous remettre `video.mp4`. |
