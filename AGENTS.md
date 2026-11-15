@@ -44,7 +44,7 @@ Inside this repository the skills' launcher (`node plugin/launcher/unfaced.mjs <
 
 ## Rules
 
-- Everything user-facing is in English.
+- Everything user-facing is in English. `README.md` and `docs/guide/getting-started.md` also have translations in `docs/i18n/<lang>/` (it, es, fr, pt-BR): when you change either, update the translations too.
 - No feature may require a paid key. A paid provider without its key falls back to the free one and says so.
 - Never store API keys in `page.yaml`; use `.env`.
 - Video output is 1080×1920, 30 fps, H.264 + AAC.

@@ -2,6 +2,8 @@
 
 **Create and run faceless social media pages with your coding agent.**
 
+**Read this in:** English · [Italiano](docs/i18n/it/README.md) · [Español](docs/i18n/es/README.md) · [Français](docs/i18n/fr/README.md) · [Português (Brasil)](docs/i18n/pt-BR/README.md)
+
 Pick numbered styles, script types, hooks and voices, save them in a page profile, and turn one-line ideas into finished vertical videos for Reels, TikTok and Shorts. Free by default; paid services are optional.
 
 ![The same scene in all twelve styles](docs/media/styles-grid.gif)
@@ -22,6 +24,8 @@ Ask your agent, in your own words:
 unfaced never posts anything. It makes files; you, or your own scheduling tool, publish them.
 
 ## Install
+
+**Never used a terminal?** Follow [Getting started, no coding needed](docs/guide/getting-started.md): the Claude desktop app, a folder and a few sentences to Claude.
 
 **Claude Code** (first-class):
 
