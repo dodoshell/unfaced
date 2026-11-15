@@ -15,6 +15,7 @@ vi.mock("@remotion/renderer", () => ({
   renderStill: vi.fn(async () => ({})),
   renderMedia: vi.fn(async () => ({})),
 }));
+vi.mock("../../engine/src/render/browser.js", () => ({ libraryBrowser: vi.fn(async () => "/lib/chrome-headless-shell") }));
 
 afterEach(async () => {
   await closeRenders();

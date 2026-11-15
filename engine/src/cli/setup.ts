@@ -1,5 +1,5 @@
-import { ensureBrowser } from "@remotion/renderer";
 import { ensureModel } from "../download.js";
+import { libraryBrowser } from "../render/browser.js";
 import { ensureWhisper } from "../timing/align.js";
 import { KOKORO_MODEL } from "../voice/kokoro.js";
 
@@ -11,5 +11,5 @@ export async function setup(log: (m: string) => void = console.error): Promise<v
   await ensureWhisper("en");
   await ensureWhisper("it");
   log("Remotion browser");
-  await ensureBrowser();
+  await libraryBrowser();
 }
