@@ -68,13 +68,13 @@ describe("eval graders", () => {
   });
 
   it.each([
-    "page-results-no-numbers/graders/page-not-edited.md",
-    "page-results-three-changes/graders/page-not-edited.md",
-    "page-results-three-changes/graders/page-not-rewritten.md",
-    "video-recommend-one-off-style/graders/page-not-edited.md",
-    "video-recommend-one-off-style/graders/page-not-rewritten.md",
-  ])("%s: counts a change to page.yaml, not a note that names it", (path) => {
-    const touched = regex(path);
+    ["page-results-no-numbers", "page-not-edited"],
+    ["page-results-three-changes", "page-not-edited"],
+    ["page-results-three-changes", "page-not-rewritten"],
+    ["video-recommend-one-off-style", "page-not-edited"],
+    ["video-recommend-one-off-style", "page-not-rewritten"],
+  ])("%s %s: counts a change to page.yaml, not a note that names it", (name, file) => {
+    const touched = regex(`${name}/graders/${file}.md`);
     expect(touched.test(JSON.stringify({ file_path: "/w/pages/curious-cats/page.yaml", old_string: "style: 3", new_string: "style: 1" }))).toBe(true);
     expect(touched.test(JSON.stringify({ file_path: "C:\\w\\pages\\curious-cats\\page.yaml", content: "name: Curious Cats" }))).toBe(true);
     expect(touched.test(JSON.stringify({ file_path: "/w/pages/curious-cats/results.md", old_string: "", new_string: "## Notes\n- page.yaml left as it is" }))).toBe(false);
