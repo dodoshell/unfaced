@@ -67,6 +67,19 @@ describe("eval graders", () => {
     expect(validated.test(bash(`U="node ${launcher}"; $U docs page; $U list style`))).toBe(false);
   });
 
+  it.each([
+    ["page-results-no-numbers", "page-not-edited"],
+    ["page-results-three-changes", "page-not-edited"],
+    ["page-results-three-changes", "page-not-rewritten"],
+    ["video-recommend-one-off-style", "page-not-edited"],
+    ["video-recommend-one-off-style", "page-not-rewritten"],
+  ])("%s %s: counts a change to page.yaml, not a note that names it", (name, file) => {
+    const touched = regex(`${name}/graders/${file}.md`);
+    expect(touched.test(JSON.stringify({ file_path: "/w/pages/curious-cats/page.yaml", old_string: "style: 3", new_string: "style: 1" }))).toBe(true);
+    expect(touched.test(JSON.stringify({ file_path: "C:\\w\\pages\\curious-cats\\page.yaml", content: "name: Curious Cats" }))).toBe(true);
+    expect(touched.test(JSON.stringify({ file_path: "/w/pages/curious-cats/results.md", old_string: "", new_string: "## Notes\n- page.yaml left as it is" }))).toBe(false);
+  });
+
   it("video-make-stops-for-approval short-hook: passes a hook under 12 words, on one line, and nothing longer", () => {
     const short = regex("video-make-stops-for-approval/graders/short-hook.md");
     expect(short.test(script("script_type: 6", "Your cat is baking bread on your blanket. Here's why."))).toBe(true);
