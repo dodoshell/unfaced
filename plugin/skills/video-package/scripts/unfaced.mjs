@@ -19,7 +19,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 /** The library version this plugin works with; equal to plugin.json and package.json (a test checks). */
-const VERSION = "0.1.4";
+const VERSION = "0.1.5";
 const REPO = process.env.UNFACED_REPO || "https://github.com/dodoshell/unfaced.git";
 
 const say = (line) => process.stderr.write(`unfaced: ${line}\n`);
