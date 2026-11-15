@@ -73,4 +73,5 @@ The only exception: the user said in this conversation to skip approval ("don't 
 | A hook scene with no words on its first frame | Draw `<StyleScene>` in it; the preview must show the hook. |
 | Looking at a few frames, or at frames every 4 seconds | Every frame at 1 s, then the independent review. |
 | Reviewing your own video and calling it reviewed | The `video-reviewer` agent reviews; you fix. |
+| Editing unfaced's own files, wherever they are installed, to fix a video | Change only the page and the video. If unfaced itself is wrong, tell the user and suggest an issue at https://github.com/dodoshell/unfaced/issues. |
 | Posting the video | Never. Hand over the files. |
