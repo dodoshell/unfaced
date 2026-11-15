@@ -36,9 +36,12 @@ Créez un dossier vide, par exemple `Documents/my-pages`. Chaque page que vous g
 
 ## 4. Ajoutez unfaced
 
-**Dans l'application :** cliquez sur **+** à côté de la zone de message, puis sur **Plugins**. Si vous pouvez y ajouter une marketplace, ajoutez `dodoshell/unfaced` et installez **unfaced**.
+1. Cliquez sur **+** à côté de la zone de message, puis sur **Plugins** → **Browse plugins**.
+2. Cliquez sur la flèche à côté de **+ Add** (en haut à droite) et choisissez **Add marketplace**.
+3. Tapez `dodoshell/unfaced` et validez.
+4. **unfaced** apparaît dans la liste : cliquez sur **Add to this computer**.
 
-**Si l'application ne le propose pas**, faites-le une seule fois depuis un terminal (l'application lit les mêmes réglages) :
+**Si votre application n'a pas Add marketplace**, faites-le plutôt une seule fois depuis un terminal (l'application lit les mêmes réglages) :
 
 1. Ouvrez **PowerShell** (Windows : menu Démarrer, tapez PowerShell) ou **Terminal** (macOS).
 2. Installez la ligne de commande de Claude Code en collant cette ligne puis en appuyant sur Entrée :
@@ -57,7 +60,7 @@ Démarrez une nouvelle session dans l'onglet Code : unfaced est prêt. Les plugi
 
 Écrivez à Claude comme vous le feriez à un collègue :
 
-> Crée une page sur des faits étonnants sur les chats, en français. Choisis le style.
+> Crée une page TikTok faceless sur des faits étonnants sur les chats, en français. Choisis le style.
 
 La première fois, unfaced installe son moteur vidéo (environ 1 Go). Claude vous prévient avant de commencer ; cela prend plusieurs minutes. Claude vous demande aussi l'autorisation avant de lancer des commandes ou d'écrire des fichiers : autorisez-les pour ce dossier.
 

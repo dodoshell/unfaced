@@ -34,9 +34,12 @@ Create an empty folder, for example `Documents/my-pages`. Every page you run, wi
 
 ## 4. Add unfaced
 
-**In the app:** click **+** next to the message box, then **Plugins**. If you can add a marketplace there, add `dodoshell/unfaced` and install **unfaced**.
+1. Click **+** next to the message box, then **Plugins** → **Browse plugins**.
+2. Click the arrow next to **+ Add** (top right) and choose **Add marketplace**.
+3. Type `dodoshell/unfaced` and confirm.
+4. **unfaced** appears in the list: click **Add to this computer**.
 
-**If the app doesn't offer it**, do it once from a terminal (the app reads the same settings):
+**If your app has no Add marketplace**, do it once from a terminal instead (the app reads the same settings):
 
 1. Open **PowerShell** (Windows: Start menu, type PowerShell) or **Terminal** (macOS).
 2. Install Claude Code's command line by pasting this line and pressing Enter:
@@ -55,7 +58,7 @@ Start a new session in the Code tab: unfaced is ready. Plugins added this way ar
 
 Write to Claude as you would to a colleague:
 
-> Start a page about surprising cat facts, in English. You choose the style.
+> Start a faceless TikTok page about surprising cat facts, in English. You choose the style.
 
 The first time, unfaced installs its video engine (about 1 GB). Claude tells you before it starts; it takes several minutes. Claude also asks your permission before running commands or writing files: allow them for this folder.
 
