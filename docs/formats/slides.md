@@ -109,6 +109,14 @@ Safe areas, which the layouts keep to and the checks verify:
 - 4:5 and square slides: a 60 px margin all round. On 4:5 formats the cover's headline also stays inside the central 1080×1012 area (from y 169 to y 1181), because Instagram's profile grid crops 4:5 posts to 3:4.
 - Stories: a 60 px margin left and right, and nothing readable in the top 250 px or the bottom 340 px, where the platform draws its bars and the reply field.
 
+## Photos
+
+A slide's photo is named in its attributes: `## image {photo: inbox/shop.jpg}`. The files live in the post's `inbox/`, like a video's. A prompt in `inbox/PROMPTS.md` can say which slide it is for (`## shop.jpg`, then `For slide 2. A shop front at dusk.`).
+
+- `unfaced inbox <postDir>` checks what arrived. Photos must be the post's shape and at least as wide as the format: 1080×1350 (`instagram-carousel`, `instagram-post`, `linkedin-carousel`), 1080×1080 (a `square` post) or 1080×1920 (`story`). The post's first format counts: `format` in `slides.md`, else the page's first `formats`, else `instagram-carousel`.
+- `unfaced generate <postDir>` makes the missing images with the page's image provider, asked for 4:5, 1:1 or 9:16 and cropped to the format's size. Without a provider or its key a file is left for you, as for videos.
+- Posts use images only. An `.mp4` or a voice file in a post's `inbox/` is reported `ignored: posts use images only`, and `generate` makes no clips or voice for a post.
+
 ## The frame
 
 Every slide also gets the style's frame: the label and the counter (`2/8`) at the top; the handle (and the logo, when the brand has one, drawn at the style's height and its own width) and "swipe →" at the bottom. "Swipe" is left off the last slide and off single posts. The frame's words are in the page's language (English, Italian, Spanish, French, Portuguese and Hindi; other languages use English, and `unfaced post` says so). The handle, logo and fonts come from the page's `brand` block (`unfaced docs brand`).

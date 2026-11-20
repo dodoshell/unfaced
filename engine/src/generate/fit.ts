@@ -1,7 +1,12 @@
 import { extname, resolve } from "node:path";
 import { runFfmpeg } from "../ffmpeg.js";
 
-const FILL = "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920";
+export interface Size {
+  width: number;
+  height: number;
+}
+
+const PORTRAIT: Size = { width: 1080, height: 1920 };
 
 /**
  * How each input type is read: its demuxer forced, so ffmpeg never picks one from the content
@@ -24,13 +29,13 @@ const OUTPUT: Record<string, string[]> = {
 };
 
 /**
- * Fills 1080×1920 with the picture or clip at `src`, cropping what overflows around the centre,
+ * Fills `size` (1080×1920 unless a post's format says otherwise) with the picture or clip at `src`, cropping what overflows around the centre,
  * and writes `dest` in the format its extension names: PNG, JPEG, or an H.264 MP4 without sound.
  */
-export async function fitPortrait(src: string, dest: string, run: typeof runFfmpeg = runFfmpeg): Promise<void> {
+export async function fitPortrait(src: string, dest: string, run: typeof runFfmpeg = runFfmpeg, size: Size = PORTRAIT): Promise<void> {
   const input = INPUT[extname(src).toLowerCase()];
   if (!input) throw new Error(`Can't read ${extname(src) || "files without an extension"} files safely; use .png, .jpg or .mp4`);
   const output = OUTPUT[extname(dest).toLowerCase()];
-  if (!output) throw new Error(`Can't write ${extname(dest) || "files without an extension"} at 9:16; use .png, .jpg or .mp4`);
-  await run(["-v", "error", ...input, "-protocol_whitelist", "file", "-i", resolve(src), "-vf", FILL, ...output, "-y", resolve(dest)]);
+  if (!output) throw new Error(`Can't write ${extname(dest) || "files without an extension"} at this size; use .png, .jpg or .mp4`);
+  await run(["-v", "error", ...input, "-protocol_whitelist", "file", "-i", resolve(src), "-vf", `scale=${size.width}:${size.height}:force_original_aspect_ratio=increase,crop=${size.width}:${size.height}`, ...output, "-y", resolve(dest)]);
 }

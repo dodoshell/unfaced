@@ -3,6 +3,8 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { extname, join, resolve } from "node:path";
 import { runFfmpeg } from "../ffmpeg.js";
+import { postFormatOf } from "../post/postFormat.js";
+import type { PostFormat } from "../post/types.js";
 
 export type InboxKind = "image" | "clip" | "voice";
 
@@ -93,6 +95,18 @@ export async function probeMedia(path: string): Promise<Probe> {
 
 const portrait = (w: number, h: number) => Math.abs(w / h - 9 / 16) <= 0.01;
 
+/** A post's photo must have its format's aspect and be at least as wide. */
+function judgePhoto(post: PostFormat, probe: Probe): Pick<InboxLine, "status" | "detail"> {
+  const v = probe.video;
+  if (!v) return { status: "problem", detail: "can't be read as an image" };
+  const wanted = `${post.width}×${post.height}`;
+  const size = `${v.width}×${v.height}`;
+  if (Math.abs(v.width / v.height - post.width / post.height) > 0.01 || v.width < post.width) {
+    return { status: "problem", detail: `image ${size}: needs ${wanted} (the ${post.name} size) or the same shape, at least ${post.width} wide` };
+  }
+  return { status: "ok", detail: `image ${size}` };
+}
+
 function judge(kind: InboxKind, probe: Probe): Pick<InboxLine, "status" | "detail"> {
   const v = probe.video;
   const size = v ? `${v.width}×${v.height}` : "";
@@ -118,6 +132,7 @@ export async function checkInbox(videoDir: string, probe: (path: string) => Prom
   const inbox = join(videoDir, "inbox");
   if (!existsSync(inbox)) return [];
   const lines: InboxLine[] = [];
+  const post = postFormatOf(videoDir);
   const names = readdirSync(inbox).filter((n) => n !== PROMPTS_FILE && n !== CREDITS_FILE).sort();
   for (const name of names) {
     const path = join(inbox, name);
@@ -134,8 +149,12 @@ export async function checkInbox(videoDir: string, probe: (path: string) => Prom
       lines.push({ file: name, status: "problem", detail: `unknown type (${extname(name) || "no extension"}), not used: ${SUPPORTED}` });
       continue;
     }
+    if (post && kind !== "image") {
+      lines.push({ file: name, status: "ignored", detail: "posts use images only" });
+      continue;
+    }
     const probed = await probe(path).catch(() => undefined);
-    lines.push({ file: name, ...(probed ? judge(kind, probed) : { status: "problem" as const, detail: `can't be read as ${kind === "voice" ? "audio" : kind === "image" ? "an image" : "a clip"}` }) });
+    lines.push({ file: name, ...(probed ? (post ? judgePhoto(post, probed) : judge(kind, probed)) : { status: "problem" as const, detail: `can't be read as ${kind === "voice" ? "audio" : kind === "image" ? "an image" : "a clip"}` }) });
   }
   const promptsFile = join(inbox, PROMPTS_FILE);
   if (existsSync(promptsFile)) {

@@ -5,6 +5,7 @@ import { videoEnv } from "../env.js";
 import { fitPortrait } from "../generate/fit.js";
 import { type GenerateDeps, generateMissing } from "../generate/generate.js";
 import { parsePrompts, type Probe, probeMedia, PROMPTS_FILE } from "../inbox/inbox.js";
+import { runFfmpeg } from "../ffmpeg.js";
 import { loadPage } from "../page/loadPage.js";
 import { CATALOG_DIR } from "../paths.js";
 import { inboxReport } from "./inbox.js";
@@ -17,7 +18,7 @@ export const defaultGenerateDeps = (videoDir: string): GenerateDeps => ({
   fetch,
   sleep: (ms) => new Promise((done) => setTimeout(done, ms)),
   now: Date.now,
-  fit: fitPortrait,
+  fit: (src, dest, size) => fitPortrait(src, dest, runFfmpeg, size),
   log: (msg) => console.error(msg),
 });
 

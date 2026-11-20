@@ -213,3 +213,59 @@ describe("unfaced generate", () => {
     expect(pass).toBe(true);
   });
 });
+
+/** A page with one post whose slides.md has `front` as its front matter, and whose inbox/PROMPTS.md asks for `prompts`. */
+function setupPost(front: string, prompts: string, pageExtra = ""): string {
+  const page = mkdtempSync(join(tmpdir(), "unfaced generate "));
+  const post = join(page, "posts", "first post");
+  mkdirSync(join(post, "inbox"), { recursive: true });
+  writeFileSync(join(page, "page.yaml"), `name: Test\nlanguage: en\nniche: tests\nproviders:\n  images: replicate\n  ai_clips: replicate\n${pageExtra}`);
+  writeFileSync(join(post, "slides.md"), `---\ntitle: T\npost_type: 1\n${front}---\n\n## cover\n# Hello\n`);
+  writeFileSync(join(post, "inbox", "PROMPTS.md"), prompts);
+  return post;
+}
+
+describe("unfaced generate for a post", () => {
+  const postProbe = async () => ({ video: { codec: "png", width: 1080, height: 1350 }, durationSec: undefined });
+
+  it("asks for 4:5 and fits to 1080×1350 for an instagram-carousel", async () => {
+    const post = setupPost("format: instagram-carousel\n", "## shop.png\nFor slide 2. A shop front.\n");
+    const { fetchImpl, inputs } = services();
+    const d = deps({ REPLICATE_API_TOKEN: TOKEN }, fetchImpl);
+    const { lines, pass } = await generateReport(post, d, postProbe);
+    expect(inputs["black-forest-labs/flux-2-pro"]!.aspect_ratio).toBe("4:5");
+    expect(d.fit).toHaveBeenCalledWith(expect.any(String), expect.any(String), { width: 1080, height: 1350 });
+    expect(lines).toContain("ok       shop.png — image 1080×1350");
+    expect(pass).toBe(true);
+  });
+
+  it("asks for 9:16 for a story, from the page's formats when slides.md names none", async () => {
+    const post = setupPost("", "## shop.png\nA shop front.\n", "formats: [story]\n");
+    const { fetchImpl, inputs } = services();
+    const d = deps({ REPLICATE_API_TOKEN: TOKEN }, fetchImpl);
+    await generateReport(post, d, postProbe);
+    expect(inputs["black-forest-labs/flux-2-pro"]!.aspect_ratio).toBe("9:16");
+    expect(d.fit).toHaveBeenCalledWith(expect.any(String), expect.any(String), { width: 1080, height: 1920 });
+  });
+
+  it("asks for 1:1 for a square instagram-post, and Pexels crops to the size", async () => {
+    const post = setupPost("format: instagram-post\nsquare: true\n", "## shop.jpg\nA shop.\nSearch: shop\n");
+    writeFileSync(join(post, "..", "..", "page.yaml"), "name: Test\nlanguage: en\nniche: tests\nproviders:\n  images: pexels\n");
+    const { fetchImpl } = services();
+    const d = deps({ PEXELS_API_KEY: "k" }, fetchImpl);
+    await generateReport(post, d, postProbe);
+    expect(d.fit).toHaveBeenCalledWith(expect.any(String), expect.any(String), { width: 1080, height: 1080 });
+    const urls = fetchImpl.mock.calls.map((c) => String(c[0]));
+    expect(urls.some((u) => u.startsWith("https://api.pexels.com/v1/search") && u.includes("orientation=square"))).toBe(true);
+    expect(urls.some((u) => u.includes("w=1080&h=1080"))).toBe(true);
+  });
+
+  it("does not make clips or voice for a post, and says why", async () => {
+    const post = setupPost("format: instagram-carousel\n", "## b3.mp4\nA pan.\n\n## v.wav\nA voice.\n");
+    const { fetchImpl } = services();
+    const { lines } = await generateReport(post, deps({ REPLICATE_API_TOKEN: TOKEN }, fetchImpl), postProbe);
+    expect(lines[0]).toMatch(/^skipped {2}b3\.mp4 — posts use images only/);
+    expect(lines[1]).toMatch(/^skipped {2}v\.wav — posts use images only/);
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+});

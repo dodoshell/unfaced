@@ -28,11 +28,11 @@ export const withoutSearchLine = (prompt: string): string =>
     .trim();
 
 /**
- * The first portrait photo Pexels finds for `query`: where to download it, cropped to 1080×1920,
+ * The first portrait photo Pexels finds for `query`: where to download it, cropped to `size` (1080×1920 by default),
  * and the credit line Pexels asks for. https://www.pexels.com/api/documentation/#photos-search
  */
-export async function findPhoto(query: string, key: string, fetchImpl: typeof fetch, webp = false): Promise<{ url: string; credit: string }> {
-  const params = new URLSearchParams({ query, orientation: "portrait", per_page: "1" });
+export async function findPhoto(query: string, key: string, fetchImpl: typeof fetch, webp = false, size: { width: number; height: number } = { width: 1080, height: 1920 }): Promise<{ url: string; credit: string }> {
+  const params = new URLSearchParams({ query, orientation: size.width === size.height ? "square" : "portrait", per_page: "1" });
   const res = await reach("Pexels", fetchImpl, `https://api.pexels.com/v1/search?${params}`, { headers: { authorization: key } });
   if (res.status === 401 || res.status === 403) throw new Error(`Pexels refused PEXELS_API_KEY (${res.status}): check the key in .env`);
   if (res.status === 429) throw new Error("Pexels rate limit (429): 200 requests an hour and 20,000 a month on a free key; run generate again later");
@@ -42,7 +42,7 @@ export async function findPhoto(query: string, key: string, fetchImpl: typeof fe
   if (!photo) throw new Error(`Pexels found no photo for "${query}"; add a shorter Search: line under its prompt`);
   // The same resizing parameters Pexels puts in its own src.portrait links; fm=webp asks for WebP.
   return {
-    url: `${photo.src.original}?auto=compress&cs=tinysrgb&fit=crop&w=1080&h=1920${webp ? "&fm=webp" : ""}`,
+    url: `${photo.src.original}?auto=compress&cs=tinysrgb&fit=crop&w=${size.width}&h=${size.height}${webp ? "&fm=webp" : ""}`,
     credit: `Photo by ${photo.photographer} on Pexels: ${photo.url}`,
   };
 }
