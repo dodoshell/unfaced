@@ -34,12 +34,12 @@ The `video-make` skill fixes the issues, makes the video again and asks for a ne
 
 ## A post's review
 
-A made post (`slide-NN.png`, `grid.png`, `post-plan.json`, `check.json`) is reviewed the same way by the `post-reviewer` agent, which writes `review.md` in the post folder. The header and verdict work as above (`# Review: PASS` or `# Review: FAIL`, a failure being at least one `error`). Issues are placed by slide number instead of time, and the round line gives the slide count instead of a length:
+A made post (`slide-NN.png`, `grid.png`, `post-plan.json`, `check.json`) is reviewed the same way by the `post-reviewer` agent, which writes `review.md` in the post folder. The header and verdict work as above (`# Review: PASS` or `# Review: FAIL`, a failure being at least one `error`). Issues are placed by slide number instead of time, and the round line gives the format and slide count instead of a length:
 
 ```markdown
 # Review: FAIL
 
-Round 1 · 7 slides · reviewed 2026-11-14
+Round 1 · instagram-carousel · 7 slides · reviewed 2026-11-14
 
 ## Issues
 
