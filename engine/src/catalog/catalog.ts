@@ -11,7 +11,10 @@ export interface CatalogEntry {
   goodFor: string[];
   /** Relative to the catalog folder; an anchor (#...) points at a section of a shared file. */
   path: string;
+  /** Whether videos can be made with it. */
   status: "ready" | "planned";
+  /** Whether posts can be made with it; an entry without the field (styles 1–12) makes none. */
+  posts?: "ready" | "planned";
 }
 
 export class Catalog implements CatalogLike {

@@ -15,3 +15,8 @@ const sizes: Record<CatalogKind, number> = {
 export const stubCatalog: CatalogLike = {
   ids: (kind) => Array.from({ length: sizes[kind] }, (_, i) => i + 1),
 };
+
+/** The same, with the four post styles (13 to 16) the catalog gets later. */
+export const stubCatalogWithPosts: CatalogLike = {
+  ids: (kind) => (kind === "style" ? Array.from({ length: 16 }, (_, i) => i + 1) : stubCatalog.ids(kind)),
+};

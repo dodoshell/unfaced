@@ -88,6 +88,9 @@ export async function makeVideo(videoDir: string, deps: MakeDeps = defaultMakeDe
   checkWriting(script, deps.catalog);
   const scenes = ownScenes(dir, script.beats.map((b) => b.id), deps.log);
 
+  if (page.postStyle !== undefined && page.choices.style === undefined && script.choices.style === undefined) {
+    throw new Error("this page has no video style; set style.videos");
+  }
   const style = choose("style", page, deps, script.choices.style);
   const captions = choose("captions", page, deps, script.choices.captions);
   const voiceType = choose("voice", page, deps, script.choices.voice);

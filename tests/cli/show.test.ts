@@ -8,6 +8,7 @@ import { pageSummary } from "../../engine/src/cli/page.js";
 import { parseSlides } from "../../engine/src/post/parseSlides.js";
 import { showText } from "../../engine/src/cli/show.js";
 import { CATALOG_DIR } from "../../engine/src/paths.js";
+import { catalogWithNightTech } from "../page/catalogWithNightTech.js";
 
 const catalog = Catalog.load(CATALOG_DIR);
 
@@ -76,7 +77,9 @@ describe("unfaced show", () => {
 
 describe("unfaced docs", () => {
   it("prints every format document and lists them when no name is given", () => {
-    for (const name of FORMATS) expect(docText(name).length, name).toBeGreaterThan(200);
+    // slides.md is written with the post commands; until then `unfaced docs slides` says there is no such file.
+    for (const name of FORMATS.filter((f) => f !== "slides")) expect(docText(name).length, name).toBeGreaterThan(200);
+    expect(FORMATS).toContain("brand");
     expect(docText()).toContain("script");
     expect(() => docText("nope")).toThrow(/No format "nope".*script/);
   });
@@ -110,6 +113,41 @@ describe("unfaced page", () => {
   it("marks a fixed choice that is not ready yet", async () => {
     const lines = await pageSummary(page("name: P\nlanguage: en\nniche: x\nstyle: 7\n"), withPlannedStyle());
     expect(lines).toContain("style: 7 Paper cut-out (planned: not available yet)");
+  });
+
+  it("summarises the posts side of a page: style, post types, formats and brand", async () => {
+    const dir = page(
+      [
+        "name: Studio", "language: it", "niche: web studio", "style: { posts: 13, videos: 3 }", "post_type: [1, 3]",
+        "formats: [instagram-carousel, story]", "brand:", '  handle: "@studionord"', "  site: studionord.it",
+        "  logo: brand/logo.svg", "  fonts: { display: brand/fonts/A.ttf }", "  tone: direct, warm", "",
+      ].join("\n"),
+    );
+    mkdirSync(join(dir, "brand", "fonts"), { recursive: true });
+    writeFileSync(join(dir, "brand", "logo.svg"), "<svg/>");
+    writeFileSync(join(dir, "brand", "fonts", "A.ttf"), "x");
+    const lines = await pageSummary(dir, catalogWithNightTech("ready"));
+    expect(lines).toContain("style: 3 Flat cartoon");
+    expect(lines).toContain("Posts: style 13 Night tech · post types 1, 3 · formats instagram-carousel, story");
+    const brand = lines.find((l) => l.startsWith("Brand:"))!;
+    for (const part of ["@studionord", "studionord.it", "brand/logo.svg", "display brand/fonts/A.ttf", "direct, warm"]) expect(brand).toContain(part);
+    expect(lines.some((l) => l.startsWith("warning"))).toBe(false);
+  });
+
+  it("warns when the post style cannot make posts yet, naming the styles that can", async () => {
+    const yaml = "name: P\nlanguage: en\nniche: x\nstyle: { posts: 13 }\n";
+    const none = await pageSummary(page(yaml), catalogWithNightTech("planned"));
+    expect(none.find((l) => l.startsWith("warning"))).toMatch(/style 13 Night tech cannot make posts yet; no style makes posts yet/);
+    expect(none).toContain("style: none (set style.videos to make videos)");
+    const other = catalogWithNightTech("planned");
+    other.get("style", 12).posts = "ready";
+    const some = await pageSummary(page(yaml), other);
+    expect(some.find((l) => l.startsWith("warning"))).toMatch(/cannot make posts yet; styles that can: 12 Kinetic typography/);
+  });
+
+  it("warns that font is ignored", async () => {
+    const lines = await pageSummary(page("name: P\nlanguage: en\nniche: x\nfont: Inter\n"), catalog);
+    expect(lines.find((l) => l.includes('"font" is ignored; use brand.fonts'))).toBeDefined();
   });
 
   it("explains what is wrong with an invalid page", async () => {

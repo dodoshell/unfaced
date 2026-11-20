@@ -6,7 +6,9 @@ import { Ajv2020 } from "ajv/dist/2020.js";
 import { parse } from "yaml";
 import { CLIP_CHOICES, clipProvider, IMAGE_CHOICES, imageProvider } from "../generate/providers.js";
 import { VOICE_PROVIDERS, voiceProviderId } from "../voice/providers.js";
-import { CHOICE_FIELDS, type CatalogLike, type Choice, type ChoiceField, type Page } from "./types.js";
+import { FORMAT_NAMES } from "../post/formats.js";
+import type { FormatName } from "../post/types.js";
+import { CHOICE_FIELDS, type Brand, type CatalogKind, type CatalogLike, type Choice, type ChoiceField, type Page } from "./types.js";
 
 export class PageError extends Error {
   constructor(
@@ -23,6 +25,10 @@ const schema = JSON.parse(readFileSync(schemaPath, "utf8"));
 const validate = new Ajv2020({ allErrors: true }).compile(schema);
 const knownFields: string[] = Object.keys(schema.properties);
 const providerFields: string[] = Object.keys(schema.properties.providers.properties);
+const brandFields: string[] = Object.keys(schema.properties.brand.properties);
+const fontRoles: string[] = Object.keys(schema.properties.brand.properties.fonts.properties);
+const wordsFields: string[] = Object.keys(schema.properties.brand.properties.words.properties);
+const styleFields: string[] = Object.keys(schema.properties.style.oneOf[1].properties);
 
 // Prefixes of common API keys: OpenAI and Anthropic (sk-), ElevenLabs and Stripe (sk_), Google (AIza),
 // xi- and Replicate (r8_); or one unbroken run of 40 or more letters and digits, as Pexels' keys are.
@@ -60,6 +66,14 @@ export async function loadPage(dir: string, catalog: CatalogLike): Promise<Page>
       }
     }
   }
+  checkNested(data.brand, "brand", brandFields);
+  const brandData = data.brand;
+  if (brandData && typeof brandData === "object" && !Array.isArray(brandData)) {
+    const { fonts, words } = brandData as Record<string, unknown>;
+    checkNested(fonts, "brand.fonts", fontRoles);
+    checkNested(words, "brand.words", wordsFields);
+  }
+  checkNested(data.style, "style", styleFields);
   if (!validate(data)) {
     const first = validate.errors![0]!;
     const field = first.instancePath.split("/")[1] || first.params.missingProperty || "page.yaml";
@@ -67,18 +81,22 @@ export async function loadPage(dir: string, catalog: CatalogLike): Promise<Page>
   }
 
   const choices: Page["choices"] = {};
+  let postStyle: Choice | undefined;
   for (const field of CHOICE_FIELDS) {
-    const choice = data[field] as Choice | undefined;
+    let choice = data[field] as Choice | { posts?: Choice; videos?: Choice } | undefined;
     if (choice === undefined) continue;
-    const ids = catalog.ids(field);
-    const numbers = choice === "auto" ? [] : Array.isArray(choice) ? choice : [choice];
-    for (const n of numbers) {
-      if (!ids.includes(n)) {
-        throw new PageError(field, `${field} ${n} does not exist; choose a number from ${ids[0]}–${ids[ids.length - 1]}, a list of them, or "auto"`);
-      }
+    if (field === "style" && isStyleObject(choice)) {
+      // One look for posts and one for videos; either may be left out.
+      postStyle = checkChoice("style", choice.posts, "style", catalog);
+      choice = checkChoice("style", choice.videos, "style", catalog);
+      if (choice === undefined) continue;
+    } else {
+      checkChoice(field, choice as Choice, field, catalog);
+      if (field === "style") postStyle = choice as Choice;
     }
-    choices[field] = choice;
+    choices[field] = choice as Choice;
   }
+  const postType = checkChoice("post-type", data.post_type as Choice | undefined, "post_type", catalog);
 
   const providers = (data.providers ?? {}) as Partial<Page["providers"]>;
   if (providers.voice !== undefined && !(VOICE_PROVIDERS as readonly string[]).includes(providers.voice)) {
@@ -96,6 +114,10 @@ export async function loadPage(dir: string, catalog: CatalogLike): Promise<Page>
     language: data.language as string,
     niche: data.niche as string,
     choices,
+    ...(postStyle !== undefined && { postStyle }),
+    ...(postType !== undefined && { postType }),
+    ...(data.formats !== undefined && { formats: data.formats as FormatName[] }),
+    ...(data.brand !== undefined && { brand: data.brand as Brand }),
     duration: parseDuration(data.duration as number | string | undefined),
     palette: data.palette as string[] | undefined,
     font: data.font as string | undefined,
@@ -108,14 +130,48 @@ export async function loadPage(dir: string, catalog: CatalogLike): Promise<Page>
   };
 }
 
+function isStyleObject(value: unknown): value is { posts?: Choice; videos?: Choice } {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+/** Every number of a choice must be in the catalog; returns the choice unchanged. */
+function checkChoice(kind: CatalogKind, choice: Choice | undefined, field: string, catalog: CatalogLike): Choice | undefined {
+  if (choice === undefined) return undefined;
+  const ids = catalog.ids(kind);
+  const numbers = choice === "auto" ? [] : Array.isArray(choice) ? choice : [choice];
+  for (const n of numbers) {
+    if (!ids.includes(n)) {
+      throw new PageError(field, `${field} ${n} does not exist; choose a number from ${ids[0]}–${ids[ids.length - 1]}, a list of them, or "auto"`);
+    }
+  }
+  return choice;
+}
+
+/** An unknown key in a nested mapping (brand, brand.fonts, ...) is named in full, with the closest known one. */
+function checkNested(value: unknown, path: string, known: string[]): void {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) return;
+  for (const key of Object.keys(value)) {
+    if (!known.includes(key)) {
+      const hint = closest(key, known);
+      throw new PageError(`${path}.${key}`, `Unknown field "${path}.${key}" in page.yaml${hint ? `. Did you mean "${hint}"?` : `; ${path} takes: ${known.join(", ")}`}`);
+    }
+  }
+}
+
 /** What a field should look like, for the fields where the schema's own message would not say. */
 function explain(field: string, value: unknown, catalog: CatalogLike): string | undefined {
   const got = ` (got ${JSON.stringify(value)})`;
   if ((CHOICE_FIELDS as readonly string[]).includes(field)) {
     const ids = catalog.ids(field as ChoiceField);
     const range = `${ids[0]}–${ids[ids.length - 1]}`;
-    return `"${field}" must be a number from ${range}, a list of different numbers from ${range}, or "auto"${got}`;
+    return `"${field}" must be a number from ${range}, a list of different numbers from ${range}, or "auto"${got}${field === "style" ? '; or { posts: …, videos: … } for two looks' : ""}`;
   }
+  if (field === "post_type") {
+    const ids = catalog.ids("post-type");
+    const range = `${ids[0]}–${ids[ids.length - 1]}`;
+    return `"post_type" must be a number from ${range}, a list of different numbers from ${range}, or "auto"${got}`;
+  }
+  if (field === "formats") return `"formats" must be a list of different names from: ${FORMAT_NAMES.join(", ")}${got}`;
   if (field === "duration") return `"duration" must be a number of seconds (5 or more) or a range such as 30-45${got}`;
   if (field === "language") return `"language" must be a language code such as en or it${got}`;
   if (field === "palette") return `"palette" must be a list of colours such as "#FF6B35"${got}`;

@@ -8,6 +8,11 @@ export function listLines(catalog: Catalog, kind: string): string[] {
   }
   return catalog.list(kind as CatalogKind).map((e) => {
     const line = `${String(e.num).padStart(2, "0")}  ${e.name} — ${e.summary}`;
+    if (e.kind === "style") {
+      // What the style makes: videos (status) and posts (an entry without the field makes none).
+      const makes = [e.status === "ready" && "videos", e.posts === "ready" && "posts"].filter(Boolean);
+      return `${line} (${makes.length ? makes.join(", ") : "planned"})`;
+    }
     return e.status === "planned" ? `${line} (planned)` : line;
   });
 }
