@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 
 const root = join(import.meta.dirname, "..", "..");
 const launcher = join(root, "plugin", "launcher", "unfaced.mjs");
-const SKILLS = ["page-setup", "video-ideas", "video-recommend", "video-make", "video-package", "page-results"];
+const SKILLS = ["page-setup", "video-ideas", "video-recommend", "video-make", "post-make", "video-package", "page-results"];
 /** The library version the launcher asks for, which names its install folder and the release tag it clones. */
 const VERSION = /const VERSION = "([^"]+)"/.exec(readFileSync(launcher, "utf8"))![1]!;
 

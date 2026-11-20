@@ -45,9 +45,13 @@ describe("skills", () => {
     const copy = join(skillsDir, skill, "references", `${agent}.md`);
     expect(existsSync(copy), `${skill}/references/${agent}.md`).toBe(true);
     expect(readFileSync(copy, "utf8"), `copy plugin/agents/${agent}.md again`).toBe(readFileSync(join(root, "plugin", "agents", `${agent}.md`), "utf8"));
-    // post-make's SKILL.md arrives later; once it exists it must point at the copy.
-    const skillFile = join(skillsDir, skill, "SKILL.md");
-    if (existsSync(skillFile)) expect(frontMatter(skillFile).body).toContain(`references/${agent}.md`);
+    expect(frontMatter(join(skillsDir, skill, "SKILL.md")).body).toContain(`references/${agent}.md`);
+  });
+
+  it("has a post-make skill that names the post reviewer, its copy and the commands that make a post", () => {
+    expect(skills).toContain("post-make");
+    const { body } = frontMatter(join(skillsDir, "post-make", "SKILL.md"));
+    for (const word of ["post-reviewer", "references/post-reviewer.md", "unfaced post", "unfaced inbox", "unfaced generate", "slides.md", "post.md", "grid.png"]) expect(body, word).toContain(word);
   });
 
   it.each(["video-reviewer", "post-reviewer"])("has a reviewer agent %s with a name, a description and its tools", (agent) => {
