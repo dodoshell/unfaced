@@ -2,10 +2,63 @@ import type React from "react";
 import type { Rect } from "../core/safeZone.js";
 import type { Scene } from "../../src/plan/types.js";
 import type { FigureProps } from "../core/character/svg.js";
+import type { Brand } from "../../src/page/types.js";
+import type { FittedText } from "../../src/post/fitText.js";
+import type { FrameWords } from "../../src/post/frameWords.js";
+import type { PostFormat, Slide } from "../../src/post/types.js";
 
 /** A rectangle a style draws text in, named so checks can report it. */
 export interface TextBox extends Rect {
   id: string;
+}
+
+/** The four kinds of type a slide style uses; a brand font replaces the style's for its role. */
+export type FontRole = "display" | "accent" | "text" | "mono";
+
+/**
+ * A text box on a slide, with the text and how to fit it (see fitText). A cover's headline box
+ * has the id "headline": the cover-crop check holds it inside the format's coverArea.
+ */
+export interface SlideBox extends TextBox {
+  role: FontRole;
+  text: string;
+  /** Indices into `text`; drawn in the accent font. */
+  accent?: { start: number; end: number };
+  maxSize: number;
+  minSize: number;
+  lineHeight: number;
+  maxLines?: number;
+  /** Extra spacing per character, in em. */
+  tracking?: number;
+  upper?: boolean;
+  color: string;
+  /** The colour under the text, for the contrast check. */
+  on: string;
+  /** "body" text must reach 4.5:1 against `on`, "large" text 3:1. */
+  readable: "body" | "large";
+}
+
+/** What a slide style lays out and draws one slide from. */
+export interface SlideContext {
+  slide: Slide;
+  /** The number of slides in the post. */
+  total: number;
+  format: PostFormat;
+  palette: string[];
+  brand: Brand;
+  label?: string;
+  /** The frame's words in the page's language. */
+  words: FrameWords;
+}
+
+/** What a style provides to make posts. */
+export interface SlideKit {
+  /** Font files relative to the style folder. */
+  fonts: Record<FontRole, string>;
+  /** Where the style puts text on a slide; pure, so plans and checks are built without rendering. */
+  layout(ctx: SlideContext): SlideBox[];
+  /** Draws a slide; `fitted` holds each box's lines, by box id. */
+  SlideView: React.FC<{ ctx: SlideContext; fitted: Record<string, FittedText> }>;
 }
 
 /** Everything a visual style provides to the composition. */
@@ -18,6 +71,8 @@ export interface StyleKit {
   Background: React.FC<{ palette: string[] }>;
   /** Paints a character's parts (the mascot, the dog in the style demo); see core/character. */
   Figure: React.FC<FigureProps>;
+  /** Present when the style makes posts. */
+  slides?: SlideKit;
 }
 
 const styles = new Map<number, StyleKit>();

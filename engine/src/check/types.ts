@@ -1,6 +1,18 @@
-export type CheckName = "overlap" | "safe-zone" | "sync" | "black-frame" | "frozen-frame" | "loudness" | "clipping" | "cut-word";
+export type CheckName =
+  | "overlap"
+  | "safe-zone"
+  | "sync"
+  | "black-frame"
+  | "frozen-frame"
+  | "loudness"
+  | "clipping"
+  | "cut-word"
+  | "post-safe-area"
+  | "post-overlap"
+  | "contrast"
+  | "cover-crop";
 
-/** One problem found in a made video, at a time from its start. */
+/** One problem found in a made video, at a time from its start (a post's issues are at 0 and name the slide). */
 export interface CheckIssue {
   check: CheckName;
   atMs: number;
