@@ -19,6 +19,8 @@ Every third-party file shipped in this repository (fonts, music, sound effects, 
 | `catalog/styles/10-neon-synthwave/fonts/Orbitron.ttf` | [google/fonts](https://github.com/google/fonts/tree/main/ofl/orbitron), The Orbitron Project Authors | SIL OFL 1.1 (`catalog/styles/10-neon-synthwave/fonts/OFL-Orbitron.txt`) |
 | `catalog/styles/11-watercolour/fonts/ShadowsIntoLightTwo.ttf` | [google/fonts](https://github.com/google/fonts/tree/main/ofl/shadowsintolighttwo), Kimberly Geswein | SIL OFL 1.1 (`catalog/styles/11-watercolour/fonts/OFL-ShadowsIntoLightTwo.txt`) |
 | `catalog/styles/12-kinetic-typography/fonts/Anton.ttf` | [google/fonts](https://github.com/google/fonts/tree/main/ofl/anton), The Anton Project Authors | SIL OFL 1.1 (`catalog/styles/12-kinetic-typography/fonts/OFL-Anton.txt`) |
+| `tests/fixtures/fonts/Condensed-Anton.ttf` | [google/fonts](https://github.com/google/fonts/tree/main/ofl/anton), The Anton Project Authors | SIL OFL 1.1 (`tests/fixtures/fonts/OFL-Anton.txt`) |
+| `tests/fixtures/fonts/Wide-Orbitron.ttf` | [google/fonts](https://github.com/google/fonts/tree/main/ofl/orbitron), The Orbitron Project Authors | SIL OFL 1.1 (`tests/fixtures/fonts/OFL-Orbitron.txt`) |
 
 ## Downloaded at first use (not in this repository)
 
