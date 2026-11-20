@@ -7,7 +7,7 @@ export const PEXELS_FILE_HOSTS = ["images.pexels.com"] as const;
 
 /**
  * What to search stock photos for: the prompt's `Search:` line, or else its subject (the first
- * sentence after a "For beat ..." one, up to its first comma).
+ * sentence after a "For beat ..." or "For slide ..." one, up to its first comma).
  */
 export function stockQuery(prompt: string): string {
   for (const line of prompt.split(/\r?\n/)) {
@@ -15,7 +15,7 @@ export function stockQuery(prompt: string): string {
     if (search) return search[1]!;
   }
   const sentences = prompt.replace(/\s+/g, " ").trim().split(/(?<=\.) /);
-  const subject = sentences.find((s) => !/^for beat\b/i.test(s)) ?? sentences[0]!;
+  const subject = sentences.find((s) => !/^for (beat|slide)\b/i.test(s)) ?? sentences[0]!;
   return subject.split(",")[0]!.replace(/\.$/, "").trim();
 }
 
