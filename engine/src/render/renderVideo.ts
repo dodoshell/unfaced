@@ -29,6 +29,8 @@ export interface RenderJob {
   /** Files from anywhere, by the path staticFile() reads them at (a post's fonts live in the catalog or the page). */
   staged?: Record<string, string>;
   scenes?: string;
+  /** A post's own slide code (its custom/index.tsx) and the custom slide ids the post uses; the entry point checks them when the bundle loads. */
+  slides?: { file: string; ids: string[] };
   /** How renderMediaOf encodes: H.264 + AAC by default, or a looping GIF with every nth frame, scaled. */
   media?: { codec: "gif"; everyNthFrame: number; scale: number };
   /** How many browser tabs render frames at once; Remotion picks from the CPU count when unset. */
@@ -90,19 +92,36 @@ function scenesEntry(scenes: string): { entry: string; dir: string } {
   return { entry, dir };
 }
 
+/** An entry point that loads the base entry point, then a post's own slides, checked against the ids the post uses. */
+function slidesEntry(entryPoint: string, slides: { file: string; ids: string[] }): { entry: string; dir: string } {
+  const dir = mkdtempSync(join(tmpdir(), "unfaced-entry-"));
+  const source = [
+    // The bundler looks for the word: registerRoot() is called by the base entry point imported next.
+    "// registerRoot() runs in the entry point below.",
+    `import ${JSON.stringify(slash(entryPoint))};`,
+    `import { setPostSlides } from ${JSON.stringify(slash(join(LIBRARY_ROOT, "engine", "remotion", "core", "postSlides.ts")))};`,
+    `import slides from ${JSON.stringify(slash(resolve(slides.file)))};`,
+    `setPostSlides(slides, ${JSON.stringify(resolve(slides.file))}, ${JSON.stringify(slides.ids)});`,
+    "",
+  ].join("\n");
+  const entry = join(dir, "entry.ts");
+  writeFileSync(entry, source);
+  return { entry, dir };
+}
+
 const bundles = new Map<string, Promise<string>>();
 /** Every temporary folder a bundle made, kept apart from `bundles` so a failed bundle's folders are deleted too. */
 const temporary: string[] = [];
 
 /** Bundles once per entry point, scenes and staged files (their paths, sources, sizes and times). */
-function serveUrl(entryPoint: string, assetsDir: string, files: string[], scenes?: string, from: Record<string, string> = {}): Promise<string> {
+function serveUrl(entryPoint: string, assetsDir: string, files: string[], scenes?: string, from: Record<string, string> = {}, slides?: { file: string; ids: string[] }): Promise<string> {
   const stat = (f: string, source: string) => {
     const s = statSync(source);
     return `${f}:${source}:${s.size}:${s.mtimeMs}`;
   };
   const stats = [...files.map((f) => stat(f, join(assetsDir, f))), ...Object.entries(from).map(([f, source]) => stat(f, source))];
   // With no files to stage, the folder they would come from changes nothing in the bundle.
-  const key = [entryPoint, files.length > 0 ? assetsDir : "", scenes ?? "", ...stats].join("\n");
+  const key = [entryPoint, files.length > 0 ? assetsDir : "", scenes ?? "", ...(slides ? [`slides:${slides.file}:${slides.ids.join(",")}`, stat("slides", slides.file)] : []), ...stats].join("\n");
   let url = bundles.get(key);
   if (!url) {
     const staged = stagePublicDir(assetsDir, files, from);
@@ -111,6 +130,10 @@ function serveUrl(entryPoint: string, assetsDir: string, files: string[], scenes
     let entry = entryPoint;
     if (scenes) {
       const generated = scenesEntry(scenes);
+      entry = generated.entry;
+      temporary.push(generated.dir);
+    } else if (slides) {
+      const generated = slidesEntry(entryPoint, slides);
       entry = generated.entry;
       temporary.push(generated.dir);
     }
@@ -182,7 +205,7 @@ function compositionOf(url: string, job: RenderJob, scale: number, browser: Head
 
 async function prepare(job: RenderJob, scale: number) {
   const entryPoint = resolve(job.entryPoint ?? ENGINE_ENTRY);
-  const url = await serveUrl(entryPoint, resolve(job.assetsDir ?? dirname(job.outPath)), job.files ?? [], job.scenes, job.staged);
+  const url = await serveUrl(entryPoint, resolve(job.assetsDir ?? dirname(job.outPath)), job.files ?? [], job.scenes, job.staged, job.slides);
   const browser = await browserAt(scale);
   const composition = await compositionOf(url, job, scale, browser);
   mkdirSync(dirname(job.outPath), { recursive: true });

@@ -28,13 +28,14 @@ export function checkPost(plan: PostPlan): CheckIssue[] {
   const issue = (check: CheckName, n: number, message: string) =>
     issues.push({ check, atMs: 0, severity: "error", message: `${format.name} slide ${n}: ${message}` });
 
-  for (const { slide, boxes } of plan.slides) {
+  for (const { slide, boxes, own = [] } of plan.slides) {
     const n = slide.index + 1;
-    for (const box of boxes) {
+    const placed: (Rect & { id: string })[] = [...boxes, ...own];
+    for (const box of placed) {
       if (!inside(box, safe)) issue("post-safe-area", n, `text box "${box.id}" (${where(box)}) reaches outside the safe area (${where(safe)})`);
     }
-    boxes.forEach((a, i) => {
-      for (const b of boxes.slice(i + 1)) {
+    placed.forEach((a, i) => {
+      for (const b of placed.slice(i + 1)) {
         if (overlaps(a, b)) issue("post-overlap", n, `text boxes "${a.id}" and "${b.id}" overlap`);
       }
     });

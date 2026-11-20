@@ -100,4 +100,38 @@ describe.skipIf(!process.env.UNFACED_SLOW)("render posts (slow)", () => {
     const squarePng = readPng(squareSlide!);
     expect([squarePng.width, squarePng.height]).toEqual([1080, 1080]);
   }, 600_000);
+
+  it("draws a post's own slide inside the style's frame, and stops before rendering when an id is not exported", async () => {
+    const { pageDir, dir, page } = post(`---
+title: Own code
+post_type: 3
+---
+
+## cover
+# Our *app*
+
+## custom {id: square}
+`);
+    mkdirSync(join(dir, "custom"));
+    // The component imports the kit, like a video's scenes do.
+    writeFileSync(join(dir, "custom", "index.tsx"), `import { AbsoluteFill } from "remotion";
+import { defineSlides } from "@unfaced/kit";
+export default defineSlides({ square: () => <AbsoluteFill><div style={{ position: "absolute", left: 300, top: 500, width: 400, height: 400, background: "#FF0000" }} /></AbsoluteFill> });
+`);
+    writeFileSync(join(dir, "custom", "boxes.json"), JSON.stringify({ square: { "instagram-carousel": [] } }));
+    const plan = buildPostPlans(dir, page, catalog, {}).plans[0]!;
+    const files = await renderPost(plan, dir, pageDir, { postDir: dir, entryPoint });
+    const png = readPng(files[1]!);
+    const at = (x: number, y: number) => (y * png.width + x) * 4;
+    expect([...png.data.subarray(at(500, 700), at(500, 700) + 3)]).toEqual([255, 0, 0]);
+    // The frame is still drawn: the first slide has none of the red.
+    const cover = readPng(files[0]!);
+    expect([...cover.data.subarray(at(500, 700), at(500, 700) + 3)]).not.toEqual([255, 0, 0]);
+
+    writeFileSync(join(dir, "custom", "index.tsx"), `import { defineSlides } from "@unfaced/kit";
+export default defineSlides({ other: () => null });
+`);
+    writeFileSync(join(dir, "slides.md"), readFileSync(join(dir, "slides.md"), "utf8"));
+    await expect(renderPost(plan, join(dir, "again"), pageDir, { postDir: dir, entryPoint })).rejects.toThrow(/does not export a slide "square"/);
+  }, 600_000);
 });

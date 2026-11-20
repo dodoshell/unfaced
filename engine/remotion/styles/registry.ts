@@ -63,8 +63,13 @@ export interface SlideKit {
   fonts: Record<FontRole, string>;
   /** Where the style puts text on a slide; pure, so plans and checks are built without rendering. */
   layout(ctx: SlideContext): SlideBox[];
-  /** Draws a slide; `fitted` holds each box's lines, by box id. */
-  SlideView: React.FC<{ ctx: SlideContext; fitted: Record<string, FittedText> }>;
+  /**
+   * Draws a slide; `fitted` holds each box's lines, by box id. On a `custom` slide the post's
+   * own component arrives as `custom` (already given its `ctx`): the view draws its frame
+   * (label, counter, handle, swipe) and renders `<custom />` where the content goes; the
+   * component draws only the content, inside the boxes of custom/boxes.json.
+   */
+  SlideView: React.FC<{ ctx: SlideContext; fitted: Record<string, FittedText>; custom?: React.FC }>;
 }
 
 /** Everything a visual style provides to the composition. */

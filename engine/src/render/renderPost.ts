@@ -5,6 +5,7 @@ import { SLIDE_FONT_ROLES, slideFontFile, slideLogoFile } from "../../remotion/p
 import { brandPath } from "../page/brand.js";
 import { inboxKind } from "../inbox/inbox.js";
 import type { PostPlan } from "../post/buildPostPlan.js";
+import { ownSlides } from "./ownSlides.js";
 import { renderStillOf } from "./renderVideo.js";
 
 export interface PostRenderOptions {
@@ -43,7 +44,10 @@ export async function renderPost(plan: PostPlan, outDir: string, pageDir: string
   const dir = resolve(outDir);
   mkdirSync(dir, { recursive: true });
   for (const f of readdirSync(dir)) if (/^slide-\d+\.png$/.test(f)) rmSync(join(dir, f));
-  const job = { entryPoint: options.entryPoint, assetsDir: resolve(pageDir), staged: postFiles(plan, pageDir, options.postDir), frame: 0 };
+  const ids = [...new Set(plan.slides.flatMap(({ slide }) => (slide.kind === "custom" && slide.attrs.id ? [slide.attrs.id] : [])))];
+  const file = options.postDir ? ownSlides(options.postDir) : undefined;
+  if (ids.length > 0 && !file) throw new Error(`The post has custom slides (${ids.join(", ")}) but no custom/index.tsx to draw them`);
+  const job = { ...(file && { slides: { file, ids } }), entryPoint: options.entryPoint, assetsDir: resolve(pageDir), staged: postFiles(plan, pageDir, options.postDir), frame: 0 };
   const files: string[] = [];
   for (let index = 0; index < plan.slides.length; index++) {
     const outPath = join(dir, slideName(index));

@@ -1,5 +1,6 @@
-import type React from "react";
+import React, { useMemo } from "react";
 import { AbsoluteFill } from "remotion";
+import { postSlide } from "../core/postSlides.js";
 import type { PostPlan } from "../../src/post/buildPostPlan.js";
 import { frameWords } from "../../src/post/frameWords.js";
 import type { SlideContext } from "../styles/registry.js";
@@ -26,9 +27,14 @@ export function slideContext(plan: PostPlan, index: number): SlideContext {
 /** One slide drawn by its style, at the format's size; the fonts must already be loading. */
 export const SlideFrame: React.FC<PostSlideProps> = ({ plan, index }) => {
   const SlideView = getSlideView(plan.style);
+  const ctx = slideContext(plan, index);
+  const id = ctx.slide.kind === "custom" ? ctx.slide.attrs.id : undefined;
+  const Own = id === undefined ? undefined : postSlide(id);
+  if (id !== undefined && !Own) throw new Error(`slides.md line ${ctx.slide.line}: the post has no custom slide "${id}"; its custom/index.tsx must export it`);
+  const custom = useMemo(() => (Own ? () => <Own ctx={ctx} /> : undefined), [Own, plan, index]);
   return (
     <AbsoluteFill style={{ overflow: "hidden" }}>
-      <SlideView ctx={slideContext(plan, index)} fitted={plan.slides[index]!.fitted} />
+      <SlideView ctx={ctx} fitted={plan.slides[index]!.fitted} {...(custom && { custom })} />
     </AbsoluteFill>
   );
 };

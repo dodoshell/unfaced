@@ -74,6 +74,15 @@ Every style that makes posts draws these kinds.
 
 Text is fitted to its box with the real fonts before anything renders: each line is broken and sized once, and drawn exactly so. A text that does not fit at the style's smallest size, a character the font cannot draw, an unknown kind or a slide count the format does not take stops `unfaced post` with the line and slide number and what to change.
 
+## Custom slides
+
+A post can draw a slide with its own code, the way a video draws its own scenes. Write `## custom {id: phone}` in `slides.md` and put two files in the post folder:
+
+- `custom/index.tsx` exports the slides by id: `export default defineSlides({ phone: PhoneSlide })`, with `import { defineSlides, type SlideComponent } from "@unfaced/kit"`. A `SlideComponent` is a React component that receives `{ ctx }` (the `SlideContext`: the slide, the palette, the brand, the format, the logo path) and draws the content only; the style draws its frame (label, counter, handle, swipe) around it.
+- `custom/boxes.json` declares the text the component draws, by id and then by format: `{ "phone": { "instagram-carousel": [{ "id": "label", "x": 120, "y": 880, "w": 340, "h": 90 }] } }`. Give an empty list for a format whose slide draws no text. The boxes are checked for the safe area and for overlap, and are not fitted: the component sizes its own text. They carry no colours, so the contrast check does not cover them.
+
+`unfaced post` stops before rendering, naming the file and the id, when a `custom` slide has no `id`, when `custom/index.tsx` is missing or does not export the id, or when `boxes.json` has nothing for the id in a format being made.
+
 ## Formats
 
 | Name | Size | Slides | Output |

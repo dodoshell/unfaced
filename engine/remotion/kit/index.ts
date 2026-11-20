@@ -16,6 +16,7 @@ export { drawsEndingMark } from "../styles/layouts.js";
 export { FRAME, SAFE_ZONE, type Rect } from "../core/safeZone.js";
 export { useVideo, VideoContext } from "../core/VideoContext.js";
 export { defineScenes, type SceneComponent } from "../core/videoScenes.js";
+export { defineSlides, type SlideComponent } from "../core/postSlides.js";
 export { StyleScene } from "../core/StyleScene.js";
 export { factBadge, factNumber, listParts } from "../core/badges.js";
 export { fitFontSize, fitLines, type FitOptions, wrapLines } from "../core/fit.js";

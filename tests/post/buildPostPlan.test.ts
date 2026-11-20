@@ -195,11 +195,6 @@ describe("buildPostPlans", () => {
     expect(() => buildPostPlans(dir, page(pageDir), catalogWithSlides("planned"))).toThrow(/style 99 \(Placeholder slides\) does not make posts yet/);
   });
 
-  it("refuses custom slides for now", () => {
-    const { pageDir, dir } = postDir(EXAMPLE.replace("## steps", "## custom {id: phone}\n\n## steps"));
-    expect(() => buildPostPlans(dir, page(pageDir), catalog)).toThrow(/slides\.md line \d+ \(slide 3, custom\): custom slides are not supported yet/);
-  });
-
   it("warns when the frame's words fall back to English", () => {
     const { pageDir, dir } = postDir(EXAMPLE);
     const { plans, warnings } = buildPostPlans(dir, page(pageDir, { language: "de" }), catalog);

@@ -1,10 +1,11 @@
 import { readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
-import type { FontRole, SlideBox, SlideContext } from "../../remotion/styles/registry.js";
+import type { FontRole, SlideBox, SlideContext, TextBox } from "../../remotion/styles/registry.js";
 import { getSlideLayout, stylesWithSlides } from "../../remotion/styles/slideLayouts.js";
 import { slideLogoFile } from "../../remotion/post/slideFonts.js";
 import type { Catalog } from "../catalog/catalog.js";
 import { brandPath } from "../page/brand.js";
+import { ownSlides, readOwnSlideBoxes } from "../render/ownSlides.js";
 import type { Brand, Choice, Page } from "../page/types.js";
 import { FitError, type FittedText, fitText } from "./fitText.js";
 import { formatFor } from "./formats.js";
@@ -22,7 +23,11 @@ export interface PostPlan {
   label?: string;
   /** Absolute font files: the brand's where it has one for the role, the style's otherwise. */
   fonts: Record<FontRole, string>;
-  slides: { slide: Slide; boxes: SlideBox[]; fitted: Record<string, FittedText> }[];
+  /**
+   * `own` is a custom slide's boxes from custom/boxes.json for this format: checked for safe
+   * area and overlap but not fitted, and with no colours, so not checked for contrast.
+   */
+  slides: { slide: Slide; boxes: SlideBox[]; fitted: Record<string, FittedText>; own?: TextBox[] }[];
 }
 
 const DEFAULT_FORMAT: FormatName = "instagram-carousel";
@@ -68,13 +73,24 @@ export function buildPostPlans(postDir: string, page: Page, catalog: Catalog, op
     fonts,
     slides: file.slides.map((slide) => {
       const where = `slides.md line ${slide.line} (slide ${slide.index + 1}, ${slide.kind})`;
-      if (slide.kind === "custom") throw new Error(`${where}: custom slides are not supported yet`);
+      const own = slide.kind === "custom" ? ownBoxes(postDir, slide, format.name, where) : undefined;
       const ctx: SlideContext = { slide, total, format, palette, brand, words, ...(file.label !== undefined && { label: file.label }), ...(brand.logo && { logoFile: slideLogoFile(brand.logo) }) };
       const boxes = kit.layout(ctx);
-      return { slide, boxes, fitted: fitBoxes(boxes, fonts, where) };
+      return { slide, boxes, fitted: fitBoxes(boxes, fonts, where), ...(own && { own }) };
     }),
   }));
   return { plans, warnings };
+}
+
+/** A custom slide's boxes for one format; fails naming the file and id when the slide has no id, the post no custom/index.tsx or boxes.json no entry. */
+function ownBoxes(postDir: string, slide: Slide, format: FormatName, where: string): TextBox[] {
+  const id = slide.attrs.id;
+  if (!id) throw new Error(`${where}: a custom slide needs an id naming its code in custom/index.tsx, such as ## custom {id: phone}`);
+  if (!ownSlides(postDir)) throw new Error(`${where}: custom slide "${id}" needs ${join(postDir, "custom", "index.tsx")}, which exports it with export default defineSlides({ ${id}: MySlide })`);
+  const file = join(postDir, "custom", "boxes.json");
+  const boxes = readOwnSlideBoxes(file)[id]?.[format];
+  if (!boxes) throw new Error(`${where}: ${file} has no boxes for slide "${id}" in ${format}; add { "${id}": { "${format}": [] } } (an empty list when it draws no text)`);
+  return boxes;
 }
 
 /** The style for this post: the front matter's, else the page's; a list or auto takes the first that makes posts. */
