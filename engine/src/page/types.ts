@@ -7,6 +7,7 @@ export const CATALOG_KINDS = [
   "music",
   "ending",
   "duration",
+  "post-type",
 ] as const;
 
 export type CatalogKind = (typeof CATALOG_KINDS)[number];

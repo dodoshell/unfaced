@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import { Catalog } from "../../engine/src/catalog/catalog.js";
 import { docText, FORMATS } from "../../engine/src/cli/docs.js";
 import { pageSummary } from "../../engine/src/cli/page.js";
+import { parseSlides } from "../../engine/src/post/parseSlides.js";
 import { showText } from "../../engine/src/cli/show.js";
 import { CATALOG_DIR } from "../../engine/src/paths.js";
 
@@ -16,6 +17,22 @@ function withPlannedStyle(): Catalog {
   fresh.get("style", 7).status = "planned";
   return fresh;
 }
+
+describe("unfaced show post-type", () => {
+  it("prints each post type with its sections and an example that parses as slides.md", () => {
+    for (let n = 1; n <= 6; n++) {
+      const text = showText(catalog, "post-type", n);
+      for (const heading of ["## What it's for", "## Slides", "## Cover", "## Writing rules", "## Example"]) expect(text, `post type ${n}`).toContain(heading);
+      const example = text.split(/^## Example/m)[1]!;
+      const block = /```markdown\r?\n([\s\S]*?)\r?\n```/.exec(example);
+      expect(block, `post type ${n} example`).not.toBeNull();
+      const file = parseSlides(block![1]!);
+      expect(file.postType).toBe(n);
+      expect(file.slides.length).toBeGreaterThanOrEqual(5);
+      expect(file.slides.length).toBeLessThanOrEqual(8);
+    }
+  });
+});
 
 describe("unfaced show", () => {
   it("prints one entry's own section of a shared catalog file", () => {

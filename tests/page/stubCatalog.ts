@@ -9,6 +9,7 @@ const sizes: Record<CatalogKind, number> = {
   music: 8,
   ending: 6,
   duration: 4,
+  "post-type": 6,
 };
 
 export const stubCatalog: CatalogLike = {

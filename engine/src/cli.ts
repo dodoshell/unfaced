@@ -22,7 +22,7 @@ import { CATALOG_DIR } from "./paths.js";
 const USAGE = `Usage: unfaced <command>
 
 Commands:
-  list <kind>                    List a catalog (style, script, hook, voice, captions, music, ending, duration)
+  list <kind>                    List a catalog (style, script, hook, voice, captions, music, ending, duration, post-type)
   show <kind> [number]           Print a catalog entry's guide, or the whole catalog file with its rules
   docs [format]                  Print a file format (page, script, mascot, scenes, review, post, results)
   page <pageDir>                 Check a page profile and print it with every choice named

@@ -22,6 +22,7 @@ const launch: Record<string, string[]> = {
   music: ["Suspense", "Epic", "Lo-fi", "Upbeat", "Playful", "Emotional", "Mystery", "None"],
   ending: ["Seamless loop", "Cliffhanger", "Comment question", "Follow for part 2", "Punchline", "Callback to the hook"],
   duration: ["15 seconds", "30 seconds", "45 seconds", "60 seconds"],
+  "post-type": ["Tips and mistakes", "How it works", "About us", "Services and prices", "Before and after", "Announcement"],
 };
 
 
