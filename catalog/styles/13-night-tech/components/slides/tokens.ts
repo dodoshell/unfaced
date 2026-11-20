@@ -1,6 +1,6 @@
 // Night tech's colours, glow and sizes. Pure, so the layout (and through it the checks) and the
 // drawing read the same numbers: the contrast check measures text on the glow the ground draws.
-import { liftedOn, mix } from "../../../../../engine/remotion/core/contrast.js";
+import { contrast, liftedOn, mix } from "../../../../../engine/remotion/core/contrast.js";
 import type { Rect } from "../../../../../engine/remotion/core/safeZone.js";
 import type { PostFormat } from "../../../../../engine/src/post/types.js";
 import style from "../../style.json";
@@ -18,6 +18,12 @@ export interface NightColours {
   muted: string;
   /** Body text: the ink 22% of the way to the ground, a soft grey-blue that still reads at length. */
   body: string;
+  /** The ✗ of bad items: a soft red, the one colour that is not the page's (it means "no" on any palette). */
+  bad: string;
+  /** Hairlines, outlines of quiet shapes: the ink 84% of the way to the ground. */
+  line: string;
+  /** The face of drawn objects (phone, cards): the ink 5% over the ground. */
+  surface: string;
 }
 
 export function colours(palette: string[]): NightColours {
@@ -31,7 +37,18 @@ export function colours(palette: string[]): NightColours {
     ink,
     muted: mix(ink, ground, 0.45),
     body: mix(ink, ground, 0.22),
+    bad: BAD,
+    line: mix(ink, ground, 0.84),
+    surface: mix(ground, ink, 0.05),
   };
+}
+
+const BAD = "#E5605A";
+
+/** The text colour that reads best on a filled shape of `fill`: white, or the ground when white does not reach `ratio`. */
+export function onFill(fill: string, ground: string, ratio: number): string {
+  if (contrast("#FFFFFF", fill) >= ratio) return "#FFFFFF";
+  return contrast(ground, fill) >= contrast("#FFFFFF", fill) ? ground : liftedOn(fill, "#FFFFFF", ratio);
 }
 
 /**
@@ -102,4 +119,8 @@ export const SIZE = {
   markGap: 14,
   /** Space between the headline and the text under it, either side of the seam. */
   seamGap: 24,
+  /** The widest a logo may be drawn, at the logo's height. */
+  logoMaxWidth: 220,
+  /** Corner radius of photos and cards. */
+  radius: 28,
 };

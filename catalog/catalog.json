@@ -13,7 +13,7 @@
     { "num": 10, "slug": "neon-synthwave", "name": "Neon synthwave", "summary": "Glowing neon lines on a dark grid under an 80s sunset.", "goodFor": ["tech", "space", "music"], "path": "styles/10-neon-synthwave/style.json", "status": "ready" },
     { "num": 11, "slug": "watercolour", "name": "Watercolour", "summary": "Soft washes of paint with visible paper texture.", "goodFor": ["nature", "emotional stories", "travel"], "path": "styles/11-watercolour/style.json", "status": "ready" },
     { "num": 12, "slug": "kinetic-typography", "name": "Kinetic typography", "summary": "The words are the visuals: big type that moves with the voice.", "goodFor": ["quotes", "motivation", "lists"], "path": "styles/12-kinetic-typography/style.json", "status": "ready" },
-    { "num": 13, "slug": "night-tech", "name": "Night tech", "summary": "Near-black navy with a soft blue glow, an elegant serif with one word in italic blue, and small monospace labels.", "goodFor": ["software", "services", "agencies"], "path": "styles/13-night-tech/style.json", "status": "planned", "posts": "planned" }
+    { "num": 13, "slug": "night-tech", "name": "Night tech", "summary": "Near-black navy with a soft blue glow, an elegant serif with one word in italic blue, and small monospace labels.", "goodFor": ["software", "services", "agencies"], "path": "styles/13-night-tech/style.json", "status": "planned", "posts": "ready" }
   ],
   "script": [
     { "num": 1, "slug": "build-it", "name": "Build it", "summary": "Something is built step by step, from nothing to finished.", "goodFor": ["engineering", "history", "food"], "path": "scripts/01-build-it.md", "status": "ready" },

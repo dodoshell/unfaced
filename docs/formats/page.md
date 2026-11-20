@@ -60,7 +60,7 @@ providers:
 | `formats` | no | What "make a post" makes by default: any of `instagram-carousel`, `instagram-post`, `linkedin-carousel`, `story`. |
 | `brand` | no | Handle, site, logo, fonts, tone and words for posts and the agents' writing (`unfaced docs brand`). |
 | `duration` | no | Target length in seconds, `30` or `30-45`. `unfaced make` warns when a voice-over falls outside it. |
-| `palette` | no | Colours as `#RRGGBB`. Every style maps them to five roles: background, accent, secondary, highlight, ink. |
+| `palette` | no | Colours as `#RRGGBB`. Every style maps them to five roles: background, accent, secondary, highlight, ink. In posts, a style that keeps a dark ground (Night tech) takes the background and ink only when the background is dark, and `unfaced post` says when it ignores them; accent, secondary and highlight always apply. |
 | `font` | no | Deprecated and ignored: use `brand.fonts`. `unfaced page` warns when it is set. |
 | `mascot` | no | A one-line description; the character is defined in `brand/mascot/mascot.json`. |
 | `providers` | no | Which provider makes the voice, clips and images (see Providers below). Free by default; a paid one without its key falls back to the free one and says so. |

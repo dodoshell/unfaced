@@ -113,14 +113,40 @@ function startSlide(line: string, number: number, index: number): Slide {
   };
 }
 
+const QUOTES: Record<string, string> = { '"': '"', "“": "”" };
+
+/** `{key: value, key: "a value, with commas"}`: values in double quotes (straight or curly) may hold commas; the quotes are dropped. */
 function parseAttrs(text: string | undefined, number: number): Record<string, string> {
+  const parts: string[] = [];
+  let part = "";
+  let closing: string | undefined;
+  for (const ch of text ?? "") {
+    if (closing) {
+      if (ch === closing) closing = undefined;
+      part += ch;
+    } else if (ch in QUOTES) {
+      closing = QUOTES[ch];
+      part += ch;
+    } else if (ch === ",") {
+      parts.push(part);
+      part = "";
+    } else {
+      part += ch;
+    }
+  }
+  if (closing) throw new SlidesError(number, `an attribute value opens a quote that is not closed with ${closing}`);
+  parts.push(part);
+
   const attrs: Record<string, string> = {};
-  for (const part of (text ?? "").split(",")) {
-    if (!part.trim()) continue;
-    const colon = part.indexOf(":");
-    const key = part.slice(0, colon).trim();
-    if (colon < 0 || !key) throw new SlidesError(number, `the attribute "${part.trim()}" must look like key: value`);
-    attrs[key] = part.slice(colon + 1).trim();
+  for (const raw of parts) {
+    if (!raw.trim()) continue;
+    const colon = raw.indexOf(":");
+    const key = raw.slice(0, colon).trim();
+    if (colon < 0 || !key) throw new SlidesError(number, `the attribute "${raw.trim()}" must look like key: value`);
+    let value = raw.slice(colon + 1).trim();
+    const close = QUOTES[value.charAt(0)];
+    if (close && value.length > 1 && value.endsWith(close)) value = value.slice(1, -1);
+    attrs[key] = value;
   }
   return attrs;
 }

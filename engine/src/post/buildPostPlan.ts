@@ -1,15 +1,18 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import type { FontRole, SlideBox, SlideContext, TextBox } from "../../remotion/styles/registry.js";
 import { getSlideLayout, stylesWithSlides } from "../../remotion/styles/slideLayouts.js";
 import { slideLogoFile } from "../../remotion/post/slideFonts.js";
 import type { Catalog } from "../catalog/catalog.js";
-import { brandPath } from "../page/brand.js";
+import { brandPath, pathInside } from "../page/brand.js";
 import { ownSlides, readOwnSlideBoxes } from "../render/ownSlides.js";
 import type { Brand, Choice, Page } from "../page/types.js";
 import { FitError, type FittedText, fitText } from "./fitText.js";
 import { formatFor } from "./formats.js";
 import { frameWords } from "./frameWords.js";
+import { slideLimit } from "./limits.js";
+import { logoAspect } from "./logoAspect.js";
+import { postPalette } from "./palette.js";
 import { parseSlides } from "./parseSlides.js";
 import type { FormatName, PostFormat, Slide } from "./types.js";
 
@@ -23,11 +26,14 @@ export interface PostPlan {
   label?: string;
   /** Absolute font files: the brand's where it has one for the role, the style's otherwise. */
   fonts: Record<FontRole, string>;
+  /** The brand logo's width over its height (SlideContext.logoAspect), when it has a logo that can be read. */
+  logoAspect?: number;
   /**
    * `own` is a custom slide's boxes from custom/boxes.json for this format: checked for safe
-   * area and overlap but not fitted, and with no colours, so not checked for contrast.
+   * area and overlap but not fitted, and with no colours, so not checked for contrast. `photo` is
+   * an image slide's photo, as an absolute path inside the post folder.
    */
-  slides: { slide: Slide; boxes: SlideBox[]; fitted: Record<string, FittedText>; own?: TextBox[] }[];
+  slides: { slide: Slide; boxes: SlideBox[]; fitted: Record<string, FittedText>; own?: TextBox[]; photo?: string }[];
 }
 
 export interface PlanOptions {
@@ -62,13 +68,22 @@ export function buildPostPlans(postDir: string, page: Page, catalog: Catalog, op
     }
   }
 
+  for (const slide of file.slides) {
+    const limit = slideLimit(slide);
+    if (limit) throw new Error(`${where(slide)}: ${limit}`);
+  }
+
   const style = postStyle(file.style, page.postStyle, catalog, opts.allowPlanned ?? false);
   const kit = getSlideLayout(style);
-  const styleFile = resolve(catalog.root, catalog.get("style", style).path);
+  const entry = catalog.get("style", style);
+  const styleFile = resolve(catalog.root, entry.path);
   const { defaultPalette } = JSON.parse(readFileSync(styleFile, "utf8")) as { defaultPalette: string[] };
-  const palette = defaultPalette.map((colour, i) => page.palette?.[i] ?? colour);
+  const { palette, warnings: paletteWarnings } = postPalette({ name: entry.name, defaultPalette, ...(kit.ground && { ground: kit.ground }) }, page.palette);
+  warnings.push(...paletteWarnings);
   const brand = page.brand ?? {};
   const fonts = fontFiles(kit.fonts, dirname(styleFile), brand, page.dir);
+  const aspect = brand.logo ? logoAspect(brandPath(page.dir, "brand.logo", brand.logo)) : undefined;
+  const photos = new Map(file.slides.filter((s) => s.kind === "image").map((s) => [s.index, photoFile(postDir, s)]));
 
   const { words, fallback } = frameWords(page.language);
   if (fallback) warnings.push(`The frame's words ("${words.swipe}", "${words.of}") have no "${page.language}" version yet; they are in English`);
@@ -81,15 +96,44 @@ export function buildPostPlans(postDir: string, page: Page, catalog: Catalog, op
     brand,
     ...(file.label !== undefined && { label: file.label }),
     fonts,
+    ...(aspect !== undefined && { logoAspect: aspect }),
     slides: file.slides.map((slide) => {
-      const where = `slides.md line ${slide.line} (slide ${slide.index + 1}, ${slide.kind})`;
-      const own = slide.kind === "custom" ? ownBoxes(postDir, slide, format.name, where) : undefined;
-      const ctx: SlideContext = { slide, total, format, palette, brand, words, ...(file.label !== undefined && { label: file.label }), ...(brand.logo && { logoFile: slideLogoFile(brand.logo) }) };
+      const own = slide.kind === "custom" ? ownBoxes(postDir, slide, format.name, where(slide)) : undefined;
+      const ctx: SlideContext = {
+        slide,
+        total,
+        format,
+        palette,
+        brand,
+        words,
+        ...(file.label !== undefined && { label: file.label }),
+        ...(brand.logo && { logoFile: slideLogoFile(brand.logo) }),
+        ...(aspect !== undefined && { logoAspect: aspect }),
+      };
       const boxes = kit.layout(ctx);
-      return { slide, boxes, fitted: fitBoxes(boxes, fonts, where), ...(own && { own }) };
+      const photo = photos.get(slide.index);
+      return { slide, boxes, fitted: fitBoxes(boxes, fonts, where(slide)), ...(own && { own }), ...(photo && { photo }) };
     }),
   }));
   return { plans, warnings };
+}
+
+const where = (slide: Slide) => `slides.md line ${slide.line} (slide ${slide.index + 1}, ${slide.kind})`;
+
+/** An image slide's photo: inside the post folder, and there. */
+function photoFile(postDir: string, slide: Slide): string {
+  const written = slide.attrs.photo!;
+  const file = pathInside(postDir, written);
+  if (!file) throw new Error(`${where(slide)}: the photo ${written} must be inside the post folder; write it relative to slides.md, such as inbox/shop.jpg`);
+  if (!/\.(png|jpe?g|webp)$/i.test(written)) throw new Error(`${where(slide)}: the photo ${written} is not a PNG, JPEG or WebP image`);
+  let isFile = false;
+  try {
+    isFile = statSync(file).isFile();
+  } catch {
+    // missing: reported below
+  }
+  if (!isFile) throw new Error(`${where(slide)}: the photo ${written} is missing (looked for ${file}); put it in the post's inbox/ or fix the path`);
+  return file;
 }
 
 /** A custom slide's boxes for one format; fails naming the file and id when the slide has no id, the post no custom/index.tsx or boxes.json no entry. */

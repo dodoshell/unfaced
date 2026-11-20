@@ -12,6 +12,8 @@ const fixture = join(dirname(fileURLToPath(import.meta.url)), "..", "fixtures", 
 export function catalogWithSlides(posts: "ready" | "planned" = "ready"): Catalog {
   const dir = mkdtempSync(join(tmpdir(), "unfaced catalog "));
   const raw = JSON.parse(readFileSync(join(CATALOG_DIR, "catalog.json"), "utf8"));
+  // The copy lives elsewhere, so the styles' paths point back at the real catalog.
+  for (const entry of raw.style) entry.path = join(CATALOG_DIR, entry.path);
   raw.style.push({ num: PLACEHOLDER_SLIDES, slug: "placeholder-slides", name: "Placeholder slides", summary: "Plain boxes for tests.", goodFor: ["tests"], path: fixture, status: "planned", posts });
   writeFileSync(join(dir, "catalog.json"), JSON.stringify(raw));
   return Catalog.load(dir);

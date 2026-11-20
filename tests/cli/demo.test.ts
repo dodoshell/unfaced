@@ -101,15 +101,22 @@ describe("demo --post", () => {
     return { d, renders, closed: () => closed };
   }
 
-  it("renders the sample post of a style whose posts are still planned, as a carousel and a story", async () => {
+  it("renders the sample post (one slide of every kind) and the cover visuals, as a carousel and a story", async () => {
     const { d, renders, closed } = postDeps();
     const out = mkdtempSync(join(tmpdir(), "unfaced post demo "));
     const files = await renderPostDemos("13", { out }, d);
     const dir = join(out, "13-night-tech");
-    expect(renders.map((r) => [r.plan.format.name, r.outDir])).toEqual(POST_DEMO_FORMATS.map((f) => [f, join(dir, f)]));
+    expect(renders.map((r) => [r.plan.format.name, r.outDir])).toEqual([
+      ...POST_DEMO_FORMATS.map((f) => [f, join(dir, f)]),
+      ...POST_DEMO_FORMATS.map((f) => [f, join(dir, "visuals", f)]),
+    ]);
     expect(renders[0]!.plan.style).toBe(13);
-    expect(renders[0]!.plan.slides.map((s) => s.slide.kind)).toEqual(["cover", "point", "point"]);
+    expect(renders[0]!.plan.slides.map((s) => s.slide.kind)).toEqual(["cover", "point", "list", "steps", "compare", "stat", "quote", "image", "cta"]);
+    expect(renders[0]!.plan.slides[7]!.photo).toBe(join(dir, "inbox", "photo.png"));
+    expect(existsSync(join(dir, "inbox", "photo.png"))).toBe(true);
+    expect(renders.at(-1)!.plan.slides.map((s) => s.slide.attrs.visual)).toEqual(["chips", "phone", "notification"]);
     expect(existsSync(join(dir, "slides.md"))).toBe(true);
+    expect(existsSync(join(dir, "visuals", "slides.md"))).toBe(true);
     expect(readFileSync(join(dir, "slides.md"), "utf8")).toContain("style: 13");
     expect(files).toContain(join(dir, "story", "slide-01.png"));
     expect(closed()).toBe(1);

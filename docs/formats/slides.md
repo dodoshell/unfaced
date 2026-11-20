@@ -49,7 +49,7 @@ Front matter:
 
 Slides:
 
-- `## <kind>` starts a slide. Attributes may follow in braces: `## image {photo: inbox/shop.jpg}`, `## custom {id: phone}`.
+- `## <kind>` starts a slide. Attributes may follow in braces: `## image {photo: inbox/shop.jpg}`, `## custom {id: phone}`. A value with commas goes in double quotes: `{visual: notification, title: "New booking", text: "Anna, Friday at 10:00"}`.
 - `# ` is the slide's headline. Text wrapped in `*…*` is the accent; the style decides how it looks (another typeface, another colour). At most one accent span per headline.
 - Plain lines are body text.
 - `- ` lines are items. `a | b` gives an item a second, smaller line. `✓` or `✗` at the start marks an item good or bad.
@@ -59,18 +59,28 @@ Slides:
 
 Every style that makes posts draws these kinds.
 
-| Kind | What it shows | Keep it to |
-|---|---|---|
-| `cover` | headline, optional subtitle, optional visual | headline of 12 words or fewer |
-| `point` | headline and body: one idea per slide | body of 45 words or fewer |
-| `list` | headline and up to 5 numbered or ticked items | items of 8 words or fewer |
-| `steps` | headline and 2 to 6 steps as a flow | 3 words per step, plus the second line |
-| `compare` | ✗ against ✓, or before against after, in two groups | 4 items per side |
-| `stat` | a big number or short figure with one line under it | figure of 8 characters or fewer |
-| `quote` | a testimonial or quote with its author | 35 words or fewer |
-| `image` | a photo from `inbox/` with a headline or caption | |
-| `cta` | the closing invite, one button, a small line under it | |
-| `custom` | the post's own code from `custom/` | |
+| Kind | What it shows | Write it as | Keep it to |
+|---|---|---|---|
+| `cover` | headline, optional subtitle, optional visual | `# headline`, the subtitle as a plain line | headline of 12 words or fewer |
+| `point` | headline and body: one idea per slide | `# headline`, the body as plain lines | body of 45 words or fewer |
+| `list` | headline and up to 5 numbered or ticked items | `- item` lines, `✓`/`✗` to tick them, `\| second line` | 5 items of 8 words or fewer |
+| `steps` | headline and 2 to 6 steps as a flow | `- Step \| who does it` | 2 to 6 steps of 3 words or fewer, plus the second line |
+| `compare` | ✗ against ✓, or before against after, in two groups | `- ✗ …` and `- ✓ …`; without marks the first half is "before", the second "after" | 4 items per side, 6 words each |
+| `stat` | a big number or short figure with one line under it | `# +40%` as the headline, the line as a plain line | figure of 8 characters or fewer |
+| `quote` | a testimonial or quote with its author | `# "the quote"` as the headline, the author as a plain line | 35 words or fewer |
+| `image` | a photo from the post with a headline or caption | `## image {photo: inbox/shop.jpg}`, `# headline` and/or a caption line | a PNG, JPEG or WebP inside the post folder |
+| `cta` | the closing invite, one button, a small line under it | `# headline`, `[button]`, the small line as a plain line | one button, which it needs |
+| `custom` | the post's own code from `custom/` | `## custom {id: phone}` | |
+
+**Cover visuals.** A cover can draw a visual under its headline without any code, with the `visual` attribute:
+
+- `## cover {visual: chips}`: the slide's `- ✓ …` / `- ✗ …` items as chips around a phone (up to 4 chips, 3 words each).
+- `## cover {visual: phone, screen: "Booked: Anna, Friday at 10:00"}`: a phone with a short text on its screen (8 words or fewer).
+- `## cover {visual: notification, title: "New enquiry", text: "Do you also build online shops?"}`: a notification card (a title of up to 6 words, a text of up to 14; at least one of them). The brand's logo is its app icon.
+
+**Steps.** When the steps carry second lines, the style may set the steps of one second line apart (style 13 fills them with the accent): the commonest one, or the one named with `## steps {filled: software}`.
+
+A slide past these limits stops `unfaced post` before anything is laid out, with the slides.md line, the slide's number and kind, and the limit: `slides.md line 21 (slide 3, list): a list takes up to 5 items; this one has 6`. So does an image slide whose photo is missing or outside the post folder.
 
 Text is fitted to its box with the real fonts before anything renders: each line is broken and sized once, and drawn exactly so. A text that does not fit at the style's smallest size, a character the font cannot draw, an unknown kind or a slide count the format does not take stops `unfaced post` with the line and slide number and what to change.
 
@@ -101,7 +111,7 @@ Safe areas, which the layouts keep to and the checks verify:
 
 ## The frame
 
-Every slide also gets the style's frame: the label and the counter (`2/8`) at the top; the handle (and the logo, when the brand has one) and "swipe →" at the bottom. "Swipe" is left off the last slide and off single posts. The frame's words are in the page's language (English, Italian, Spanish, French, Portuguese and Hindi; other languages use English, and `unfaced post` says so). The handle, logo and fonts come from the page's `brand` block (`unfaced docs brand`).
+Every slide also gets the style's frame: the label and the counter (`2/8`) at the top; the handle (and the logo, when the brand has one, drawn at the style's height and its own width) and "swipe →" at the bottom. "Swipe" is left off the last slide and off single posts. The frame's words are in the page's language (English, Italian, Spanish, French, Portuguese and Hindi; other languages use English, and `unfaced post` says so). The handle, logo and fonts come from the page's `brand` block (`unfaced docs brand`).
 
 ## Outputs
 

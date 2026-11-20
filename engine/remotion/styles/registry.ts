@@ -5,6 +5,7 @@ import type { FigureProps } from "../core/character/svg.js";
 import type { Brand } from "../../src/page/types.js";
 import type { FittedText } from "../../src/post/fitText.js";
 import type { FrameWords } from "../../src/post/frameWords.js";
+import type { GroundFamily } from "../../src/post/palette.js";
 import type { PostFormat, Slide, SlideKind } from "../../src/post/types.js";
 
 /** A rectangle a style draws text in, named so checks can report it. */
@@ -57,6 +58,11 @@ export interface SlideContext {
    * which is the path as page.yaml writes it.
    */
   logoFile?: string;
+  /**
+   * The logo's width over its height, read from the file when the plan is built; the style
+   * draws the logo at its own height with this width, so a wide wordmark is not shrunk.
+   */
+  logoAspect?: number;
 }
 
 /** What a style provides to make posts. */
@@ -65,6 +71,11 @@ export interface SlideKit {
   fonts: Record<FontRole, string>;
   /** The slide kinds the style draws so far, while it is being built; every kind when absent. */
   kinds?: SlideKind[];
+  /**
+   * The lightness family the style's ground keeps (see post/palette.ts): a page background
+   * outside it is ignored with a warning. Absent: the page's background always replaces it.
+   */
+  ground?: GroundFamily;
   /** Where the style puts text on a slide; pure, so plans and checks are built without rendering. */
   layout(ctx: SlideContext): SlideBox[];
   /**

@@ -68,6 +68,14 @@ describe("parseSlides", () => {
     expect(file.slides[1]).toMatchObject({ kind: "custom", attrs: { id: "phone", size: "big" } });
   });
 
+  it("reads quoted attribute values, which may hold commas and colons", () => {
+    const file = parseSlides(withSlides('## cover {visual: notification, title: "New booking", text: "Anna, Friday at 10:00"}\n# Hi\n'));
+    expect(file.slides[0]!.attrs).toEqual({ visual: "notification", title: "New booking", text: "Anna, Friday at 10:00" });
+    const curly = parseSlides(withSlides("## cover {visual: phone, screen: “Booked, see you soon”}\n# Hi\n"));
+    expect(curly.slides[0]!.attrs.screen).toBe("Booked, see you soon");
+    expect(() => parseSlides(withSlides('## cover {title: "open}\n# Hi\n'))).toThrow(/line \d+: .*quote/);
+  });
+
   it("accepts a single format name and the optional fields", () => {
     const file = parseSlides(withSlides("## cover\n# Hi\n", "title: T\npost_type: 2\nformat: story\nstyle: 13\nsquare: true"));
     expect(file).toMatchObject({ formats: ["story"], style: 13, square: true });

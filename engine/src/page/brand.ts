@@ -12,12 +12,20 @@ const LOGO_EXTENSIONS = [".svg", ".png"];
  * leads out of the page folder, is a PageError: brand files must be inside the page folder.
  */
 export function brandPath(pageDir: string, field: string, path: string): string {
+  const absolute = pathInside(pageDir, path);
+  if (!absolute) throw new PageError(field, `${field}: ${path} must be inside the page folder (${pageDir}); write it relative to page.yaml, such as brand/logo.svg`);
+  return absolute;
+}
+
+/**
+ * The absolute path of `path` written relative to `dir` (either separator, an optional ./), or
+ * undefined when it is absolute or leads out of `dir`.
+ */
+export function pathInside(dir: string, path: string): string | undefined {
   const written = path.replace(/\\/g, "/");
-  const absolute = resolve(pageDir, written);
-  const inside = relative(resolve(pageDir), absolute);
-  if (isAbsolute(written) || /^[a-z]:/i.test(written) || !inside || inside.startsWith("..") || isAbsolute(inside)) {
-    throw new PageError(field, `${field}: ${path} must be inside the page folder (${pageDir}); write it relative to page.yaml, such as brand/logo.svg`);
-  }
+  const absolute = resolve(dir, written);
+  const inside = relative(resolve(dir), absolute);
+  if (isAbsolute(written) || /^[a-z]:/i.test(written) || !inside || inside.startsWith("..") || isAbsolute(inside)) return undefined;
   return absolute;
 }
 

@@ -173,16 +173,16 @@ describe("buildPostPlans", () => {
   it("refuses a style that has no slides, naming the styles that make posts", () => {
     const { pageDir, dir } = postDir(EXAMPLE);
     expect(() => buildPostPlans(dir, page(pageDir, { postStyle: 3 }), catalog)).toThrow(
-      "style 3 (Flat cartoon) makes videos only for now; styles that make posts: 99 Placeholder slides",
+      "style 3 (Flat cartoon) makes videos only for now; styles that make posts: 13 Night tech, 99 Placeholder slides",
     );
   });
 
   it("picks the first style that makes posts from a list or auto", () => {
     const { pageDir, dir } = postDir(EXAMPLE);
     expect(buildPostPlans(dir, page(pageDir, { postStyle: [3, PLACEHOLDER_SLIDES] }), catalog).plans[0]!.style).toBe(PLACEHOLDER_SLIDES);
-    expect(buildPostPlans(dir, page(pageDir, { postStyle: "auto" }), catalog).plans[0]!.style).toBe(PLACEHOLDER_SLIDES);
-    expect(buildPostPlans(dir, page(pageDir, { postStyle: undefined }), catalog).plans[0]!.style).toBe(PLACEHOLDER_SLIDES);
-    expect(() => buildPostPlans(dir, page(pageDir, { postStyle: [3, 4] }), catalog)).toThrow("styles that make posts: 99 Placeholder slides");
+    expect(buildPostPlans(dir, page(pageDir, { postStyle: "auto" }), catalog).plans[0]!.style).toBe(13);
+    expect(buildPostPlans(dir, page(pageDir, { postStyle: undefined }), catalog).plans[0]!.style).toBe(13);
+    expect(() => buildPostPlans(dir, page(pageDir, { postStyle: [3, 4] }), catalog)).toThrow("styles that make posts: 13 Night tech, 99 Placeholder slides");
   });
 
   it("takes the front matter's style over the page's", () => {
@@ -200,6 +200,30 @@ describe("buildPostPlans", () => {
     const { plans, warnings } = buildPostPlans(dir, page(pageDir, { language: "de" }), catalog);
     expect(plans[0]!.slides[0]!.boxes.find((b) => b.id === "swipe")!.text).toBe("swipe →");
     expect(warnings).toEqual(['The frame\'s words ("swipe", "of") have no "de" version yet; they are in English']);
+  });
+
+  it("takes an image slide's photo from inside the post folder, and stops before rendering when it is missing or outside", () => {
+    const image = (photo: string) => EXAMPLE.replace("## cta", `## image {photo: ${photo}}\n# Our shop\n\n## cta`);
+    const { pageDir, dir } = postDir(image("inbox/shop.png"));
+    expect(() => buildPostPlans(dir, page(pageDir), catalog)).toThrow(/^slides\.md line \d+ \(slide 4, image\): the photo inbox\/shop\.png is missing \(looked for .*shop\.png\)/);
+    mkdirSync(join(dir, "inbox"));
+    writeFileSync(join(dir, "inbox", "shop.png"), "png");
+    const { plans } = buildPostPlans(dir, page(pageDir), catalog);
+    expect(plans[0]!.slides[3]!.photo).toBe(join(dir, "inbox", "shop.png"));
+    expect(plans[0]!.slides[0]!.photo).toBeUndefined();
+    writeFileSync(join(dir, "slides.md"), image("../../outside.png"));
+    expect(() => buildPostPlans(dir, page(pageDir), catalog)).toThrow(/slide 4, image\): the photo \.\.\/\.\.\/outside\.png must be inside the post folder/);
+    writeFileSync(join(dir, "slides.md"), image("inbox/shop.gif"));
+    expect(() => buildPostPlans(dir, page(pageDir), catalog)).toThrow(/is not a PNG, JPEG or WebP image/);
+  });
+
+  it("reads the logo's width over its height into the plan", () => {
+    const { pageDir, dir } = postDir(EXAMPLE);
+    mkdirSync(join(pageDir, "brand"));
+    writeFileSync(join(pageDir, "brand", "logo.svg"), '<svg viewBox="0 0 240 60"></svg>');
+    const { plans } = buildPostPlans(dir, page(pageDir, { brand: { handle: "@studionord", logo: "brand/logo.svg" } }), catalog);
+    expect(plans[0]!.logoAspect).toBe(4);
+    expect(buildPostPlans(dir, page(pageDir), catalog).plans[0]!.logoAspect).toBeUndefined();
   });
 
   it("lists the registered slide styles", () => {

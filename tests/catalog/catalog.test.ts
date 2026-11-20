@@ -75,13 +75,13 @@ describe("catalog", () => {
 });
 
 describe("unfaced list", () => {
-  it("prints one numbered line per style, planned ones marked", () => {
+  it("prints one numbered line per style, those that make nothing yet marked planned", () => {
     const out = execFileSync(process.execPath, ["--import", "tsx", join(root, "engine/src/cli.ts"), "list", "style"], { cwd: root, encoding: "utf8" });
     const lines = out.trim().split(/\r?\n/);
     expect(lines).toHaveLength(13);
     expect(lines[2]).toMatch(/^03 {2}Flat cartoon — /);
     const styles = catalog.list("style");
-    styles.forEach((entry, i) => expect(lines[i]!.includes("(planned)"), lines[i]).toBe(entry.status === "planned"));
+    styles.forEach((entry, i) => expect(lines[i]!.includes("(planned)"), lines[i]).toBe(entry.status === "planned" && entry.posts !== "ready"));
   });
 });
 

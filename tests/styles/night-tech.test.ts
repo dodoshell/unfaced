@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { layout, nightTechLayout } from "../../catalog/styles/13-night-tech/components/slides/layout.js";
+import { compose, layout, markOf, nightTechLayout } from "../../catalog/styles/13-night-tech/components/slides/layout.js";
 import { colours, groundUnder } from "../../catalog/styles/13-night-tech/components/slides/tokens.js";
 import style from "../../catalog/styles/13-night-tech/style.json";
 import { contrast, mix } from "../../engine/remotion/core/contrast.js";
@@ -16,7 +16,8 @@ import type { Page } from "../../engine/src/page/types.js";
 import { buildPostPlans } from "../../engine/src/post/buildPostPlan.js";
 import { FORMAT_NAMES, formatFor } from "../../engine/src/post/formats.js";
 import { frameWords } from "../../engine/src/post/frameWords.js";
-import { sampleSlides } from "../../engine/src/post/samples.js";
+import { samplePhoto, sampleSlides, sampleVisuals } from "../../engine/src/post/samples.js";
+import { catalogWithNightTech } from "../page/catalogWithNightTech.js";
 import type { PostFormat, Slide, SlideKind } from "../../engine/src/post/types.js";
 
 const palette = style.defaultPalette;
@@ -131,34 +132,84 @@ describe("style 13 Night tech: slide layout", () => {
     expect(logo.find((b) => b.id === "handle")!.x).toBeGreaterThan(plain.find((b) => b.id === "handle")!.x);
   });
 
-  it("refuses the kinds it does not draw yet, naming them", () => {
+  it("draws every kind", () => {
+    expect([...nightTechLayout.kinds!].sort()).toEqual(["compare", "cover", "cta", "custom", "image", "list", "point", "quote", "stat", "steps"]);
+  });
+
+  it("lays out only the frame on a custom slide", () => {
+    const custom: Slide = { index: 1, line: 9, kind: "custom" as SlideKind, attrs: { id: "phone" }, body: [], items: [] };
+    const boxes = layout({ ...ctx(formatFor("instagram-carousel"), "point", 1, 8), slide: custom });
+    expect(boxes.map((b) => b.id).sort()).toEqual(["counter", "handle", "label", "swipe"]);
+  });
+
+  it("draws a logo 28 px high at its own width, up to 220 px, and moves the handle past it", () => {
     const format = formatFor("instagram-carousel");
-    const list: Slide = { index: 1, line: 9, kind: "list" as SlideKind, attrs: {}, body: [], items: [{ text: "One" }] };
-    expect(() => layout({ ...ctx(format, "point", 1, 8), slide: list })).toThrow(/Night tech does not draw "list" slides yet/);
+    const withLogo = (logoAspect?: number) => ctx(format, "point", 1, 8, { brand: { handle: "@studionord", logo: "brand/logo.svg" }, logoFile: "brand/logo.svg", ...(logoAspect !== undefined && { logoAspect }) });
+    const square = markOf(withLogo(1));
+    const wide = markOf(withLogo(4));
+    const huge = markOf(withLogo(20));
+    expect(square).toMatchObject({ w: 28, h: 28 });
+    expect(wide).toMatchObject({ w: 112, h: 28 });
+    expect(huge).toMatchObject({ w: 220, h: 28 });
+    expect(markOf(withLogo())).toMatchObject({ w: 28, h: 28 });
+    const handle = (c: SlideContext) => layout(c).find((b) => b.id === "handle")!;
+    expect(handle(withLogo(4)).x).toBe(wide.x + 112 + 14);
+    expect(handle(withLogo(4)).x).toBeGreaterThan(handle(withLogo(1)).x);
+    for (const aspect of [1, 4, 20]) {
+      const mark = markOf(withLogo(aspect));
+      for (const box of layout(withLogo(aspect))) expect(overlaps(mark, box), `${aspect} ${box.id}`).toBe(false);
+    }
+  });
+
+  it("fills the steps of the commonest second line, the later one on a tie, or the one named by filled", () => {
+    const format = formatFor("instagram-carousel");
+    const steps = (items: Slide["items"], attrs: Record<string, string> = {}): boolean[] => {
+      const slide: Slide = { index: 1, line: 9, kind: "steps", attrs, headline: { text: "How" }, body: [], items };
+      const { drawing } = compose({ ...ctx(format, "point", 1, 8), slide });
+      return drawing.kind === "steps" ? drawing.steps.map((s) => s.filled) : [];
+    };
+    const reference = [{ text: "Topic", second: "us" }, { text: "Text", second: "software" }, { text: "Voice", second: "software" }, { text: "Check", second: "us" }];
+    expect(steps(reference)).toEqual([false, true, true, false]);
+    expect(steps(reference, { filled: "us" })).toEqual([true, false, false, true]);
+    expect(steps([{ text: "Visit", second: "we" }, { text: "Proof", second: "owner" }, { text: "Print", second: "we" }])).toEqual([true, false, true]);
+    expect(steps([{ text: "One" }, { text: "Two" }])).toEqual([true, true]);
+  });
+
+  it("draws numbers and marks as icons, never as text", () => {
+    const format = formatFor("instagram-carousel");
+    const slide: Slide = { index: 1, line: 9, kind: "list", attrs: {}, headline: { text: "What we make" }, body: [], items: [{ text: "Posters" }, { text: "Flyers", mark: "good" }] };
+    const { boxes, drawing } = compose({ ...ctx(format, "point", 1, 8), slide });
+    for (const box of boxes) expect(box.text, box.id).not.toMatch(/[✓✗]|^\d+\.?$/);
+    expect(drawing).toMatchObject({ kind: "list", rows: [{ n: 1 }, { n: 2, mark: "good" }] });
   });
 });
 
 describe("style 13 Night tech: the demo's sample post", () => {
   const page = (dir: string): Page => ({ dir, name: "Studio Nord", language: "en", niche: "websites for shops", choices: {}, postStyle: 13, brand: { handle: "@studionord" }, providers: { voice: "kokoro", ai_clips: "none", images: "none" } });
 
-  it("fits and passes every check in all four formats", () => {
+  it("fits and passes every check in all four formats, with its cover visuals too", () => {
     const dir = mkdtempSync(join(tmpdir(), "unfaced night tech "));
     const post = join(dir, "posts", "sample");
-    mkdirSync(post, { recursive: true });
+    mkdirSync(join(post, "inbox"), { recursive: true });
+    writeFileSync(join(post, "inbox", "photo.png"), samplePhoto());
     for (const format of FORMAT_NAMES) {
-      const count = formatFor(format).maxSlides === 1 ? 1 : undefined;
-      writeFileSync(join(post, "slides.md"), sampleSlides(13, { kinds: nightTechLayout.kinds!, formats: [format], ...(count && { count }) }));
-      const { plans } = buildPostPlans(post, page(dir), Catalog.load(CATALOG_DIR), { allowPlanned: true });
-      expect(plans).toHaveLength(1);
-      expect(checkPost(plans[0]!), format).toEqual([]);
+      const single = formatFor(format).maxSlides === 1;
+      const samples = [sampleSlides(13, { kinds: nightTechLayout.kinds!, formats: [format], ...(single && { count: 1 }) }), ...(single ? [] : [sampleVisuals(13, [format])])];
+      for (const slides of samples) {
+        writeFileSync(join(post, "slides.md"), slides);
+        const { plans } = buildPostPlans(post, page(dir), Catalog.load(CATALOG_DIR));
+        expect(plans).toHaveLength(1);
+        expect(checkPost(plans[0]!), format).toEqual([]);
+      }
     }
   });
 
-  it("is refused without the demo's override while the style's posts are planned", () => {
+  it("is ready for posts in the catalog; a catalog with them planned refuses it without the demo's override", () => {
     const dir = mkdtempSync(join(tmpdir(), "unfaced night tech "));
     const post = join(dir, "posts", "sample");
     mkdirSync(post, { recursive: true });
-    writeFileSync(join(post, "slides.md"), sampleSlides(13, { kinds: nightTechLayout.kinds!, formats: ["instagram-carousel"] }));
-    expect(() => buildPostPlans(post, page(dir), Catalog.load(CATALOG_DIR))).toThrow(/style 13 \(Night tech\) does not make posts yet/);
+    writeFileSync(join(post, "slides.md"), sampleSlides(13, { kinds: ["cover", "point"], formats: ["instagram-carousel"] }));
+    expect(Catalog.load(CATALOG_DIR).get("style", 13)).toMatchObject({ posts: "ready", status: "planned" });
+    expect(() => buildPostPlans(post, page(dir), catalogWithNightTech("planned"))).toThrow(/style 13 \(Night tech\) does not make posts yet/);
   });
 });

@@ -21,6 +21,7 @@ export function slideContext(plan: PostPlan, index: number): SlideContext {
     words: frameWords(plan.language).words,
     ...(plan.label !== undefined && { label: plan.label }),
     ...(plan.brand.logo && { logoFile: slideLogoFile(plan.brand.logo) }),
+    ...(plan.logoAspect !== undefined && { logoAspect: plan.logoAspect }),
   };
 }
 

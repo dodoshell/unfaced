@@ -8,6 +8,8 @@ import { CATALOG_DIR } from "../../engine/src/paths.js";
 export function catalogWithNightTech(posts: "ready" | "planned" = "ready"): Catalog {
   const dir = mkdtempSync(join(tmpdir(), "unfaced catalog "));
   const raw = JSON.parse(readFileSync(join(CATALOG_DIR, "catalog.json"), "utf8"));
+  // The copy lives elsewhere, so the styles' paths point back at the real catalog.
+  for (const entry of raw.style) entry.path = join(CATALOG_DIR, entry.path);
   const entry = raw.style.find((e: { num: number }) => e.num === 13);
   entry.posts = posts;
   writeFileSync(join(dir, "catalog.json"), JSON.stringify(raw));

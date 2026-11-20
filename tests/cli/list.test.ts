@@ -5,11 +5,11 @@ import { CATALOG_DIR } from "../../engine/src/paths.js";
 import { catalogWithNightTech } from "../page/catalogWithNightTech.js";
 
 describe("listLines", () => {
-  it("shows (videos) for the video styles, which have no posts field, and (planned) for Night tech while it is built", () => {
+  it("shows (videos) for the video styles, which have no posts field, and (posts) for Night tech, which makes posts only", () => {
     const lines = listLines(Catalog.load(CATALOG_DIR), "style");
     expect(lines).toHaveLength(13);
     for (const line of lines.slice(0, 12)) expect(line).toMatch(/ \(videos\)$/);
-    expect(lines[12]).toMatch(/^13 {2}Night tech — .* \(planned\)$/);
+    expect(lines[12]).toMatch(/^13 {2}Night tech — .* \(posts\)$/);
   });
 
   it("shows what each style makes: posts, both or nothing yet", () => {
