@@ -21,6 +21,7 @@ describe("slide limits", () => {
     expect(slideLimit(slide(`## point\n# P\n${words(LIMITS.pointWords)}`))).toBeUndefined();
     expect(slideLimit(slide(`## list\n# L\n${items(LIMITS.listItems, LIMITS.listWords)}`))).toBeUndefined();
     expect(slideLimit(slide(`## steps\n# S\n${items(LIMITS.steps.max, LIMITS.stepWords)}`))).toBeUndefined();
+    expect(slideLimit(slide("## steps {filled: software}\n# S\n- Topic | us\n- Text | software"))).toBeUndefined();
     expect(slideLimit(slide(`## compare\n# C\n${items(4, 3, "✗ ")}\n${items(4, 3, "✓ ")}`))).toBeUndefined();
     expect(slideLimit(slide("## stat\n# +120.000\nvisitors"))).toBeUndefined();
     expect(slideLimit(slide(`## quote\n# "${words(LIMITS.quoteWords)}"\nAnna`))).toBeUndefined();
@@ -36,6 +37,8 @@ describe("slide limits", () => {
     expect(slideLimit(slide(`## steps\n# S\n${items(7)}`))).toBe("a steps slide takes 2 to 6 steps (- lines); this one has 7");
     expect(slideLimit(slide("## steps\n# S\n- one"))).toMatch(/2 to 6 steps.*has 1/);
     expect(slideLimit(slide(`## steps\n# S\n- one two three four\n- b`))).toMatch(/^step 1 .* has 4 words; a steps slide takes up to 3 per step \(put the rest in its second line/);
+    expect(slideLimit(slide("## steps {filled: sofware}\n# S\n- Topic | us\n- Text | software"))).toBe(`{filled: sofware} names no step's second line; the second lines are "us" and "software"`);
+    expect(slideLimit(slide("## steps {filled: us}\n# S\n- Topic\n- Text"))).toBe("{filled: us} names no step's second line; these steps have none (- Step | who)");
     expect(slideLimit(slide(`## compare\n# C\n${items(5, 2, "✓ ")}\n${items(1, 2, "✗ ")}`))).toBe("a compare slide takes up to 4 items per side; the ✓ side has 5");
     expect(slideLimit(slide("## stat\n# +1.250.000\nvisitors"))).toBe('a stat\'s figure takes up to 8 characters; "+1.250.000" has 10');
     expect(slideLimit(slide(`## quote\n# ${words(36)}\nAnna`))).toBe("a quote takes up to 35 words; this one has 36");

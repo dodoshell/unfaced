@@ -78,7 +78,7 @@ Every style that makes posts draws these kinds.
 - `## cover {visual: phone, screen: "Booked: Anna, Friday at 10:00"}`: a phone with a short text on its screen (8 words or fewer).
 - `## cover {visual: notification, title: "New enquiry", text: "Do you also build online shops?"}`: a notification card (a title of up to 6 words, a text of up to 14; at least one of them). The brand's logo is its app icon.
 
-**Steps.** When the steps carry second lines, the style may set the steps of one second line apart (style 13 fills them with the accent): the commonest one, or the one named with `## steps {filled: software}`.
+**Steps.** When the steps carry second lines, the style may set the steps of one second line apart (style 13 fills them with the accent): the commonest one, or the one named with `## steps {filled: software}`, which must be one of the steps' second lines (a name that matches none stops `unfaced post`, naming the slide).
 
 A slide past these limits stops `unfaced post` before anything is laid out, with the slides.md line, the slide's number and kind, and the limit: `slides.md line 21 (slide 3, list): a list takes up to 5 items; this one has 6`. So does an image slide whose photo is missing or outside the post folder.
 

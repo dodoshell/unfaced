@@ -408,9 +408,9 @@ function steps(ctx: SlideContext): Composed {
     const filled = filledLine === undefined || item.second === filledLine;
     const pill = { x: a.left, y: top + i * pitch, w: pillW, h: pillH };
     const textH = Math.round(pillH * 0.62);
-    const textBox = { id, role: "text" as const, text: item.text, x: pill.x + padX, y: pill.y + Math.round((pillH - textH) / 2), w: pillW - 2 * padX, h: textH, maxSize: Math.max(24, Math.round(pillH * 0.4)), minSize: 24, lineHeight: 1.15, maxLines: 1, readable: "large" as const };
+    const textBox = { id, role: "text" as const, text: item.text, x: pill.x + padX, y: pill.y + Math.round((pillH - textH) / 2), w: pillW - 2 * padX, h: textH, maxSize: Math.max(24, Math.round(pillH * 0.4)), minSize: 24, lineHeight: 1.15, maxLines: 1, readable: "body" as const };
     const fill = filled ? c.accent : c.ground;
-    boxes.push(filled ? boxOn(ctx, { ...textBox, color: onFill(c.accent, c.ground, 3) }, fill) : box(ctx, { ...textBox, color: c.ink }));
+    boxes.push(filled ? boxOn(ctx, { ...textBox, color: onFill(c.accent, c.ground, 4.5) }, fill) : box(ctx, { ...textBox, color: c.ink }));
     if (item.second) {
       const h = Math.round(SECOND_SIZE * 1.3);
       boxes.push(box(ctx, { id: `${id}-second`, ...mono, maxSize: SECOND_SIZE, minSize: 18, upper: true, text: item.second, x: secondX, y: pill.y + Math.round((pillH - h) / 2), w: a.right - secondX, h, color: filled ? c.secondary : c.body }));
@@ -587,7 +587,7 @@ function cta(ctx: SlideContext): Composed {
   boxes.push(
     boxOn(
       ctx,
-      { id: "button", role: "text", text: slide.button!, x: cx - shift - Math.round(textW / 2), y: pillY + Math.round((pillH - textH) / 2), w: textW, h: textH, maxSize: Math.round(pillH * 0.34), minSize: 24, lineHeight: 1.2, maxLines: 1, color: onFill(c.accent, c.ground, 3), readable: "large" },
+      { id: "button", role: "text", text: slide.button!, x: cx - shift - Math.round(textW / 2), y: pillY + Math.round((pillH - textH) / 2), w: textW, h: textH, maxSize: Math.round(pillH * 0.34), minSize: 24, lineHeight: 1.2, maxLines: 1, color: onFill(c.accent, c.ground, 4.5), readable: "body" },
       c.accent,
     ),
   );

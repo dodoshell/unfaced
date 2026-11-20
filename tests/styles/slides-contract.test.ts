@@ -14,6 +14,8 @@ import { CATALOG_DIR } from "../../engine/src/paths.js";
 import type { Brand, Page } from "../../engine/src/page/types.js";
 import { buildPostPlans } from "../../engine/src/post/buildPostPlan.js";
 import { FORMAT_NAMES, formatFor } from "../../engine/src/post/formats.js";
+import { LIMITS } from "../../engine/src/post/limits.js";
+import { parseSlides } from "../../engine/src/post/parseSlides.js";
 import type { FormatName, SlideKind } from "../../engine/src/post/types.js";
 
 const fixtures = join(dirname(fileURLToPath(import.meta.url)), "..", "fixtures", "fonts");
@@ -25,7 +27,7 @@ const LONGEST: Record<Exclude<SlideKind, "custom">, string> = {
 No templates and no guesswork: here is how we build fast, honest sites that bring in clients.`,
   point: `## point
 # Speed is the *feature* people notice
-Every second a page takes to load costs you visitors. We build light sites that open quickly on any phone and any network, so people stay long enough to read about you, look at your prices and get in touch.`,
+Every second a page takes to load costs you visitors. We build light sites that open quickly on any phone and any network, so people stay long enough to read about you, look at your prices, see your opening hours and then get in touch.`,
   list: `## list
 # What every *good website* needs
 - Clear prices written right where people expect them
@@ -36,15 +38,15 @@ Every second a page takes to load costs you visitors. We build light sites that 
   steps: `## steps
 # How a *new site* is born
 - First phone call | together
-- Written brief | our studio
-- Design proposal | our studio
-- Your feedback | you
+- Written project brief | our studio
+- First design proposal | our studio
+- Your honest feedback | you
 - Build and test | our studio
 - Launch day party | together`,
   compare: `## compare
 # Our way against *the usual* way
 You should not have to chase anyone to get your website done.
-- ✗ Templates that everyone else uses
+- ✗ Templates that everyone else also uses
 - ✗ Weeks of waiting for a reply
 - ✗ Files sent back and forth forever
 - ✗ Hidden costs at the very end
@@ -56,7 +58,7 @@ You should not have to chase anyone to get your website done.
 # +120.000
 visitors a year on the sites we built and still look after today`,
   quote: `## quote
-# "They rebuilt our website in two weeks, explained every step in plain words, and since the launch the phone rings every single morning with people asking about prices and opening hours."
+# "They rebuilt our website in just two weeks, explained every single step in plain words, and since the launch the phone rings every single morning with new people asking about our prices and opening hours."
 Marta Rossi, owner of Casa Aurora bakery`,
   image: `## image {photo: inbox/photo.png}
 # The shop that started it all
@@ -74,12 +76,12 @@ const VISUAL_COVERS = [
 No templates and no guesswork, just sites that work.
 - ✓ Fast on phones
 - ✓ Made for you
-- ✗ No templates
-- ✓ Clear prices`,
+- ✗ No ugly templates
+- ✓ Clear fair prices`,
   `## cover {visual: phone, screen: "New booking from Anna, Friday morning at ten"}
 # Your new website should bring *clients to your door* every single week
 No templates and no guesswork, just sites that work.`,
-  `## cover {visual: notification, title: "New enquiry from your website", text: "Hello, do you also make posters for shop windows? We open in March."}
+  `## cover {visual: notification, title: "New enquiry from your shop website", text: "Hello, do you also make posters for shop windows? We open in early March."}
 # Your new website should bring *clients to your door* every single week
 No templates and no guesswork, just sites that work.`,
 ];
@@ -131,6 +133,35 @@ function post(style: number, formatName: FormatName, square: boolean, slides: st
 }
 
 const catalog = Catalog.load(CATALOG_DIR);
+
+describe("slides contract: the longest texts", () => {
+  const words = (text: string) => text.split(/\s+/).filter(Boolean).length;
+  const parse = (text: string) => parseSlides(`---\ntitle: x\npost_type: 1\n---\n\n${text}\n`).slides[0]!;
+
+  it("are exactly at every limit, so the contract tests the limits themselves", () => {
+    const [cover, point, list, steps, compare, stat, quote] = (["cover", "point", "list", "steps", "compare", "stat", "quote"] as const).map((k) => parse(LONGEST[k]));
+    expect(words(cover!.headline!.text)).toBe(LIMITS.coverWords);
+    expect(words(point!.body.join(" "))).toBe(LIMITS.pointWords);
+    expect(list!.items).toHaveLength(LIMITS.listItems);
+    for (const item of list!.items) expect(words(item.text), item.text).toBe(LIMITS.listWords);
+    expect(steps!.items).toHaveLength(LIMITS.steps.max);
+    for (const item of steps!.items) expect(words(item.text), item.text).toBe(LIMITS.stepWords);
+    for (const mark of ["bad", "good"]) {
+      const side = compare!.items.filter((i) => i.mark === mark);
+      expect(side).toHaveLength(LIMITS.comparePerSide);
+      for (const item of side) expect(words(item.text), item.text).toBe(LIMITS.compareWords);
+    }
+    expect([...stat!.headline!.text]).toHaveLength(LIMITS.statCharacters);
+    expect(words(quote!.headline!.text)).toBe(LIMITS.quoteWords);
+    const [chips, phone, notification] = VISUAL_COVERS.map(parse);
+    expect(chips!.items).toHaveLength(LIMITS.coverChips);
+    for (const item of chips!.items) expect(words(item.text), item.text).toBe(LIMITS.chipWords);
+    for (const visual of [chips, phone, notification]) expect(words(visual!.headline!.text)).toBe(LIMITS.coverWords);
+    expect(words(phone!.attrs.screen!)).toBe(LIMITS.screenWords);
+    expect(words(notification!.attrs.title!)).toBe(LIMITS.notificationTitleWords);
+    expect(words(notification!.attrs.text!)).toBe(LIMITS.notificationTextWords);
+  });
+});
 
 describe.each(stylesWithSlides().map((s) => [s, catalog.get("style", s).name] as const))("slides contract: style %i %s", (style) => {
   const kinds = (getSlideLayout(style).kinds ?? (Object.keys(LONGEST) as SlideKind[])).filter((k): k is keyof typeof LONGEST => k !== "custom");

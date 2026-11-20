@@ -52,6 +52,12 @@ export function slideLimit(slide: Slide): string | undefined {
     case "steps": {
       const { min, max } = LIMITS.steps;
       if (items.length < min || items.length > max) return `a steps slide takes ${min} to ${max} steps (- lines); this one has ${items.length}`;
+      const { filled } = slide.attrs;
+      const seconds = [...new Set(items.map((i) => i.second).filter((s): s is string => !!s))];
+      if (filled !== undefined && !seconds.includes(filled)) {
+        const have = seconds.length ? `the second lines are ${seconds.map((s) => `"${s}"`).join(seconds.length === 2 ? " and " : ", ")}` : "these steps have none (- Step | who)";
+        return `{filled: ${filled}} names no step's second line; ${have}`;
+      }
       return itemLimit(items, max, LIMITS.stepWords, "a steps slide", "step", " (put the rest in its second line: - Step | who)");
     }
     case "compare": {
