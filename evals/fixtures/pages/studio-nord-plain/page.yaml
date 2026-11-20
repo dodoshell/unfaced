@@ -1,0 +1,7 @@
+# A sample business page with no brand block yet: no handle, logo or tone (invented).
+name: Studio Nord
+language: en
+niche: websites for shop owners, made to measure
+style: 13         # Night tech
+post_type: [1, 3, 4]
+formats: [instagram-carousel]
