@@ -2,7 +2,7 @@
 
 *Ceci est une traduction ; en cas de différence avec [la version anglaise](../../guide/getting-started.md), c'est la version anglaise qui fait foi.*
 
-Ce guide s'adresse aux social media managers et aux créateurs qui n'ont jamais utilisé de terminal. Vous allez discuter avec Claude dans son application de bureau, et unfaced transforme vos demandes en vidéos verticales terminées, directement sur votre ordinateur.
+Ce guide s'adresse aux social media managers et aux créateurs qui n'ont jamais utilisé de terminal. Vous allez discuter avec Claude dans son application de bureau, et unfaced transforme vos demandes en vidéos verticales terminées, en carrousels et en autres publications, directement sur votre ordinateur.
 
 **Autres langues :** [English](../../guide/getting-started.md) · [Italiano](../it/getting-started.md) · [Español](../es/getting-started.md) · Français · [Português (Brasil)](../pt-BR/getting-started.md)
 
@@ -74,6 +74,14 @@ Ensuite, étape par étape :
 | « Prépare-la pour la publication » | Une image de couverture, ainsi que les légendes, hashtags et titres pour chaque plateforme |
 | « Voici mes chiffres, qu'est-ce que je devrais changer ? » | Au maximum trois changements, chacun avec les chiffres qui le justifient et une façon de le tester |
 
+### Votre premier carrousel
+
+Si la page est celle d'une entreprise ou d'une marque, demandez plutôt une publication :
+
+> Fais un carrousel sur nos trois services, sur un ton direct et chaleureux.
+
+La première fois, Claude vous demande le handle et le ton de la page (ou les déduit de captures de votre profil, si vous en partagez), écrit le texte slide par slide et **s'arrête pour votre validation**. Vous obtenez ensuite une image par slide, une `grid.png` pour les voir côte à côte et, pour LinkedIn, un PDF. Dites à quoi sert la publication et Claude choisit le format : une publication Instagram à faire défiler, une image seule, un PDF pour LinkedIn ou une story. Pour l'instant, les publications utilisent le style 13 Night tech ; les autres styles ne font que des vidéos.
+
 Les voix gratuites parlent anglais, italien, espagnol, français, portugais et hindi. Pour les autres langues, les vidéos utilisent uniquement du texte à l'écran, ou une voix payante si vous en avez une.
 
 ## Où se trouvent vos vidéos
@@ -91,9 +99,15 @@ my-pages/
         video.mp4        la vidéo à publier
         cover.png        la couverture
         post.md          légendes et hashtags
+    posts/
+      nos-services/
+        slides.md        le texte que vous validez
+        slide-01.png ... les slides à publier (post.pdf pour LinkedIn)
+        grid.png         toutes les slides côte à côte
+        post.md          légendes, hashtags et textes alternatifs
 ```
 
-unfaced ne publie jamais rien : c'est vous qui mettez la vidéo en ligne, vous-même ou avec votre outil de planification habituel.
+unfaced ne publie jamais rien : c'est vous qui mettez la vidéo ou les slides en ligne, vous-même ou avec votre outil de planification habituel.
 
 ## En cas de problème
 

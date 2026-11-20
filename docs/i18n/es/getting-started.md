@@ -2,7 +2,7 @@
 
 *Esta es una traducción; si difiere de la [versión en inglés](../../guide/getting-started.md), la versión en inglés es la que está al día.*
 
-Esta guía es para social media managers y creadores que nunca han usado una terminal. Vas a hablar con Claude en su app de escritorio, y unfaced convierte lo que le pides en videos verticales terminados, en tu computadora.
+Esta guía es para social media managers y creadores que nunca han usado una terminal. Vas a hablar con Claude en su app de escritorio, y unfaced convierte lo que le pides en videos verticales terminados, carruseles y otras publicaciones, en tu computadora.
 
 **Otros idiomas:** [English](../../guide/getting-started.md) · [Italiano](../it/getting-started.md) · Español · [Français](../fr/getting-started.md) · [Português (Brasil)](../pt-BR/getting-started.md)
 
@@ -74,6 +74,14 @@ Después, paso a paso:
 | "Déjalo listo para publicar" | Una imagen de portada y los textos, hashtags y títulos para cada plataforma |
 | "Aquí tienes mis números, ¿qué debería cambiar?" | Como máximo tres cambios, cada uno con los números que lo respaldan y una forma de ponerlo a prueba |
 
+### Tu primer carrusel
+
+Si la página es de un negocio o una marca, pide una publicación:
+
+> Haz un carrusel sobre nuestros tres servicios, con un tono directo y cercano.
+
+La primera vez, Claude te pregunta el handle y el tono de la página (o los saca de capturas de tu perfil, si compartes algunas), escribe el texto diapositiva por diapositiva y **se detiene para que lo apruebes**. Después recibes una imagen por diapositiva, una `grid.png` para verlas todas juntas y, para LinkedIn, un PDF. Basta con decir para qué sirve la publicación y Claude elige el formato: una publicación de Instagram para deslizar, una imagen suelta, un PDF para LinkedIn o una historia. Por ahora las publicaciones usan el estilo 13 Night tech; los demás estilos solo hacen videos.
+
 Las voces gratuitas hablan inglés, italiano, español, francés, portugués e hindi. Para otros idiomas, los videos usan solo texto en pantalla, o una voz de pago si tienes una.
 
 ## Dónde están tus videos
@@ -91,9 +99,15 @@ my-pages/
         video.mp4        el video para publicar
         cover.png        la portada
         post.md          textos y hashtags
+    posts/
+      nuestros-servicios/
+        slides.md        el texto que apruebas
+        slide-01.png ... las diapositivas para publicar (post.pdf para LinkedIn)
+        grid.png         todas las diapositivas juntas
+        post.md          textos, hashtags y textos alternativos
 ```
 
-unfaced nunca publica nada: tú subes el video, o lo haces con tu herramienta habitual de programación de publicaciones.
+unfaced nunca publica nada: tú subes el video o las diapositivas, o lo haces con tu herramienta habitual de programación de publicaciones.
 
 ## Si algo sale mal
 
