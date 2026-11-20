@@ -52,3 +52,12 @@ describe("stagePublicDir", () => {
     expect(readdirSync(stagePublicDir(video, []))).toEqual([]);
   });
 });
+
+describe("stagePublicDir outside the staged folder", () => {
+  it("refuses a file whose public path would land outside the staged folder", () => {
+    const source = join(mkdtempSync(join(tmpdir(), "unfaced src ")), "a.png");
+    writeFileSync(source, "png");
+    expect(() => stagePublicDir(tmpdir(), [], { "../escape.png": source })).toThrow(/outside the render's public folder/);
+    expect(() => stagePublicDir(tmpdir(), [], { "fonts/../../escape.png": source })).toThrow(/outside the render's public folder/);
+  });
+});

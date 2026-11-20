@@ -6,8 +6,14 @@ export const SLIDE_FONT_ROLES: FontRole[] = ["display", "accent", "text", "mono"
 /** The CSS font family a slide draws `role` in: the brand's file where it has one, the style's otherwise. */
 export const slideFont = (role: FontRole): string => `unfaced-slide-${role}`;
 
+const extension = (file: string): string => /\.[^./\\]+$/.exec(file)?.[0]?.toLowerCase() ?? "";
+
 /** Where a post render's public folder holds the font for `role`: fonts/<role> with the file's extension. */
 export function slideFontFile(role: FontRole, file: string): string {
-  const ext = /\.[^./\\]+$/.exec(file)?.[0]?.toLowerCase() ?? "";
-  return `fonts/${role}${ext}`;
+  return `fonts/${role}${extension(file)}`;
+}
+
+/** Where a post render's public folder holds the brand's logo: brand/logo with the file's extension, however page.yaml writes the path. */
+export function slideLogoFile(logo: string): string {
+  return `brand/logo${extension(logo)}`;
 }

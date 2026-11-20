@@ -1,6 +1,6 @@
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join, resolve } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { bundle } from "@remotion/bundler";
 import { type HeadlessBrowser, openBrowser, renderMedia, renderStill, selectComposition } from "@remotion/renderer";
 import { COMPOSITION_ID } from "../../remotion/compositionId.js";
@@ -60,7 +60,9 @@ export function stagePublicDir(assetsDir: string, files: string | string[], from
   const staged = mkdtempSync(join(tmpdir(), "unfaced-public-"));
   const sources: [string, string][] = [...([] as string[]).concat(files).map((file): [string, string] => [file, join(assetsDir, file)]), ...Object.entries(from)];
   for (const [file, source] of sources) {
-    const target = join(staged, file);
+    const target = resolve(staged, file);
+    const inside = relative(staged, target);
+    if (!inside || inside.startsWith("..") || isAbsolute(inside)) throw new Error(`${file} would be staged outside the render's public folder`);
     mkdirSync(dirname(target), { recursive: true });
     copyFileSync(source, target);
   }

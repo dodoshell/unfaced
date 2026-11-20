@@ -28,7 +28,7 @@ brand:
 | `tone` | How the page sounds, in one sentence. |
 | `words` | `use`: words and phrases the page likes. `avoid`: words it never uses. |
 
-Paths are relative to the page folder. Any other key under `brand` is an error that names it.
+Paths are relative to the page folder and must stay inside it: an absolute path, or one that leads out with `..`, is an error naming the field. Any other key under `brand` is an error that names it.
 
 ## Where it applies
 

@@ -2,7 +2,9 @@ import { readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import type { FontRole, SlideBox, SlideContext } from "../../remotion/styles/registry.js";
 import { getSlideLayout, stylesWithSlides } from "../../remotion/styles/slideLayouts.js";
+import { slideLogoFile } from "../../remotion/post/slideFonts.js";
 import type { Catalog } from "../catalog/catalog.js";
+import { brandPath } from "../page/brand.js";
 import type { Brand, Choice, Page } from "../page/types.js";
 import { FitError, type FittedText, fitText } from "./fitText.js";
 import { formatFor } from "./formats.js";
@@ -67,7 +69,7 @@ export function buildPostPlans(postDir: string, page: Page, catalog: Catalog, op
     slides: file.slides.map((slide) => {
       const where = `slides.md line ${slide.line} (slide ${slide.index + 1}, ${slide.kind})`;
       if (slide.kind === "custom") throw new Error(`${where}: custom slides are not supported yet`);
-      const ctx: SlideContext = { slide, total, format, palette, brand, words, ...(file.label !== undefined && { label: file.label }) };
+      const ctx: SlideContext = { slide, total, format, palette, brand, words, ...(file.label !== undefined && { label: file.label }), ...(brand.logo && { logoFile: slideLogoFile(brand.logo) }) };
       const boxes = kit.layout(ctx);
       return { slide, boxes, fitted: fitBoxes(boxes, fonts, where) };
     }),
@@ -114,8 +116,8 @@ function fontFiles(styleFonts: Record<FontRole, string>, styleDir: string, brand
   const own = brand.fonts ?? {};
   const fonts = {} as Record<FontRole, string>;
   for (const role of ROLES) {
-    const brandFile = own[role] ?? (role === "accent" ? own.display : undefined);
-    fonts[role] = brandFile ? resolve(pageDir, brandFile) : resolve(styleDir, styleFonts[role]);
+    const brandRole = own[role] ? role : role === "accent" && own.display ? "display" : undefined;
+    fonts[role] = brandRole ? brandPath(pageDir, `brand.fonts.${brandRole}`, own[brandRole]!) : resolve(styleDir, styleFonts[role]);
   }
   return fonts;
 }

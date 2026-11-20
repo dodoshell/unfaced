@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { registerSlideLayout } from "../../engine/remotion/styles/slideLayouts.js";
 import { checkPostDir } from "../../engine/src/cli/check.js";
-import { makePost, type PostDeps } from "../../engine/src/cli/post.js";
+import { makePost, parsePostArgs, type PostDeps } from "../../engine/src/cli/post.js";
 import type { CheckReport } from "../../engine/src/check/types.js";
 import type { PostPlan } from "../../engine/src/post/buildPostPlan.js";
 import { PLACEHOLDER_SLIDES, placeholderSlides } from "../fixtures/remotion/placeholderSlides.js";
@@ -125,6 +125,16 @@ describe("unfaced post", () => {
     expect(render.mock.calls.map((c) => [c[0].format.name, c[1]])).toEqual([["story", dir]]);
   });
 
+  it("removes a post.pdf left from an earlier linkedin-carousel when this run makes none", async () => {
+    const { dir } = setup("format: [linkedin-carousel]\n");
+    await makePost(dir, stubs().deps);
+    expect(existsSync(join(dir, "post.pdf"))).toBe(true);
+    writeFileSync(join(dir, "slides.md"), slides("format: [instagram-carousel]\n"));
+    const { files } = await makePost(dir, stubs().deps);
+    expect(existsSync(join(dir, "post.pdf"))).toBe(false);
+    expect(files).not.toContain(join(dir, "post.pdf"));
+  });
+
   it("stops before rendering when slides.md is missing", async () => {
     const { deps, render } = stubs();
     const empty = mkdtempSync(join(tmpdir(), "unfaced no post "));
@@ -150,5 +160,20 @@ describe("unfaced check on a post folder", () => {
   it("asks for unfaced post first when there is no post-plan.json", () => {
     const { dir } = setup();
     expect(() => checkPostDir(dir)).toThrow(/post-plan\.json not found.*unfaced post/);
+  });
+});
+
+describe("unfaced post arguments", () => {
+  it("takes --format before or after the folder", () => {
+    expect(parsePostArgs(["posts/a", "--format", "story"])).toEqual({ dir: "posts/a", format: "story" });
+    expect(parsePostArgs(["--format", "story", "posts/a"])).toEqual({ dir: "posts/a", format: "story" });
+    expect(parsePostArgs(["posts/a"])).toEqual({ dir: "posts/a" });
+  });
+
+  it("names what is missing or unknown", () => {
+    expect(() => parsePostArgs(["--format", "story"])).toThrow(/post folder/);
+    expect(() => parsePostArgs(["posts/a", "--format"])).toThrow(/--format/);
+    expect(() => parsePostArgs(["posts/a", "--format", "tiktok"])).toThrow(/Unknown post format "tiktok"/);
+    expect(() => parsePostArgs(["posts/a", "--square"])).toThrow(/--square/);
   });
 });

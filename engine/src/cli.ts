@@ -14,8 +14,7 @@ import { listLines } from "./cli/list.js";
 import { defaultMakeDeps, makeVideo } from "./cli/make.js";
 import { renderMascotSheet } from "./cli/mascot.js";
 import { pageSummary } from "./cli/page.js";
-import { makePost } from "./cli/post.js";
-import { formatFor } from "./post/formats.js";
+import { makePost, parsePostArgs } from "./cli/post.js";
 import { renderHookReel } from "./cli/reel.js";
 import { resultsReport } from "./cli/results.js";
 import { showText } from "./cli/show.js";
@@ -91,9 +90,8 @@ async function main(args: string[]): Promise<number> {
       return 0;
     }
     case "post": {
-      const at = rest.indexOf("--format");
-      const format = at >= 0 ? formatFor(need(rest[at + 1], "a format name for --format")).name : undefined;
-      const { pass } = await makePost(need(rest[0], "the post folder"), undefined, format ? { format } : {});
+      const { dir, format } = parsePostArgs(rest);
+      const { pass } = await makePost(dir, undefined, format ? { format } : {});
       return pass ? 0 : 1;
     }
     case "check": {

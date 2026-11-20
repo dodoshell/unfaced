@@ -1,7 +1,8 @@
 import { existsSync, mkdirSync, readdirSync, rmSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { POST_GRID_ID, POST_SLIDE_ID } from "../../remotion/compositionId.js";
-import { SLIDE_FONT_ROLES, slideFontFile } from "../../remotion/post/slideFonts.js";
+import { SLIDE_FONT_ROLES, slideFontFile, slideLogoFile } from "../../remotion/post/slideFonts.js";
+import { brandPath } from "../page/brand.js";
 import { inboxKind } from "../inbox/inbox.js";
 import type { PostPlan } from "../post/buildPostPlan.js";
 import { renderStillOf } from "./renderVideo.js";
@@ -15,12 +16,13 @@ export interface PostRenderOptions {
 
 /**
  * What a post render reads through staticFile(), by public path: the four fonts as
- * fonts/<role>.<ext>, the brand's logo at its path in page.yaml, and the post's inbox/ images.
+ * fonts/<role>.<ext>, the brand's logo as brand/logo.<ext> (SlideContext.logoFile), and the
+ * post's inbox/ images as inbox/<file>. A logo outside the page folder is refused.
  */
 export function postFiles(plan: PostPlan, pageDir: string, postDir?: string): Record<string, string> {
   const files: Record<string, string> = {};
   for (const role of SLIDE_FONT_ROLES) files[slideFontFile(role, plan.fonts[role])] = plan.fonts[role];
-  if (plan.brand.logo) files[plan.brand.logo.replace(/\\/g, "/")] = resolve(pageDir, plan.brand.logo);
+  if (plan.brand.logo) files[slideLogoFile(plan.brand.logo)] = brandPath(pageDir, "brand.logo", plan.brand.logo);
   const inbox = postDir && join(postDir, "inbox");
   if (inbox && existsSync(inbox)) {
     for (const f of readdirSync(inbox)) {

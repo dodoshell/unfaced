@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { checkBrandFiles } from "../../engine/src/page/brand.js";
+import { brandPath, checkBrandFiles } from "../../engine/src/page/brand.js";
 import type { Page } from "../../engine/src/page/types.js";
 
 function pageWith(brand: Page["brand"], files: string[] = []): Page {
@@ -48,6 +48,36 @@ describe("checkBrandFiles", () => {
   it("puts the field in the error", () => {
     try {
       checkBrandFiles(pageWith({ logo: "logo.jpg" }, ["logo.jpg"]));
+      expect.unreachable();
+    } catch (e) {
+      expect((e as { field: string }).field).toBe("brand.logo");
+    }
+  });
+
+  it("keeps brand files inside the page folder", () => {
+    const outside = pageWith({ logo: "../outside.png" });
+    writeFileSync(join(outside.dir, "..", "outside.png"), "x");
+    expect(() => checkBrandFiles(outside)).toThrow(/brand\.logo: \.\.\/outside\.png.*inside the page folder/);
+    const absolute = join(tmpdir(), "Font.ttf");
+    writeFileSync(absolute, "x");
+    expect(() => checkBrandFiles(pageWith({ fonts: { display: absolute } }))).toThrow(/brand\.fonts\.display: .*inside the page folder/);
+  });
+});
+
+describe("brandPath", () => {
+  it("resolves a path inside the page folder, written with either separator or ./", () => {
+    const dir = join(tmpdir(), "page");
+    expect(brandPath(dir, "brand.logo", "./brand/logo.svg")).toBe(join(dir, "brand", "logo.svg"));
+    expect(brandPath(dir, "brand.logo", "brand\\logo.png")).toBe(join(dir, "brand", "logo.png"));
+  });
+
+  it("rejects absolute paths and paths that leave the page folder, naming the field", () => {
+    const dir = join(tmpdir(), "page");
+    expect(() => brandPath(dir, "brand.logo", "../outside.png")).toThrow(/brand\.logo.*must be inside the page folder/);
+    expect(() => brandPath(dir, "brand.fonts.text", "brand/../../x.ttf")).toThrow(/brand\.fonts\.text/);
+    expect(() => brandPath(dir, "brand.fonts.text", join(dir, "brand", "A.ttf"))).toThrow(/inside the page folder/);
+    try {
+      brandPath(dir, "brand.logo", "/etc/logo.png");
       expect.unreachable();
     } catch (e) {
       expect((e as { field: string }).field).toBe("brand.logo");

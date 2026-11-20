@@ -49,6 +49,12 @@ export interface SlideContext {
   label?: string;
   /** The frame's words in the page's language. */
   words: FrameWords;
+  /**
+   * The brand logo's path in the render's public folder (brand/logo.svg or brand/logo.png), for
+   * staticFile(); set when the brand has a logo. Draw it from here, never from `brand.logo`,
+   * which is the path as page.yaml writes it.
+   */
+  logoFile?: string;
 }
 
 /** What a style provides to make posts. */

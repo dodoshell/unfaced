@@ -5,6 +5,7 @@ import { frameWords } from "../../src/post/frameWords.js";
 import type { SlideContext } from "../styles/registry.js";
 import { getSlideView } from "../styles/slideViews.js";
 import { loadSlideFonts } from "./brandFonts.js";
+import { slideLogoFile } from "./slideFonts.js";
 
 export type PostSlideProps = { plan: PostPlan; index: number };
 
@@ -18,6 +19,7 @@ export function slideContext(plan: PostPlan, index: number): SlideContext {
     brand: plan.brand,
     words: frameWords(plan.language).words,
     ...(plan.label !== undefined && { label: plan.label }),
+    ...(plan.brand.logo && { logoFile: slideLogoFile(plan.brand.logo) }),
   };
 }
 
