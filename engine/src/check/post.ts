@@ -44,8 +44,12 @@ export function checkPost(plan: PostPlan): CheckIssue[] {
       if (ratio < need) issue("contrast", n, `text box "${box.id}" is ${box.color} on ${box.on}, ${ratio.toFixed(2)}:1; ${box.readable} text needs ${need}:1`);
     }
     const headline = boxes.find((b) => b.id === "headline");
-    if (slide.index === 0 && format.coverArea && headline && !inside(headline, format.coverArea)) {
-      issue("cover-crop", n, `the cover's headline (${where(headline)}) reaches outside the area the profile grid shows (${where(format.coverArea)})`);
+    if (slide.index === 0 && format.coverArea) {
+      if (headline && !inside(headline, format.coverArea)) {
+        issue("cover-crop", n, `the cover's headline (${where(headline)}) reaches outside the area the profile grid shows (${where(format.coverArea)})`);
+      } else if (!headline && slide.headline) {
+        issue("cover-crop", n, `the cover has a headline but the style lays out no box called "headline", so its place in the profile grid's crop cannot be checked`);
+      }
     }
   }
   return issues;

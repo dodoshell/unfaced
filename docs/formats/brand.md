@@ -24,7 +24,7 @@ brand:
 | `handle` | The account name, with the `@`. Posts show it in the frame at the bottom of each slide. |
 | `site` | The website, written as people should read it. |
 | `logo` | A `.svg` or `.png` file, relative to the page folder. Posts show it next to the handle. |
-| `fonts` | Font files per role: `display` (headlines), `accent`, `text` (body) and `mono` (labels). Each is `.ttf`, `.otf` or `.woff`; `.woff2` is not accepted. A role left out uses the style's own font. |
+| `fonts` | Font files per role: `display` (headlines), `accent`, `text` (body) and `mono` (labels). Each is `.ttf`, `.otf` or `.woff`; `.woff2` is not accepted. A role left out uses the style's own font, except `accent`: a brand `display` font without an `accent` font also draws the accent words, so they are not set in the style's typeface next to the brand's. |
 | `tone` | How the page sounds, in one sentence. |
 | `words` | `use`: words and phrases the page likes. `avoid`: words it never uses. |
 

@@ -10,7 +10,7 @@ function box(over: Partial<SlideBox>): SlideBox {
 }
 
 function slide(index: number): Slide {
-  return { index, kind: index === 0 ? "cover" : "point", attrs: {}, body: [], items: [], line: 5 + index * 4 };
+  return { index, kind: index === 0 ? "cover" : "point", attrs: {}, headline: { text: "Hi" }, body: [], items: [], line: 5 + index * 4 };
 }
 
 function plan(slides: SlideBox[][], format: FormatName = "instagram-carousel"): PostPlan {
@@ -80,5 +80,20 @@ describe("checkPost", () => {
     expect(checkPost(plan([[box({ y: 300 })], [box({ y: 100, h: 100 })]]))).toEqual([]);
     expect(checkPost(plan([[box({ id: "label", y: 60, h: 40 }), box({ y: 300 })], [box({})]]))).toEqual([]);
     expect(checkPost(plan([[box({ y: 300 })], [box({})]], "story"))).toEqual([]);
+  });
+
+  it("flags a 4:5 cover with a headline but no headline box", () => {
+    const issues = checkPost(plan([[box({ id: "title" })], [box({})]]));
+    expect(issues).toHaveLength(1);
+    expect(issues[0]).toMatchObject({ check: "cover-crop", severity: "error" });
+    expect(issues[0]!.message).toContain("slide 1");
+    expect(issues[0]!.message).toContain('no box called "headline"');
+    expect(checkPost(plan([[box({ id: "title" })], [box({})]], "story"))).toEqual([]);
+  });
+
+  it("does not ask for a headline box on a cover without a headline", () => {
+    const p = plan([[box({ id: "title" })], [box({})]]);
+    delete p.slides[0]!.slide.headline;
+    expect(checkPost(p)).toEqual([]);
   });
 });

@@ -146,6 +146,17 @@ describe("buildPostPlans", () => {
     expect(fonts.accent).toBe(resolve(pageDir, "brand", "fonts", "Brand.ttf"));
   });
 
+  it("draws the accent in the brand's accent font when it has one, and in the style's when the brand has no display font", () => {
+    const { pageDir, dir } = postDir(EXAMPLE);
+    mkdirSync(join(pageDir, "brand", "fonts"), { recursive: true });
+    copyFileSync(join(fixtures, "fonts", "Wide-Orbitron.ttf"), join(pageDir, "brand", "fonts", "Display.ttf"));
+    copyFileSync(join(fixtures, "fonts", "Condensed-Anton.ttf"), join(pageDir, "brand", "fonts", "Accent.ttf"));
+    const both = { handle: "@studionord", fonts: { display: "brand/fonts/Display.ttf", accent: "brand/fonts/Accent.ttf" } };
+    expect(buildPostPlans(dir, page(pageDir, { brand: both }), catalog).plans[0]!.fonts.accent).toBe(resolve(pageDir, "brand", "fonts", "Accent.ttf"));
+    const textOnly = { handle: "@studionord", fonts: { text: "brand/fonts/Accent.ttf" } };
+    expect(buildPostPlans(dir, page(pageDir, { brand: textOnly }), catalog).plans[0]!.fonts.accent).toBe(resolve(fixtures, "fonts", "Wide-Orbitron.ttf"));
+  });
+
   it("gives the style's files as absolute paths without a brand font", () => {
     const { pageDir, dir } = postDir(EXAMPLE);
     const fonts = buildPostPlans(dir, page(pageDir), catalog).plans[0]!.fonts;
