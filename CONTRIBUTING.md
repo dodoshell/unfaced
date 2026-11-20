@@ -38,14 +38,14 @@ Attach a few frames to the pull request.
 
 ## Making a style draw posts
 
-A style draws posts when it has a `components/slides/` folder, a **Slides** section in its `STYLE.md` and `"posts": "ready"` in `catalog/catalog.json` (styles 1 to 12 are `"posts": "planned"`; `status` stays about videos). Look at style 13 Night tech: one component per slide kind (cover, point, list, steps, compare, stat, quote, image, cta), a pure `layout.ts`, the drawn visuals (chips, a step flow, a phone, a notification, icons) and its fonts. Then:
+A style draws posts when it has a `components/slides/` folder, a **Slides** section in its `STYLE.md` and `"posts": "ready"` in `catalog/catalog.json` (styles 1 to 12 have no `posts` field, which means they make videos only; `status` stays about videos). Look at style 13 Night tech: one component per slide kind (cover, point, list, steps, compare, stat, quote, image, cta), a pure `layout.ts`, the drawn visuals (chips, a step flow, a phone, a notification, icons) and its fonts. Then:
 
 1. `npx vitest run tests/styles/slides-contract.test.ts` passes: every kind in every format, the safe areas, no overlapping text.
 2. `npm run unfaced -- demo NN --post` renders the sample carousel and story; look at every slide.
 
 ## Adding a slide kind
 
-A kind is parsed in `engine/src/post/parseSlides.ts` (its fields and limits), drawn by each style's `components/slides/` and `layout.ts`, and described in `docs/formats/slides.md`. Add it to every style that draws posts and extend the slides contract test, so a style without the kind fails.
+A kind is parsed in `engine/src/post/parseSlides.ts` (its fields), its limits live in `engine/src/post/limits.ts`, it is drawn by each style's `components/slides/` and `layout.ts`, and described in `docs/formats/slides.md`. Add it to every style that draws posts and extend the slides contract test, so a style without the kind fails.
 
 ## Adding a post type
 

@@ -103,7 +103,6 @@ describe("eval graders", () => {
     }
   });
 
-
   it("post-make-keeps-user-text: needs all five sentences, word for word", () => {
     const kept = regex("post-make-keeps-user-text/graders/user-text-verbatim.md");
     const sentences = [
