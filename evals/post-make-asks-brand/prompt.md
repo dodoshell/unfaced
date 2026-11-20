@@ -8,4 +8,4 @@ timeout_seconds: 300
 allowed_tools: [Read, Glob, Grep, Skill, Write, Edit]
 ---
 
-Make an Instagram carousel for my web studio about why a shop needs its own website. The page is pages/studio-nord.
+Make an Instagram carousel for my web studio about why a shop needs its own website. The page is pages/studio-nord-plain.
