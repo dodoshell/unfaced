@@ -49,6 +49,8 @@ export interface Page {
   /** The catalog choices; `choices.style` is the video style (unset when only style.posts is given). */
   choices: Partial<Record<ChoiceField, Choice>>;
   postStyle?: Choice;
+  /** True when style was written as { posts, ... }: the page asked for a post style of its own. */
+  postsStyleSet?: boolean;
   postType?: Choice;
   formats?: FormatName[];
   brand?: Brand;

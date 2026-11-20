@@ -82,12 +82,14 @@ export async function loadPage(dir: string, catalog: CatalogLike): Promise<Page>
 
   const choices: Page["choices"] = {};
   let postStyle: Choice | undefined;
+  let postsStyleSet = false;
   for (const field of CHOICE_FIELDS) {
     let choice = data[field] as Choice | { posts?: Choice; videos?: Choice } | undefined;
     if (choice === undefined) continue;
     if (field === "style" && isStyleObject(choice)) {
       // One look for posts and one for videos; either may be left out.
       postStyle = checkChoice("style", choice.posts, "style", catalog);
+      postsStyleSet = postStyle !== undefined;
       choice = checkChoice("style", choice.videos, "style", catalog);
       if (choice === undefined) continue;
     } else {
@@ -115,6 +117,7 @@ export async function loadPage(dir: string, catalog: CatalogLike): Promise<Page>
     niche: data.niche as string,
     choices,
     ...(postStyle !== undefined && { postStyle }),
+    ...(postsStyleSet && { postsStyleSet }),
     ...(postType !== undefined && { postType }),
     ...(data.formats !== undefined && { formats: data.formats as FormatName[] }),
     ...(data.brand !== undefined && { brand: data.brand as Brand }),

@@ -21,7 +21,7 @@ export async function pageSummary(pageDir: string, catalog: Catalog): Promise<st
   const lines = [`${page.name} (${page.language}): ${page.niche}`];
   for (const field of CHOICE_FIELDS) {
     const choice = page.choices[field];
-    if (field === "style" && choice === undefined && page.postStyle !== undefined) lines.push("style: none (set style.videos to make videos)");
+    if (field === "style" && choice === undefined && page.postsStyleSet) lines.push("style: none (set style.videos to make videos)");
     else if (choice === undefined || choice === "auto") lines.push(`${field}: auto (the agent picks from the ready ones)`);
     else if (Array.isArray(choice)) lines.push(`${field}: one of ${choice.map((n) => named(field, n)).join(", ")}`);
     else lines.push(`${field}: ${named(field, choice)}`);
@@ -46,12 +46,14 @@ function postLines(page: Page, catalog: Catalog): string[] {
   const list = (choice: Choice | undefined, name: (n: number) => string) =>
     choice === undefined || choice === "auto" ? "auto" : Array.isArray(choice) ? `one of ${choice.map(name).join(", ")}` : name(choice);
   const parts: string[] = [];
-  if (page.postStyle !== undefined) parts.push(`style ${list(page.postStyle, (n) => `${n} ${catalog.get("style", n).name}`)}`);
+  // A plain `style: N` is a video page; posts are mentioned only when the page asked for them.
+  const wantsPosts = page.postsStyleSet || page.postType !== undefined || page.formats !== undefined;
+  if (wantsPosts && page.postStyle !== undefined) parts.push(`style ${list(page.postStyle, (n) => `${n} ${catalog.get("style", n).name}`)}`);
   if (page.postType !== undefined) parts.push(`post types ${page.postType === "auto" ? "auto" : [page.postType].flat().join(", ")}`);
   if (page.formats) parts.push(`formats ${page.formats.join(", ")}`);
   if (parts.length) lines.push(`Posts: ${parts.join(" · ")}`);
 
-  const chosen = page.postStyle === undefined || page.postStyle === "auto" ? [] : [page.postStyle].flat();
+  const chosen = !wantsPosts || page.postStyle === undefined || page.postStyle === "auto" ? [] : [page.postStyle].flat();
   const cannot = chosen.filter((n) => catalog.get("style", n).posts !== "ready");
   if (cannot.length) {
     const can = catalog.list("style").filter((e) => e.posts === "ready");

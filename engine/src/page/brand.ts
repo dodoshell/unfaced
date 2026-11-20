@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { statSync } from "node:fs";
 import { extname, join } from "node:path";
 import { PageError } from "./loadPage.js";
 import type { Page } from "./types.js";
@@ -25,7 +25,13 @@ export function checkBrandFiles(page: Page): string[] {
       throw new PageError(field, `${field}: ${path} is not a supported file; ${hint}`);
     }
     const absolute = join(page.dir, path);
-    if (!existsSync(absolute)) throw new PageError(field, `${field}: ${path} not found (looked for ${absolute})`);
+    let isFile = false;
+    try {
+      isFile = statSync(absolute).isFile();
+    } catch {
+      // missing or unreadable: reported below
+    }
+    if (!isFile) throw new PageError(field, `${field}: ${path} is missing or not a readable file (looked for ${absolute}); ${hint}`);
     found.push(absolute);
   }
   return found;

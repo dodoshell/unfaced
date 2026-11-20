@@ -29,6 +29,13 @@ describe("checkBrandFiles", () => {
     expect(() => checkBrandFiles(pageWith({ fonts: { display: "brand/fonts/X.ttf" } }))).toThrow(/brand\.fonts\.display.*brand\/fonts\/X\.ttf/);
   });
 
+  it("says what fonts are accepted when a font file is missing or is a folder", () => {
+    expect(() => checkBrandFiles(pageWith({ fonts: { display: "brand/fonts/X.ttf" } }))).toThrow(/brand\/fonts\/X\.ttf.*use \.ttf, \.otf or \.woff/);
+    const page = pageWith({ fonts: { text: "brand/fonts/Dir.ttf" } });
+    mkdirSync(join(page.dir, "brand", "fonts", "Dir.ttf"), { recursive: true });
+    expect(() => checkBrandFiles(page)).toThrow(/Dir\.ttf.*use \.ttf, \.otf or \.woff/);
+  });
+
   it("rejects a font that is not .ttf, .otf or .woff", () => {
     expect(() => checkBrandFiles(pageWith({ fonts: { text: "brand/fonts/X.woff2" } }, ["brand/fonts/X.woff2"]))).toThrow(/use \.ttf, \.otf or \.woff/);
   });

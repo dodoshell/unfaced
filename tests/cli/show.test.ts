@@ -145,6 +145,28 @@ describe("unfaced page", () => {
     expect(some.find((l) => l.startsWith("warning"))).toMatch(/cannot make posts yet; styles that can: 12 Kinetic typography/);
   });
 
+  it("prints a plain video-only page exactly as before: no Posts line, no post warning", async () => {
+    const lines = await pageSummary(page("name: P\nlanguage: en\nniche: x\nstyle: 3\nvoice: 1\n"), catalog);
+    expect(lines).toEqual([
+      "P (en): x",
+      "style: 3 Flat cartoon",
+      "script: auto (the agent picks from the ready ones)",
+      "hook: auto (the agent picks from the ready ones)",
+      "voice: 1 Calm documentary",
+      "captions: auto (the agent picks from the ready ones)",
+      "music: auto (the agent picks from the ready ones)",
+      "ending: auto (the agent picks from the ready ones)",
+      "mascot: none (brand/mascot/mascot.json)",
+      "videos: 0",
+    ]);
+  });
+
+  it("warns for a plain style that cannot make posts only when post_type or formats ask for posts", async () => {
+    const lines = await pageSummary(page("name: P\nlanguage: en\nniche: x\nstyle: 3\nformats: [story]\n"), catalog);
+    expect(lines.some((l) => l.startsWith("Posts: style 3"))).toBe(true);
+    expect(lines.some((l) => l.startsWith("warning") && l.includes("cannot make posts yet"))).toBe(true);
+  });
+
   it("warns that font is ignored", async () => {
     const lines = await pageSummary(page("name: P\nlanguage: en\nniche: x\nfont: Inter\n"), catalog);
     expect(lines.find((l) => l.includes('"font" is ignored; use brand.fonts'))).toBeDefined();
