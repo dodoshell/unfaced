@@ -37,6 +37,21 @@ describe("fitText", () => {
     expect(a.lines.length).toBeLessThan(b.lines.length);
   });
 
+  it("balances the lines when asked: same size and line count, no lone last word", () => {
+    const text = "Your website should work for you";
+    // A width where the greedy breaks leave "you" alone on the last line.
+    const widths = Array.from({ length: 160 }, (_, i) => 400 + i * 5);
+    const w = widths.find((w) => fitText(spec({ text, box: { ...box, w, h: 2000 }, minSize: 120 })).lines.at(-1)!.text === "you");
+    expect(w).toBeDefined();
+    const greedy = fitText(spec({ text, box: { ...box, w: w!, h: 2000 }, minSize: 120 }));
+    const even = fitText(spec({ text, box: { ...box, w: w!, h: 2000 }, minSize: 120, balance: true }));
+    expect(even.size).toBe(greedy.size);
+    expect(even.lines).toHaveLength(greedy.lines.length);
+    expect(even.lines.at(-1)!.text).not.toBe("you");
+    expect(even.lines.map((l) => l.text).join(" ")).toBe(text);
+    expect(Math.max(...even.lines.map((l) => l.width))).toBeLessThanOrEqual(Math.max(...greedy.lines.map((l) => l.width)));
+  });
+
   it("throws overflow for an unbreakable long word", () => {
     const err = catchErr(() => fitText(spec({ text: "x".repeat(60), minSize: 40 })));
     expect(err).toBeInstanceOf(FitError);

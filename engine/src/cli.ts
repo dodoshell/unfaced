@@ -4,7 +4,7 @@ import { Catalog } from "./catalog/catalog.js";
 import { checkPostDir, checkVideo, summaryLines } from "./cli/check.js";
 import { defaultChecks, keyLines, runDoctor } from "./cli/doctor.js";
 import { makeCover } from "./cli/cover.js";
-import { renderDemos } from "./cli/demo.js";
+import { renderDemos, renderPostDemos } from "./cli/demo.js";
 import { docText } from "./cli/docs.js";
 import { parseEvery, renderFrames } from "./cli/frames.js";
 import { buildGallery } from "./gallery/gallery.js";
@@ -44,6 +44,9 @@ Commands:
                                  Render the style demo (the same dog scene in every style) to <dir>/NN-slug.mp4,
                                  or its key moments as PNGs with --frames (default dir: examples/styles);
                                  all also writes <dir>/all-styles.mp4 and docs/media/styles-grid.gif
+  demo <style|all> --post [--out <dir>]
+                                 Render a sample post in the style, as a carousel and a story, to
+                                 <dir>/NN-slug/<format>/ (default dir: examples/posts)
   reel hooks [--out <file>]      Render the hook reel: every hook's first example, spoken, each in the next style
                                  (default file: examples/hooks/hook-reel.mp4)
   gallery [--out <dir>] [--no-stills]
@@ -108,7 +111,9 @@ async function main(args: string[]): Promise<number> {
     }
     case "demo": {
       const out = rest.indexOf("--out");
-      await renderDemos(need(rest[0], "a style number or all"), { ...(out >= 0 ? { out: need(rest[out + 1], "a folder for --out") } : {}), frames: rest.includes("--frames") });
+      const where = out >= 0 ? { out: need(rest[out + 1], "a folder for --out") } : {};
+      if (rest.includes("--post")) await renderPostDemos(need(rest[0], "a style number or all"), where);
+      else await renderDemos(need(rest[0], "a style number or all"), { ...where, frames: rest.includes("--frames") });
       return 0;
     }
     case "inbox": {

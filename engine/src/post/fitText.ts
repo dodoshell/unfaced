@@ -16,6 +16,11 @@ export interface TextSpec {
   /** Extra spacing per character, in em. */
   tracking?: number;
   upper?: boolean;
+  /**
+   * Evens out the lines: keeps the size and line count the fit found, then breaks the words
+   * as narrowly as that line count allows, so a headline has no lone last word.
+   */
+  balance?: boolean;
 }
 
 export interface FittedText {
@@ -86,11 +91,12 @@ export function fitText(spec: TextSpec): FittedText {
   const ws = words(text);
   const first = text.slice(0, 40);
 
-  const attempt = (size: number): FittedText | null => {
+  /** Greedy line breaks at `size` within `width`. */
+  const wrap = (size: number, width: number): [number, number][] => {
     const lineRanges: [number, number][] = [];
     let cur: [number, number] | null = null;
     for (const w of ws) {
-      if (cur && measure(cur[0], w.end) * size <= box.w) {
+      if (cur && measure(cur[0], w.end) * size <= width) {
         cur[1] = w.end;
       } else {
         if (cur) lineRanges.push(cur);
@@ -98,6 +104,24 @@ export function fitText(spec: TextSpec): FittedText {
       }
     }
     if (cur) lineRanges.push(cur);
+    return lineRanges;
+  };
+
+  /** The narrowest width (to a pixel) that still breaks into `count` lines at `size`, never wider than the box. */
+  const balanced = (size: number, count: number): [number, number][] => {
+    let lo = Math.max(...ws.map((w) => measure(w.start, w.end) * size));
+    let hi = box.w;
+    while (hi - lo > 1) {
+      const mid = (lo + hi) / 2;
+      if (wrap(size, mid).length <= count) hi = mid;
+      else lo = mid;
+    }
+    return wrap(size, hi);
+  };
+
+  const attempt = (size: number): FittedText | null => {
+    let lineRanges = wrap(size, box.w);
+    if (spec.balance && lineRanges.length > 1) lineRanges = balanced(size, lineRanges.length);
     if (spec.maxLines !== undefined && lineRanges.length > spec.maxLines) return null;
     const height = lineRanges.length * size * spec.lineHeight;
     if (height > box.h) return null;

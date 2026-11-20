@@ -30,6 +30,16 @@ export interface PostPlan {
   slides: { slide: Slide; boxes: SlideBox[]; fitted: Record<string, FittedText>; own?: TextBox[] }[];
 }
 
+export interface PlanOptions {
+  format?: FormatName;
+  /**
+   * Also takes a style whose posts are still planned in the catalog, as long as it has a slide
+   * layout. Only for `unfaced demo <style> --post`, which shows a style while it is being built;
+   * `unfaced post` never sets it.
+   */
+  allowPlanned?: boolean;
+}
+
 const DEFAULT_FORMAT: FormatName = "instagram-carousel";
 const ROLES: FontRole[] = ["display", "accent", "text", "mono"];
 
@@ -38,7 +48,7 @@ const ROLES: FontRole[] = ["display", "accent", "text", "mono"];
  * else the page's, else instagram-carousel). Throws before anything renders when the slide
  * count does not suit a format, the style makes no posts, or a text does not fit its box.
  */
-export function buildPostPlans(postDir: string, page: Page, catalog: Catalog, opts: { format?: FormatName } = {}): { plans: PostPlan[]; warnings: string[] } {
+export function buildPostPlans(postDir: string, page: Page, catalog: Catalog, opts: PlanOptions = {}): { plans: PostPlan[]; warnings: string[] } {
   const file = parseSlides(readFileSync(join(postDir, "slides.md"), "utf8"));
   const warnings: string[] = [];
 
@@ -52,7 +62,7 @@ export function buildPostPlans(postDir: string, page: Page, catalog: Catalog, op
     }
   }
 
-  const style = postStyle(file.style, page.postStyle, catalog);
+  const style = postStyle(file.style, page.postStyle, catalog, opts.allowPlanned ?? false);
   const kit = getSlideLayout(style);
   const styleFile = resolve(catalog.root, catalog.get("style", style).path);
   const { defaultPalette } = JSON.parse(readFileSync(styleFile, "utf8")) as { defaultPalette: string[] };
@@ -94,8 +104,8 @@ function ownBoxes(postDir: string, slide: Slide, format: FormatName, where: stri
 }
 
 /** The style for this post: the front matter's, else the page's; a list or auto takes the first that makes posts. */
-function postStyle(fromFile: number | undefined, fromPage: Choice | undefined, catalog: Catalog): number {
-  const ready = (n: number) => catalog.get("style", n).posts === "ready" && stylesWithSlides().includes(n);
+function postStyle(fromFile: number | undefined, fromPage: Choice | undefined, catalog: Catalog, allowPlanned: boolean): number {
+  const ready = (n: number) => (catalog.get("style", n).posts === "ready" || (allowPlanned && catalog.get("style", n).posts === "planned")) && stylesWithSlides().includes(n);
   const choice = fromFile ?? fromPage ?? "auto";
   if (typeof choice === "number") {
     let entry;
@@ -155,6 +165,7 @@ function fitBoxes(boxes: SlideBox[], fonts: Record<FontRole, string>, where: str
         ...(box.maxLines !== undefined && { maxLines: box.maxLines }),
         ...(box.tracking !== undefined && { tracking: box.tracking }),
         ...(box.upper !== undefined && { upper: box.upper }),
+        ...(box.balance !== undefined && { balance: box.balance }),
       });
     } catch (err) {
       if (err instanceof FitError) throw new FitError(err.kind, err.detail, `${where}: ${err.message}`);

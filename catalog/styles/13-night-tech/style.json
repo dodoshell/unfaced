@@ -1,0 +1,12 @@
+{
+  "id": 13,
+  "slug": "night-tech",
+  "name": "Night tech",
+  "defaultPalette": ["#0B1020", "#2F6BFF", "#5B8CFF", "#2F9E6A", "#E8ECF7"],
+  "fonts": {
+    "display": "fonts/InstrumentSerif-Regular.ttf",
+    "accent": "fonts/InstrumentSerif-Italic.ttf",
+    "text": "fonts/Inter-Regular.ttf",
+    "mono": "fonts/JetBrainsMono-Medium.ttf"
+  }
+}

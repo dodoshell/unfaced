@@ -5,7 +5,7 @@ import type { FigureProps } from "../core/character/svg.js";
 import type { Brand } from "../../src/page/types.js";
 import type { FittedText } from "../../src/post/fitText.js";
 import type { FrameWords } from "../../src/post/frameWords.js";
-import type { PostFormat, Slide } from "../../src/post/types.js";
+import type { PostFormat, Slide, SlideKind } from "../../src/post/types.js";
 
 /** A rectangle a style draws text in, named so checks can report it. */
 export interface TextBox extends Rect {
@@ -31,6 +31,8 @@ export interface SlideBox extends TextBox {
   /** Extra spacing per character, in em. */
   tracking?: number;
   upper?: boolean;
+  /** Evens out the lines (see fitText's `balance`), for headlines. */
+  balance?: boolean;
   color: string;
   /** The colour under the text, for the contrast check. */
   on: string;
@@ -61,6 +63,8 @@ export interface SlideContext {
 export interface SlideKit {
   /** Font files relative to the style folder. */
   fonts: Record<FontRole, string>;
+  /** The slide kinds the style draws so far, while it is being built; every kind when absent. */
+  kinds?: SlideKind[];
   /** Where the style puts text on a slide; pure, so plans and checks are built without rendering. */
   layout(ctx: SlideContext): SlideBox[];
   /**

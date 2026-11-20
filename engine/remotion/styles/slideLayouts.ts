@@ -1,12 +1,13 @@
 // Each post-capable style's pure slide layout and font files, importable without React so post
 // plans and their checks are built in Node. A style that makes posts adds one line here as well
 // as its `slides` in installed.ts.
+import { nightTechLayout } from "../../../catalog/styles/13-night-tech/components/slides/layout.js";
 import type { SlideKit } from "./registry.js";
 
-/** The part of a SlideKit that needs no React: the font files and the layout. */
-export type SlideLayout = Pick<SlideKit, "fonts" | "layout">;
+/** The part of a SlideKit that needs no React: the font files, the layout and the kinds drawn so far. */
+export type SlideLayout = Pick<SlideKit, "fonts" | "layout" | "kinds">;
 
-const SLIDE_LAYOUTS = new Map<number, SlideLayout>([]);
+const SLIDE_LAYOUTS = new Map<number, SlideLayout>([[13, nightTechLayout]]);
 
 /** Adds a style's slide layout (for the styles listed above, and for test fixtures). */
 export function registerSlideLayout(style: number, kit: SlideLayout): void {

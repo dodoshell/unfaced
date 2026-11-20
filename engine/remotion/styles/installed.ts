@@ -14,7 +14,9 @@ import { pixelArt } from "../../../catalog/styles/09-16-bit-pixel-art/components
 import { neonSynthwave } from "../../../catalog/styles/10-neon-synthwave/components/index.js";
 import { watercolour } from "../../../catalog/styles/11-watercolour/components/index.js";
 import { kineticTypography } from "../../../catalog/styles/12-kinetic-typography/components/index.js";
+import { nightTechSlides } from "../../../catalog/styles/13-night-tech/components/slides/index.js";
 import { registerStyle } from "./registry.js";
+import { registerSlideView } from "./slideViews.js";
 
 registerStyle(softThreeD);
 registerStyle(lowPoly);
@@ -28,3 +30,6 @@ registerStyle(pixelArt);
 registerStyle(neonSynthwave);
 registerStyle(watercolour);
 registerStyle(kineticTypography);
+
+// Styles that make posts (style 13 has no video scenes yet).
+registerSlideView(13, nightTechSlides.SlideView);
