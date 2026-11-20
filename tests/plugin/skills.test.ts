@@ -7,7 +7,7 @@ import { FORMATS } from "../../engine/src/cli/docs.js";
 
 const root = join(import.meta.dirname, "..", "..");
 const skillsDir = join(root, "plugin", "skills");
-const skills = readdirSync(skillsDir).filter((d) => !d.startsWith("."));
+const skills = readdirSync(skillsDir).filter((d) => !d.startsWith(".") && existsSync(join(skillsDir, d, "SKILL.md")));
 // Frontmatter keys every agent that reads Agent Skills accepts.
 const PORTABLE = ["name", "description", "license", "compatibility", "metadata", "allowed-tools"];
 
@@ -41,16 +41,18 @@ describe("skills", () => {
     for (const [path] of body.matchAll(/\b(?:references|scripts)\/[\w.-]+/g)) expect(existsSync(join(skillsDir, skill, path)), `${skill}: ${path}`).toBe(true);
   });
 
-  it("carries the reviewer's instructions, unchanged, in video-make for agents without subagents", () => {
-    const copy = join(skillsDir, "video-make", "references", "video-reviewer.md");
-    expect(existsSync(copy), "video-make/references/video-reviewer.md").toBe(true);
-    expect(readFileSync(copy, "utf8"), "copy plugin/agents/video-reviewer.md again").toBe(readFileSync(join(root, "plugin", "agents", "video-reviewer.md"), "utf8"));
-    expect(frontMatter(join(skillsDir, "video-make", "SKILL.md")).body).toContain("references/video-reviewer.md");
+  it.each([["video-make", "video-reviewer"], ["post-make", "post-reviewer"]])("carries the reviewer's instructions, unchanged, in %s for agents without subagents", (skill, agent) => {
+    const copy = join(skillsDir, skill, "references", `${agent}.md`);
+    expect(existsSync(copy), `${skill}/references/${agent}.md`).toBe(true);
+    expect(readFileSync(copy, "utf8"), `copy plugin/agents/${agent}.md again`).toBe(readFileSync(join(root, "plugin", "agents", `${agent}.md`), "utf8"));
+    // post-make's SKILL.md arrives later; once it exists it must point at the copy.
+    const skillFile = join(skillsDir, skill, "SKILL.md");
+    if (existsSync(skillFile)) expect(frontMatter(skillFile).body).toContain(`references/${agent}.md`);
   });
 
-  it("has a reviewer agent with a name, a description and its tools", () => {
-    const { meta, body } = frontMatter(join(root, "plugin", "agents", "video-reviewer.md"));
-    expect(meta).toMatchObject({ name: "video-reviewer", tools: expect.stringContaining("Read") });
+  it.each(["video-reviewer", "post-reviewer"])("has a reviewer agent %s with a name, a description and its tools", (agent) => {
+    const { meta, body } = frontMatter(join(root, "plugin", "agents", `${agent}.md`));
+    expect(meta).toMatchObject({ name: agent, tools: expect.stringContaining("Read") });
     expect(String(meta.description).length).toBeGreaterThan(50);
     expect(body).toContain("# Review: PASS");
   });

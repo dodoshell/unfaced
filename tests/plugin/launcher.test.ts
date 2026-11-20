@@ -58,7 +58,7 @@ function releaseRepo(dir: string, cli = 'console.log(`ran ${process.argv.slice(2
 
 describe("the skills' launcher", () => {
   it("is copied, unchanged, into the scripts/ folder of every skill", () => {
-    expect(readdirSync(join(root, "plugin", "skills")).filter((d) => !d.startsWith(".")).sort()).toEqual([...SKILLS].sort());
+    expect(readdirSync(join(root, "plugin", "skills")).filter((d) => !d.startsWith(".") && existsSync(join(root, "plugin", "skills", d, "SKILL.md"))).sort()).toEqual([...SKILLS].sort());
     for (const skill of SKILLS) {
       const copy = join(root, "plugin", "skills", skill, "scripts", "unfaced.mjs");
       expect(existsSync(copy), skill).toBe(true);
