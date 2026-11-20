@@ -75,7 +75,7 @@ Indiquez le format selon l'usage de la publication ; unfaced connaît la taille 
 | `linkedin-carousel` | 1080×1350 | de 2 à 12 | un PDF, et les PNG |
 | `story` | 1080×1920 | de 1 à 10 | des PNG |
 
-Un même `slides.md` peut être fabriqué dans plusieurs formats : la mise en page s'adapte, le texte ne change pas. La marque de la page (handle, site, logo, polices, ton, mots à utiliser et à éviter) apparaît sur les slides et guide tous les textes écrits par les agents. Types de slide : cover, point, list, steps, compare, stat, quote, image, cta et custom, pour une slide qui demande son propre code. Voir `unfaced docs slides` et `unfaced docs brand`.
+Un même `slides.md` peut être fabriqué dans plusieurs formats : la mise en page s'adapte, le texte ne change pas. La marque de la page (handle, site, logo, polices, ton, mots à utiliser et à éviter) place son handle, son logo et ses polices sur les slides et guide tous les textes écrits par les agents, légendes comprises, où figure le site. Types de slide : cover, point, list, steps, compare, stat, quote, image, cta et custom, pour une slide qui demande son propre code. Voir `unfaced docs slides` et `unfaced docs brand`.
 
 Le 13 Night tech est le premier style qui dessine les publications, avec des éléments graphiques prêts à l'emploi : pastilles, un flux d'étapes, un téléphone, une notification et un petit jeu d'icônes. Les styles 1 à 12 ne font encore que des vidéos. Une page complète avec un carrousel : [`examples/pages/studio-nord/`](../../../examples/pages/studio-nord/).
 

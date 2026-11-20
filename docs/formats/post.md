@@ -1,6 +1,6 @@
 # Post format
 
-`post.md` sits in the video folder next to `video.mp4` and `cover.png`. It holds what the user pastes when posting: a caption and hashtags for each platform. unfaced never posts; the user (or a tool such as Regia) does.
+`post.md` holds what the user pastes when posting: a caption and hashtags for each platform. A video's `post.md` sits in the video folder next to `video.mp4` and `cover.png`; a still post's sits in the post folder next to its slides (see "For a still post" below). unfaced never posts; the user (or a tool such as Regia) does.
 
 ```markdown
 # Why do cats purr?
@@ -94,4 +94,4 @@ Extra rules for a still post:
 - Alt text: one line per slide, numbered, describing what the slide shows and says, in the page's language. Plain description, not a repeat of the hashtags; leave out decoration. Keep the label `Alt text:` in English.
 - `Instagram`: first line is the hook; 3 to 5 hashtags. `LinkedIn`: a short opening line, no more than 3 hashtags, a question at the end invites comments. `Facebook`: conversational, hashtags optional and few.
 - Don't repeat the slides in the caption; add the reason to swipe or to act.
-- Use the handle and tone from the page's `brand`, and never a word from `brand.words.avoid`.
+- Use the handle and tone from the page's `brand`, and never a word from `brand.words.avoid`. The slides don't show `brand.site`: put it in the caption where a link helps (on LinkedIn, or as the last line on Facebook).

@@ -191,7 +191,7 @@ describe("loadPage", () => {
 formats: [instagram-carousel, story]
 brand:
   handle: "@studionord"
-  site: studionord.it
+  site: studionord.example
   logo: brand/logo.svg
   fonts: { display: brand/fonts/A.ttf, text: brand/fonts/B.ttf, mono: brand/fonts/C.ttf }
   tone: direct, warm

@@ -75,7 +75,7 @@ Indica il formato in base a cosa serve il post; la dimensione la conosce unfaced
 | `linkedin-carousel` | 1080×1350 | da 2 a 12 | un PDF, più i PNG |
 | `story` | 1080×1920 | da 1 a 10 | PNG |
 
-Lo stesso `slides.md` si può creare in più formati: l'impaginazione si adatta, il testo resta. Il brand della pagina (handle, sito, logo, font, tono, parole da usare e da evitare) compare nelle slide e guida ogni testo scritto dagli agent. Tipi di slide: cover, point, list, steps, compare, stat, quote, image, cta e custom, per una slide che ha bisogno di codice proprio. Vedi `unfaced docs slides` e `unfaced docs brand`.
+Lo stesso `slides.md` si può creare in più formati: l'impaginazione si adatta, il testo resta. Il brand della pagina (handle, sito, logo, font, tono, parole da usare e da evitare) mette handle, logo e font nelle slide e guida ogni testo scritto dagli agent, didascalie comprese, dove va il sito. Tipi di slide: cover, point, list, steps, compare, stat, quote, image, cta e custom, per una slide che ha bisogno di codice proprio. Vedi `unfaced docs slides` e `unfaced docs brand`.
 
 Il 13 Night tech è il primo stile che disegna i post, con elementi grafici già pronti: chip, un flusso a passi, un telefono, una notifica e una piccola serie di icone. Gli stili da 1 a 12 per ora fanno solo video. Una pagina completa con un carosello: [`examples/pages/studio-nord/`](../../../examples/pages/studio-nord/).
 

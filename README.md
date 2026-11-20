@@ -73,7 +73,7 @@ Name the format by what the post is for; unfaced knows the size:
 | `linkedin-carousel` | 1080×1350 | 2 to 12 | a PDF, and the PNGs |
 | `story` | 1080×1920 | 1 to 10 | PNGs |
 
-One `slides.md` can be made in several formats; the layouts reflow and the text stays. A page's brand (handle, site, logo, fonts, tone, words to use and to avoid) appears on the slides and guides every text the agents write. Slide kinds: cover, point, list, steps, compare, stat, quote, image, cta, and custom for a slide that needs its own code. See `unfaced docs slides` and `unfaced docs brand`.
+One `slides.md` can be made in several formats; the layouts reflow and the text stays. A page's brand (handle, site, logo, fonts, tone, words to use and to avoid) puts its handle, logo and fonts on the slides and guides every text the agents write, captions included, where the site goes. Slide kinds: cover, point, list, steps, compare, stat, quote, image, cta, and custom for a slide that needs its own code. See `unfaced docs slides` and `unfaced docs brand`.
 
 Style 13 Night tech is the first style that draws posts, with drawn visuals ready to use: chips, a step flow, a phone, a notification card and a small icon set. Styles 1 to 12 make videos only for now. A complete page with a carousel: [`examples/pages/studio-nord/`](examples/pages/studio-nord/).
 

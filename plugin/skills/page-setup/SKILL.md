@@ -39,7 +39,7 @@ Either way, ask one question at a time and only about what is still open; skip a
 4. **Brand and formats**, only for what is still open:
    - handle and website;
    - a logo file (`.svg` or `.png`) and the fonts: ask for the real font files (`.ttf`, `.otf`, `.woff`) and put them with the logo in the page's `brand/` folder. Until they arrive, the style's own free fonts are used: say so;
-   - one to three brand colours, not five: the first is the accent and the style fills the rest. They go in `palette`. A style keeps its own ground, so a background of the other lightness may be ignored: `unfaced page` says so;
+   - one to three brand colours, not five. `palette` is read by position (1 background, 2 accent, 3 secondary, 4 highlight, 5 ink), so write `palette: [<the style's background>, <accent>, <secondary>, <highlight>]`: position 1 is the first colour of the style's default palette (`unfaced show style <n>`), then the brand colours, leaving out the ones the brand doesn't have. Never put a brand colour first: it would become the background. A style keeps its own ground, so a background of the other lightness is ignored: `unfaced page` says so;
    - the tone in one sentence, and words to use and to avoid;
    - default formats, asked by purpose, never as sizes: "Instagram carousel? LinkedIn carousel (a PDF)? A single post? Stories?" Map the answer to `formats` (`instagram-carousel`, `instagram-post`, `linkedin-carousel`, `story`).
 
@@ -56,7 +56,7 @@ The user shows you a page that already exists, as screenshots or files (posts, r
 
 1. **Look** at everything they gave you. Ask for more only if a medium is missing (a few posts, a few reels, the profile page).
 2. **Draft the profile** from what you see, without writing anything yet:
-   - colours: sample them from the images, the one to three that carry the identity, accent first;
+   - colours: sample them from the images, the one to three that carry the identity, and say which is the accent. They go in `palette` after the style's background (see New page, step 4);
    - style per medium: the closest catalog entry for the posts and for the videos (`unfaced list style`, `unfaced show style <n>`). For posts that is 13 Night tech for now, the only post style; 14 to 16 are coming. Say how close it is and what it cannot match;
    - fonts: name the closest free families you can see, then ask for the real font files;
    - logo (ask for the file), handle, website, and the tone and recurring formats read from the captions and text on the posts;
@@ -97,6 +97,7 @@ The user shows you a page that already exists, as screenshots or files (posts, r
 | Mistake | Instead |
 |---|---|
 | Asking for five colours, or for sizes in pixels | One to three colours; formats by purpose ("Instagram carousel"). |
+| A brand colour first in `palette` | Position 1 is the background: the style's own, then accent, secondary, highlight. |
 | Opening the social network, or asking for a login | Work from the screenshots and files the user gives you. |
 | Writing the draft of an existing page before the user agrees | Play it back, ask about what differs, then write. |
 | One style for a page whose post style has no video scenes yet | `style: { posts, videos }`, and say why. |

@@ -91,7 +91,7 @@ formats: [instagram-carousel, linkedin-carousel]   # what "make a post" makes by
 
 brand:
   handle: "@studionord"
-  site: studionord.it         # optional
+  site: studionord.example         # optional
   logo: brand/logo.svg        # optional
   fonts:                      # optional; the style's own fonts otherwise
     display: brand/fonts/Fraunces.ttf

@@ -75,7 +75,7 @@ Indica el formato según para qué sirve la publicación; el tamaño ya lo conoc
 | `linkedin-carousel` | 1080×1350 | de 2 a 12 | un PDF, y los PNG |
 | `story` | 1080×1920 | de 1 a 10 | PNG |
 
-Un mismo `slides.md` se puede crear en varios formatos: el diseño se adapta y el texto no cambia. La marca de la página (handle, sitio web, logo, fuentes, tono, palabras que usar y que evitar) aparece en las diapositivas y guía todos los textos que escriben los agentes. Tipos de diapositiva: cover, point, list, steps, compare, stat, quote, image, cta y custom, para una diapositiva que necesita su propio código. Mira `unfaced docs slides` y `unfaced docs brand`.
+Un mismo `slides.md` se puede crear en varios formatos: el diseño se adapta y el texto no cambia. La marca de la página (handle, sitio web, logo, fuentes, tono, palabras que usar y que evitar) pone su handle, su logo y sus fuentes en las diapositivas y guía todos los textos que escriben los agentes, pies de publicación incluidos, donde va el sitio web. Tipos de diapositiva: cover, point, list, steps, compare, stat, quote, image, cta y custom, para una diapositiva que necesita su propio código. Mira `unfaced docs slides` y `unfaced docs brand`.
 
 El 13 Night tech es el primer estilo que dibuja publicaciones, con elementos gráficos listos para usar: chips, un flujo de pasos, un teléfono, una notificación y un pequeño juego de iconos. Los estilos del 1 al 12 de momento solo hacen videos. Una página completa con un carrusel: [`examples/pages/studio-nord/`](../../../examples/pages/studio-nord/).
 
