@@ -7,3 +7,8 @@ examples/**/*.wav
 examples/**/videos/**/frames/
 evals/results/
 examples/posts/
+examples/pages/**/posts/**/slide-*.png
+examples/pages/**/posts/**/grid.png
+examples/pages/**/posts/**/post.pdf
+examples/pages/**/posts/**/post-plan.json
+examples/pages/**/posts/**/check.json

@@ -17,7 +17,7 @@ export interface FlowProps {
  */
 export const Flow: React.FC<FlowProps> = ({ steps, connectorX, palette }) => {
   const c = colours(palette);
-  const stroke = 2;
+  const stroke = 3;
   return (
     <>
       {steps.map(({ pill, filled, second }, i) => {
@@ -26,7 +26,7 @@ export const Flow: React.FC<FlowProps> = ({ steps, connectorX, palette }) => {
         return (
           <div key={i}>
             <Chip x={pill.x} y={pill.y} w={pill.w} h={pill.h} fill={filled ? c.accent : c.ground} {...(!filled && { stroke: c.secondary })} />
-            {next && <Arrow x={connectorX} from={pill.y + pill.h + 8} to={next.pill.y - 8} color={c.muted} width={stroke} />}
+            {next && <Arrow x={connectorX} from={pill.y + pill.h + 8} to={next.pill.y - 8} color={c.body} width={stroke} />}
             {second && second.x - 20 > pill.x + pill.w + 18 && (
               <div style={{ position: "absolute", left: pill.x + pill.w + 18, top: cy - 1, width: second.x - 20 - (pill.x + pill.w + 18), height: 0, borderTop: `2px dashed ${c.line}` }} />
             )}
@@ -41,7 +41,7 @@ export const Flow: React.FC<FlowProps> = ({ steps, connectorX, palette }) => {
 const Arrow: React.FC<{ x: number; from: number; to: number; color: string; width: number }> = ({ x, from, to, color, width }) => {
   const h = to - from;
   if (h < 8) return null;
-  const head = Math.min(9, h / 2.5);
+  const head = Math.min(11, h / 2.5);
   return (
     <svg width={2 * head + 4} height={h} style={{ position: "absolute", left: x - head - 2, top: from, overflow: "visible" }}>
       <path d={`M ${head + 2} 0 V ${h} M 2 ${h - head} L ${head + 2} ${h} L ${2 * head + 2} ${h - head}`} fill="none" stroke={color} strokeWidth={width} strokeLinecap="round" strokeLinejoin="round" />

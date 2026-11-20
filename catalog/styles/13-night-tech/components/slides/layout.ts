@@ -195,6 +195,12 @@ function headline(ctx: SlideContext, a: Area, seam: number, size: { max: number;
 
 const seamAt = (a: Area, t: number) => Math.round(a.top + a.height * t);
 
+/**
+ * How far a slide of rows lowers its seam: half the room its rows leave empty under them, so the
+ * headline and the rows sit balanced in the content area instead of crowding its top.
+ */
+const settle = (room: number, used: number) => Math.max(0, Math.round((room - used) / 2));
+
 /** Headline and subtitle meet at a seam two thirds down: the headline grows upwards from it, the subtitle hangs below. With a visual, the seam rises to two fifths and the visual takes the space under the subtitle. */
 function cover(ctx: SlideContext): Composed {
   const { slide } = ctx;
@@ -300,12 +306,12 @@ function chipText(chip: CoverChip, a: Area): Rect {
 /** A notification card centred in `zone`, with a quieter one stacked behind it. */
 function notification(zone: Rect): CoverVisual {
   const card = notificationCard(zone);
-  const icon = Math.round(card.h * 0.44);
+  const icon = Math.round(card.h * 0.4);
   return { type: "notification", card, icon: { x: card.x + Math.round(card.h * 0.2), y: card.y + Math.round(card.h * 0.2), w: icon, h: icon } };
 }
 
 function notificationCard(zone: Rect): Rect {
-  const h = Math.round(Math.min(184, Math.max(132, zone.h * 0.44)));
+  const h = Math.round(Math.min(220, Math.max(132, zone.h * 0.46)));
   const w = Math.round(Math.min(zone.w, 860));
   return { x: Math.round(zone.x + (zone.w - w) / 2), y: Math.round(zone.y + (zone.h - h) / 2 + h * 0.08), w, h };
 }
@@ -314,17 +320,17 @@ function notificationBoxes(ctx: SlideContext, zone: Rect): SlideBox[] {
   const c = colours(ctx.palette);
   const card = notificationCard(zone);
   const pad = Math.round(card.h * 0.2);
-  const icon = Math.round(card.h * 0.44);
+  const icon = Math.round(card.h * 0.4);
   const x = card.x + pad + icon + Math.round(pad * 0.9);
   const w = card.x + card.w - pad - x;
   const fill = c.surface;
   const boxes: SlideBox[] = [];
   const { title, text } = ctx.slide.attrs;
   const titleH = Math.round(card.h * 0.26);
-  if (title) boxes.push(boxOn(ctx, { id: "notification-title", role: "text", text: title, x, y: card.y + pad - 4, w, h: titleH, maxSize: Math.round(card.h * 0.19), minSize: 20, lineHeight: 1.25, maxLines: 1, color: c.ink, readable: "body" }, fill));
+  if (title) boxes.push(boxOn(ctx, { id: "notification-title", role: "text", text: title, x, y: card.y + pad - 4, w, h: titleH, maxSize: Math.round(card.h * 0.2), minSize: 20, lineHeight: 1.25, maxLines: 1, color: c.ink, readable: "body" }, fill));
   if (text) {
     const y = card.y + pad - 4 + (title ? titleH : 0);
-    boxes.push(boxOn(ctx, { id: "notification-text", role: "text", text, x, y, w, h: card.y + card.h - pad + 4 - y, maxSize: Math.round(card.h * 0.16), minSize: 18, lineHeight: 1.3, maxLines: 2, color: c.body, readable: "body" }, fill));
+    boxes.push(boxOn(ctx, { id: "notification-text", role: "text", text, x, y, w, h: card.y + card.h - pad + 4 - y, maxSize: Math.round(card.h * 0.17), minSize: 18, lineHeight: 1.3, maxLines: 2, color: c.body, readable: "body" }, fill));
   }
   return boxes;
 }
@@ -348,11 +354,13 @@ function list(ctx: SlideContext): Composed {
   const { slide } = ctx;
   const c = colours(ctx.palette);
   const a = area(ctx);
-  const seam = seamAt(a, 0.3);
+  const n = slide.items.length;
+  const first = seamAt(a, 0.3);
+  const room = a.bottom - (first + SIZE.seamGap + 16);
+  const pitch = Math.floor(Math.min(170, room / Math.max(n, 1)));
+  const seam = first + settle(room, n * pitch);
   const boxes = headline(ctx, a, seam, { max: 104, min: 52, lines: 3 });
   const top = seam + SIZE.seamGap + 16;
-  const n = slide.items.length;
-  const pitch = Math.floor(Math.min(150, (a.bottom - top) / Math.max(n, 1)));
   const icon = Math.round(Math.min(56, pitch * 0.48));
   const textX = a.left + icon + 32;
   const textW = a.right - textX;
@@ -362,10 +370,10 @@ function list(ctx: SlideContext): Composed {
     const y = top + i * pitch + 10;
     const room = pitch - 22;
     const mainH = item.second ? Math.round(room * 0.64) : room;
-    const size = Math.round(Math.min(40, Math.max(26, pitch * 0.3)));
+    const size = Math.round(Math.min(42, Math.max(26, pitch * 0.3)));
     boxes.push(box(ctx, { id, role: "text", text: item.text, x: textX, y, w: textW, h: mainH, maxSize: size, minSize: 22, lineHeight: 1.25, maxLines: 2, balance: true, color: c.ink, readable: "body" }));
     if (item.second) {
-      boxes.push(box(ctx, { id: `${id}-second`, role: "text", text: item.second, x: textX, y: y + mainH, w: textW, h: room - mainH, maxSize: Math.round(size * 0.72), minSize: 18, lineHeight: 1.25, maxLines: 1, color: c.muted, readable: "body" }));
+      boxes.push(box(ctx, { id: `${id}-second`, role: "text", text: item.second, x: textX, y: y + mainH, w: textW, h: room - mainH, maxSize: Math.round(size * 0.76), minSize: 18, lineHeight: 1.25, maxLines: 1, color: c.muted, readable: "body" }));
     }
     rows.push({ id, n: i + 1, ...(item.mark && { mark: item.mark }), icon: { x: a.left, size: icon }, ...(i < n - 1 && { rule: { x: textX, y: top + (i + 1) * pitch, w: textW } }) });
   });
@@ -382,16 +390,18 @@ function steps(ctx: SlideContext): Composed {
   const { slide } = ctx;
   const c = colours(ctx.palette);
   const a = area(ctx);
-  const seam = seamAt(a, 0.3);
+  const n = slide.items.length;
+  const first = seamAt(a, 0.3);
+  const room = a.bottom - (first + SIZE.seamGap + 16);
+  const pitch = Math.floor(Math.min(156, room / Math.max(n, 1)));
+  const seam = first + settle(room, n * pitch);
   const boxes = headline(ctx, a, seam, { max: 104, min: 52, lines: 3 });
   const top = seam + SIZE.seamGap + 16;
-  const n = slide.items.length;
-  const pitch = Math.floor(Math.min(136, (a.bottom - top) / Math.max(n, 1)));
   const pillH = Math.round(Math.min(88, pitch * 0.64));
   const padX = Math.round(pillH * 0.48);
   const pillW = Math.round(a.width * 0.56);
   const filledLine = filledSecond(slide);
-  const secondX = a.left + pillW + 56;
+  const secondX = a.left + pillW + 40;
   const flow: FlowStep[] = [];
   slide.items.forEach((item, i) => {
     const id = `step-${i + 1}`;
@@ -402,13 +412,16 @@ function steps(ctx: SlideContext): Composed {
     const fill = filled ? c.accent : c.ground;
     boxes.push(filled ? boxOn(ctx, { ...textBox, color: onFill(c.accent, c.ground, 3) }, fill) : box(ctx, { ...textBox, color: c.ink }));
     if (item.second) {
-      const h = SIZE.frameRow;
-      boxes.push(box(ctx, { id: `${id}-second`, ...mono, upper: true, text: item.second, x: secondX, y: pill.y + Math.round((pillH - h) / 2), w: a.right - secondX, h, color: filled ? c.secondary : c.muted }));
+      const h = Math.round(SECOND_SIZE * 1.3);
+      boxes.push(box(ctx, { id: `${id}-second`, ...mono, maxSize: SECOND_SIZE, minSize: 18, upper: true, text: item.second, x: secondX, y: pill.y + Math.round((pillH - h) / 2), w: a.right - secondX, h, color: filled ? c.secondary : c.body }));
     }
     flow.push({ id, filled, pill, padX, ...(item.second && { second: { id: `${id}-second` } }) });
   });
   return { boxes, drawing: { kind: "steps", steps: flow, connectorX: a.left + Math.round(pillH / 2) } };
 }
+
+/** The size of a step's second line ("US", "SOFTWARE"): larger than the frame's labels, so it reads at phone size. */
+const SECOND_SIZE = 28;
 
 function filledSecond(slide: Slide): string | undefined {
   const seconds = slide.items.map((i) => i.second).filter((s): s is string => !!s);
@@ -426,16 +439,8 @@ function compare(ctx: SlideContext): Composed {
   const { slide } = ctx;
   const c = colours(ctx.palette);
   const a = area(ctx);
-  const seam = seamAt(a, 0.27);
-  const boxes = headline(ctx, a, seam, { max: 96, min: 48, lines: 3 });
-  let y = seam + SIZE.seamGap;
   const body = slide.body.join(" ");
-  if (body) {
-    const h = 2 * Math.round(32 * 1.4);
-    boxes.push(box(ctx, { id: "body", role: "text", text: body, x: a.left, y, w: a.width, h, maxSize: 32, minSize: 22, lineHeight: 1.4, maxLines: 2, color: c.body, readable: "body" }));
-    y += h;
-  }
-  y += 40;
+  const bodyH = body ? 2 * Math.round(32 * 1.4) : 0;
   const marked = slide.items.some((i) => i.mark);
   const half = Math.ceil(slide.items.length / 2);
   const groups: { side: CompareColumn["side"]; items: Item[] }[] = marked
@@ -447,14 +452,23 @@ function compare(ctx: SlideContext): Composed {
         { side: "before", items: slide.items.slice(0, half) },
         { side: "after", items: slide.items.slice(half) },
       ];
+  const rows = Math.max(1, ...groups.map((g) => g.items.length));
+  const first = seamAt(a, 0.27);
+  const room = a.bottom - (first + SIZE.seamGap + bodyH + 40);
+  const pitch = Math.floor(Math.min(150, room / rows));
+  const seam = first + settle(room, rows * pitch);
+  const boxes = headline(ctx, a, seam, { max: 96, min: 48, lines: 3 });
+  let y = seam + SIZE.seamGap;
+  if (body) {
+    boxes.push(box(ctx, { id: "body", role: "text", text: body, x: a.left, y, w: a.width, h: bodyH, maxSize: 32, minSize: 22, lineHeight: 1.4, maxLines: 2, balance: true, color: c.body, readable: "body" }));
+    y += bodyH;
+  }
+  const itemsTop = y + 40;
   const gutter = 28;
   const colW = Math.floor((a.width - gutter) / 2);
-  const itemsTop = y;
-  const rows = Math.max(1, ...groups.map((g) => g.items.length));
-  const pitch = Math.floor(Math.min(136, (a.bottom - itemsTop) / rows));
   const rowH = pitch - 16;
   const pad = Math.round(Math.min(26, rowH * 0.24));
-  const icon = marked ? { size: Math.round(Math.min(26, rowH * 0.3)), pad } : undefined;
+  const icon = marked ? { size: Math.round(Math.min(34, rowH * 0.3)), pad } : undefined;
   const columns: CompareColumn[] = groups.map((group, g) => {
     const x = a.left + g * (colW + gutter);
     const textX = x + pad + (icon ? icon.size + Math.round(pad * 0.6) : 0);
@@ -465,7 +479,7 @@ function compare(ctx: SlideContext): Composed {
       boxes.push(
         boxOn(
           ctx,
-          { id, role: "text", text: item.text, x: textX, y: rect.y + inset, w: x + colW - pad - textX, h: rowH - 2 * inset, maxSize: Math.round(Math.min(32, rowH * 0.3)), minSize: 18, lineHeight: 1.22, maxLines: 3, balance: true, color: group.side === "bad" || group.side === "before" ? c.body : c.ink, readable: "body" },
+          { id, role: "text", text: item.text, x: textX, y: rect.y + inset, w: x + colW - pad - textX, h: rowH - 2 * inset, maxSize: Math.round(Math.min(36, rowH * 0.3)), minSize: 18, lineHeight: 1.22, maxLines: 3, balance: true, color: group.side === "bad" || group.side === "before" ? c.body : c.ink, readable: "body" },
           compareFill(ctx.palette, group.side),
         ),
       );

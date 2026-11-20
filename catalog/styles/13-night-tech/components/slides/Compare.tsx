@@ -39,7 +39,7 @@ export const Compare: KindView<"compare"> = ({ ctx, boxes, fitted, drawing }) =>
                   />
                   {column.icon && (
                     <div style={{ position: "absolute", left: rect.x + column.icon.pad, top: (text ? text.box.y + (text.box.h - text.fitted.height) / 2 + lineHeight(text.fitted) / 2 : rect.y + rect.h / 2) - column.icon.size / 2 }}>
-                      <Icon name={column.side === "bad" ? "cross" : "check"} size={column.icon.size} color={tint} stroke={2.5} />
+                      <Icon name={column.side === "bad" ? "cross" : "check"} size={column.icon.size} color={tint} stroke={3} />
                     </div>
                   )}
                   {text && <FittedLines {...text} style={{ display: "flex", flexDirection: "column", justifyContent: "center" }} />}
