@@ -1,5 +1,7 @@
 // Registers every style that has components. A new style adds two lines here and
-// one in layouts.ts.
+// one in layouts.ts. A style that makes posts also registers its SlideView here with
+// registerSlideView (slideViews.ts), and its layout in slideLayouts.ts; it needs no video
+// scenes to do so.
 import { softThreeD } from "../../../catalog/styles/01-soft-3d/components/index.js";
 import { lowPoly } from "../../../catalog/styles/02-90s-low-poly/components/index.js";
 import { flatCartoon } from "../../../catalog/styles/03-flat-cartoon/components/index.js";

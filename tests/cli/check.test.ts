@@ -89,5 +89,8 @@ describe("check", () => {
     };
     expect(summaryLines(report)).toEqual(["Checks: FAIL (2 errors, 0 warnings)", "  error   0:00.0  clipping  True peak is -0.4 dBTP", "  error   0:12.3  sync  Captions drift 3 frames"]);
     expect(summaryLines({ pass: true, issues: [] })).toEqual(["Checks: PASS (0 errors, 0 warnings)"]);
+    // A post's issues name their slide and have no time.
+    const post: CheckReport = { pass: false, issues: [{ check: "contrast", atMs: 0, severity: "error", message: "story slide 2: low contrast" }] };
+    expect(summaryLines(post, { times: false })).toEqual(["Checks: FAIL (1 error, 0 warnings)", "  error   contrast  story slide 2: low contrast"]);
   });
 });

@@ -4,10 +4,12 @@ import { drawsEndingMark, getLayout } from "../../remotion/styles/layouts.js";
 import { type Pcm, readSoundtrack, speechOnsets } from "../audio/speech.js";
 import { type Loudness, checkLoudness, measureLoudness } from "../check/audio.js";
 import { checkFrames, readGrayFrames } from "../check/frames.js";
+import { checkPost } from "../check/post.js";
 import { checkOverlap, checkSafeZone, placedBoxes } from "../check/overlap.js";
 import { captionedOnsets, checkEdges, checkSync, shownWords } from "../check/sync.js";
 import { type CheckReport, toReport } from "../check/types.js";
 import type { VideoPlan } from "../plan/types.js";
+import type { PostPlan } from "../post/buildPostPlan.js";
 import { readOwnBoxes } from "../render/ownScenes.js";
 import { TEXT_ONLY_VOICE } from "../catalog/special.js";
 
@@ -47,6 +49,21 @@ export async function checkVideo(videoDir: string, deps: CheckDeps = defaultChec
   return report;
 }
 
+/**
+ * Runs a made post's checks again from `<postDir>/post-plan.json` (one plan per format) and
+ * writes `<postDir>/check.json`. `unfaced check` calls this for a folder with slides.md.
+ */
+export function checkPostDir(postDir: string): CheckReport {
+  const dir = resolve(postDir);
+  const file = join(dir, "post-plan.json");
+  if (!existsSync(file)) throw new Error(`post-plan.json not found in ${dir}; run "unfaced post" on this folder first`);
+  const plans = JSON.parse(readFileSync(file, "utf8")) as PostPlan[];
+  const report = toReport(plans.flatMap(checkPost));
+  writeFileSync(join(dir, "check.json"), `${JSON.stringify(report, null, 2)}
+`);
+  return report;
+}
+
 const count = (n: number, noun: string) => `${n} ${noun}${n === 1 ? "" : "s"}`;
 
 /** m:ss.t */
@@ -55,12 +72,12 @@ function clock(ms: number): string {
   return `${Math.floor(tenths / 600)}:${((tenths % 600) / 10).toFixed(1).padStart(4, "0")}`;
 }
 
-/** A verdict line, then one line per issue. */
-export function summaryLines(report: CheckReport): string[] {
+/** A verdict line, then one line per issue; a post's issues have no time (they name their slide). */
+export function summaryLines(report: CheckReport, { times = true }: { times?: boolean } = {}): string[] {
   const errors = report.issues.filter((i) => i.severity === "error").length;
   const warnings = report.issues.length - errors;
   return [
     `Checks: ${report.pass ? "PASS" : "FAIL"} (${count(errors, "error")}, ${count(warnings, "warning")})`,
-    ...report.issues.map((i) => `  ${i.severity.padEnd(7)} ${clock(i.atMs)}  ${i.check}  ${i.message}`),
+    ...report.issues.map((i) => `  ${i.severity.padEnd(7)} ${times ? `${clock(i.atMs)}  ` : ""}${i.check}  ${i.message}`),
   ];
 }

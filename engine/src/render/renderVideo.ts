@@ -26,6 +26,8 @@ export interface RenderJob {
   entryPoint?: string;
   assetsDir?: string;
   files?: string[];
+  /** Files from anywhere, by the path staticFile() reads them at (a post's fonts live in the catalog or the page). */
+  staged?: Record<string, string>;
   scenes?: string;
   /** How renderMediaOf encodes: H.264 + AAC by default, or a looping GIF with every nth frame, scaled. */
   media?: { codec: "gif"; everyNthFrame: number; scale: number };
@@ -54,12 +56,13 @@ export function planFiles(plan: VideoPlan, assetsDir: string): string[] {
  * A temporary folder holding only the files the render reads, used as the bundle's public
  * folder: the bundler copies its public folder, and a video folder also holds renders and frames.
  */
-export function stagePublicDir(assetsDir: string, files: string | string[]): string {
+export function stagePublicDir(assetsDir: string, files: string | string[], from: Record<string, string> = {}): string {
   const staged = mkdtempSync(join(tmpdir(), "unfaced-public-"));
-  for (const file of ([] as string[]).concat(files)) {
+  const sources: [string, string][] = [...([] as string[]).concat(files).map((file): [string, string] => [file, join(assetsDir, file)]), ...Object.entries(from)];
+  for (const [file, source] of sources) {
     const target = join(staged, file);
     mkdirSync(dirname(target), { recursive: true });
-    copyFileSync(join(assetsDir, file), target);
+    copyFileSync(source, target);
   }
   return staged;
 }
@@ -89,17 +92,18 @@ const bundles = new Map<string, Promise<string>>();
 /** Every temporary folder a bundle made, kept apart from `bundles` so a failed bundle's folders are deleted too. */
 const temporary: string[] = [];
 
-/** Bundles once per entry point, scenes and staged files (their paths, sizes and times). */
-function serveUrl(entryPoint: string, assetsDir: string, files: string[], scenes?: string): Promise<string> {
-  const stats = files.map((f) => {
-    const s = statSync(join(assetsDir, f));
-    return `${f}:${s.size}:${s.mtimeMs}`;
-  });
+/** Bundles once per entry point, scenes and staged files (their paths, sources, sizes and times). */
+function serveUrl(entryPoint: string, assetsDir: string, files: string[], scenes?: string, from: Record<string, string> = {}): Promise<string> {
+  const stat = (f: string, source: string) => {
+    const s = statSync(source);
+    return `${f}:${source}:${s.size}:${s.mtimeMs}`;
+  };
+  const stats = [...files.map((f) => stat(f, join(assetsDir, f))), ...Object.entries(from).map(([f, source]) => stat(f, source))];
   // With no files to stage, the folder they would come from changes nothing in the bundle.
   const key = [entryPoint, files.length > 0 ? assetsDir : "", scenes ?? "", ...stats].join("\n");
   let url = bundles.get(key);
   if (!url) {
-    const staged = stagePublicDir(assetsDir, files);
+    const staged = stagePublicDir(assetsDir, files, from);
     const outDir = mkdtempSync(join(tmpdir(), "unfaced-bundle-"));
     temporary.push(staged, outDir);
     let entry = entryPoint;
@@ -176,7 +180,7 @@ function compositionOf(url: string, job: RenderJob, scale: number, browser: Head
 
 async function prepare(job: RenderJob, scale: number) {
   const entryPoint = resolve(job.entryPoint ?? ENGINE_ENTRY);
-  const url = await serveUrl(entryPoint, resolve(job.assetsDir ?? dirname(job.outPath)), job.files ?? [], job.scenes);
+  const url = await serveUrl(entryPoint, resolve(job.assetsDir ?? dirname(job.outPath)), job.files ?? [], job.scenes, job.staged);
   const browser = await browserAt(scale);
   const composition = await compositionOf(url, job, scale, browser);
   mkdirSync(dirname(job.outPath), { recursive: true });

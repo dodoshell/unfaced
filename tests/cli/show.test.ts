@@ -77,8 +77,7 @@ describe("unfaced show", () => {
 
 describe("unfaced docs", () => {
   it("prints every format document and lists them when no name is given", () => {
-    // slides.md is written with the post commands; until then `unfaced docs slides` says there is no such file.
-    for (const name of FORMATS.filter((f) => f !== "slides")) expect(docText(name).length, name).toBeGreaterThan(200);
+    for (const name of FORMATS) expect(docText(name).length, name).toBeGreaterThan(200);
     expect(FORMATS).toContain("brand");
     expect(docText()).toContain("script");
     expect(() => docText("nope")).toThrow(/No format "nope".*script/);

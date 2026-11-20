@@ -1,0 +1,54 @@
+import { existsSync, mkdirSync, readdirSync, rmSync, statSync } from "node:fs";
+import { join, resolve } from "node:path";
+import { POST_GRID_ID, POST_SLIDE_ID } from "../../remotion/compositionId.js";
+import { SLIDE_FONT_ROLES, slideFontFile } from "../../remotion/post/slideFonts.js";
+import { inboxKind } from "../inbox/inbox.js";
+import type { PostPlan } from "../post/buildPostPlan.js";
+import { renderStillOf } from "./renderVideo.js";
+
+export interface PostRenderOptions {
+  /** The post's folder, whose inbox/ images the slides read as `inbox/<file>`. */
+  postDir?: string;
+  /** Remotion entry point; defaults to the engine's, with every built style. */
+  entryPoint?: string;
+}
+
+/**
+ * What a post render reads through staticFile(), by public path: the four fonts as
+ * fonts/<role>.<ext>, the brand's logo at its path in page.yaml, and the post's inbox/ images.
+ */
+export function postFiles(plan: PostPlan, pageDir: string, postDir?: string): Record<string, string> {
+  const files: Record<string, string> = {};
+  for (const role of SLIDE_FONT_ROLES) files[slideFontFile(role, plan.fonts[role])] = plan.fonts[role];
+  if (plan.brand.logo) files[plan.brand.logo.replace(/\\/g, "/")] = resolve(pageDir, plan.brand.logo);
+  const inbox = postDir && join(postDir, "inbox");
+  if (inbox && existsSync(inbox)) {
+    for (const f of readdirSync(inbox)) {
+      if (!f.startsWith(".") && inboxKind(f) === "image" && statSync(join(inbox, f)).isFile()) files[`inbox/${f}`] = join(inbox, f);
+    }
+  }
+  return files;
+}
+
+const slideName = (i: number) => `slide-${String(i + 1).padStart(2, "0")}.png`;
+
+/**
+ * Renders each slide of one format to `<outDir>/slide-01.png…` and all of them side by side to
+ * `<outDir>/grid.png`, in one browser session; returns the slides' paths, then the grid's. Slides
+ * left from an earlier, longer render are removed. The bundle and browser are kept until closeRenders().
+ */
+export async function renderPost(plan: PostPlan, outDir: string, pageDir: string, options: PostRenderOptions = {}): Promise<string[]> {
+  const dir = resolve(outDir);
+  mkdirSync(dir, { recursive: true });
+  for (const f of readdirSync(dir)) if (/^slide-\d+\.png$/.test(f)) rmSync(join(dir, f));
+  const job = { entryPoint: options.entryPoint, assetsDir: resolve(pageDir), staged: postFiles(plan, pageDir, options.postDir), frame: 0 };
+  const files: string[] = [];
+  for (let index = 0; index < plan.slides.length; index++) {
+    const outPath = join(dir, slideName(index));
+    await renderStillOf({ ...job, id: POST_SLIDE_ID, inputProps: { plan, index }, outPath });
+    files.push(outPath);
+  }
+  const grid = join(dir, "grid.png");
+  await renderStillOf({ ...job, id: POST_GRID_ID, inputProps: { plan }, outPath: grid });
+  return [...files, grid];
+}

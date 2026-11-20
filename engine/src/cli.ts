@@ -1,5 +1,7 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { Catalog } from "./catalog/catalog.js";
-import { checkVideo, summaryLines } from "./cli/check.js";
+import { checkPostDir, checkVideo, summaryLines } from "./cli/check.js";
 import { defaultChecks, keyLines, runDoctor } from "./cli/doctor.js";
 import { makeCover } from "./cli/cover.js";
 import { renderDemos } from "./cli/demo.js";
@@ -12,6 +14,8 @@ import { listLines } from "./cli/list.js";
 import { defaultMakeDeps, makeVideo } from "./cli/make.js";
 import { renderMascotSheet } from "./cli/mascot.js";
 import { pageSummary } from "./cli/page.js";
+import { makePost } from "./cli/post.js";
+import { formatFor } from "./post/formats.js";
 import { renderHookReel } from "./cli/reel.js";
 import { resultsReport } from "./cli/results.js";
 import { showText } from "./cli/show.js";
@@ -24,10 +28,13 @@ const USAGE = `Usage: unfaced <command>
 Commands:
   list <kind>                    List a catalog (style, script, hook, voice, captions, music, ending, duration, post-type)
   show <kind> [number]           Print a catalog entry's guide, or the whole catalog file with its rules
-  docs [format]                  Print a file format (page, script, mascot, scenes, review, post, results)
+  docs [format]                  Print a file format (page, script, mascot, scenes, review, post, results, brand, slides)
   page <pageDir>                 Check a page profile and print it with every choice named
   make <videoDir>                Make the video in <videoDir> (script.md; page.yaml two folders up)
-  check <videoDir>               Run the automatic checks on a made video; writes <videoDir>/check.json
+  post <postDir> [--format <name>]
+                                 Make the post in <postDir> (slides.md; page.yaml two folders up): slide PNGs,
+                                 grid.png and, for linkedin-carousel, post.pdf; writes post-plan.json and check.json
+  check <videoDir|postDir>       Run the automatic checks on a made video or post; writes check.json
   frames <videoDir> [--every 1s] Render review frames of a made video into <videoDir>/frames/
   cover <videoDir> [--at 1.5]    Render the cover (a frame without captions) to <videoDir>/cover.png
   inbox <videoDir>               Check the files handed off into <videoDir>/inbox/ and list the prompts still waiting for one
@@ -83,9 +90,17 @@ async function main(args: string[]): Promise<number> {
       console.log(await makeCover(need(rest[0], "the video folder"), atSec));
       return 0;
     }
+    case "post": {
+      const at = rest.indexOf("--format");
+      const format = at >= 0 ? formatFor(need(rest[at + 1], "a format name for --format")).name : undefined;
+      const { pass } = await makePost(need(rest[0], "the post folder"), undefined, format ? { format } : {});
+      return pass ? 0 : 1;
+    }
     case "check": {
-      const report = await checkVideo(need(rest[0], "the video folder"));
-      console.log(summaryLines(report).join("\n"));
+      const dir = need(rest[0], "the video or post folder");
+      const post = existsSync(join(dir, "slides.md"));
+      const report = post ? checkPostDir(dir) : await checkVideo(dir);
+      console.log(summaryLines(report, { times: !post }).join("\n"));
       return report.pass ? 0 : 1;
     }
     case "frames": {
