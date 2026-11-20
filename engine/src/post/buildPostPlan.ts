@@ -1,6 +1,6 @@
 import { readFileSync, statSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
-import type { FontRole, SlideBox, SlideContext, TextBox } from "../../remotion/styles/registry.js";
+import type { FontRole, SlideBox, SlideColours, SlideContext, TextBox } from "../../remotion/styles/registry.js";
 import { getSlideLayout, stylesWithSlides } from "../../remotion/styles/slideLayouts.js";
 import { slideLogoFile } from "../../remotion/post/slideFonts.js";
 import type { Catalog } from "../catalog/catalog.js";
@@ -12,7 +12,7 @@ import { formatFor } from "./formats.js";
 import { frameWords } from "./frameWords.js";
 import { slideLimit } from "./limits.js";
 import { logoAspect } from "./logoAspect.js";
-import { postPalette } from "./palette.js";
+import { postPalette, slideColours } from "./palette.js";
 import { parseSlides } from "./parseSlides.js";
 import type { FormatName, PostFormat, Slide } from "./types.js";
 
@@ -22,6 +22,8 @@ export interface PostPlan {
   format: PostFormat;
   language: string;
   palette: string[];
+  /** The style's colours by name for `palette`; what a post's own slides draw with. */
+  colours: SlideColours;
   brand: Brand;
   label?: string;
   /** Absolute font files: the brand's where it has one for the role, the style's otherwise. */
@@ -52,20 +54,29 @@ const ROLES: FontRole[] = ["display", "accent", "text", "mono"];
 /**
  * The plans for the post in `postDir` (one per format: `opts.format`, else the front matter's,
  * else the page's, else instagram-carousel). Throws before anything renders when the slide
- * count does not suit a format, the style makes no posts, or a text does not fit its box.
+ * count does not suit a format (of the page's formats, only when it suits none of them, the
+ * others being left out with a warning), the style makes no posts, or a text does not fit its box.
  */
 export function buildPostPlans(postDir: string, page: Page, catalog: Catalog, opts: PlanOptions = {}): { plans: PostPlan[]; warnings: string[] } {
   const file = parseSlides(readFileSync(join(postDir, "slides.md"), "utf8"));
   const warnings: string[] = [];
 
+  const fromPage = !opts.format && !file.formats.length && page.formats !== undefined;
   const names = opts.format ? [opts.format] : file.formats.length ? file.formats : (page.formats ?? [DEFAULT_FORMAT]);
-  const formats = [...new Set(names)].map((name) => formatFor(name, file.square));
   const total = file.slides.length;
-  for (const format of formats) {
-    if (total < format.minSlides || total > format.maxSlides) {
-      const range = format.minSlides === format.maxSlides ? `${format.minSlides} slide${format.minSlides === 1 ? "" : "s"}` : `${format.minSlides}–${format.maxSlides} slides`;
-      throw new Error(`${format.name} takes ${range}; slides.md has ${total}`);
+  const all = [...new Set(names)].map((name) => formatFor(name, file.square));
+  const suits = (format: PostFormat) => total >= format.minSlides && total <= format.maxSlides;
+  // A format the post asks for must suit it. The page's formats are defaults for every post, so
+  // one that does not suit this post's slide count (instagram-post for a carousel) is left out.
+  const formats = fromPage ? all.filter(suits) : all;
+  for (const format of all) {
+    if (suits(format)) continue;
+    if (!fromPage) throw new Error(`${format.name} takes ${slideRange(format)}; slides.md has ${total}`);
+    if (!formats.length) {
+      if (all.length === 1) throw new Error(`${format.name} takes ${slideRange(format)}; slides.md has ${total}`);
+      throw new Error(`No format of the page takes ${total} slides: ${all.map((f) => `${f.name} takes ${slideRange(f)}`).join(", ")}`);
     }
+    warnings.push(`The page's format ${format.name} takes ${slideRange(format)}; slides.md has ${total}, so it is left out`);
   }
 
   for (const slide of file.slides) {
@@ -75,10 +86,8 @@ export function buildPostPlans(postDir: string, page: Page, catalog: Catalog, op
 
   const style = postStyle(file.style, page.postStyle, catalog, opts.allowPlanned ?? false);
   const kit = getSlideLayout(style);
-  const entry = catalog.get("style", style);
-  const styleFile = resolve(catalog.root, entry.path);
-  const { defaultPalette } = JSON.parse(readFileSync(styleFile, "utf8")) as { defaultPalette: string[] };
-  const { palette, warnings: paletteWarnings } = postPalette({ name: entry.name, defaultPalette, ...(kit.ground && { ground: kit.ground }) }, page.palette);
+  const styleFile = resolve(catalog.root, catalog.get("style", style).path);
+  const { palette, warnings: paletteWarnings } = stylePalette(style, page.palette, catalog);
   warnings.push(...paletteWarnings);
   const brand = page.brand ?? {};
   const fonts = fontFiles(kit.fonts, dirname(styleFile), brand, page.dir);
@@ -93,6 +102,7 @@ export function buildPostPlans(postDir: string, page: Page, catalog: Catalog, op
     format,
     language: page.language,
     palette,
+    colours: (kit.colours ?? slideColours)(palette),
     brand,
     ...(file.label !== undefined && { label: file.label }),
     fonts,
@@ -117,6 +127,20 @@ export function buildPostPlans(postDir: string, page: Page, catalog: Catalog, op
   }));
   return { plans, warnings };
 }
+
+/**
+ * The palette a post style draws with for the page's colours, and the warnings when it ignores
+ * some of them (design §5.6). Shared by `unfaced post` and `unfaced page`, so both say the same.
+ */
+export function stylePalette(style: number, page: string[] | undefined, catalog: Catalog): { palette: string[]; warnings: string[] } {
+  const entry = catalog.get("style", style);
+  const { defaultPalette } = JSON.parse(readFileSync(resolve(catalog.root, entry.path), "utf8")) as { defaultPalette: string[] };
+  const { ground } = getSlideLayout(style);
+  return postPalette({ name: entry.name, defaultPalette, ...(ground && { ground }) }, page);
+}
+
+const slideRange = (format: PostFormat) =>
+  format.minSlides === format.maxSlides ? `${format.minSlides} slide${format.minSlides === 1 ? "" : "s"}` : `${format.minSlides}–${format.maxSlides} slides`;
 
 const where = (slide: Slide) => `slides.md line ${slide.line} (slide ${slide.index + 1}, ${slide.kind})`;
 

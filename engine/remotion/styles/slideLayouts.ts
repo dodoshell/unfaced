@@ -4,8 +4,8 @@
 import { nightTechLayout } from "../../../catalog/styles/13-night-tech/components/slides/layout.js";
 import type { SlideKit } from "./registry.js";
 
-/** The part of a SlideKit that needs no React: the font files, the layout, the kinds drawn so far and the ground's family. */
-export type SlideLayout = Pick<SlideKit, "fonts" | "layout" | "kinds" | "ground">;
+/** The part of a SlideKit that needs no React: the font files, the layout, the kinds drawn so far, the ground's family and the colours. */
+export type SlideLayout = Pick<SlideKit, "fonts" | "layout" | "kinds" | "ground" | "colours">;
 
 const SLIDE_LAYOUTS = new Map<number, SlideLayout>([[13, nightTechLayout]]);
 

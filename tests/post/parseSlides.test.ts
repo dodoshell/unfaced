@@ -129,4 +129,13 @@ describe("parseSlides", () => {
     expect(() => parseSlides("## cover\n# Hi\n")).toThrow(SlidesError);
     expect(() => parseSlides(withSlides(""))).toThrow(/no slides/i);
   });
+
+  it("rejects text before the first slide, naming its line, but allows blank lines and HTML comments", () => {
+    const front = "---\ntitle: T\npost_type: 1\n---\n";
+    expect(() => parseSlides(`${front}\nWho we are\n\n## cover\n# Hi\n`)).toThrow(
+      "slides.md line 6: text before the first slide; start a slide with ## <kind>",
+    );
+    const ok = parseSlides(`${front}\n<!-- a note -->\n<!--\nlonger note\n-->\n\n## cover\n# Hi\n`);
+    expect(ok.slides.map((s) => s.kind)).toEqual(["cover"]);
+  });
 });

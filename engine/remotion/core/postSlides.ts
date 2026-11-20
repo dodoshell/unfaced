@@ -1,8 +1,12 @@
 import type React from "react";
-import type { SlideContext } from "../styles/registry.js";
+import type { SlideColours, SlideContext } from "../styles/registry.js";
 
-/** A slide drawn by code written for one post (its `custom/` folder). It draws the content only; the style's view draws the frame around it. */
-export type SlideComponent = React.FC<{ ctx: SlideContext }>;
+/**
+ * A slide drawn by code written for one post (its `custom/` folder). It draws the content only;
+ * the style's view draws the ground and the frame around it. `colours` are the post style's
+ * colours by name for the page's palette, so the slide matches any style without importing it.
+ */
+export type SlideComponent = React.FC<{ ctx: SlideContext; colours: SlideColours }>;
 
 let custom: Record<string, SlideComponent> = {};
 

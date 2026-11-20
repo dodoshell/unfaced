@@ -4,6 +4,8 @@ import type { Catalog } from "../catalog/catalog.js";
 import { loadPage } from "../page/loadPage.js";
 import { checkBrandFiles } from "../page/brand.js";
 import { loadMascot } from "../page/mascot.js";
+import { stylePalette } from "../post/buildPostPlan.js";
+import { stylesWithSlides } from "../../remotion/styles/slideLayouts.js";
 import { CHOICE_FIELDS, type Choice, type Page } from "../page/types.js";
 
 /**
@@ -40,7 +42,7 @@ export async function pageSummary(pageDir: string, catalog: Catalog): Promise<st
   return lines;
 }
 
-/** The posts line, the brand line and the warning when the post style cannot make posts yet. */
+/** The posts line, the brand line, and the warnings when the post style cannot make posts yet or will ignore palette colours. */
 function postLines(page: Page, catalog: Catalog): string[] {
   const lines: string[] = [];
   const list = (choice: Choice | undefined, name: (n: number) => string) =>
@@ -60,6 +62,9 @@ function postLines(page: Page, catalog: Catalog): string[] {
     const names = cannot.map((n) => `style ${n} ${catalog.get("style", n).name}`).join(", ");
     lines.push(`warning: ${names} cannot make posts yet; ${can.length ? `styles that can: ${can.map((e) => `${e.num} ${e.name}`).join(", ")}` : "no style makes posts yet"}`);
   }
+  // The same palette rule `unfaced post` applies, so a colour the post style will ignore is said here first.
+  const drawn = chosen.filter((n) => !cannot.includes(n) && stylesWithSlides().includes(n));
+  for (const warning of new Set(drawn.flatMap((n) => stylePalette(n, page.palette, catalog).warnings))) lines.push(`warning: ${warning}`);
 
   const brand = page.brand;
   if (brand) {

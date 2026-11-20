@@ -118,7 +118,7 @@ describe("unfaced page", () => {
     const dir = page(
       [
         "name: Studio", "language: it", "niche: web studio", "style: { posts: 13, videos: 3 }", "post_type: [1, 3]",
-        "formats: [instagram-carousel, story]", "brand:", '  handle: "@studionord"', "  site: studionord.it",
+        "formats: [instagram-carousel, story]", "brand:", '  handle: "@studionord"', "  site: studionord.example",
         "  logo: brand/logo.svg", "  fonts: { display: brand/fonts/A.ttf }", "  tone: direct, warm", "",
       ].join("\n"),
     );
@@ -129,7 +129,7 @@ describe("unfaced page", () => {
     expect(lines).toContain("style: 3 Flat cartoon");
     expect(lines).toContain("Posts: style 13 Night tech · post types 1, 3 · formats instagram-carousel, story");
     const brand = lines.find((l) => l.startsWith("Brand:"))!;
-    for (const part of ["@studionord", "studionord.it", "brand/logo.svg", "display brand/fonts/A.ttf", "direct, warm"]) expect(brand).toContain(part);
+    for (const part of ["@studionord", "studionord.example", "brand/logo.svg", "display brand/fonts/A.ttf", "direct, warm"]) expect(brand).toContain(part);
     expect(lines.some((l) => l.startsWith("warning"))).toBe(false);
   });
 
@@ -142,6 +142,15 @@ describe("unfaced page", () => {
     other.get("style", 12).posts = "ready";
     const some = await pageSummary(page(yaml), other);
     expect(some.find((l) => l.startsWith("warning"))).toMatch(/cannot make posts yet; styles that can: 12 Kinetic typography/);
+  });
+
+  it("warns when the palette's background is ignored by the post style, as unfaced post does", async () => {
+    const light = await pageSummary(page('name: P\nlanguage: en\nniche: x\nstyle: { posts: 13 }\npalette: ["#FFFFFF", "#FF0055"]\n'), catalogWithNightTech("ready"));
+    expect(light).toContain("warning: Night tech keeps its dark ground; palette background #FFFFFF ignored");
+    const dark = await pageSummary(page('name: P\nlanguage: en\nniche: x\nstyle: { posts: 13 }\npalette: ["#101418", "#FF0055"]\n'), catalogWithNightTech("ready"));
+    expect(dark.some((l) => l.startsWith("warning"))).toBe(false);
+    const videosOnly = await pageSummary(page('name: P\nlanguage: en\nniche: x\nstyle: 3\npalette: ["#FFFFFF"]\n'), catalog);
+    expect(videosOnly.some((l) => l.startsWith("warning"))).toBe(false);
   });
 
   it("prints a plain video-only page exactly as before: no Posts line, no post warning", async () => {

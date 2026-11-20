@@ -116,6 +116,36 @@ describe("buildPostPlans", () => {
     expect(buildPostPlans(dir, page(pageDir), catalog, { format: "story" }).plans.map((p) => p.format.name)).toEqual(["story"]);
   });
 
+  it("leaves out a page format the slide count does not suit, with a warning, and fails only when none suits", () => {
+    const formats: Page["formats"] = ["instagram-carousel", "instagram-post"];
+    const seven = Array.from({ length: 7 }, (_, i) => `## point\n# Point ${i + 1}\nOne idea.\n`).join("\n");
+    const many = postDir(`---\ntitle: Many\npost_type: 1\n---\n\n${seven}`);
+    const carousel = buildPostPlans(many.dir, page(many.pageDir, { formats }), catalog);
+    expect(carousel.plans.map((p) => p.format.name)).toEqual(["instagram-carousel"]);
+    expect(carousel.warnings).toContain("The page's format instagram-post takes 1 slide; slides.md has 7, so it is left out");
+
+    const one = postDir("---\ntitle: One\npost_type: 1\n---\n\n## point\n# Just one\nOne idea.\n");
+    const single = buildPostPlans(one.dir, page(one.pageDir, { formats }), catalog);
+    expect(single.plans.map((p) => p.format.name)).toEqual(["instagram-post"]);
+    expect(single.warnings).toContain("The page's format instagram-carousel takes 2–10 slides; slides.md has 1, so it is left out");
+
+    const eleven = Array.from({ length: 11 }, (_, i) => `## point\n# Point ${i + 1}\nOne idea.\n`).join("\n");
+    const none = postDir(`---\ntitle: Many\npost_type: 1\n---\n\n${eleven}`);
+    expect(() => buildPostPlans(none.dir, page(none.pageDir, { formats }), catalog)).toThrow(
+      "No format of the page takes 11 slides: instagram-carousel takes 2–10 slides, instagram-post takes 1 slide",
+    );
+  });
+
+  it("still refuses a format named in slides.md or with --format that the slide count does not suit", () => {
+    const one = "---\ntitle: One\npost_type: 1\nformat: [instagram-carousel, instagram-post]\n---\n\n## point\n# Just one\nOne idea.\n";
+    const { pageDir, dir } = postDir(one);
+    expect(() => buildPostPlans(dir, page(pageDir), catalog)).toThrow("instagram-carousel takes 2–10 slides; slides.md has 1");
+    expect(() => buildPostPlans(dir, page(pageDir), catalog, { format: "story" })).not.toThrow();
+    expect(() => buildPostPlans(dir, page(pageDir, { formats: ["instagram-post"] }), catalog, { format: "linkedin-carousel" })).toThrow(
+      "linkedin-carousel takes 2–12 slides; slides.md has 1",
+    );
+  });
+
   it("refuses a slide count outside the format's limits", () => {
     const eleven = Array.from({ length: 11 }, (_, i) => `## point\n# Point ${i + 1}\nOne idea.\n`).join("\n");
     const { pageDir, dir } = postDir(`---\ntitle: Many\npost_type: 1\n---\n\n${eleven}`);
@@ -133,6 +163,14 @@ describe("buildPostPlans", () => {
     }
     expect(error).toBeInstanceOf(FitError);
     expect((error as Error).message).toMatch(/^slides\.md line 12 \(slide 2, compare\): /);
+  });
+
+  it("carries the style's named colours for the palette, for a post's own slides", () => {
+    const { pageDir, dir } = postDir(EXAMPLE);
+    const { plans } = buildPostPlans(dir, page(pageDir, { palette: ["#101010", "#FF0055"] }), catalog);
+    const c = plans[0]!.colours;
+    expect([c.ground, c.accent, c.ink]).toEqual(["#101010", "#FF0055", plans[0]!.palette[4]]);
+    for (const role of ["secondary", "highlight", "muted", "body", "line", "surface"] as const) expect(c[role]).toMatch(/^#[0-9A-F]{6}$/i);
   });
 
   it("uses a brand font file in place of the style's for its role", () => {

@@ -42,7 +42,7 @@ Front matter:
 |---|---|
 | `title` | Required. What the post is about, for you; it is not drawn. |
 | `post_type` | Required. The number of a post type (`unfaced list post-type`). |
-| `format` | Optional. One format name or a list. Without it, the page's `formats`, else `instagram-carousel`. |
+| `format` | Optional. One format name or a list. Without it, the page's `formats` (leaving out, with a warning, those the slide count does not suit), else `instagram-carousel`. A format named here must suit the slide count. |
 | `label` | Optional. A short word drawn at the top of every slide. |
 | `style` | Optional. A style number for this post only; the page's post style otherwise. |
 | `square` | Optional. `true` makes an `instagram-post` 1080×1080 instead of 1080×1350. |
@@ -80,7 +80,7 @@ Every style that makes posts draws these kinds.
 
 **Steps.** When the steps carry second lines, the style may set the steps of one second line apart (style 13 fills them with the accent): the commonest one, or the one named with `## steps {filled: software}`, which must be one of the steps' second lines (a name that matches none stops `unfaced post`, naming the slide).
 
-A slide past these limits stops `unfaced post` before anything is laid out, with the slides.md line, the slide's number and kind, and the limit: `slides.md line 21 (slide 3, list): a list takes up to 5 items; this one has 6`. So does an image slide whose photo is missing or outside the post folder.
+The limits live in `engine/src/post/limits.ts`. A slide past them stops `unfaced post` before anything is laid out, with the slides.md line, the slide's number and kind, and the limit: `slides.md line 21 (slide 3, list): a list takes up to 5 items; this one has 6`. So does an image slide whose photo is missing or outside the post folder.
 
 Text is fitted to its box with the real fonts before anything renders: each line is broken and sized once, and drawn exactly so. A text that does not fit at the style's smallest size, a character the font cannot draw, an unknown kind or a slide count the format does not take stops `unfaced post` with the line and slide number and what to change.
 
@@ -88,7 +88,7 @@ Text is fitted to its box with the real fonts before anything renders: each line
 
 A post can draw a slide with its own code, the way a video draws its own scenes. Write `## custom {id: phone}` in `slides.md` and put two files in the post folder:
 
-- `custom/index.tsx` exports the slides by id: `export default defineSlides({ phone: PhoneSlide })`, with `import { defineSlides, type SlideComponent } from "@unfaced/kit"`. A `SlideComponent` is a React component that receives `{ ctx }` (the `SlideContext`: the slide, the palette, the brand, the format, the logo path) and draws the content only; the style draws its frame (label, counter, handle, swipe) around it.
+- `custom/index.tsx` exports the slides by id: `export default defineSlides({ phone: PhoneSlide })`, with `import { defineSlides, type SlideComponent } from "@unfaced/kit"`. A `SlideComponent` is a React component that receives `{ ctx, colours }` and draws the content only; the style draws the ground and its frame (label, counter, handle, swipe) around it. `ctx` is the `SlideContext`: the slide (its headline, body and items from `slides.md`), the palette, the brand, the format and the logo path. `colours` are the post style's colours by name for the page's palette: `ground`, `accent`, `secondary`, `highlight`, `ink`, and the quieter `muted` (labels), `body` (body text), `line` (hairlines) and `surface` (the face of cards). Draw with them rather than fixed colours, so the slide matches the style and the brand. Import only from `@unfaced/kit`, `react` and `remotion`; a path into the unfaced catalog breaks when the post is copied elsewhere. See `examples/pages/studio-nord/posts/about-us/custom/` for a slide of three service cards.
 - `custom/boxes.json` declares the text the component draws, by id and then by format: `{ "phone": { "instagram-carousel": [{ "id": "label", "x": 120, "y": 880, "w": 340, "h": 90 }] } }`. Give an empty list for a format whose slide draws no text. The boxes are checked for the safe area and for overlap, and are not fitted: the component sizes its own text. They carry no colours, so the contrast check does not cover them.
 
 `unfaced post` stops before rendering, naming the file and the id, when a `custom` slide has no `id`, when `custom/index.tsx` is missing or does not export the id, or when `boxes.json` has nothing for the id in a format being made.

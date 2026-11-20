@@ -44,7 +44,7 @@ Posts only for now: still slides have no motion. Video scenes come in a later ph
 
 ## Slides
 
-`components/slides/layout.ts` exports a pure `compose(ctx)` that returns every text box of a slide and the shapes drawn with them (the icons' rows, the pills, the phone, the cards), and `layout(ctx)`, its boxes only; the views draw exactly those, and post plans and their checks call it without rendering. It is registered in `engine/remotion/styles/slideLayouts.ts`, the view (`components/slides/index.tsx`) in `engine/remotion/styles/installed.ts`. `components/index.tsx` exports `nightTech`, with `nightTech.visuals` (Badge, Chip, Flow, Icon, Notification, Phone) and `nightTech.colours` for a post's own slides.
+`components/slides/layout.ts` exports a pure `compose(ctx)` that returns every text box of a slide and the shapes drawn with them (the icons' rows, the pills, the phone, the cards), and `layout(ctx)`, its boxes only; the views draw exactly those, and post plans and their checks call it without rendering. It is registered in `engine/remotion/styles/slideLayouts.ts`, the view (`components/slides/index.tsx`) in `engine/remotion/styles/installed.ts`. `components/index.tsx` exports `nightTech`, with `nightTech.visuals` (Badge, Chip, Flow, Icon, Notification, Phone) and `nightTech.colours`, for code inside this repository. `nightTechLayout` also gives the colours to the engine, which hands them to a post's own slides as their `colours` prop (`unfaced docs slides`, Custom slides).
 
 **The frame**, on every slide, in the mono at 22 px, 4 px inside the format's safe area (y 64 and 1256 on 4:5, 254 and 1546 on a story), 72 px from the sides:
 

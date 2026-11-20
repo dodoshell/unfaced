@@ -1,8 +1,8 @@
 // The "who we are" slide: three service cards, each with a drawn icon, its name and one line.
 // The words come from slides.md (the headline, the body and the items); boxes.json declares
-// where this component draws them, for the checks. Night tech draws the ground and the frame.
+// where this component draws them, for the checks. The style draws the ground and the frame, and
+// gives its colours by name as `colours`, so the cards match the page's palette in any post style.
 import { defineSlides, mix, slideFont, type SlideComponent } from "@unfaced/kit";
-import { nightTech } from "../../../../../../catalog/styles/13-night-tech/components/index.js";
 
 /** Monoline icons in a 24 × 24 box: a browser window, a calendar, a pair of code brackets. */
 const ICONS = [
@@ -18,8 +18,7 @@ const HEADLINE = { y: 236, h: 124, size: 104 };
 const BODY = { y: 384, h: 46, size: 30 };
 const CARD = { top: 474, h: 196, gap: 22, pad: 36, icon: 96 };
 
-const ServiceCards: SlideComponent = ({ ctx }) => {
-  const c = nightTech.colours(ctx.palette);
+const ServiceCards: SlideComponent = ({ ctx, colours: c }) => {
   const { headline, body, items } = ctx.slide;
   const accent = headline?.accent;
   const face = mix(c.ground, c.ink, 0.04);

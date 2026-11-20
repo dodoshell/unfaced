@@ -24,7 +24,7 @@ export { contrast, liftedOn, luminance, mix, readableOn } from "../core/contrast
 export { loadFont } from "../core/loadFont.js";
 export { FittedLines, type FittedLinesProps } from "../post/FittedLines.js";
 export { slideFont } from "../post/slideFonts.js";
-export type { FontRole, SlideBox, SlideContext, SlideKit, StyleKit, TextBox } from "../styles/registry.js";
+export type { FontRole, SlideBox, SlideColours, SlideContext, SlideKit, StyleKit, TextBox } from "../styles/registry.js";
 export type { FittedText } from "../../src/post/fitText.js";
 export type { Mascot, Scene, VideoPlan } from "../../src/plan/types.js";
 

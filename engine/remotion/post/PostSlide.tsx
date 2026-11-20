@@ -32,7 +32,7 @@ export const SlideFrame: React.FC<PostSlideProps> = ({ plan, index }) => {
   const id = ctx.slide.kind === "custom" ? ctx.slide.attrs.id : undefined;
   const Own = id === undefined ? undefined : postSlide(id);
   if (id !== undefined && !Own) throw new Error(`slides.md line ${ctx.slide.line}: the post has no custom slide "${id}"; its custom/index.tsx must export it`);
-  const custom = useMemo(() => (Own ? () => <Own ctx={ctx} /> : undefined), [Own, plan, index]);
+  const custom = useMemo(() => (Own ? () => <Own ctx={ctx} colours={plan.colours} /> : undefined), [Own, plan, index]);
   return (
     <AbsoluteFill style={{ overflow: "hidden" }}>
       <SlideView ctx={ctx} fitted={plan.slides[index]!.fitted} {...(custom && { custom })} />

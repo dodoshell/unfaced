@@ -1,6 +1,7 @@
 import { Composition } from "remotion";
 import type { PostPlan } from "../src/post/buildPostPlan.js";
 import { FORMATS } from "../src/post/formats.js";
+import { slideColours } from "../src/post/palette.js";
 import type { VideoPlan } from "../src/plan/types.js";
 import { COMPOSITION_ID, DOG_DEMO_ID, HOOK_REEL_ID, MASCOT_SHEET_ID, POST_GRID_ID, POST_SLIDE_ID, STYLES_GRID_ID } from "./compositionId.js";
 import { DEMO } from "./demo/demoMotion.js";
@@ -32,6 +33,7 @@ const emptyPost: PostPlan = {
   format: FORMATS["instagram-carousel"],
   language: "en",
   palette: emptyPlan.palette,
+  colours: slideColours(emptyPlan.palette),
   brand: {},
   fonts: { display: "", accent: "", text: "", mono: "" },
   slides: [],

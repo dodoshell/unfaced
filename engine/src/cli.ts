@@ -36,8 +36,8 @@ Commands:
   check <videoDir|postDir>       Run the automatic checks on a made video or post; writes check.json
   frames <videoDir> [--every 1s] Render review frames of a made video into <videoDir>/frames/
   cover <videoDir> [--at 1.5]    Render the cover (a frame without captions) to <videoDir>/cover.png
-  inbox <videoDir>               Check the files handed off into <videoDir>/inbox/ and list the prompts still waiting for one
-  generate <videoDir>            Make the images and clips inbox/PROMPTS.md asks for with the page's providers, then check the inbox
+  inbox <videoDir|postDir>       Check the files handed off into the folder's inbox/ and list the prompts still waiting for one
+  generate <videoDir|postDir>    Make the images and clips inbox/PROMPTS.md asks for with the page's providers, then check the inbox
   results <pageDir>              Compare the numbers in <pageDir>/results.md by platform and by each choice the videos made
   mascot <pageDir>               Render the page's mascot reference sheet to brand/mascot/reference.png
   demo <style|all> [--out <dir>] [--frames]

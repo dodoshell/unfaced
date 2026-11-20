@@ -65,6 +65,27 @@ export interface SlideContext {
   logoAspect?: number;
 }
 
+/**
+ * A post style's colours by name for the post's palette: the five roles and the mixes the style
+ * draws quiet text and shapes with. A post's own slides (custom/) receive them as `colours`, so
+ * they draw in the style without importing it.
+ */
+export interface SlideColours {
+  ground: string;
+  accent: string;
+  secondary: string;
+  highlight: string;
+  ink: string;
+  /** Small labels. */
+  muted: string;
+  /** Body text. */
+  body: string;
+  /** Hairlines and the outlines of quiet shapes. */
+  line: string;
+  /** The face of drawn objects (cards, a phone). */
+  surface: string;
+}
+
 /** What a style provides to make posts. */
 export interface SlideKit {
   /** Font files relative to the style folder. */
@@ -76,6 +97,8 @@ export interface SlideKit {
    * outside it is ignored with a warning. Absent: the page's background always replaces it.
    */
   ground?: GroundFamily;
+  /** The style's named colours for a palette; absent, the mixes of slideColours() in post/palette.ts. Pure. */
+  colours?(palette: string[]): SlideColours;
   /** Where the style puts text on a slide; pure, so plans and checks are built without rendering. */
   layout(ctx: SlideContext): SlideBox[];
   /**

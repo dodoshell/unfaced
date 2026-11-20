@@ -1,7 +1,6 @@
-// Style 13 Night tech, for a post's own code: its slides and the drawn visuals they are made of.
-// A custom slide (custom/index.tsx) can import these to draw in the style:
-//   import { nightTech } from "<path to catalog>/styles/13-night-tech/components/index.js";
-//   const { Phone, Chip, Icon } = nightTech.visuals;
+// Style 13 Night tech, for code inside this repository (demos, tests, other styles): its slides
+// and the drawn visuals they are made of. A post's own slides (custom/index.tsx) do not import
+// it: they get the style's colours as the `colours` prop, through @unfaced/kit's SlideComponent.
 import { colours } from "./slides/tokens.js";
 import { nightTechSlides } from "./slides/index.js";
 import { Chip } from "./visuals/Chip.js";

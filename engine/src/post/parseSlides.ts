@@ -72,14 +72,20 @@ export function parseSlides(markdown: string): SlidesFile {
   }
 
   let current: Slide | undefined;
+  let inComment = false;
   for (let i = close + 1; i < lines.length; i++) {
     const line = lines[i]!.trim();
     const number = i + 1;
     if (line.startsWith("## ") || line === "##") {
       current = startSlide(line, number, file.slides.length);
       file.slides.push(current);
-    } else if (current && line) {
-      addLine(current, line, number);
+    } else if (current) {
+      if (line) addLine(current, line, number);
+    } else if (inComment || line.startsWith("<!--")) {
+      // Before the first slide only blank lines and HTML comments, which may span lines, are allowed.
+      inComment = !line.endsWith("-->");
+    } else if (line) {
+      throw new SlidesError(number, "text before the first slide; start a slide with ## <kind>");
     }
   }
   if (!file.slides.length) throw new SlidesError(close + 1, "no slides: start each one with ## and its kind");

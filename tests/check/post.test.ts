@@ -3,6 +3,7 @@ import type { SlideBox } from "../../engine/remotion/styles/registry.js";
 import { checkPost } from "../../engine/src/check/post.js";
 import type { PostPlan } from "../../engine/src/post/buildPostPlan.js";
 import { formatFor } from "../../engine/src/post/formats.js";
+import { slideColours } from "../../engine/src/post/palette.js";
 import type { FormatName, Slide } from "../../engine/src/post/types.js";
 
 function box(over: Partial<SlideBox>): SlideBox {
@@ -19,6 +20,7 @@ function plan(slides: SlideBox[][], format: FormatName = "instagram-carousel"): 
     format: formatFor(format),
     language: "en",
     palette: ["#101418", "#4F8CFF", "#7FB0FF", "#2F9E6A", "#F2F2F2"],
+    colours: slideColours(["#101418", "#4F8CFF", "#7FB0FF", "#2F9E6A", "#F2F2F2"]),
     brand: {},
     fonts: { display: "a.ttf", accent: "a.ttf", text: "a.ttf", mono: "a.ttf" },
     slides: slides.map((boxes, i) => ({ slide: slide(i), boxes, fitted: {} })),

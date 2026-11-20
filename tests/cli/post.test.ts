@@ -141,6 +141,19 @@ describe("unfaced post", () => {
     await expect(makePost(empty, deps)).rejects.toThrow(/slides\.md not found/);
     expect(render).not.toHaveBeenCalled();
   });
+
+  it("removes the last run's post-plan.json and check.json when the plans cannot be built, so no old PASS is left", async () => {
+    const { dir } = setup();
+    await makePost(dir, stubs().deps);
+    expect(existsSync(join(dir, "check.json"))).toBe(true);
+    writeFileSync(join(dir, "slides.md"), slides().replace("## cover", "## nope"));
+    const { deps, render } = stubs();
+    await expect(makePost(dir, deps)).rejects.toThrow(/unknown slide kind "nope"/);
+    expect(render).not.toHaveBeenCalled();
+    expect(existsSync(join(dir, "post-plan.json"))).toBe(false);
+    expect(existsSync(join(dir, "check.json"))).toBe(false);
+    expect(() => checkPostDir(dir)).toThrow(/post-plan\.json not found/);
+  });
 });
 
 describe("unfaced check on a post folder", () => {

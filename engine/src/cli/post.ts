@@ -42,6 +42,8 @@ export const defaultPostDeps = (): PostDeps => ({
 export async function makePost(postDir: string, deps: PostDeps = defaultPostDeps(), opts: { format?: FormatName } = {}): Promise<{ pass: boolean; files: string[] }> {
   const dir = resolve(postDir);
   if (!existsSync(join(dir, "slides.md"))) throw new Error(`slides.md not found in ${dir}`);
+  // The last run's results go first: a run that stops before writing new ones must not leave an old PASS for `unfaced check`.
+  for (const file of ["post-plan.json", "check.json"]) rmSync(join(dir, file), { force: true });
   const pageDir = resolve(dir, "..", "..");
   const page = await loadPage(pageDir, deps.catalog);
   // A brand font or logo that is missing, of the wrong kind or outside the page folder stops here, before anything renders.

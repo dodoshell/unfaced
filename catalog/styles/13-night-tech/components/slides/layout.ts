@@ -602,5 +602,5 @@ function cta(ctx: SlideContext): Composed {
 
 const KIND_LAYOUTS: Record<Exclude<SlideKind, "custom">, KindLayout> = { cover, point, list, steps, compare, stat, quote, image, cta };
 
-/** Night tech's slide fonts and layout, for slideLayouts.ts. */
-export const nightTechLayout: SlideLayout = { fonts: style.fonts, layout, kinds: KINDS, ground: "dark" };
+/** Night tech's slide fonts, layout and colours, for slideLayouts.ts. */
+export const nightTechLayout: SlideLayout = { fonts: style.fonts, layout, kinds: KINDS, ground: "dark", colours };
