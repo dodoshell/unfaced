@@ -13,13 +13,63 @@
         { "type": "array", "items": { "type": "integer", "minimum": 1 }, "minItems": 1, "uniqueItems": true },
         { "const": "auto" }
       ]
-    }
+    },
+    "filePath": { "type": "string", "minLength": 1, "description": "A path relative to the page folder." }
   },
   "properties": {
     "name": { "type": "string", "minLength": 1 },
     "language": { "type": "string", "description": "Language of the videos, as a code such as en or it.", "pattern": "^[a-z]{2,3}(-[A-Za-z]{2,4})?$" },
     "niche": { "type": "string", "minLength": 1 },
-    "style": { "$ref": "#/$defs/choice" },
+    "style": {
+      "description": "One style for posts and videos, or { posts, videos } when a page keeps two looks.",
+      "oneOf": [
+        { "$ref": "#/$defs/choice" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 1,
+          "properties": {
+            "posts": { "$ref": "#/$defs/choice" },
+            "videos": { "$ref": "#/$defs/choice" }
+          }
+        }
+      ]
+    },
+    "post_type": { "$ref": "#/$defs/choice" },
+    "formats": {
+      "type": "array",
+      "items": { "enum": ["instagram-carousel", "instagram-post", "linkedin-carousel", "story"] },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "brand": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "handle": { "type": "string", "minLength": 1 },
+        "site": { "type": "string", "minLength": 1 },
+        "logo": { "$ref": "#/$defs/filePath" },
+        "fonts": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "display": { "$ref": "#/$defs/filePath" },
+            "accent": { "$ref": "#/$defs/filePath" },
+            "text": { "$ref": "#/$defs/filePath" },
+            "mono": { "$ref": "#/$defs/filePath" }
+          }
+        },
+        "tone": { "type": "string", "minLength": 1 },
+        "words": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "use": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+            "avoid": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+          }
+        }
+      }
+    },
     "script": { "$ref": "#/$defs/choice" },
     "hook": { "$ref": "#/$defs/choice" },
     "voice": { "$ref": "#/$defs/choice" },
@@ -34,7 +84,7 @@
       ]
     },
     "palette": { "type": "array", "items": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }, "minItems": 1 },
-    "font": { "type": "string" },
+    "font": { "type": "string", "description": "Deprecated and ignored; use brand.fonts." },
     "mascot": { "type": "string" },
     "providers": {
       "type": "object",

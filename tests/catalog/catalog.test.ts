@@ -14,7 +14,7 @@ const catalog = Catalog.load(join(root, "catalog"));
 
 // Launch entries, in order, from the design spec §5.4.
 const launch: Record<string, string[]> = {
-  style: ["Soft 3D", "90s low poly", "Flat cartoon", "Line art", "Ink silhouette", "Chalkboard", "Paper cut-out", "Vintage comic", "16-bit pixel art", "Neon synthwave", "Watercolour", "Kinetic typography"],
+  style: ["Soft 3D", "90s low poly", "Flat cartoon", "Line art", "Ink silhouette", "Chalkboard", "Paper cut-out", "Vintage comic", "16-bit pixel art", "Neon synthwave", "Watercolour", "Kinetic typography", "Night tech"],
   script: ["Build it", "Top N countdown", "Myth or fact", "What if", "Story in 60 seconds", "Surprising answer", "How it works", "X vs Y", "Did you know", "Mini story"],
   hook: ["Shocking question", "Absurd number", "You're doing it wrong", "Impossible image", "Unfinished sentence", "Bold claim", "Countdown tease", "POV", "Nobody talks about this", "Before/after flash", "Insider secret", "Challenge", "Start at the climax", "Relatable pain", "Contrarian take"],
   voice: ["Calm documentary", "Energetic", "Storyteller", "Whisper", "Deadpan", "Warm friendly", "News anchor", "None (text only)"],
@@ -22,6 +22,7 @@ const launch: Record<string, string[]> = {
   music: ["Suspense", "Epic", "Lo-fi", "Upbeat", "Playful", "Emotional", "Mystery", "None"],
   ending: ["Seamless loop", "Cliffhanger", "Comment question", "Follow for part 2", "Punchline", "Callback to the hook"],
   duration: ["15 seconds", "30 seconds", "45 seconds", "60 seconds"],
+  "post-type": ["Tips and mistakes", "How it works", "About us", "Services and prices", "Before and after", "Announcement"],
 };
 
 
@@ -69,18 +70,18 @@ describe("catalog", () => {
   });
 
   it("throws a helpful error for an unknown entry", () => {
-    expect(() => catalog.get("style", 40)).toThrow(/style 40.*1–12/);
+    expect(() => catalog.get("style", 40)).toThrow(/style 40.*1–13/);
   });
 });
 
 describe("unfaced list", () => {
-  it("prints one numbered line per style, planned ones marked", () => {
+  it("prints one numbered line per style, those that make nothing yet marked planned", () => {
     const out = execFileSync(process.execPath, ["--import", "tsx", join(root, "engine/src/cli.ts"), "list", "style"], { cwd: root, encoding: "utf8" });
     const lines = out.trim().split(/\r?\n/);
-    expect(lines).toHaveLength(12);
+    expect(lines).toHaveLength(13);
     expect(lines[2]).toMatch(/^03 {2}Flat cartoon — /);
     const styles = catalog.list("style");
-    styles.forEach((entry, i) => expect(lines[i]!.includes("(planned)"), lines[i]).toBe(entry.status === "planned"));
+    styles.forEach((entry, i) => expect(lines[i]!.includes("(planned)"), lines[i]).toBe(entry.status === "planned" && entry.posts !== "ready"));
   });
 });
 

@@ -1,6 +1,6 @@
 # Getting started, no coding needed
 
-This guide is for social media managers and creators who have never used a terminal. You will talk to Claude in its desktop app, and unfaced turns what you ask into finished vertical videos on your computer.
+This guide is for social media managers and creators who have never used a terminal. You will talk to Claude in its desktop app, and unfaced turns what you ask into finished vertical videos, and carousels and other posts, on your computer.
 
 **Read this in:** English · [Italiano](../i18n/it/getting-started.md) · [Español](../i18n/es/getting-started.md) · [Français](../i18n/fr/getting-started.md) · [Português (Brasil)](../i18n/pt-BR/getting-started.md)
 
@@ -72,6 +72,14 @@ Then, one step at a time:
 | "Get it ready to post" | A cover image and the captions, hashtags and titles for each platform |
 | "Here are my numbers, what should I change?" | At most three changes, each with the numbers behind it and a way to test it |
 
+### Your first carousel
+
+If the page is for a business or a brand, ask for a post instead:
+
+> Make a carousel about our three services, in a direct, friendly tone.
+
+The first time, Claude asks for the page's handle and tone (or reads them from screenshots of your profile, if you share some), writes the text slide by slide and **stops for your approval**. Then you get one image per slide, a `grid.png` to see them side by side and, for LinkedIn, a PDF. Say what the post is for and Claude picks the format: a swipeable Instagram post, a single image, a LinkedIn PDF or a story. Posts use style 13 Night tech for now; the other styles make videos only.
+
 Free voices speak English, Italian, Spanish, French, Portuguese and Hindi. For other languages the videos use on-screen text only, or a paid voice if you have one.
 
 ## Where your videos are
@@ -89,9 +97,15 @@ my-pages/
         video.mp4        the video to post
         cover.png        the cover
         post.md          captions and hashtags
+    posts/
+      our-services/
+        slides.md        the text you approve
+        slide-01.png ... the slides to post (post.pdf for LinkedIn)
+        grid.png         all the slides side by side
+        post.md          captions, hashtags and alt text
 ```
 
-unfaced never posts anything: you upload the video yourself, or with your usual scheduling tool.
+unfaced never posts anything: you upload the video or the slides yourself, or with your usual scheduling tool.
 
 ## If something goes wrong
 

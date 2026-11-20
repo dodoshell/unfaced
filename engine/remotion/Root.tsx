@@ -1,10 +1,15 @@
 import { Composition } from "remotion";
+import type { PostPlan } from "../src/post/buildPostPlan.js";
+import { FORMATS } from "../src/post/formats.js";
+import { slideColours } from "../src/post/palette.js";
 import type { VideoPlan } from "../src/plan/types.js";
-import { COMPOSITION_ID, DOG_DEMO_ID, HOOK_REEL_ID, MASCOT_SHEET_ID, STYLES_GRID_ID } from "./compositionId.js";
+import { COMPOSITION_ID, DOG_DEMO_ID, HOOK_REEL_ID, MASCOT_SHEET_ID, POST_GRID_ID, POST_SLIDE_ID, STYLES_GRID_ID } from "./compositionId.js";
 import { DEMO } from "./demo/demoMotion.js";
 import { DogDemo } from "./demo/DogDemo.js";
 import { GRID, gridHeight, StylesGrid, type StylesGridProps } from "./demo/StylesGrid.js";
 import { MascotSheet, type MascotSheetProps, SHEET } from "./MascotSheet.js";
+import { PostGrid, type PostGridProps, postGridSize } from "./post/PostGrid.js";
+import { PostSlide, type PostSlideProps } from "./post/PostSlide.js";
 import { HookReel, type HookReelProps, reelDuration } from "./reel/HookReel.js";
 import { rigFor } from "./core/character/rig.js";
 import { UnfacedVideo } from "./UnfacedVideo.js";
@@ -22,9 +27,23 @@ const emptyPlan: VideoPlan = {
   scenes: [],
 };
 
+// A post with no slides, for Remotion Studio: renderPost always passes a plan.
+const emptyPost: PostPlan = {
+  style: 13,
+  format: FORMATS["instagram-carousel"],
+  language: "en",
+  palette: emptyPlan.palette,
+  colours: slideColours(emptyPlan.palette),
+  brand: {},
+  fonts: { display: "", accent: "", text: "", mono: "" },
+  slides: [],
+};
+const sampleSlide: PostSlideProps = { plan: emptyPost, index: 0 };
+const sampleGrid: PostGridProps = { plan: emptyPost };
+
 const sampleReel: HookReelProps = { segments: [] };
 
-const sampleGrid: StylesGridProps = { cells: [], bands: true };
+const sampleStylesGrid: StylesGridProps = { cells: [], bands: true };
 
 const sampleSheet: MascotSheetProps = { style: 3, mascot: { name: "Miso", rig: rigFor("cat") }, palette: emptyPlan.palette };
 
@@ -52,7 +71,7 @@ export const RemotionRoot: React.FC = () => (
     <Composition
       id={STYLES_GRID_ID}
       component={StylesGrid}
-      defaultProps={sampleGrid}
+      defaultProps={sampleStylesGrid}
       durationInFrames={DEMO.durationInFrames}
       fps={DEMO.fps}
       width={GRID.width}
@@ -68,6 +87,25 @@ export const RemotionRoot: React.FC = () => (
       width={1080}
       height={1920}
       calculateMetadata={({ props }) => ({ durationInFrames: reelDuration(props.segments) })}
+    />
+    <Composition
+      id={POST_SLIDE_ID}
+      component={PostSlide}
+      defaultProps={sampleSlide}
+      durationInFrames={1}
+      fps={30}
+      width={emptyPost.format.width}
+      height={emptyPost.format.height}
+      calculateMetadata={({ props }) => ({ width: props.plan.format.width, height: props.plan.format.height })}
+    />
+    <Composition
+      id={POST_GRID_ID}
+      component={PostGrid}
+      defaultProps={sampleGrid}
+      durationInFrames={1}
+      fps={30}
+      {...postGridSize(emptyPost)}
+      calculateMetadata={({ props }) => postGridSize(props.plan)}
     />
     <Composition id={MASCOT_SHEET_ID} component={MascotSheet} defaultProps={sampleSheet} durationInFrames={1} fps={30} width={SHEET.width} height={SHEET.height} />
   </>

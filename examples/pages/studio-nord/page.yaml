@@ -1,0 +1,12 @@
+# A sample page for a business: an invented two-person studio that posts carousels about its work.
+# Posts use Night tech (13), videos Kinetic typography (12); see `npm run unfaced -- list style`.
+name: Studio Nord
+language: en
+niche: websites and custom software for small businesses
+style: { posts: 13, videos: 12 }
+post_type: [1, 2, 3]
+formats: [instagram-carousel, linkedin-carousel]
+brand:
+  handle: "@studionord"
+  site: studionord.example
+  tone: "calm, direct and warm; we talk to shop owners, not developers, and never use jargon"

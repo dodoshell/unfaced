@@ -1,6 +1,9 @@
+import { existsSync, mkdtempSync, readFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { DEMO_FRAMES, type DemoDeps, renderDemos } from "../../engine/src/cli/demo.js";
+import { DEMO_FRAMES, type DemoDeps, POST_DEMO_FORMATS, type PostDemoDeps, renderDemos, renderPostDemos } from "../../engine/src/cli/demo.js";
+import type { PostPlan } from "../../engine/src/post/buildPostPlan.js";
 import { DOG_DEMO_ID, STYLES_GRID_ID } from "../../engine/remotion/compositionId.js";
 import { stylesWithLayout } from "../../engine/remotion/styles/layouts.js";
 import { Catalog } from "../../engine/src/catalog/catalog.js";
@@ -79,5 +82,48 @@ describe("demo", () => {
     const planned = Catalog.load(CATALOG_DIR).list("style").find((s) => !stylesWithLayout().includes(s.num));
     if (planned) await expect(renderDemos(String(planned.num), { out }, d)).rejects.toThrow(/has no components yet.*styles with components/);
     await expect(renderDemos("dog", { out }, d)).rejects.toThrow(/a style number or "all"/);
+  });
+});
+
+describe("demo --post", () => {
+  function postDeps() {
+    const renders: { plan: PostPlan; outDir: string }[] = [];
+    let closed = 0;
+    const d: PostDemoDeps = {
+      catalog: Catalog.load(CATALOG_DIR),
+      render: async (plan, outDir) => {
+        renders.push({ plan, outDir });
+        return [join(outDir, "slide-01.png"), join(outDir, "grid.png")];
+      },
+      close: async () => void closed++,
+      log: () => {},
+    };
+    return { d, renders, closed: () => closed };
+  }
+
+  it("renders the sample post (one slide of every kind) and the cover visuals, as a carousel and a story", async () => {
+    const { d, renders, closed } = postDeps();
+    const out = mkdtempSync(join(tmpdir(), "unfaced post demo "));
+    const files = await renderPostDemos("13", { out }, d);
+    const dir = join(out, "13-night-tech");
+    expect(renders.map((r) => [r.plan.format.name, r.outDir])).toEqual([
+      ...POST_DEMO_FORMATS.map((f) => [f, join(dir, f)]),
+      ...POST_DEMO_FORMATS.map((f) => [f, join(dir, "visuals", f)]),
+    ]);
+    expect(renders[0]!.plan.style).toBe(13);
+    expect(renders[0]!.plan.slides.map((s) => s.slide.kind)).toEqual(["cover", "point", "list", "steps", "compare", "stat", "quote", "image", "cta"]);
+    expect(renders[0]!.plan.slides[7]!.photo).toBe(join(dir, "inbox", "photo.png"));
+    expect(existsSync(join(dir, "inbox", "photo.png"))).toBe(true);
+    expect(renders.at(-1)!.plan.slides.map((s) => s.slide.attrs.visual)).toEqual(["chips", "phone", "notification"]);
+    expect(existsSync(join(dir, "slides.md"))).toBe(true);
+    expect(existsSync(join(dir, "visuals", "slides.md"))).toBe(true);
+    expect(readFileSync(join(dir, "slides.md"), "utf8")).toContain("style: 13");
+    expect(files).toContain(join(dir, "story", "slide-01.png"));
+    expect(closed()).toBe(1);
+  });
+
+  it("names the styles with slides when asked for one without", async () => {
+    const { d } = postDeps();
+    await expect(renderPostDemos("3", {}, d)).rejects.toThrow(/Style 3 has no slides yet; styles with slides: 13/);
   });
 });

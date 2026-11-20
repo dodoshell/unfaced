@@ -1,6 +1,6 @@
 # Evals
 
-Scenarios for the six skills and the `video-reviewer` agent, run with Claude Code's `claude plugin eval`. Each case is a folder with a `prompt.md` (what a user types, plus run limits), `graders/` (how the result is scored) and, when it needs a page on disk, a `case.yaml` and `scaffold.sh` that copy a sample page into the empty workspace first.
+Scenarios for the seven skills and the `video-reviewer` agent, run with Claude Code's `claude plugin eval`. Each case is a folder with a `prompt.md` (what a user types, plus run limits), `graders/` (how the result is scored) and, when it needs a page on disk, a `case.yaml` and `scaffold.sh` that copy a sample page into the empty workspace first.
 
 Every run is a real Claude Code session on your account: it counts against your plan's usage, or your API bill when Claude Code uses an API key (see [Cost](#cost)).
 
@@ -38,6 +38,11 @@ claude plugin eval . --case video-make-stops-for-approval --runs 1 --ablation no
 | `page-setup-you-choose` | page-setup | "You choose everything": writes `page.yaml` with a fixed ready style, fixed voice and captions, and validates it with `unfaced page`. | Skill fired, file exists, ready style, fixed voice and captions, `unfaced page` ran, judge |
 | `page-setup-key-to-env` | page-setup | API key pasted into `page.yaml`: moves it to `.env` as `ELEVENLABS_API_KEY`, keeps `voice: elevenlabs`. | Skill fired, key gone from `page.yaml`, provider kept, `.env` created with the key, judge |
 | `page-setup-unknown-style` | page-setup | Asks for claymation, which the catalog doesn't have: `page.yaml` keeps style 03; offers the closest styles. | Skill fired, style unchanged, judge |
+| `page-setup-existing-page` | page-setup | A screenshot of existing posts: reads the image, plays back a draft (colours, style 13, fonts, tone) and asks at least one question; no `page.yaml` yet. | Skill fired, image read, no `page.yaml`, judge |
+| `post-make-stops-for-approval` | post-make | Writes `slides.md` (starts with a cover) and stops for approval; never runs `unfaced post`. | Skill fired, file exists, cover slide, no render, judge |
+| `post-make-keeps-user-text` | post-make | The user's own five sentences: laid out as slides verbatim, what does not fit is flagged, not changed. | Skill fired, sentences verbatim in `slides.md`, no render, judge |
+| `post-make-asks-brand` | post-make | A page with no `brand`: asks for the handle, logo and tone before writing slides, offers "you choose". | Skill fired, no `slides.md`, "you choose" in the reply, judge |
+| `post-make-unknown-format` | post-make | Asks for a Pinterest pin: says it is not a format and offers the four by purpose; writes nothing. | Skill fired, no `slides.md`, no Write, judge |
 | `video-ideas-week-plan` | video-ideas | Ideas, series and a 5-post calendar in `ideas.md`, script types 06/09 only, no repeats. | Skill fired, file exists, three sections, page's script types only, judge |
 | `video-ideas-keeps-history` | video-ideas | Existing `ideas.md`: adds one dated section, keeps the old one, repeats nothing. | Skill fired, old section kept, exactly two dated sections, judge |
 | `video-ideas-checks-facts` | video-ideas | No web access: marks ideas "check before scripting"; "cats always land on their feet" treated as a myth. | Skill fired, file exists, mark present, judge |
@@ -64,6 +69,7 @@ claude plugin eval . --case video-make-stops-for-approval --runs 1 --ablation no
 
 - `fixtures/pages/curious-cats/`: the sample page from `examples/pages/curious-cats/` without media (`script.md`, `plan.json`, `check.json` per video), plus a passing `review.md` for the purr video.
 - `fixtures/pages/gatti-curiosi/`: the same page in Italian, with one video (`le-fusa`).
+- `fixtures/pages/studio-nord/` and `studio-nord-plain/`: an invented web studio (`@studionord`, style 13) with and without a `brand` block, for the `post-make` cases.
 - `fixtures/frames/cats-and-milk/`: the 33 frames (one per second) of a render of `cats-and-milk`, reduced to a 48-colour palette to keep them small. The reviewer cases copy them into the video folder.
 - `fixtures/video.mp4`: a small still video that stands in for a made video in the packaging cases.
 - `fixtures/scaffold.sh`: copies the named pages into `pages/`, then the case's own `overlay/` folder on top. Each case's `scaffold.sh` calls it.
@@ -71,7 +77,7 @@ claude plugin eval . --case video-make-stops-for-approval --runs 1 --ablation no
 
 ## Cost
 
-Measured: `page-setup-key-to-env`, one run without baseline, cost $0.15 and took 36 s; the 15 `files-only` cases, one run each without baseline, cost $4.26 and took 11 minutes. The costs are list-price estimates: on a Claude plan nothing is charged, but the runs use the plan's limits, and a run that hits a limit scores 0 without grading (run it again after the reset). The default run is 23 cases × 3 runs × 2 arms = 138 sessions plus three judge calls per `llm` grader per run; the `video-make` and reviewer cases cost the most (the reviewer reads 33 images). For a quick pass use `--runs 1 --ablation none` (23 sessions), pick a cheaper model with `--model`, and cap the spend with `--max-cost-usd`.
+Measured: `page-setup-key-to-env`, one run without baseline, cost $0.15 and took 36 s; the 15 `files-only` cases, one run each without baseline, cost $4.26 and took 11 minutes. The costs are list-price estimates: on a Claude plan nothing is charged, but the runs use the plan's limits, and a run that hits a limit scores 0 without grading (run it again after the reset). The default run is 28 cases × 3 runs × 2 arms = 168 sessions plus three judge calls per `llm` grader per run; the `video-make` and reviewer cases cost the most (the reviewer reads 33 images). For a quick pass use `--runs 1 --ablation none` (28 sessions), pick a cheaper model with `--model`, and cap the spend with `--max-cost-usd`.
 
 ## Reading the results
 
@@ -84,3 +90,5 @@ A low `Δ` with "Skill fired" failing means the skill didn't trigger on that wor
 - `page-setup-you-choose` accepts styles 01 to 12, all ready today; widen `graders/ready-style.md` when a style is added, and narrow it if one is ever marked planned.
 - The unknown-style cases ask for claymation and anime; if a style like either is added, ask for a look the catalog still lacks, and update the style list in their judges.
 - If style 03 changes how it draws, render `cats-and-milk` again, extract its frames (`unfaced frames <videoDir> --every 1s`) and replace `fixtures/frames/cats-and-milk/`.
+- `page-setup-existing-page` uses `docs/media/posts-grid.png` as the user's screenshot; if that image changes, check that the judge's wording still fits what it shows.
+- The `post-make` cases rely on style 13 being the only post style; when 14 to 16 land, update the judges that name it.

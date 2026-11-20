@@ -5,8 +5,10 @@ import { describe, expect, it } from "vitest";
 import { Catalog } from "../../engine/src/catalog/catalog.js";
 import { docText, FORMATS } from "../../engine/src/cli/docs.js";
 import { pageSummary } from "../../engine/src/cli/page.js";
+import { parseSlides } from "../../engine/src/post/parseSlides.js";
 import { showText } from "../../engine/src/cli/show.js";
 import { CATALOG_DIR } from "../../engine/src/paths.js";
+import { catalogWithNightTech } from "../page/catalogWithNightTech.js";
 
 const catalog = Catalog.load(CATALOG_DIR);
 
@@ -16,6 +18,22 @@ function withPlannedStyle(): Catalog {
   fresh.get("style", 7).status = "planned";
   return fresh;
 }
+
+describe("unfaced show post-type", () => {
+  it("prints each post type with its sections and an example that parses as slides.md", () => {
+    for (let n = 1; n <= 6; n++) {
+      const text = showText(catalog, "post-type", n);
+      for (const heading of ["## What it's for", "## Slides", "## Cover", "## Writing rules", "## Example"]) expect(text, `post type ${n}`).toContain(heading);
+      const example = text.split(/^## Example/m)[1]!;
+      const block = /```markdown\r?\n([\s\S]*?)\r?\n```/.exec(example);
+      expect(block, `post type ${n} example`).not.toBeNull();
+      const file = parseSlides(block![1]!);
+      expect(file.postType).toBe(n);
+      expect(file.slides.length).toBeGreaterThanOrEqual(5);
+      expect(file.slides.length).toBeLessThanOrEqual(8);
+    }
+  });
+});
 
 describe("unfaced show", () => {
   it("prints one entry's own section of a shared catalog file", () => {
@@ -60,6 +78,7 @@ describe("unfaced show", () => {
 describe("unfaced docs", () => {
   it("prints every format document and lists them when no name is given", () => {
     for (const name of FORMATS) expect(docText(name).length, name).toBeGreaterThan(200);
+    expect(FORMATS).toContain("brand");
     expect(docText()).toContain("script");
     expect(() => docText("nope")).toThrow(/No format "nope".*script/);
   });
@@ -93,6 +112,72 @@ describe("unfaced page", () => {
   it("marks a fixed choice that is not ready yet", async () => {
     const lines = await pageSummary(page("name: P\nlanguage: en\nniche: x\nstyle: 7\n"), withPlannedStyle());
     expect(lines).toContain("style: 7 Paper cut-out (planned: not available yet)");
+  });
+
+  it("summarises the posts side of a page: style, post types, formats and brand", async () => {
+    const dir = page(
+      [
+        "name: Studio", "language: it", "niche: web studio", "style: { posts: 13, videos: 3 }", "post_type: [1, 3]",
+        "formats: [instagram-carousel, story]", "brand:", '  handle: "@studionord"', "  site: studionord.example",
+        "  logo: brand/logo.svg", "  fonts: { display: brand/fonts/A.ttf }", "  tone: direct, warm", "",
+      ].join("\n"),
+    );
+    mkdirSync(join(dir, "brand", "fonts"), { recursive: true });
+    writeFileSync(join(dir, "brand", "logo.svg"), "<svg/>");
+    writeFileSync(join(dir, "brand", "fonts", "A.ttf"), "x");
+    const lines = await pageSummary(dir, catalogWithNightTech("ready"));
+    expect(lines).toContain("style: 3 Flat cartoon");
+    expect(lines).toContain("Posts: style 13 Night tech · post types 1, 3 · formats instagram-carousel, story");
+    const brand = lines.find((l) => l.startsWith("Brand:"))!;
+    for (const part of ["@studionord", "studionord.example", "brand/logo.svg", "display brand/fonts/A.ttf", "direct, warm"]) expect(brand).toContain(part);
+    expect(lines.some((l) => l.startsWith("warning"))).toBe(false);
+  });
+
+  it("warns when the post style cannot make posts yet, naming the styles that can", async () => {
+    const yaml = "name: P\nlanguage: en\nniche: x\nstyle: { posts: 13 }\n";
+    const none = await pageSummary(page(yaml), catalogWithNightTech("planned"));
+    expect(none.find((l) => l.startsWith("warning"))).toMatch(/style 13 Night tech cannot make posts yet; no style makes posts yet/);
+    expect(none).toContain("style: none (set style.videos to make videos)");
+    const other = catalogWithNightTech("planned");
+    other.get("style", 12).posts = "ready";
+    const some = await pageSummary(page(yaml), other);
+    expect(some.find((l) => l.startsWith("warning"))).toMatch(/cannot make posts yet; styles that can: 12 Kinetic typography/);
+  });
+
+  it("warns when the palette's background is ignored by the post style, as unfaced post does", async () => {
+    const light = await pageSummary(page('name: P\nlanguage: en\nniche: x\nstyle: { posts: 13 }\npalette: ["#FFFFFF", "#FF0055"]\n'), catalogWithNightTech("ready"));
+    expect(light).toContain("warning: Night tech keeps its dark ground; palette background #FFFFFF ignored");
+    const dark = await pageSummary(page('name: P\nlanguage: en\nniche: x\nstyle: { posts: 13 }\npalette: ["#101418", "#FF0055"]\n'), catalogWithNightTech("ready"));
+    expect(dark.some((l) => l.startsWith("warning"))).toBe(false);
+    const videosOnly = await pageSummary(page('name: P\nlanguage: en\nniche: x\nstyle: 3\npalette: ["#FFFFFF"]\n'), catalog);
+    expect(videosOnly.some((l) => l.startsWith("warning"))).toBe(false);
+  });
+
+  it("prints a plain video-only page exactly as before: no Posts line, no post warning", async () => {
+    const lines = await pageSummary(page("name: P\nlanguage: en\nniche: x\nstyle: 3\nvoice: 1\n"), catalog);
+    expect(lines).toEqual([
+      "P (en): x",
+      "style: 3 Flat cartoon",
+      "script: auto (the agent picks from the ready ones)",
+      "hook: auto (the agent picks from the ready ones)",
+      "voice: 1 Calm documentary",
+      "captions: auto (the agent picks from the ready ones)",
+      "music: auto (the agent picks from the ready ones)",
+      "ending: auto (the agent picks from the ready ones)",
+      "mascot: none (brand/mascot/mascot.json)",
+      "videos: 0",
+    ]);
+  });
+
+  it("warns for a plain style that cannot make posts only when post_type or formats ask for posts", async () => {
+    const lines = await pageSummary(page("name: P\nlanguage: en\nniche: x\nstyle: 3\nformats: [story]\n"), catalog);
+    expect(lines.some((l) => l.startsWith("Posts: style 3"))).toBe(true);
+    expect(lines.some((l) => l.startsWith("warning") && l.includes("cannot make posts yet"))).toBe(true);
+  });
+
+  it("warns that font is ignored", async () => {
+    const lines = await pageSummary(page("name: P\nlanguage: en\nniche: x\nfont: Inter\n"), catalog);
+    expect(lines.find((l) => l.includes('"font" is ignored; use brand.fonts'))).toBeDefined();
   });
 
   it("explains what is wrong with an invalid page", async () => {

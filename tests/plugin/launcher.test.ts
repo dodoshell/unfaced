@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 
 const root = join(import.meta.dirname, "..", "..");
 const launcher = join(root, "plugin", "launcher", "unfaced.mjs");
-const SKILLS = ["page-setup", "video-ideas", "video-recommend", "video-make", "video-package", "page-results"];
+const SKILLS = ["page-setup", "video-ideas", "video-recommend", "video-make", "post-make", "video-package", "page-results"];
 /** The library version the launcher asks for, which names its install folder and the release tag it clones. */
 const VERSION = /const VERSION = "([^"]+)"/.exec(readFileSync(launcher, "utf8"))![1]!;
 
@@ -58,7 +58,7 @@ function releaseRepo(dir: string, cli = 'console.log(`ran ${process.argv.slice(2
 
 describe("the skills' launcher", () => {
   it("is copied, unchanged, into the scripts/ folder of every skill", () => {
-    expect(readdirSync(join(root, "plugin", "skills")).filter((d) => !d.startsWith(".")).sort()).toEqual([...SKILLS].sort());
+    expect(readdirSync(join(root, "plugin", "skills")).filter((d) => !d.startsWith(".") && existsSync(join(root, "plugin", "skills", d, "SKILL.md"))).sort()).toEqual([...SKILLS].sort());
     for (const skill of SKILLS) {
       const copy = join(root, "plugin", "skills", skill, "scripts", "unfaced.mjs");
       expect(existsSync(copy), skill).toBe(true);

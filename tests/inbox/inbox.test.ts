@@ -137,3 +137,59 @@ describe("checking an inbox", () => {
     expect(await checkInbox(mkdtempSync(join(tmpdir(), "unfaced no inbox ")))).toEqual([]);
   });
 });
+
+describe("checking a post's inbox", () => {
+  const post = (front: string) => {
+    const dir = mkdtempSync(join(tmpdir(), "unfaced post inbox "));
+    mkdirSync(join(dir, "inbox"), { recursive: true });
+    writeFileSync(join(dir, "slides.md"), `---\ntitle: T\npost_type: 1\n${front}---\n\n## cover\n# Hi\n`);
+    for (const f of ["shop.jpg", "tall.png", "clip.mp4", "voice.wav"]) writeFileSync(join(dir, "inbox", f), "");
+    writeFileSync(join(dir, "inbox", "PROMPTS.md"), "## later.png\nFor slide 3. A door.\n");
+    return dir;
+  };
+  const sized = (width: number, height: number) => async (path: string) =>
+    path.endsWith(".png") ? { video: { codec: "png", width: 1080, height: 1920 }, durationSec: undefined } : { video: { codec: "mjpeg", width, height }, durationSec: undefined };
+
+  it("accepts images at the format's shape and reports clips and voice as ignored", async () => {
+    const lines = await checkInbox(post("format: instagram-carousel\n"), sized(1080, 1350));
+    const byFile = Object.fromEntries(lines.map((l) => [l.file, l]));
+    expect(byFile["shop.jpg"]).toMatchObject({ status: "ok", detail: "image 1080×1350" });
+    expect(byFile["tall.png"]).toMatchObject({ status: "problem" });
+    expect(byFile["tall.png"]!.detail).toMatch(/1080×1350/);
+    expect(byFile["clip.mp4"]).toEqual({ file: "clip.mp4", status: "ignored", detail: "posts use images only" });
+    expect(byFile["voice.wav"]).toEqual({ file: "voice.wav", status: "ignored", detail: "posts use images only" });
+    expect(byFile["later.png"]).toMatchObject({ status: "waiting" });
+  });
+
+  it("wants a story's photos at 9:16 and a square post's at 1:1", async () => {
+    const story = Object.fromEntries((await checkInbox(post("format: story\n"), sized(1080, 1920))).map((l) => [l.file, l]));
+    expect(story["shop.jpg"]).toMatchObject({ status: "ok" });
+    const square = Object.fromEntries((await checkInbox(post("format: instagram-post\nsquare: true\n"), sized(1080, 1080))).map((l) => [l.file, l]));
+    expect(square["shop.jpg"]).toMatchObject({ status: "ok", detail: "image 1080×1080" });
+  });
+});
+
+describe("a post's format when slides.md names none", () => {
+  const bare = (pageYaml: string | undefined) => {
+    const page = mkdtempSync(join(tmpdir(), "unfaced post page "));
+    const dir = join(page, "posts", "p");
+    mkdirSync(join(dir, "inbox"), { recursive: true });
+    if (pageYaml !== undefined) writeFileSync(join(page, "page.yaml"), pageYaml);
+    writeFileSync(join(dir, "slides.md"), "---\ntitle: T\npost_type: 1\n---\n\n## cover\n# Hi\n");
+    writeFileSync(join(dir, "inbox", "shop.jpg"), "");
+    return dir;
+  };
+  const at = (width: number, height: number) => async () => ({ video: { codec: "mjpeg", width, height }, durationSec: undefined });
+
+  it("uses the page's first format", async () => {
+    const dir = bare("name: T\nformats: [story, instagram-carousel]\n");
+    expect((await checkInbox(dir, at(1080, 1920)))[0]).toMatchObject({ status: "ok", detail: "image 1080×1920" });
+    expect((await checkInbox(dir, at(1080, 1350)))[0]).toMatchObject({ status: "problem" });
+  });
+
+  it.each([["no page.yaml", undefined], ["an invalid page.yaml", "name: [unclosed\n"]])("falls back to instagram-carousel with %s", async (_n, yaml) => {
+    const dir = bare(yaml);
+    expect((await checkInbox(dir, at(1080, 1350)))[0]).toMatchObject({ status: "ok", detail: "image 1080×1350" });
+    expect((await checkInbox(dir, at(1080, 1920)))[0]).toMatchObject({ status: "problem" });
+  });
+});

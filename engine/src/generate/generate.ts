@@ -4,7 +4,9 @@ import { appendFileSync, constants, copyFileSync, existsSync, mkdtempSync, renam
 import { tmpdir } from "node:os";
 import { extname, join } from "node:path";
 import { CREDITS_FILE, inboxKind } from "../inbox/inbox.js";
+import { aspectOf, postFormatOf } from "../post/postFormat.js";
 import type { CatalogLike, Page } from "../page/types.js";
+import type { Size } from "./fit.js";
 import { downloadFile, type FileType, sniffFile } from "./download.js";
 import { findPhoto, PEXELS_FILE_HOSTS, stockQuery, withoutSearchLine } from "./pexels.js";
 import { clipProvider, imageProvider, MODEL_INPUTS, type MediaProvider } from "./providers.js";
@@ -17,8 +19,8 @@ export interface GenerateDeps {
   fetch: typeof fetch;
   sleep(ms: number): Promise<void>;
   now(): number;
-  /** Fills and crops a downloaded file to 1080×1920, written in the format `dest`'s extension names. */
-  fit(src: string, dest: string): Promise<void>;
+  /** Fills and crops a downloaded file to `size`, written in the format `dest`'s extension names. */
+  fit(src: string, dest: string, size: Size): Promise<void>;
   log(msg: string): void;
 }
 
@@ -52,6 +54,7 @@ const ACCEPTS: Record<string, { types: FileType[]; label: string }> = {
 };
 const TYPE_EXT: Record<FileType, string> = { png: ".png", jpeg: ".jpg", webp: ".webp", mp4: ".mp4" };
 
+const VIDEO_SIZE: Size = { width: 1080, height: 1920 };
 const BY_HAND = "make it by hand from its prompt";
 
 /**
@@ -61,6 +64,8 @@ const BY_HAND = "make it by hand from its prompt";
 export async function generateMissing(videoDir: string, prompts: { file: string; prompt: string }[], page: Page, deps: GenerateDeps): Promise<GenerateLine[]> {
   const inbox = join(videoDir, "inbox");
   const lines: GenerateLine[] = [];
+  const post = postFormatOf(videoDir, page.formats);
+  const size: Size = post ? { width: post.width, height: post.height } : VIDEO_SIZE;
   const skip = (file: string, detail: string) => lines.push({ file, status: "skipped", detail });
   for (const { file, prompt } of prompts) {
     if (/[\\/]/.test(file) || file.startsWith(".")) {
@@ -71,6 +76,10 @@ export async function generateMissing(videoDir: string, prompts: { file: string;
     const kind = inboxKind(file);
     if (!kind) {
       skip(file, "unknown type; generate makes .png, .jpg, .webp images and .mp4 clips");
+      continue;
+    }
+    if (post && kind !== "image") {
+      skip(file, "posts use images only, so this file is not made");
       continue;
     }
     if (kind === "voice") {
@@ -90,7 +99,7 @@ export async function generateMissing(videoDir: string, prompts: { file: string;
       continue;
     }
     try {
-      lines.push({ file, status: "made", detail: await makeFile(inbox, file, kind, prompt, provider, key, deps) });
+      lines.push({ file, status: "made", detail: await makeFile(inbox, file, kind, prompt, provider, key, size, deps) });
     } catch (e) {
       lines.push({ file, status: "failed", detail: e instanceof Error ? e.message : String(e) });
     }
@@ -98,8 +107,8 @@ export async function generateMissing(videoDir: string, prompts: { file: string;
   return lines;
 }
 
-/** Makes one file into a temporary folder, fits it to 9:16 and copies it into inbox/; returns what made it. */
-async function makeFile(inbox: string, file: string, kind: "image" | "clip", prompt: string, provider: Exclude<MediaProvider, { name: "none" }>, key: string, deps: GenerateDeps): Promise<string> {
+/** Makes one file into a temporary folder, fits it to `size` and copies it into inbox/; returns what made it. */
+async function makeFile(inbox: string, file: string, kind: "image" | "clip", prompt: string, provider: Exclude<MediaProvider, { name: "none" }>, key: string, size: Size, deps: GenerateDeps): Promise<string> {
   const ext = extname(file).toLowerCase();
   const tmp = mkdtempSync(join(tmpdir(), "unfaced generate "));
   try {
@@ -110,14 +119,14 @@ async function makeFile(inbox: string, file: string, kind: "image" | "clip", pro
     let credit: string | undefined;
     if (provider.name === "pexels") {
       deps.log(`Finding a photo for ${file} on Pexels`);
-      const photo = await findPhoto(stockQuery(prompt), key, deps.fetch, ext === ".webp");
+      const photo = await findPhoto(stockQuery(prompt), key, deps.fetch, ext === ".webp", size);
       await downloadFile(photo.url, downloaded, { service, hosts: PEXELS_FILE_HOSTS, ...limit });
       credit = photo.credit;
       detail = `${photo.credit} (credit kept in inbox/${CREDITS_FILE})`;
     } else {
       deps.log(`Making ${file} with Replicate (${provider.model})${kind === "clip" ? "; a clip can take a few minutes" : ""}`);
       const format = kind === "image" ? { output_format: ext === ".webp" ? "webp" : ext === ".png" ? "png" : "jpg" } : {};
-      const input = { prompt: withoutSearchLine(prompt), aspect_ratio: "9:16", ...format, ...MODEL_INPUTS[provider.model] };
+      const input = { prompt: withoutSearchLine(prompt), aspect_ratio: aspectOf(size), ...format, ...MODEL_INPUTS[provider.model] };
       const url = await runPrediction(provider.model, input, key, { fetch: deps.fetch, sleep: deps.sleep, now: deps.now, timeoutMs: TIMEOUT_MS[kind] });
       await downloadFile(url, downloaded, { service, hosts: REPLICATE_FILE_HOSTS, ...limit });
       detail = `${kind} from Replicate (${provider.model})`;
@@ -129,9 +138,9 @@ async function makeFile(inbox: string, file: string, kind: "image" | "clip", pro
     if (!type || !accepts.types.includes(type)) throw new Error(`${service} sent something that isn't ${accepts.label} for ${file}; nothing was written`);
     const raw = join(tmp, `download${TYPE_EXT[type]}`);
     renameSync(downloaded, raw);
-    // WebP is kept as it comes (asked for at 9:16): the engine's ffmpeg can't write it.
+    // WebP is kept as it comes (asked for at the right aspect): the engine's ffmpeg can't write it.
     const ready = ext === ".webp" ? raw : join(tmp, `fitted${ext}`);
-    if (ready !== raw) await deps.fit(raw, ready);
+    if (ready !== raw) await deps.fit(raw, ready, size);
     try {
       copyFileSync(ready, join(inbox, file), constants.COPYFILE_EXCL);
     } catch (e) {

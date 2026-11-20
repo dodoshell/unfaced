@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import { Catalog } from "../../engine/src/catalog/catalog.js";
 import { type MakeDeps, makeVideo } from "../../engine/src/cli/make.js";
 import { CATALOG_DIR } from "../../engine/src/paths.js";
+import { catalogWithNightTech } from "../page/catalogWithNightTech.js";
 import type { VideoPlan } from "../../engine/src/plan/types.js";
 import type { VoiceProvider } from "../../engine/src/voice/types.js";
 
@@ -70,6 +71,25 @@ describe("make", () => {
     expect(plan).toMatchObject({ style: 3, captions: 1, audioSrc: "voice.wav" });
     expect(plan.scenes.map((s) => s.beatId)).toEqual(["hook", "b1", "ending"]);
     expect(render).toHaveBeenCalledWith(expect.anything(), join(video, "video.mp4"), { assetsDir: video });
+  });
+
+  it("stops before recording anything when the page has no video style", async () => {
+    const video = setup();
+    const page = join(video, "..", "..");
+    writeFileSync(join(page, "page.yaml"), "name: My cats\nlanguage: en\nniche: cat facts\nstyle: { posts: 13 }\nvoice: 1\ncaptions: 1\nmusic: 8\n");
+    const { deps, synthesize, render } = stubs();
+    await expect(makeVideo(video, { ...deps, catalog: catalogWithNightTech() })).rejects.toThrow("this page has no video style; set style.videos");
+    expect(synthesize).not.toHaveBeenCalled();
+    expect(render).not.toHaveBeenCalled();
+  });
+
+  it("uses the video style of a page that keeps two looks", async () => {
+    const video = setup();
+    const page = join(video, "..", "..");
+    writeFileSync(join(page, "page.yaml"), "name: My cats\nlanguage: en\nniche: cat facts\nstyle: { posts: 13, videos: 3 }\nvoice: 1\ncaptions: 1\nmusic: 8\n");
+    const { deps } = stubs();
+    await makeVideo(video, { ...deps, catalog: catalogWithNightTech() });
+    expect(JSON.parse(readFileSync(join(video, "plan.json"), "utf8"))).toMatchObject({ style: 3 });
   });
 
   it("puts the page's mascot and the script's ending into the plan", async () => {

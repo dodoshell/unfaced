@@ -4,7 +4,7 @@
 
 **Read this in:** English · [Italiano](docs/i18n/it/README.md) · [Español](docs/i18n/es/README.md) · [Français](docs/i18n/fr/README.md) · [Português (Brasil)](docs/i18n/pt-BR/README.md)
 
-Pick numbered styles, script types, hooks and voices, save them in a page profile, and turn one-line ideas into finished vertical videos for Reels, TikTok and Shorts. Free by default; paid services are optional.
+Pick numbered styles, script types, hooks and voices, save them in a page profile, and turn one-line ideas into finished vertical videos for Reels, TikTok and Shorts, or into still posts (carousels, single images, LinkedIn PDFs, stories) in a brand's look. Free by default; paid services are optional.
 
 ![The same scene in all twelve styles](docs/media/styles-grid.gif)
 
@@ -15,9 +15,11 @@ Ask your agent, in your own words:
 | You say | What happens |
 |---|---|
 | "Start a faceless TikTok page about surprising cat facts, in English" | **page-setup** asks a few questions (or picks everything if you say "you choose"), writes `page.yaml` from the numbered catalogs, and can build a mascot that looks the same in every video. |
-| "Give me ideas for next week" | **video-ideas** writes ten checked ideas, two or three recurring series and a calendar into `ideas.md`. |
+| "Give me ideas for next week" | **video-ideas** writes ten checked ideas, two or three recurring series and a calendar into `ideas.md`; each idea says whether it is a reel, a carousel or a story, and why. |
 | "How should I make the one about kneading?" | **video-recommend** offers 2–3 combinations (script type, hook, ending, length...) with a sample hook for each. |
 | "Make it" | **video-make** researches and writes the script, **stops for your approval**, then records the voice, draws the scenes, renders, runs the automatic checks and has an independent reviewer agent look at every frame before handing you `video.mp4`. |
+| "Make a carousel about our three services" | **post-make** writes the text slide by slide, **stops for your approval**, then renders the slides (and a PDF for LinkedIn), checks them and has an independent reviewer agent look at every one. |
+| "Here are screenshots of our profile" | **page-setup** reads them and drafts the page's profile, brand included (handle, colours, fonts, tone), then asks about what it can't settle. Nothing is saved until you agree. |
 | "Get it ready to post" | **video-package** renders `cover.png` and writes `post.md`: captions, hashtags and a title for each platform. |
 | "Here are my numbers, what should I change?" | **page-results** compares the videos in `results.md` by platform and by every choice they made, and suggests at most three changes, each with a way to test it. |
 
@@ -46,7 +48,8 @@ Every entry is ready to use. `unfaced list <kind>` lists a catalog, `unfaced sho
 
 | Catalog | Entries |
 |---|---|
-| Styles (12) | soft 3D, 90s low poly, flat cartoon, line art, ink silhouette, chalkboard, paper cut-out, vintage comic, 16-bit pixel art, neon synthwave, watercolour, kinetic typography |
+| Styles (13) | soft 3D, 90s low poly, flat cartoon, line art, ink silhouette, chalkboard, paper cut-out, vintage comic, 16-bit pixel art, neon synthwave, watercolour, kinetic typography; and 13 Night tech, which draws posts (videos are planned) |
+| Post types (6) | tips and mistakes, how it works, about us, services and prices, before and after, announcement |
 | Script types (10) | build it, top N countdown, myth or fact, what if, story in 60 seconds, surprising answer, how it works, X vs Y, did you know, mini story |
 | Hooks (15) | shocking question, absurd number, "you're doing it wrong", impossible image, POV, start at the climax... each with rules and three examples |
 | Voices (8) | calm documentary, energetic, storyteller, whisper, deadpan, warm friendly, news anchor, none (text only) |
@@ -55,9 +58,28 @@ Every entry is ready to use. `unfaced list <kind>` lists a catalog, `unfaced sho
 | Endings (6) | seamless loop, cliffhanger, comment question, follow for part 2, punchline, callback to the hook |
 | Durations (4) | 15, 30, 45 and 60 seconds, with pacing rules |
 
+## Posts
+
+A post is a folder with a `slides.md`: the text, slide by slide. unfaced lays it out in the page's style and brand and renders PNGs, plus a PDF for LinkedIn and a `grid.png` to see them side by side.
+
+![A carousel in style 13 Night tech, slide by slide](docs/media/posts-grid.png)
+
+Name the format by what the post is for; unfaced knows the size:
+
+| Format | Size | Slides | You get |
+|---|---|---|---|
+| `instagram-carousel` | 1080×1350 | 2 to 10 | PNGs |
+| `instagram-post` | 1080×1350 (1080×1080 with `square: true`) | 1 | a PNG |
+| `linkedin-carousel` | 1080×1350 | 2 to 12 | a PDF, and the PNGs |
+| `story` | 1080×1920 | 1 to 10 | PNGs |
+
+One `slides.md` can be made in several formats; the layouts reflow and the text stays. A page's brand (handle, site, logo, fonts, tone, words to use and to avoid) puts its handle, logo and fonts on the slides and guides every text the agents write, captions included, where the site goes. Slide kinds: cover, point, list, steps, compare, stat, quote, image, cta, and custom for a slide that needs its own code. See `unfaced docs slides` and `unfaced docs brand`.
+
+Style 13 Night tech is the first style that draws posts, with drawn visuals ready to use: chips, a step flow, a phone, a notification card and a small icon set. Styles 1 to 12 make videos only for now. A complete page with a carousel: [`examples/pages/studio-nord/`](examples/pages/studio-nord/).
+
 ## Examples
 
-- [`examples/pages/`](examples/pages/): three pages to copy. *Curious Cats* (flat cartoon, cat facts) with two made videos: their scripts, word timings, plans and check results, ready to render again with `unfaced make`; *Space in 60* (neon synthwave, one big space idea a minute, cliffhangers) and *Piccola Storia* (watercolour, in Italian: the small stories behind everyday words and objects), each with a mascot, ideas and a calendar.
+- [`examples/pages/`](examples/pages/): four pages to copy. *Studio Nord* (night tech, a small web studio) has a brand block and an "about us" carousel in `posts/about-us/`. *Curious Cats* (flat cartoon, cat facts) with two made videos: their scripts, word timings, plans and check results, ready to render again with `unfaced make`; *Space in 60* (neon synthwave, one big space idea a minute, cliffhangers) and *Piccola Storia* (watercolour, in Italian: the small stories behind everyday words and objects), each with a mascot, ideas and a calendar.
 - [`examples/combos/`](examples/combos/): five sample videos of about 30 seconds; no two share a style, script type, hook, voice, caption style, music mood or ending. The scripts, plans and checks are here; the MP4s are attached to each release.
 - [`examples/scripts/`](examples/scripts/): one complete `script.md` for each script type.
 - [`examples/hooks/`](examples/hooks/): every hook with three examples from different niches. The hook reel, each hook spoken over the next style, is attached to each release.
@@ -77,8 +99,11 @@ npm run unfaced -- page examples/pages/curious-cats            # check a page pr
 npm run unfaced -- make examples/pages/curious-cats/videos/why-cats-purr
 npm run unfaced -- frames examples/pages/curious-cats/videos/why-cats-purr --every 1s
 npm run unfaced -- cover examples/pages/curious-cats/videos/why-cats-purr
+npm run unfaced -- post examples/pages/studio-nord/posts/about-us      # render a carousel (--format <name> for one format)
+npm run unfaced -- demo 13 --post                              # the sample post in a style
 npm run unfaced -- results my-page                             # compare the posted videos' numbers (results.md)
-npm run unfaced -- docs script                                 # file formats: page, script, mascot, scenes, review, post, results
+npm run unfaced -- docs slides                                 # file formats: page, brand, script, slides, mascot, scenes, review, post, results
+npm run unfaced -- list post-type                              # the post types
 npm run unfaced -- doctor                                      # what is missing from the install
 npm run unfaced -- help                                        # every command
 ```
@@ -90,7 +115,7 @@ The skills and the reviewer agent have evals in [`evals/`](evals/README.md), run
 ```text
 my-page/
   page.yaml              the profile: language, niche, style, script types, voice, ...
-  brand/mascot/          the mascot: mascot.json, mascot.md, reference.png
+  brand/                 optional: logo, fonts, and mascot/ (mascot.json, mascot.md, reference.png)
   ideas.md               ideas, series and the calendar
   results.md             how the posted videos did
   videos/
@@ -102,11 +127,17 @@ my-page/
       check.json         the automatic checks
       review.md          the independent review
       cover.png, post.md ready to post
+  posts/
+    about-us/
+      slides.md          the text, slide by slide (docs/formats/slides.md)
+      custom/, inbox/   optional slide code and photos
+      slide-01.png ...   made by unfaced post (post.pdf for LinkedIn, grid.png, check.json)
+      review.md, post.md the independent review; captions, hashtags and alt text
 ```
 
 ## Contributing
 
-New styles, script types and hooks are welcome: see [`CONTRIBUTING.md`](CONTRIBUTING.md).
+New styles, script types, post types, slide kinds and hooks are welcome: see [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## License
 

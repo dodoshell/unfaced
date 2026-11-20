@@ -12,7 +12,8 @@
     { "num": 9, "slug": "16-bit-pixel-art", "name": "16-bit pixel art", "summary": "Chunky pixels and limited palettes from 16-bit consoles.", "goodFor": ["gaming", "tech", "nostalgia"], "path": "styles/09-16-bit-pixel-art/style.json", "status": "ready" },
     { "num": 10, "slug": "neon-synthwave", "name": "Neon synthwave", "summary": "Glowing neon lines on a dark grid under an 80s sunset.", "goodFor": ["tech", "space", "music"], "path": "styles/10-neon-synthwave/style.json", "status": "ready" },
     { "num": 11, "slug": "watercolour", "name": "Watercolour", "summary": "Soft washes of paint with visible paper texture.", "goodFor": ["nature", "emotional stories", "travel"], "path": "styles/11-watercolour/style.json", "status": "ready" },
-    { "num": 12, "slug": "kinetic-typography", "name": "Kinetic typography", "summary": "The words are the visuals: big type that moves with the voice.", "goodFor": ["quotes", "motivation", "lists"], "path": "styles/12-kinetic-typography/style.json", "status": "ready" }
+    { "num": 12, "slug": "kinetic-typography", "name": "Kinetic typography", "summary": "The words are the visuals: big type that moves with the voice.", "goodFor": ["quotes", "motivation", "lists"], "path": "styles/12-kinetic-typography/style.json", "status": "ready" },
+    { "num": 13, "slug": "night-tech", "name": "Night tech", "summary": "Near-black navy with a soft blue glow, an elegant serif with one word in italic blue, and small monospace labels.", "goodFor": ["software", "services", "agencies"], "path": "styles/13-night-tech/style.json", "status": "planned", "posts": "ready" }
   ],
   "script": [
     { "num": 1, "slug": "build-it", "name": "Build it", "summary": "Something is built step by step, from nothing to finished.", "goodFor": ["engineering", "history", "food"], "path": "scripts/01-build-it.md", "status": "ready" },
@@ -84,5 +85,13 @@
     { "num": 2, "slug": "30-seconds", "name": "30 seconds", "summary": "The default: a hook, three beats and an ending.", "goodFor": ["most videos"], "path": "durations.md#02-30-seconds", "status": "ready" },
     { "num": 3, "slug": "45-seconds", "name": "45 seconds", "summary": "Room for a short story or a top 5.", "goodFor": ["countdowns", "short stories"], "path": "durations.md#03-45-seconds", "status": "ready" },
     { "num": 4, "slug": "60-seconds", "name": "60 seconds", "summary": "Full stories, countdowns and comparisons.", "goodFor": ["stories", "comparisons"], "path": "durations.md#04-60-seconds", "status": "ready" }
+  ],
+  "post-type": [
+    { "num": 1, "slug": "tips-and-mistakes", "name": "Tips and mistakes", "summary": "One useful lesson as a list of mistakes or tips, one per slide.", "goodFor": ["advice", "habits", "how-to"], "path": "posts/01-tips-and-mistakes.md", "status": "ready" },
+    { "num": 2, "slug": "how-it-works", "name": "How it works", "summary": "A process or a concept explained in steps.", "goodFor": ["services", "methods", "explainers"], "path": "posts/02-how-it-works.md", "status": "ready" },
+    { "num": 3, "slug": "about-us", "name": "About us", "summary": "Who you are, what you do, the proof and how to start.", "goodFor": ["introductions", "new followers", "brands"], "path": "posts/03-about-us.md", "status": "ready" },
+    { "num": 4, "slug": "services-and-prices", "name": "Services and prices", "summary": "What is offered, for whom, from what price and how to ask.", "goodFor": ["services", "menus", "quotes"], "path": "posts/04-services-and-prices.md", "status": "ready" },
+    { "num": 5, "slug": "before-and-after", "name": "Before and after", "summary": "A case study: the problem, what was done, the result in numbers.", "goodFor": ["case studies", "transformations", "proof"], "path": "posts/05-before-and-after.md", "status": "ready" },
+    { "num": 6, "slug": "announcement", "name": "Announcement", "summary": "What is new, why it matters, the condition or deadline, the call to action.", "goodFor": ["launches", "offers", "events"], "path": "posts/06-announcement.md", "status": "ready" }
   ]
 }

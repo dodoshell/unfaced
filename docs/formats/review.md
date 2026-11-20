@@ -31,3 +31,20 @@ Round 1 · video.mp4 (00:34.2) · reviewed 2026-11-14
 ## The loop
 
 The `video-make` skill fixes the issues, makes the video again and asks for a new review, at most three rounds. After the third FAIL it shows the user what is left instead of trying again. On an agent without subagents, the review runs in a fresh session with the reviewer's instructions.
+
+## A post's review
+
+A made post (`slide-NN.png`, `grid.png`, `post-plan.json`, `check.json`) is reviewed the same way by the `post-reviewer` agent, which writes `review.md` in the post folder. The header and verdict work as above (`# Review: PASS` or `# Review: FAIL`, a failure being at least one `error`). Issues are placed by slide number instead of time, and the round line gives the format and slide count instead of a length:
+
+```markdown
+# Review: FAIL
+
+Round 1 · instagram-carousel · 7 slides · reviewed 2026-11-14
+
+## Issues
+
+- error · slide 3 · Typo · The title reads "purrr" but slides.md says "purr". Fix the title in slides.md.
+- warning · slide 1 · Cover · The hook sits close to the bottom edge of the 3:4 crop. Move it up or shorten it in slides.md.
+```
+
+Categories: `Typo`, `Readability`, `Layout`, `Style` (as above, against the style's STYLE.md), `Brand` (handle, logo, fonts, tone, words to avoid), `Cover` (does slide 1 make you swipe, does it survive the 3:4 crop), `Consistency` (the slides match each other), `Facts`, `Checks` (from check.json).

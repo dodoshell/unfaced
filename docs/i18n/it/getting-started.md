@@ -2,7 +2,7 @@
 
 *Questa è una traduzione: se è diversa dalla [versione inglese](../../guide/getting-started.md), fa fede quella inglese.*
 
-Questa guida è per social media manager e creator che non hanno mai usato un terminale. Parlerai con Claude nella sua app desktop e unfaced trasformerà quello che chiedi in video verticali finiti, direttamente sul tuo computer.
+Questa guida è per social media manager e creator che non hanno mai usato un terminale. Parlerai con Claude nella sua app desktop e unfaced trasformerà quello che chiedi in video verticali finiti, caroselli e altri post, direttamente sul tuo computer.
 
 **In altre lingue:** [English](../../guide/getting-started.md) · Italiano · [Español](../es/getting-started.md) · [Français](../fr/getting-started.md) · [Português (Brasil)](../pt-BR/getting-started.md)
 
@@ -74,6 +74,14 @@ Poi, un passo alla volta:
 | "Preparalo per la pubblicazione" | Un'immagine di copertina più didascalie, hashtag e titoli per ogni piattaforma |
 | "Ecco i miei numeri, cosa dovrei cambiare?" | Al massimo tre modifiche, ognuna con i numeri che la motivano e un modo per testarla |
 
+### Il tuo primo carosello
+
+Se la pagina è di un'attività o di un brand, chiedi invece un post:
+
+> Fai un carosello sui nostri tre servizi, con un tono diretto e cordiale.
+
+La prima volta Claude ti chiede l'handle e il tono della pagina (oppure li ricava dagli screenshot del tuo profilo, se ne condividi), scrive il testo slide per slide e **si ferma per la tua approvazione**. Poi ricevi un'immagine per ogni slide, una `grid.png` per vederle tutte affiancate e, per LinkedIn, un PDF. Basta dire a cosa serve il post e Claude sceglie il formato: un post Instagram da sfogliare, un'immagine singola, un PDF per LinkedIn o una storia. Per ora i post usano lo stile 13 Night tech; gli altri stili fanno solo video.
+
 Le voci gratuite parlano inglese, italiano, spagnolo, francese, portoghese e hindi. Per le altre lingue i video usano solo testo a schermo, oppure una voce a pagamento se ne hai una.
 
 ## Dove trovi i tuoi video
@@ -91,9 +99,15 @@ my-pages/
         video.mp4        il video da pubblicare
         cover.png        la copertina
         post.md          didascalie e hashtag
+    posts/
+      i-nostri-servizi/
+        slides.md        il testo che approvi
+        slide-01.png ... le slide da pubblicare (post.pdf per LinkedIn)
+        grid.png         tutte le slide affiancate
+        post.md          didascalie, hashtag e testi alternativi
 ```
 
-unfaced non pubblica mai nulla: il video lo carichi tu, a mano o con il tuo solito strumento di programmazione dei post.
+unfaced non pubblica mai nulla: il video o le slide le carichi tu, a mano o con il tuo solito strumento di programmazione dei post.
 
 ## Se qualcosa va storto
 

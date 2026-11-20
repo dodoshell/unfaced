@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { LIBRARY_ROOT } from "../paths.js";
 
 /** The file formats an agent writes or reads, documented in docs/formats/<name>.md. */
-export const FORMATS = ["page", "script", "mascot", "scenes", "review", "post", "results"] as const;
+export const FORMATS = ["page", "script", "mascot", "scenes", "review", "post", "results", "brand", "slides"] as const;
 
 const DIR = join(LIBRARY_ROOT, "docs", "formats");
 

@@ -19,6 +19,11 @@ Every third-party file shipped in this repository (fonts, music, sound effects, 
 | `catalog/styles/10-neon-synthwave/fonts/Orbitron.ttf` | [google/fonts](https://github.com/google/fonts/tree/main/ofl/orbitron), The Orbitron Project Authors | SIL OFL 1.1 (`catalog/styles/10-neon-synthwave/fonts/OFL-Orbitron.txt`) |
 | `catalog/styles/11-watercolour/fonts/ShadowsIntoLightTwo.ttf` | [google/fonts](https://github.com/google/fonts/tree/main/ofl/shadowsintolighttwo), Kimberly Geswein | SIL OFL 1.1 (`catalog/styles/11-watercolour/fonts/OFL-ShadowsIntoLightTwo.txt`) |
 | `catalog/styles/12-kinetic-typography/fonts/Anton.ttf` | [google/fonts](https://github.com/google/fonts/tree/main/ofl/anton), The Anton Project Authors | SIL OFL 1.1 (`catalog/styles/12-kinetic-typography/fonts/OFL-Anton.txt`) |
+| `catalog/styles/13-night-tech/fonts/InstrumentSerif-Regular.ttf`, `InstrumentSerif-Italic.ttf` | [google/fonts](https://github.com/google/fonts/tree/main/ofl/instrumentserif), The Instrument Serif Project Authors | SIL OFL 1.1 (`catalog/styles/13-night-tech/fonts/OFL-InstrumentSerif.txt`) |
+| `catalog/styles/13-night-tech/fonts/Inter-Regular.ttf` | [rsms/inter](https://github.com/rsms/inter/releases/tag/v4.1) release 4.1 (static TTF), The Inter Project Authors | SIL OFL 1.1 (`catalog/styles/13-night-tech/fonts/OFL-Inter.txt`) |
+| `catalog/styles/13-night-tech/fonts/JetBrainsMono-Medium.ttf` | [JetBrains/JetBrainsMono](https://github.com/JetBrains/JetBrainsMono/releases/tag/v2.304) release 2.304 (static TTF), The JetBrains Mono Project Authors | SIL OFL 1.1 (`catalog/styles/13-night-tech/fonts/OFL-JetBrainsMono.txt`) |
+| `tests/fixtures/fonts/Condensed-Anton.ttf` | [google/fonts](https://github.com/google/fonts/tree/main/ofl/anton), The Anton Project Authors | SIL OFL 1.1 (`tests/fixtures/fonts/OFL-Anton.txt`) |
+| `tests/fixtures/fonts/Wide-Orbitron.ttf` | [google/fonts](https://github.com/google/fonts/tree/main/ofl/orbitron), The Orbitron Project Authors | SIL OFL 1.1 (`tests/fixtures/fonts/OFL-Orbitron.txt`) |
 
 ## Downloaded at first use (not in this repository)
 

@@ -1,6 +1,6 @@
 # Contributing to unfaced
 
-Thanks for helping. Most contributions are catalog entries: a new style, a script type, a hook. This page says where each one lives, what it must pass, and how to send it.
+Thanks for helping. Most contributions are catalog entries: a new style, a script type, a post type, a hook. This page says where each one lives, what it must pass, and how to send it.
 
 ## Ground rules
 
@@ -36,6 +36,23 @@ Follow `catalog/styles/_template/README.md`: copy the template, draw the look in
 
 Attach a few frames to the pull request.
 
+## Making a style draw posts
+
+A style draws posts when it has a `components/slides/` folder, a **Slides** section in its `STYLE.md` and `"posts": "ready"` in `catalog/catalog.json` (styles 1 to 12 have no `posts` field, which means they make videos only; `status` stays about videos). Look at style 13 Night tech: one component per slide kind (cover, point, list, steps, compare, stat, quote, image, cta), a pure `layout.ts`, the drawn visuals (chips, a step flow, a phone, a notification, icons) and its fonts. Then:
+
+1. `npx vitest run tests/styles/slides-contract.test.ts` passes: every kind in every format, the safe areas, no overlapping text.
+2. `npm run unfaced -- demo NN --post` renders the sample carousel and story; look at every slide.
+
+## Adding a slide kind
+
+A kind is parsed in `engine/src/post/parseSlides.ts` (its fields), its limits live in `engine/src/post/limits.ts`, it is drawn by each style's `components/slides/` and `layout.ts`, and described in `docs/formats/slides.md`. Add it to every style that draws posts and extend the slides contract test, so a style without the kind fails.
+
+## Adding a post type
+
+1. Copy `catalog/posts/_template.md` to `catalog/posts/NN-slug.md`: what the post is for, its slide sequence, good covers, the writing rules and one complete example `slides.md`.
+2. Add its entry to the `post-type` list in `catalog/catalog.json`, after the others.
+3. `npx vitest run tests/catalog tests/post` checks the entry and that the example parses.
+
 ## Adding a script type
 
 1. Copy `catalog/scripts/_template.md` to `catalog/scripts/NN-slug.md` and write its purpose, the beats with their timing, the rules, and two complete example scripts in different niches.
@@ -49,7 +66,7 @@ Hooks are written entries in `catalog/hooks.md`: a rule set and three examples i
 
 ## Skills
 
-The skills live in `plugin/skills/<name>/SKILL.md`. Their front matter uses only the portable keys (`name`, `description`, `license`, `compatibility`, `metadata`, `allowed-tools`), and the description starts with "Use when". The launcher in `plugin/launcher/unfaced.mjs` is copied into every skill's `scripts/`; after changing it, copy it again (a test checks the copies are identical). A change to a skill's behaviour comes with a scenario showing an agent getting it wrong before and right after.
+The skills live in `plugin/skills/<name>/SKILL.md`. Their front matter uses only the portable keys (`name`, `description`, `license`, `compatibility`, `metadata`, `allowed-tools`), and the description starts with "Use when". The launcher in `plugin/launcher/unfaced.mjs` is copied into every skill's `scripts/`; after changing it, copy it again (a test checks the copies are identical). The same goes for each reviewer agent and its copy in a skill's `references/` (`video-reviewer`, `post-reviewer`). A change to a skill's behaviour comes with a scenario showing an agent getting it wrong before and right after.
 
 ## Tests
 

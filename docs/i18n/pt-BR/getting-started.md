@@ -2,7 +2,7 @@
 
 *Esta é uma tradução; se ela for diferente da [versão em inglês](../../guide/getting-started.md), vale a versão em inglês, que está sempre atualizada.*
 
-Este guia é para social media managers e criadores de conteúdo que nunca usaram um terminal. Você vai conversar com o Claude no app para desktop, e o unfaced transforma o que você pede em vídeos verticais prontos, direto no seu computador.
+Este guia é para social media managers e criadores de conteúdo que nunca usaram um terminal. Você vai conversar com o Claude no app para desktop, e o unfaced transforma o que você pede em vídeos verticais prontos, carrosséis e outros posts, direto no seu computador.
 
 **Outros idiomas:** [English](../../guide/getting-started.md) · [Italiano](../it/getting-started.md) · [Español](../es/getting-started.md) · [Français](../fr/getting-started.md) · Português (Brasil)
 
@@ -74,6 +74,14 @@ Depois, um passo de cada vez:
 | "Deixa pronto para postar" | Uma imagem de capa e as legendas, hashtags e títulos para cada plataforma |
 | "Aqui estão os meus números, o que eu devo mudar?" | No máximo três mudanças, cada uma com os números que a justificam e um jeito de testar |
 
+### Seu primeiro carrossel
+
+Se a página é de uma empresa ou de uma marca, peça um post:
+
+> Faça um carrossel sobre os nossos três serviços, num tom direto e simpático.
+
+Na primeira vez, o Claude pergunta o handle e o tom da página (ou tira os dois de prints do seu perfil, se você compartilhar alguns), escreve o texto slide por slide e **para e espera a sua aprovação**. Depois você recebe uma imagem por slide, uma `grid.png` para ver todos lado a lado e, para o LinkedIn, um PDF. Diga para que serve o post e o Claude escolhe o formato: um post de Instagram de deslizar, uma imagem única, um PDF para o LinkedIn ou um story. Por enquanto os posts usam o estilo 13 Night tech; os outros estilos só fazem vídeos.
+
 As vozes gratuitas falam inglês, italiano, espanhol, francês, português e hindi. Para outros idiomas, os vídeos usam só texto na tela, ou uma voz paga se você tiver uma.
 
 ## Onde ficam os seus vídeos
@@ -91,9 +99,15 @@ my-pages/
         video.mp4        o vídeo para postar
         cover.png        a capa
         post.md          legendas e hashtags
+    posts/
+      nossos-servicos/
+        slides.md        o texto que você aprova
+        slide-01.png ... os slides para postar (post.pdf para o LinkedIn)
+        grid.png         todos os slides lado a lado
+        post.md          legendas, hashtags e textos alternativos
 ```
 
-O unfaced nunca posta nada: você sobe o vídeo por conta própria, ou com a sua ferramenta de agendamento de sempre.
+O unfaced nunca posta nada: você sobe o vídeo ou os slides por conta própria, ou com a sua ferramenta de agendamento de sempre.
 
 ## Se algo der errado
 

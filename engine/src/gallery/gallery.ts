@@ -23,6 +23,7 @@ const SECTIONS: Record<CatalogKind, { title: string; unit: [string, string] }> =
   music: { title: "Music moods", unit: ["music mood", "music moods"] },
   ending: { title: "Endings", unit: ["ending", "endings"] },
   duration: { title: "Durations", unit: ["duration", "durations"] },
+  "post-type": { title: "Post types", unit: ["post type", "post types"] },
 };
 
 const escape = (text: string) => text.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);

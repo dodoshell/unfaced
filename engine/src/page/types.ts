@@ -1,3 +1,5 @@
+import type { FormatName } from "../post/types.js";
+
 export const CATALOG_KINDS = [
   "style",
   "script",
@@ -7,6 +9,7 @@ export const CATALOG_KINDS = [
   "music",
   "ending",
   "duration",
+  "post-type",
 ] as const;
 
 export type CatalogKind = (typeof CATALOG_KINDS)[number];
@@ -28,12 +31,29 @@ export interface Providers {
   images: string;
 }
 
+/** The page's brand for posts; every path is relative to the page folder. */
+export interface Brand {
+  handle?: string;
+  site?: string;
+  logo?: string;
+  fonts?: Partial<Record<"display" | "accent" | "text" | "mono", string>>;
+  tone?: string;
+  words?: { use?: string[]; avoid?: string[] };
+}
+
 export interface Page {
   dir: string;
   name: string;
   language: string;
   niche: string;
+  /** The catalog choices; `choices.style` is the video style (unset when only style.posts is given). */
   choices: Partial<Record<ChoiceField, Choice>>;
+  postStyle?: Choice;
+  /** True when style was written as { posts, ... }: the page asked for a post style of its own. */
+  postsStyleSet?: boolean;
+  postType?: Choice;
+  formats?: FormatName[];
+  brand?: Brand;
   duration?: { minSec: number; maxSec: number };
   palette?: string[];
   font?: string;

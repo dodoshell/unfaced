@@ -1,10 +1,10 @@
 {
   "name": "unfaced",
   "displayName": "unfaced",
-  "version": "0.1.7",
-  "description": "Plan, script and produce videos for faceless pages: numbered styles, scripts, hooks and voices, a page profile for consistency, free by default.",
+  "version": "0.2.0",
+  "description": "Plan, script and produce videos and still posts (carousels, single posts, LinkedIn PDFs, stories) for faceless pages: numbered styles, scripts, hooks, voices and a brand block for consistency, free by default.",
   "author": { "name": "dodoshell", "url": "https://github.com/dodoshell" },
   "repository": "https://github.com/dodoshell/unfaced",
   "license": "MIT",
-  "keywords": ["faceless", "video", "reels", "tiktok", "shorts", "remotion", "social-media"]
+  "keywords": ["faceless", "video", "reels", "tiktok", "shorts", "remotion", "social-media", "carousel", "posts"]
 }

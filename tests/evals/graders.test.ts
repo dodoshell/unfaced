@@ -89,4 +89,40 @@ describe("eval graders", () => {
     expect(short.test(script("script_type: 6", "one two three four five six seven eight nine ten eleven twelve"))).toBe(false);
     expect(short.test(script("script_type: 6", "Why do cats knead\nsoft blankets with both paws when they feel safe and warm?"))).toBe(false);
   });
+
+  it("post-make no-render: catches `unfaced post`, not post-type, docs post or the other commands", () => {
+    for (const name of ["post-make-stops-for-approval", "post-make-keeps-user-text"]) {
+      const render = regex(`${name}/graders/no-render.md`);
+      const launcher = "/home/me/unfaced/plugin/skills/post-make/scripts/unfaced.mjs";
+      expect(render.test(bash(`node ${launcher} post pages/studio-nord/posts/about-us`))).toBe(true);
+      expect(render.test(bash(`node "${launcher}" post pages/studio-nord/posts/about-us --format story`))).toBe(true);
+      expect(render.test(bash(`npm run unfaced -- post pages/studio-nord/posts/about-us`))).toBe(true);
+      expect(render.test(bash(`U="node ${launcher}"; $U page pages/studio-nord; $U post pages/studio-nord/posts/x`))).toBe(true);
+      expect(render.test(bash(`U="node ${launcher}"; $U page pages/studio-nord; $U docs post; $U list post-type; $U show post-type 3`))).toBe(false);
+      expect(render.test(bash(`node ${launcher} docs slides; node ${launcher} show post-type 3`))).toBe(false);
+    }
+  });
+
+  it("post-make-keeps-user-text: needs all five sentences, word for word", () => {
+    const kept = regex("post-make-keeps-user-text/graders/user-text-verbatim.md");
+    const sentences = [
+      "We build websites for shop owners who have no time to waste.",
+      "Every project starts with a free call, never a long form.",
+      "You get a fixed price before we write a single line.",
+      "Most shops are online in three weeks.",
+      "Tell us what you sell and we do the rest.",
+    ];
+    const slides = (lines: string[]) =>
+      `---\ntitle: About us\npost_type: 3\n---\n\n## cover\n# Studio *Nord*\n\n${lines.map((l) => `## point\n${l}\n`).join("\n")}`;
+    expect(kept.test(slides(sentences))).toBe(true);
+    expect(kept.test(slides(sentences.slice(0, 4)))).toBe(false);
+    expect(kept.test(slides(sentences.map((l) => l.replace("free call", "free chat"))))).toBe(false);
+  });
+
+  it("post-make slides-parse: wants a cover first and another slide after it", () => {
+    const parses = regex("post-make-stops-for-approval/graders/slides-parse.md");
+    expect(parses.test("---\ntitle: T\npost_type: 1\n---\n\n## cover\n# Hi\n\n## point\n# Two\n")).toBe(true);
+    expect(parses.test("## cover\n# Hi\n\n## cta\n# Go\n")).toBe(true);
+    expect(parses.test("---\ntitle: T\n---\n\n## point\n# Two\n\n## cta\n# Go\n")).toBe(false);
+  });
 });

@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { loadPage, PageError } from "../../engine/src/page/loadPage.js";
-import { stubCatalog } from "./stubCatalog.js";
+import { stubCatalog, stubCatalogWithPosts } from "./stubCatalog.js";
 
 const fixture = join(import.meta.dirname, "..", "fixtures", "pages", "curious-cats");
 
@@ -151,5 +151,83 @@ describe("loadPage", () => {
   it("explains a missing page.yaml", async () => {
     const dir = mkdtempSync(join(tmpdir(), "unfaced empty "));
     await expect(loadPage(dir, stubCatalog)).rejects.toThrow(/page\.yaml not found/);
+  });
+
+  describe("posts: style, post types, formats and brand", () => {
+    const load = async (yaml: string) => loadPage(pageDir(minimal + yaml), stubCatalogWithPosts);
+
+    it("uses a single style for posts and videos", async () => {
+      const page = await load("style: 13\n");
+      expect(page.choices.style).toBe(13);
+      expect(page.postStyle).toBe(13);
+    });
+
+    it("splits the object form into a video style and a post style", async () => {
+      const page = await load("style: { posts: 13, videos: 3 }\n");
+      expect(page.choices.style).toBe(3);
+      expect(page.postStyle).toBe(13);
+    });
+
+    it("has no video style when only posts is given, and no post style when only videos is", async () => {
+      const posts = await load("style: { posts: 13 }\n");
+      expect(posts.choices.style).toBeUndefined();
+      expect(posts.postStyle).toBe(13);
+      const videos = await load("style: { videos: 3 }\n");
+      expect(videos.choices.style).toBe(3);
+      expect(videos.postStyle).toBeUndefined();
+    });
+
+    it("validates both styles against the catalog", async () => {
+      const err = await errorOf(`${minimal}style: { posts: 99, videos: 3 }\n`);
+      expect(err.field).toBe("style");
+      expect(err.message).toContain("1–12");
+      await expect(load("style: {}\n")).rejects.toThrow(/style/);
+      await expect(load("style: { poss: 13 }\n")).rejects.toBeInstanceOf(PageError);
+    });
+
+    it("loads post types, formats and a full brand block", async () => {
+      const page = await load(
+        `post_type: [1, 3]
+formats: [instagram-carousel, story]
+brand:
+  handle: "@studionord"
+  site: studionord.example
+  logo: brand/logo.svg
+  fonts: { display: brand/fonts/A.ttf, text: brand/fonts/B.ttf, mono: brand/fonts/C.ttf }
+  tone: direct, warm
+  words: { use: [su misura], avoid: [sinergia] }
+`,
+      );
+      expect(page.postType).toEqual([1, 3]);
+      expect(page.formats).toEqual(["instagram-carousel", "story"]);
+      expect(page.brand).toMatchObject({ handle: "@studionord", logo: "brand/logo.svg", fonts: { mono: "brand/fonts/C.ttf" }, words: { avoid: ["sinergia"] } });
+    });
+
+    it("validates post type numbers and format names", async () => {
+      const err = await errorOf(`${minimal}post_type: 7\n`);
+      expect(err.field).toBe("post_type");
+      expect(err.message).toContain("1–6");
+      expect((await errorOf(`${minimal}formats: [tiktok]\n`)).field).toBe("formats");
+      expect((await errorOf(`${minimal}formats: [story, story]\n`)).field).toBe("formats");
+      expect((await errorOf(`${minimal}formats: []\n`)).field).toBe("formats");
+    });
+
+    it("rejects an unknown brand field and says brand", async () => {
+      const err = await errorOf(`${minimal}brand:\n  colour: red\n`);
+      expect(err.field).toBe("brand.colour");
+      expect(err.message).toContain("brand.colour");
+      const hint = await errorOf(`${minimal}brand:\n  hanlde: "@x"\n`);
+      expect(hint.message).toContain('Did you mean "handle"?');
+      expect((await errorOf(`${minimal}brand:\n  fonts:\n    body: a.ttf\n`)).message).toContain("brand.fonts.body");
+    });
+
+    it("refuses an API key inside brand", async () => {
+      const err = await errorOf(`${minimal}brand:\n  tone: sk-abc123secret\n`);
+      expect(err.message).toContain("API keys");
+    });
+
+    it("still accepts font", async () => {
+      expect((await load("font: Inter\n")).font).toBe("Inter");
+    });
   });
 });

@@ -19,6 +19,10 @@ async function failure(fetchImpl: typeof fetch): Promise<string> {
 }
 
 describe("stockQuery", () => {
+  it("skips a post prompt's For slide N sentence", () => {
+    expect(stockQuery("For slide 2. A shop front at dusk.")).toBe("A shop front at dusk");
+  });
+
   it("searches the prompt's Search: line when it has one", () => {
     expect(stockQuery("For beat b2.\nA ginger cat kneading a blanket, flat cartoon style.\nSearch: cat kneading blanket\n")).toBe("cat kneading blanket");
   });
